@@ -1,5 +1,5 @@
 import express from 'express';
-//import userDAO
+import userDAO from 'dao/userDao'
 
 const router = express.Router();
 
@@ -13,4 +13,4 @@ router.get("/:id", async (request, response) => {
 router.get("/", async (request, response) => {
 
 })
-// so on...
+

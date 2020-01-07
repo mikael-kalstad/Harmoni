@@ -1,7 +1,7 @@
 const daoParentUser = require("./dao.ts");
 const User = require("./User.ts");
 
-module.exports = class userDao extends daoParentUser{
+export default class userDao extends daoParentUser{
     constructor(pool){
         super(pool);
     }
