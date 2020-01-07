@@ -1,9 +1,9 @@
-export interface User{
-    userId: number,
-    name: string,
-    email: string,
-    password: string,
-    salt: string,
-    type: string,
-    picture: string
+module.exports = class User{
+    userId: number;
+    name: string;
+    email: string;
+    hash: string;
+    salt: string;
+    type: string;
+    picture: string;
 }
