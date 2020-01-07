@@ -67,7 +67,7 @@ const Register = () => {
     const [type, setType] = useState('Velg type');
     const [warningText, setWarningText] = useState(' ');
 
-    const types = ['Manager', 'Artist', 'Lokaleier'];
+    const types = ['Arrangør', 'Artist/Manager', 'Frivillig'];
 
     let menuItems: JSX.Element[] = [];
 
