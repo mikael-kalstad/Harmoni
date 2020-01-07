@@ -37,4 +37,7 @@ module.exports = class userDao extends daoParentUser{
     updateUser(userId: number, user, callback){
         super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?", [user.name, user.email, user.mobile, user.hash, user.salt, user.type, user.picture, userId], callback);
     }
+    deleteUser(userId: number, callback){
+        super.query("DELETE FROM user WHERE user_id=?", [userId], callback)
+    }
 };

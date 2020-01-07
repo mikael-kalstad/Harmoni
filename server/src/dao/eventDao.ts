@@ -33,4 +33,8 @@ module.exports = class eventDao extends daoParentEvent {
     updateEvent(eventId : number, event, callback){
         super.query('UPDATE event SET name = ?, organizer = ?, location = ?, fromDate = ?, toDate = ?, capacity = ?, status = ? WHERE event_id = ?', [event.name, event.organizer, event.location, event.fromDate, event.toDate, event.capacity, event.status, eventId], callback);
     }
+
+    getEventsOfUser(userId : number, callback) {
+        super.query('SELECT event.* FROM event, user_event WHERE user_event.user_id = ? AND event.event_id = user_event.event_id', [userId], callback)
+    }
 };
