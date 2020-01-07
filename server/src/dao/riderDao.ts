@@ -26,6 +26,10 @@ module.exports = class riderDao extends daoParentRider{
         super.query('INSERT INTO rider VALUES(DEFAULT, ?)', [rider.text], callback);
     }
 
+    addRiderList(user_id : number, event_id : number, rider_list, riderId : number, callback){
+        super.query('INSERT INTO rider_list VALUES(DEFAULT, ?, ?, ?, ?) WHERE rider_id = ?', [user_id, event_id, riderId, rider_list.quantity, riderId], callback);
+    }
+
     updateRider(riderId: number, rider, callback) {
         super.query('UPDATE rider SET text = ? WHERE riderId = ?', [rider.text], callback);
     }
