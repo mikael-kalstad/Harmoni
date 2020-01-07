@@ -1,7 +1,7 @@
-const dao = require('./dao.ts');
+const daoParentEvent = require('./dao.ts');
 const EventVar = require('./Event.ts');
 
-module .exports = class eventDao extends dao {
+module.exports = class eventDao extends daoParentEvent {
     constructor(pool) {
         super(pool);
     }

@@ -1,7 +1,7 @@
-const dao = require("./dao.ts");
+const daoParentUser = require("./dao.ts");
 const User = require("./User.ts");
 
-module.exports = class userDao extends dao{
+module.exports = class userDao extends daoParentUser{
     constructor(pool){
         super(pool);
     }
@@ -15,6 +15,6 @@ module.exports = class userDao extends dao{
     }
 
     getOrganizers(callback){
-        super.query("SELECT * FROM user WHERE type = 'organizer'")
+        super.query("SELECT * FROM user WHERE type = 'organizer'", [], callback)
     }
-}
+};

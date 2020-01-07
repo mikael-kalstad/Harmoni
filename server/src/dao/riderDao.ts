@@ -1,7 +1,7 @@
-const dao = require('./dao.ts');
+const daoParentRider = require('./dao.ts');
 const Rider = require('./Rider.ts');
 
-module.exports = class riderDao extends dao{
+module.exports = class riderDao extends daoParentRider{
     constructor(pool){
         super(pool);
     }
