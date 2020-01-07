@@ -30,12 +30,16 @@ export default class UserService extends Service {
         return axios.get(this.path + "FYLL INN").then(response => response.data);
     }
 
+    getOrganizerForEvent(eventId: number){
+
+    }
+
     addUser(user: User){
         return axios.post(this.path + "/user", user).then(response => response.data);
     }
 
     updateUser(user: User){
-        return axios.put(this.path + "/user/" + user.userId).then(response => response.data);
+        return axios.put(this.path + "/user/" + user.userId, user).then(response => response.data);
     }
 
     
