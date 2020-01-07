@@ -1,4 +1,4 @@
 export interface Rider {
-    riderId : number,
-    text : string,
+    riderId : number;
+    text : string;
 }
