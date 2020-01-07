@@ -48,4 +48,8 @@ export default class eventDao extends daoParentEvent {
     deleteEvent(eventId : number,  callback){
         super.query('Delete * FROM event WHERE event_id = ?', [eventId], callback);
     }
+
+    getEventsOfUser(userId : number, callback) {
+        super.query('SELECT event.* FROM event, user_event WHERE user_event.user_id = ? AND event.event_id = user_event.event_id', [userId], callback)
+    }
 };

@@ -1,25 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import styled from 'styled-components';
+
+// Bootstrap styling
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+
+// Pages
+import FrontPage from './Components/Pages/FrontPage';
+import Register from './Components/Pages/Register';
+
+const Overlay = styled.div` 
+  position: fixed;
+  z-index: 9998;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+`;
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+       <Overlay id='overlay'/>
+
+      <Switch>
+        <Route exact path='/' component={FrontPage}/>
+        <Route exact path='/register' component={Register}/>
+      </Switch>
+    </Router>
   );
 }
 
