@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
 import styled from 'styled-components';
 import Dropdown from 'react-bootstrap/Dropdown';
+import UploadBtn from '../Button/uploadBtn';
 
 const Wrapper = styled.div`
     margin: 80px auto 0 auto;
@@ -27,6 +28,10 @@ const Input = styled.input`
     :hover {
         filter: brightness(98%);
     }
+`;
+
+const ButtonWrapper = styled.div`
+    margin-top: 70px;
 `;
 
 const Button = styled.button`
@@ -143,7 +148,13 @@ const Register = () => {
 
                 <WarningText>{warningText}</WarningText>
 
-                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>REGISTRER</Button>
+                {/* <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>REGISTRER</Button> */}
+
+                <ButtonWrapper>
+                    <UploadBtn 
+                        name='REGISTRER'
+                    />
+                </ButtonWrapper>
             </Wrapper>
         </> 
     );
