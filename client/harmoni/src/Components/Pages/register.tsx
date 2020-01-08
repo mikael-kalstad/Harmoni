@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import styled from 'styled-components';
-import Dropdown from 'react-bootstrap/DropDown';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const Wrapper = styled.div`
     margin: 80px auto 0 auto;

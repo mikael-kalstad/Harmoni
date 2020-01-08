@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from '../Button/button';
 import LoginBtn from '../Button/loginBtn';
+import SmallProfileNav from '../Profile/smallProfileNav';
 
 const NavigationBar = (props:any) => (
     <Navbar bg="light" expand="lg" sticky='top'>
@@ -32,7 +33,10 @@ const NavigationBar = (props:any) => (
       </Nav>
 
       {props.isLoggedIn 
-        ? (<Button>Logg ut</Button>)
+        ? (<>
+            <Button>Logg ut</Button>
+            <SmallProfileNav img='/icons/test.jpg' name='Jahn Teigen'/>
+          </>)
         : (<>
             <Button>Reigstrer</Button> 
             <LoginBtn />
