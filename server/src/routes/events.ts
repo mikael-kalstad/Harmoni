@@ -36,10 +36,11 @@ router.get("/status/:status", async (request, response) => {
 
 // Get events given organizer
 router.get("/organizer/:organizer", async (request, response) => {
-    dao.getEventsByOrganizer(request.params.organizer, (status, data) => {
+    dao.getEventsByOrganizer(parseInt(request.params.organizer), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+
 // Get all
 router.get("/", async (request, response) => {
     dao.getAllEvents((status, data) => {
