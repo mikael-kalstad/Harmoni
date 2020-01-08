@@ -1,10 +1,10 @@
-INSERT INTO user VALUES(default, 'Hans Hansen', 'hans@hansen.com', default, 'dfghjklfghj', 'fghjkfghjkh', 'Arrangør', default);
+INSERT INTO user VALUES(default, 'Hans Hansen', 'hans@hansen.com', default, 'dfghjklfghj', 'fghjkfghjkh', 'organizer', default);
 
-INSERT INTO user VALUES(default, 'Roy Narvestad', 'roy@hotmail.com', default, 'qwertyuty', 'cbnmnnm', 'Arrangør', default);
+INSERT INTO user VALUES(default, 'Roy Narvestad', 'roy@hotmail.com', default, 'qwertyuty', 'cbnmnnm', 'organizer', default);
 
-INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', default, 'dfghjkfghjkfghjk', 'zxcvbnmxcvb', 'Artist', default);
+INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', default, 'dfghjkfghjkfghjk', 'zxcvbnmxcvb', 'artist', default);
 
-INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 'ajjjajajjjjs', 'uriueriueriei', 'Frivillig', default);
+INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 'ajjjajajjjjs', 'uriueriueriei', 'volunteer', default);
 
 INSERT INTO rider VALUES(default, 'Julebrus');
 INSERT INTO rider VALUES(default, 'Potetgull');

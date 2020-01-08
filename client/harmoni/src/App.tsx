@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FrontPage from './Components/Pages/frontPage';
 import Register from './Components/Pages/register';
 import Profile from './Components/Pages/profile';
+import PageNotFound from './Components/Pages/pageNotFound';
 
 const Overlay = styled.div` 
   position: fixed;
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route exact path='/' component={FrontPage}/>
         <Route exact path='/register' component={Register}/>
         <Route exact path='/profile' component={Profile}/>
+        <Route component={PageNotFound} />
       </Switch>
     </Router>
   );

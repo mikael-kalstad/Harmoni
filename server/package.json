@@ -12,7 +12,8 @@
     ]
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "set NODE_ENV=development && jest --coverage --runInBand",
+    "test-ci": "set NODE_ENV=ci && jest --coverage --runInBand",
     "dev": "ts-node src/server.ts",
     "start": "ts-node dist/server.js",
     "build": "tsc -p ."

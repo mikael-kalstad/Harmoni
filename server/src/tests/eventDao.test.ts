@@ -26,16 +26,17 @@ function run(filename, pool, done) {
     });
 };
 
-
-var conPool = mysql.createPool({
+let poolConfig = {
     connectionLimit: 1,
-    host: "localhost",
+    host: process.env.NODE_ENV == "ci" ? "mysql" : "localhost",
     user: "root",
     password: "humbug",
     database: "harmoni",
     debug: false,
     multipleStatements: true
-});
+}
+
+var conPool = mysql.createPool(poolConfig);
 
 const dao = new eventDao(conPool);
 
