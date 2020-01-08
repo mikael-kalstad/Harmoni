@@ -64,5 +64,5 @@ const FrontPage = () => (
         <ArrangementGrid data={data} title='Populære arrangementer'/>
     </Layout>
 );
-
+//Test
 export default FrontPage;
