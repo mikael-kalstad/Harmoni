@@ -33,4 +33,7 @@ module.exports = class riderDao extends daoParentRider{
     updateRider(riderId: number, rider, callback) {
         super.query('UPDATE rider SET text = ? WHERE riderId = ?', [rider.text], callback);
     }
+    deleteRiderList(user_id:number, event_id:number, riderId:number, callback) {
+        super.query('DELETE FROM rider WHERE riderId=? AND user_id=? AND event_id=?',[riderId, user_id, event_id], callback);
+    }
 }
