@@ -18,7 +18,7 @@ const Grid = styled.div`
 const Title = styled.h2`
     font-weight: 500;
     font-size: 36px;
-    margin-left: 70px;
+    margin: 80px 0 70px 70px;
 `;
 
 const arrangementGrid = (props:any) => {
