@@ -21,4 +21,10 @@ export default class TicketService extends Service {
     addTickets(){
         return axios.post(this.path + "/ticket/").then(response => response.data);
     }
+    deleteTicket(ticketId: number){
+        return axios.delete(this.path + "/ticket/" + ticketId).then(response => response.data);
+    }
+    deleteTicketsByEventId(eventId: number){
+        return axios.delete(this.path + "/ticket/event" + eventId).then(response => response.data);
+    }
 }
