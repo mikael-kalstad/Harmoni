@@ -25,39 +25,39 @@ router.get("/email/:email", async (request,response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
-// Get singular hash given type
+// Get all users given type
 router.get("/type/:type", async (request,response) => {
     dao.getUsersOfType(request.params.type, (status,data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
-// Get singular hash given id
-router.get("/:id", async (request,response) => {
-    dao.getHashOfUser(parseInt(request.params.id) , (status,data) => {
-        status == 500 ? response.status(500) : response.send(data)
-    });
-})
 // Get singular user given id
-router.get("/organizer/:organizer", async (request,response) => {
+router.get("/:id", async (request,response) => {
+    dao.getOrganizerForEvent(parseInt(request.params.id) , (status,data) => {
+        status == 500 ? response.status(500) : response.send(data)
+    });
+})
+// Get singular hash given id
+router.get("/hash/:id", async (request,response) => {
     dao.getHashOfUser(parseInt(request.params.id) , (status,data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
-// Get all
+// Get all users
 router.get("/", async (request, response) => {
     dao.getAllUsers((status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Update singular event given id
+// Update singular user given id
 router.put("/:id", async (request, response) => {
     dao.updateUser(parseInt(request.params.id) , request.body,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Delete event given id
+// Delete user given id
 router.delete("/:id", async (request, response) => {
     dao.deleteUser(parseInt(request.params.id) , (status, data) => {
         status == 500 ? response.status(500) : response.send(data)

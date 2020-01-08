@@ -1,17 +1,68 @@
 import React from 'react';
-import LoginBtn from '../Button/LoginBtn';
-import ArrangmenetCard from '../arrangementCard';
+import Layout from '../layout';
+import ArrangementGrid from '../arrangementGrid';
+
+let data = [
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    },
+    {
+        'id': 1234,
+        'category': 'Konsert',
+        'title': 'Kurt Nilsen synger låter',
+        'img': '/icons/test.jpg'
+    }
+]
 
 const FrontPage = () => (
-    <>
-        <LoginBtn></LoginBtn>
-        <ArrangmenetCard 
-            id='1234'
-            img='/icons/test.jpg'
-            category='Konsert'
-            title='Konsert med rihanna!'
-        />
-    </>
+    <Layout>
+        <ArrangementGrid data={data} title='Populære arrangementer' />
+    </Layout>
 );
 
 export default FrontPage;
