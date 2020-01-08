@@ -11,6 +11,7 @@ import SmallProfileNav from './smallProfileNav';
 const StyledLink = styled(props => <Link {...props} />)`
     color: #7f7f7f;
     text-decoration: none;
+    // line-height: 96px;
 
     :visited {
         color: #7f7f7f;
@@ -20,8 +21,8 @@ const StyledLink = styled(props => <Link {...props} />)`
         filter: brightness(70%);
         text-decoration: none;
     }
-
-    margin-left: 10px;
+    margin: 0;
+    margin-right: 20px;
 `;
 
 const NavigationBar = (props:any) => (
@@ -43,9 +44,9 @@ const NavigationBar = (props:any) => (
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
 
-          <StyledLink to='/konsert'>Konsert</StyledLink>
-          <StyledLink to='/teater'>Teater</StyledLink>
-          <StyledLink to='/Standup'>Standup</StyledLink>
+          <StyledLink to='/even?konsert'>Konsert</StyledLink>
+          <StyledLink to='/event?teater'>Teater</StyledLink>
+          <StyledLink to='/event?Standup'>Standup</StyledLink>
 
             <NavDropdown title="Annet" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
