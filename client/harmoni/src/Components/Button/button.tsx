@@ -15,6 +15,7 @@ const StyledBtn = styled.button<Props>`
     outline: none;
     border-radius: 10px;
     cursor: pointer;
+    margin: 15px;
 
     :hover {
         filter: brightness(90%);
@@ -29,8 +30,10 @@ const StyledBtn = styled.button<Props>`
 const Button = (props: any) => {
     return (
         <StyledBtn 
-            onClick={() => props.onClick()}
-            solid={props.solid}>{props.children}
+            onClick={() => props.onClick !== undefined && props.onClick()}
+            solid={props.solid}
+        >
+            {props.children}
         </StyledBtn>
     );
 };
