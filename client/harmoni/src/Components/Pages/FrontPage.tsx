@@ -61,7 +61,7 @@ let data = [
 
 const FrontPage = () => (
     <Layout>
-        <ArrangementGrid data={data} title='Populære arrangementer' />
+        <ArrangementGrid data={data} title='Populære arrangementer'/>
     </Layout>
 );
 

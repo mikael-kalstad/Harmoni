@@ -32,11 +32,11 @@ const NavigationBar = (props:any) => (
       </Nav>
 
       {props.isLoggedIn 
-        ? (<>
-          <Button>Reigstrer</Button> 
-          <LoginBtn />
+        ? (<Button>Logg ut</Button>)
+        : (<>
+            <Button>Reigstrer</Button> 
+            <LoginBtn />
           </>)
-        : (<Button>Logg ut</Button>)
       }
       {/* <Form inline>
         <FormControl type="text" placeholder="Search" className="mr-sm-2" />

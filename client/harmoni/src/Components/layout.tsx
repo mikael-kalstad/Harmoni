@@ -3,7 +3,7 @@ import NavigationBar from './Nav/navigationBar';
 
 const Layout = (props: { children: any; }) => (
     <>
-        <NavigationBar />
+        <NavigationBar  isLoggedIn={true} />
         {props.children}
     </>
 );
