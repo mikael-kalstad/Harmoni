@@ -31,7 +31,6 @@ run_tests:
 
 # Publish coverage report on gitlab-pages
 pages:
-  only: master
   stage: deploy
   dependencies:
     - run_tests
@@ -46,3 +45,5 @@ pages:
   artifacts:
     paths:
       - public
+  only: 
+    - master
