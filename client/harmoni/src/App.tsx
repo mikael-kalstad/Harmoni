@@ -26,17 +26,16 @@ const Overlay = styled.div`
 const App: React.FC = () => {
   return (
     <Router>
-       <Overlay id='overlay'/>
-
+      <Overlay id='overlay'/>
+      <Layout>
       <Switch>
-        <Layout>
           <Route exact path='/' component={FrontPage}/>
           <Route exact path='/register' component={Register}/>
           <Route exact path='/profile' component={Profile}/>
-          <Route exact path='/event/:id' component={Event}/>
+          <Route path='/event/:id' component={Event}/>
           <Route component={PageNotFound} />
-        </Layout>
       </Switch>
+      </Layout>
     </Router>
   );
 }
