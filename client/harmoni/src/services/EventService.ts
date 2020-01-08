@@ -18,27 +18,27 @@ export default class EventService extends Service {
     }
 
     getAllEvents(){
-        return axios.get(this.path+'/events').then(response =>response.data);
+        return axios.get(this.path+'/events/').then(response =>response.data);
     }
 
     getEventsByLocation(location: string){
-        return axios.get(this.path+'/events/'+location).then(response =>response.data);
+        return axios.get(this.path+'/events/address/'+location).then(response =>response.data);
     }
 
-    getEventsByStatus(){
-        return axios.get(this.path+'/events').then(respnse=>respnse.data);
+    getEventsByStatus(status: string){
+        return axios.get(this.path+'/events/status/'+status).then(respnse=>respnse.data);
     }
     getEventsByOrganizer(userId:number){
-        return axios.get(this.path+'/events/'+userId).then(response =>response.data);
+        return axios.get(this.path+'/events/organizer/'+userId).then(response =>response.data);
     }
 
     addEvent(event:Event){
-        return axios.post(this.path+'/events/add',event).then(response=>response.data);
+        return axios.post(this.path+'/events/',event).then(response=>response.data);
     }
     updateEvent(event:Event){
         return axios.put(this.path+'/events/'+event.eventId,event).then(response=>response.data);
     }
-    getEventsOfUser(userId:number){
-        return axios.get(this.path+'/events/'+userId).then(response=>response.data);
+    getEventsByUser(userId:number){
+        return axios.get(this.path+'/events/user/'+userId).then(response=>response.data);
     }
 }
