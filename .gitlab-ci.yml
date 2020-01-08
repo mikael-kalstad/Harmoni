@@ -1,0 +1,48 @@
+image: node:8
+
+# Set up MySQL test-database
+services:
+  - mysql:5.7
+
+# Configure test-database
+variables:
+  MYSQL_DATABASE: harmoni
+  MYSQL_ROOT_PASSWORD: humbug
+
+# Install node libraries
+before_script:
+  - cd client/harmoni
+  - npm install
+  - cd ..
+  - cd ..
+  - cd server
+  - npm install
+
+# Run JEST tests
+run_tests:
+  stage: test
+  script:
+    - ls
+    - npm test
+    - ls
+  artifacts:
+    paths:
+      - server/coverage/
+
+# Publish coverage report on gitlab-pages
+pages:
+  only: master
+  stage: deploy
+  dependencies:
+    - run_tests
+  script:
+    - cd ..
+    - mkdir .public
+    - cp -r server/coverage/* .public
+    - mv .public public
+    - mv public/lcov-report/* public/
+    - cd public
+    - ls -l
+  artifacts:
+    paths:
+      - public
