@@ -82,7 +82,7 @@ test("Get events by address", done => {
     dao.getEventsByAddress("Elgseter Gate 1", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data[0].organizer).toBe(3);
+        expect(data[0].organizer).toBe(1);
         expect(data[0].capacity).toBe(300);
         done();
     })
@@ -105,7 +105,7 @@ test("Get events by organizer", done => {
 })
 
 test("Add new event", done => {
-    let event = 
+    let event =
     {
         event_id: -1,
         organizer: 2,
@@ -115,7 +115,7 @@ test("Add new event", done => {
         to_date: "2020-01-07 20:00:00",
         capacity: 10,
         status: "kommende"
-    } 
+    }
     dao.addEvent(event, (status, data) => {
         expect(status).toBe(200);
         expect(data.insertId).toBe(3);
@@ -125,7 +125,7 @@ test("Add new event", done => {
 })
 
 test("Update event", done => {
-    let event = 
+    let event =
     {
         event_id: -1,
         organizer: 2,
@@ -135,20 +135,20 @@ test("Update event", done => {
         to_date: "2020-01-07 20:00:00",
         capacity: 100,
         status: "kommende"
-    } 
+    }
     //Actual change
-    dao.updateEvent(3, event, (status, data) => {;
-        expect(status).toBe(200);
-        expect(data.affectedRows).toBe(1);
-        expect(data.changedRows).toBe(1);
-    })
-
-    //No change
     dao.updateEvent(3, event, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
-        expect(data.changedRows).toBe(0);
-        done();
+        expect(data.changedRows).toBe(1);
+
+        //No change
+        dao.updateEvent(3, event, (status, data) => {
+            expect(status).toBe(200);
+            expect(data.affectedRows).toBe(1);
+            expect(data.changedRows).toBe(0);
+            done();
+        })
     })
 })
 
