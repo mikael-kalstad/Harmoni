@@ -1,7 +1,14 @@
 const daoParentTicket = require('./dao.ts');
 const Ticket = require('./Ticket.ts');
 
-module.exports = class ticketDao extends daoParentTicket {
+export interface ticket {
+    ticketId : number;
+    eventId : number;
+    price : number;
+    type : string;
+}
+
+export default class ticketDao extends daoParentTicket {
     constructor(pool) {
         super(pool);
     }
