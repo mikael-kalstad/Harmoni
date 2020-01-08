@@ -52,7 +52,7 @@ const Title = styled.h3`
 
 const ArrangementCard = (props: any) => (
     <Container>
-        <StyledLink to={'/arrangement/' + props.id}>
+        <StyledLink to={'/event/' + props.id}>
             <Overlay />   
             {props.img !== undefined && <Img src={props.img} />}
             

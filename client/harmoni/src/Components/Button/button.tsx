@@ -24,7 +24,8 @@ const StyledBtn = styled.button<Props>`
 
     :active {
         filter: brightness(90%);
-}
+        outline: none;
+    }
 `;
 
 const Button = (props: any) => {
