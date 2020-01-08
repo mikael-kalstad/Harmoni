@@ -17,7 +17,7 @@ const Icon = styled.img`
     padding-top: 30px;
     display: block;
     margin: 0 auto;
-    height: 32px;
+    width: 32px;
 `;
 
 const Title = styled.h2`
@@ -60,7 +60,6 @@ const Input = styled.input`
     background: #EFEFEF;
     font-size: 18px;
     text-indent: 15px;
-    /* color: #868686; */
 
     :hover {
         filter: brightness(98%);

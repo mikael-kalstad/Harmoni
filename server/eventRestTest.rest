@@ -1,0 +1,53 @@
+
+
+### Get single event
+
+GET http://localhost:15016/api/v0/events/1
+
+
+### Get all events
+GET http://localhost:15016/api/v0/events
+
+
+### Create an event
+POST http://localhost:15016/api/v0/events
+Content-Type: application/json
+
+{
+    "organizer": 1,
+    "name": "Test",
+    "address": "Test Test 32",
+    "from_date": "2020-01-07 15:00:00",
+    "to_date": "2020-01-08 23:00:00",
+    "capacity": 100,
+    "status": "kommende"
+}
+
+### Get events by address
+GET http://localhost:15016/api/v0/events/address/Test%20Test%2032
+
+### Get events by status
+GET http://localhost:15016/api/v0/events/status/kommende
+
+### Get events by organizer
+GET http://localhost:15016/api/v0/events/organizer/2
+
+### Update single event by id
+PUT http://localhost:15016/api/v0/events/3
+Content-Type: application/json
+
+{
+    "organizer": 1,
+    "name": "Test",
+    "address": "Test Test 32",
+    "from_date": "2020-01-07 15:00:00",
+    "to_date": "2020-01-08 23:00:00",
+    "capacity": 200,
+    "status": "kommende"
+}
+
+### Delete single event by id
+DELETE http://localhost:15016/api/v0/events/3
+
+### Get events by user
+GET http://localhost:15016/api/v0/events/user/2

@@ -1,7 +1,18 @@
 const daoParentEvent = require('./dao.ts');
 const EventVar = require('./Event.ts');
 
-module.exports = class eventDao extends daoParentEvent {
+export interface event {
+    event_id: number,
+    organizer: string,
+    name: string,
+    address: string,
+    from_date: string,
+    to_date: string,
+    capacity: number,
+    status: string
+}
+
+export default class eventDao extends daoParentEvent {
     constructor(pool) {
         super(pool);
     }
@@ -14,8 +25,8 @@ module.exports = class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE event_id = ?', [eventId], callback);
     }
 
-    getEventsByLocation(location : string, callback) {
-        super.query('SELECT * FROM event WHERE location = ?', [location], callback);
+    getEventsByAddress(location : string, callback) {
+        super.query('SELECT * FROM event WHERE address = ?', [location], callback);
     }
 
     getEventsByStatus(status : string, callback) {
@@ -27,11 +38,15 @@ module.exports = class eventDao extends daoParentEvent {
     }
 
     addEvent(event, callback) {
-        super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)', [event.name, event.organizer, event.location, event.fromDate, event.toDate, event.capacity, event.status], callback);
+        super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status], callback);
     }
 
-    updateEvent(eventId : number, event, callback){
-        super.query('UPDATE event SET name = ?, organizer = ?, location = ?, fromDate = ?, toDate = ?, capacity = ?, status = ? WHERE event_id = ?', [event.name, event.organizer, event.location, event.fromDate, event.toDate, event.capacity, event.status, eventId], callback);
+    updateEvent(eventId : number, data: event , callback){
+        super.query('UPDATE event SET name = ?, organizer = ?, address = ?, from_date = ?, to_date = ?, capacity = ?, status = ? WHERE event_id = ?',
+            [data.name, data.organizer, data.address, data.from_date, data.to_date, data.capacity, data.status, eventId], callback);
+    }
+    deleteEvent(eventId : number,  callback){
+        super.query('DELETE FROM event WHERE event_id = ?', [eventId], callback);
     }
 
     getEventsOfUser(userId : number, callback) {

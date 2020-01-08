@@ -1,7 +1,18 @@
 const daoParentUser = require("./dao.ts");
 const User = require("./User.ts");
 
-module.exports = class userDao extends daoParentUser{
+export interface user {
+    user_id: number,
+    name: string,
+    mobile: number,
+    email: string,
+    hash: string,
+    salt: string,
+    type: string,
+    picture: string
+}
+
+export default class userDao extends daoParentUser{
     constructor(pool){
         super(pool);
     }
@@ -46,14 +57,16 @@ module.exports = class userDao extends daoParentUser{
         super.query("SELECT user.* FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'", [eventId], callback);
     }
 
-    // Adds a user
-    addUser(user, callback){
-        super.query("INSERT INTO user VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)", [user.name, user.email, user.mobile, user.hash, user.salt, user.type, user.picture], callback);
+    // Adds a user 
+    addUser(data:user, callback){
+        super.query("INSERT INTO user VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)",
+            [data.name, data.email, data.mobile, data.hash, data.salt, data.type, data.picture], callback);
     }
 
-    // Updates a user by its userid
-    updateUser(userId: number, user, callback){
-        super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?", [user.name, user.email, user.mobile, user.hash, user.salt, user.type, user.picture, userId], callback);
+    // Updates a user
+    updateUser(userId: number, data: user, callback){
+        super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?",
+            [data.name, data.email, data.mobile, data.hash, data.salt, data.type, data.picture, userId], callback);
     }
 
     // Deletes a user by its id

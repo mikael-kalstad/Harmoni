@@ -2,10 +2,14 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-// Pages
-import FrontPage from './Components/Pages/FrontPage';
+// Bootstrap styling
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 
-const Overlay = styled.div`
+// Pages
+import FrontPage from './Components/Pages/frontPage';
+import Register from './Components/Pages/register';
+
+const Overlay = styled.div` 
   position: fixed;
   z-index: 9998;
   width: 100vw;
@@ -22,6 +26,7 @@ const App: React.FC = () => {
 
       <Switch>
         <Route exact path='/' component={FrontPage}/>
+        <Route exact path='/register' component={Register}/>
       </Switch>
     </Router>
   );

@@ -12,6 +12,7 @@ server.use(cors());
 
 
 //Our routes
-server.use("api/v0/users", require("./routes/users"));
+server.use("/api/v0/events", require('./routes/events'));
+//server.use("api/v0/users", require("./routes/users"));
 
 server.listen(15016, () => console.log("Server started"));
