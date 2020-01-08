@@ -8,6 +8,7 @@ services:
 variables:
   MYSQL_DATABASE: harmoni
   MYSQL_ROOT_PASSWORD: humbug
+  NODE_ENV: ci
 
 # Install node libraries
 before_script:
@@ -23,7 +24,7 @@ run_tests:
   stage: test
   script:
     - ls
-    - npm test
+    - npm test-ci
     - ls
   artifacts:
     paths:
