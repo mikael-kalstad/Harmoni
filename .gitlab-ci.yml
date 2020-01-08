@@ -8,6 +8,7 @@ services:
 variables:
   MYSQL_DATABASE: harmoni
   MYSQL_ROOT_PASSWORD: humbug
+  NODE_ENV: ci
 
 # Install node libraries
 before_script:
@@ -23,7 +24,7 @@ run_tests:
   stage: test
   script:
     - ls
-    - npm test
+    - npm run test-ci
     - ls
   artifacts:
     paths:
@@ -31,7 +32,6 @@ run_tests:
 
 # Publish coverage report on gitlab-pages
 pages:
-  only: master
   stage: deploy
   dependencies:
     - run_tests
@@ -46,3 +46,5 @@ pages:
   artifacts:
     paths:
       - public
+  only: 
+    - master

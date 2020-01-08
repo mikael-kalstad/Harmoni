@@ -35,6 +35,11 @@ const Text = styled.p`
     margin: 0;
     align-self: end;
     color: black;
+    width: 100px;
+    overflow:hidden; 
+    white-space:nowrap; 
+    text-overflow: ellipsis;    
+
 `;
 
 const UnderText = styled.p`
@@ -59,7 +64,7 @@ const SmallProfileNav = (props: {img: string, name: string}) => (
         <Container>
             <Img src={props.img}/>
             <TextWrapper>
-                <Text>{props.name}</Text>
+                <Text>Rhinna rhinna rhinna rhinna</Text>
                 <UnderText>Min side</UnderText>
             </TextWrapper>
         </Container>

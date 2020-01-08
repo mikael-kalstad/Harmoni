@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from '../Button/button';
 import LoginBtn from '../Button/loginBtn';
-import SmallProfileNav from './smallProfileNav';
+import SmallProfileNav from '../Profile/smallProfileNav';
 
 const StyledLink = styled(props => <Link {...props} />)`
     color: #7f7f7f;

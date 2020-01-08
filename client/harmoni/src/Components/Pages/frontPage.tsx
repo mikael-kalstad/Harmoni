@@ -85,10 +85,10 @@ let data2 = [
 ]
 
 const FrontPage = () => (
-    <Layout>
+    <>
         <HeaderCarousel data={data2} />
         <ArrangementGrid data={data} title='Populære arrangementer'/>
-    </Layout>
+    </>
 );
 //Test
 export default FrontPage;
