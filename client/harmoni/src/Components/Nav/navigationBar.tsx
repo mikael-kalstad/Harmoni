@@ -5,6 +5,10 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from '../Button/button';
 import LoginBtn from '../Button/loginBtn';
 
+const loggedIn = (
+  
+);
+
 const NavigationBar = props => (
     <Navbar bg="light" expand="lg" sticky='top'>
     <Navbar.Brand href="#home">
@@ -32,7 +36,10 @@ const NavigationBar = props => (
       </Nav>
 
       {props.isLoggedIn 
-        ? (<Button>Reigstrer</Button> <LoginBtn />)
+        ? (<>
+          <Button>Reigstrer</Button> 
+          <LoginBtn />
+          </>)
         : (<Button>Logg ut</Button>)
       }
       {/* <Form inline>
