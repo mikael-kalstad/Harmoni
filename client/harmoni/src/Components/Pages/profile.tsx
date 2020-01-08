@@ -49,13 +49,11 @@ const Wrapper = styled.div`
 `
 
 const Profile = (props:any) => (
-    <Layout>
-        <Wrapper>
-            <ProfilePageImage img='/icons/test.jpg' name='Jahn Teigen'/>
-            <ProfileOptions img='/icons/test.jpg' name='Jahn Teigen'/>
-            <ArrangementGrid data={data} title='Populære arrangementer'/>
-        </Wrapper>
-    </Layout>
+    <Wrapper>
+        <ProfilePageImage img='/icons/test.jpg' name='Jahn Teigen'/>
+        <ProfileOptions img='/icons/test.jpg' name='Jahn Teigen'/>
+        <ArrangementGrid data={data} title='Populære arrangementer'/>
+    </Wrapper>
 );
 
 export default Profile;

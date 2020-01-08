@@ -9,7 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FrontPage from './Components/Pages/frontPage';
 import Register from './Components/Pages/register';
 import Profile from './Components/Pages/profile';
+import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
+import Layout from './Components/layout';
 
 const Overlay = styled.div` 
   position: fixed;
@@ -27,10 +29,13 @@ const App: React.FC = () => {
        <Overlay id='overlay'/>
 
       <Switch>
-        <Route exact path='/' component={FrontPage}/>
-        <Route exact path='/register' component={Register}/>
-        <Route exact path='/profile' component={Profile}/>
-        <Route component={PageNotFound} />
+        <Layout>
+          <Route exact path='/' component={FrontPage}/>
+          <Route exact path='/register' component={Register}/>
+          <Route exact path='/profile' component={Profile}/>
+          <Route exact path='/event/:id' component={Event}/>
+          <Route component={PageNotFound} />
+        </Layout>
       </Switch>
     </Router>
   );
