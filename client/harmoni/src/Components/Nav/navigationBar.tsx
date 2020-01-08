@@ -13,8 +13,8 @@ const StyledLink = styled(props => <Link {...props} />)`
     text-decoration: none;
     // line-height: 96px;
 
-    :visited {
-        color: #7f7f7f;
+    :visited { 
+        color: #7f7f7f; 
     }
 
     :hover {
@@ -64,7 +64,8 @@ const NavigationBar = (props:any) => (
                 <Button>Logg ut</Button>
               </>)
             : (<>
-                <Button>Reigstrer</Button> 
+                <StyledLink to='/registrer'>
+                  <Button>Reigstrer</Button></StyledLink>
                 <LoginBtn />
               </>)
           }

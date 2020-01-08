@@ -10,24 +10,14 @@ import FrontPage from './Components/Pages/frontPage';
 import Register from './Components/Pages/register';
 import PageNotFound from './Components/Pages/pageNotFound';
 
-const Overlay = styled.div` 
-  position: fixed;
-  z-index: 9998;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-`;
+
 
 const App: React.FC = () => {
   return (
     <Router>
-       <Overlay id='overlay'/>
-
       <Switch>
         <Route exact path='/' component={FrontPage}/>
-        <Route exact path='/register' component={Register}/>
+        <Route exact path='/registrer' component={Register}/>
         <Route component={PageNotFound} />
       </Switch>
     </Router>
