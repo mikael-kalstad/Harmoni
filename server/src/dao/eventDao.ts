@@ -2,7 +2,7 @@ const daoParentEvent = require('./dao.ts');
 
 export interface event {
     event_id: number,
-    organizer: string,
+    organizer: number,
     name: string,
     address: string,
     from_date: string,
@@ -24,10 +24,6 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE event_id = ?', [eventId], callback);
     }
 
-    getEventsByOrganizer(organizer : string, callback) {
-        super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
-    }
-
     getEventsByAddress(location : string, callback) {
         super.query('SELECT * FROM event WHERE address = ?', [location], callback);
     }
@@ -36,11 +32,11 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE capacity = ?', [capacity], callback);
     }
 
-    getEventsByStatus(status : string, callback) {
-        super.query('SELECT * FROM event WHERE status = ?', [status], callback);
+    getEventsByOrganizer(organizer : number, callback) {
+        super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
     }
 
-    addEvent(event, callback) {
+    addEvent(event : event, callback) {
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status], callback);
     }
 
