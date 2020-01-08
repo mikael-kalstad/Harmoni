@@ -29,8 +29,12 @@ export default class attachmentDao extends daoParentAttachment{
         super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?)", [eventId, userId, data], callback);
     }
 
-    updateAttachmentForUserForEvent(userId: number, eventId: number, data: string, callback){
-        super.query("UPDATE attachment SET data = ? WHERE event_id = ? AND user_id = ?", [data, eventId, userId], callback);
+    updateAttachment(attachment: Attachment, callback){
+        super.query("UPDATE attachment SET data = ? WHERE attachment_id = ?", [attachment.data, attachment.attachmentId], callback);
+    }
+    
+    deleteAttachment(attachmentId: number, callback){
+        super.query("DELETE FROM attachment WHERE attachment_id = ?", [attachmentId], callback);
     }
 
 }
