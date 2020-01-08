@@ -3,7 +3,7 @@ const EventVar = require('./Event.ts');
 
 export interface event {
     event_id: number,
-    organizer: string,
+    organizer: number,
     name: string,
     address: string,
     from_date: string,
@@ -33,11 +33,11 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE status = ?', [status], callback);
     }
 
-    getEventsByOrganizer(organizer : string, callback) {
+    getEventsByOrganizer(organizer : number, callback) {
         super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
     }
 
-    addEvent(event, callback) {
+    addEvent(event : event, callback) {
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status], callback);
     }
 
