@@ -1,6 +1,13 @@
 const daoParentAttachment = require("./dao.ts");
 const Attachment = require("./Attachment.ts");
 
+export interface attachment{
+    attachmentId: number;
+    userId: number;
+    eventId: number;
+    data: File;
+}
+
 export default class attachmentDao extends daoParentAttachment{
     constructor(pool){
         super(pool);

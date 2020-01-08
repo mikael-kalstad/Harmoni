@@ -3,7 +3,6 @@ import eventDao from '../dao/eventDao'
 import { pool } from '../dao/database'
 
 const router = express.Router();
-
 const dao = new eventDao(pool);
 // Routes to interact with events.
 
