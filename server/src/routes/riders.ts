@@ -62,3 +62,5 @@ router.delete("/:id", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+
+module.exports = router;

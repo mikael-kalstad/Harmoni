@@ -40,6 +40,7 @@ router.get("/organizer/:organizer", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+
 // Get all
 router.get("/", async (request, response) => {
     dao.getAllEvents((status, data) => {

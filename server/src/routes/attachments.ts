@@ -7,7 +7,7 @@ const dao = new attachmentDao(pool);
 
 // Routes to interact with attachments.
 
-// Create user
+// Create attachment
 router.post("/", async (request, response) => {
     dao.addAttachmentForUserForEvent(request.body, (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
@@ -48,3 +48,5 @@ router.delete("/:id", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+
+module.exports = router;

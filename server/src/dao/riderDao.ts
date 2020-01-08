@@ -8,6 +8,10 @@ export interface riderList {
     rider_id: number,
     quantity: string
 }
+export interface Rider {
+    riderId : number;
+    text : string;
+}
 
 export default class riderDao extends daoParentRider{
     constructor(pool){
@@ -33,12 +37,6 @@ export default class riderDao extends daoParentRider{
     addRider(rider, callback) {
         super.query('INSERT INTO rider VALUES(DEFAULT, ?)', [rider.text], callback);
     }
-
-    //Test
-    addRiderList2(user_id : number, event_id : number, rider_list, riderId : number, callback){
-        super.query('INSERT INTO rider_list VALUES(DEFAULT, ?, ?, ?, ?) WHERE rider_id = ?', [user_id, event_id, riderId, rider_list.quantity, riderId], callback);
-    }
-
     
     addRiderList(riderList, callback) {
         super.query('INSERT INTO rider_list VALUES(DEFAULT, ?, ?, ?, ?)',[riderList.user_id, riderList.event_id, riderList.rider_id, riderList.quantity] , callback)
