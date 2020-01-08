@@ -113,7 +113,7 @@ test("Get organizer for event", done => {
 })
 
 test("Get artists for event", done => {
-    dao.getArtistsForEvent(2, (status, data) => {
+    dao.getArtistsForEvent(1, (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBeGreaterThanOrEqual(1);
         expect(data[0].name).toBe("Jens Jensen");
@@ -124,7 +124,7 @@ test("Get artists for event", done => {
 test("Get volunteers for event", done => {
     dao.getVolunteersForEvent(1, (status, data) => {
         expect(status).toBe(200);
-        expect(data.length).toBe(0);
+        expect(data.length).toBe(1);
         done();
     })
 })
@@ -174,14 +174,14 @@ test("Update user", done => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
-    })
-    
-    // No change
-    dao.updateUser(5, updatedUser, (status, data) => {
-        expect(status).toBe(200);
-        expect(data.affectedRows).toBe(1);
-        expect(data.changedRows).toBe(0);
-        done();
+
+        // No change
+        dao.updateUser(5, updatedUser, (status, data) => {
+            expect(status).toBe(200);
+            expect(data.affectedRows).toBe(1);
+            expect(data.changedRows).toBe(0);
+            done();
+        })
     })
 })
 

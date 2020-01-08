@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS `harmoni` /*!40100 DEFAULT CHARACTER SET latin1 */
 USE `harmoni`;
 
 DROP TABLE IF EXISTS ticket;
+DROP TABLE IF EXISTS attachment_user;
 DROP TABLE IF EXISTS attachment;
 DROP TABLE IF EXISTS rider_list;
 DROP TABLE IF EXISTS user_event;
@@ -75,6 +76,7 @@ CREATE TABLE IF NOT EXISTS rider_list (
   user_id INT,
   event_id INT,
   rider_id INT,
+quantity INT,
   PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)
@@ -89,8 +91,6 @@ CREATE TABLE IF NOT EXISTS rider_list (
 	ON DELETE SET NULL
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;
- 
- 
 
  
 CREATE TABLE IF NOT EXISTS attachment (
@@ -123,10 +123,43 @@ CREATE TABLE IF NOT EXISTS ticket (
 	ON DELETE CASCADE
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+ DROP TABLE IF EXISTS attachment_user;
+
+CREATE TABLE IF NOT EXISTS attachment_user (
+	attachment_id INT NOT NULL,
+	user_id INT NOT NULL,
+	PRIMARY KEY (attachment_id, user_id),
+		FOREIGN KEY (attachment_id)
+		REFERENCES attachment (attachment_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+		FOREIGN KEY (user_id)
+		REFERENCES user (user_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE)
+	ENGINE = InnoDB;
+
+
+
  
  
  
 
 
 
+ DROP TABLE IF EXISTS attachment_user;
 
+CREATE TABLE IF NOT EXISTS attachment_user (
+	attachment_id INT NOT NULL,
+	user_id INT NOT NULL,
+	PRIMARY KEY (attachment_id, user_id),
+		FOREIGN KEY (attachment_id)
+		REFERENCES attachment (attachment_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+		FOREIGN KEY (user_id)
+		REFERENCES user (user_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE)
+	ENGINE = InnoDB;
