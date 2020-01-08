@@ -7,6 +7,7 @@ const Container = styled.div`
     grid-template-columns: 350px auto;
     padding: 10px;
     background: #F0F0F0;;
+    
     height: 400px;
     :hover {
         filter: brightness(98%);
@@ -15,13 +16,6 @@ const Container = styled.div`
 `;
 
 
-const Img = styled.img`
-    object-fit: cover;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    margin: 20px;
-`;
 
 const TextWrapper = styled.div`
     display: grid;

@@ -42,7 +42,7 @@ let data = [
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    @media screen and (max-width: 700px;){
+    @media only screen and (max-width: 700px;){
         grid-template-columns: 1fr;
     }
 
@@ -57,5 +57,5 @@ const Profile = (props:any) => (
         </Wrapper>
     </Layout>
 );
-//Test
+
 export default Profile;

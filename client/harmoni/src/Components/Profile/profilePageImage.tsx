@@ -8,7 +8,7 @@ const Container = styled.div`
     padding: 10px;
     background: #F0F0F0;;
     height: 400px;
-
+    width: 800px;
     :hover {
         filter: brightness(98%);
     }
