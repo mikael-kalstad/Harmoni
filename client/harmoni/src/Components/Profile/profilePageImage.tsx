@@ -14,7 +14,7 @@ const Container = styled.div`
     }
 `;
 
-
+ 
 const Img = styled.img`
     object-fit: cover;
     width: 300px;
