@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import Login from '../Login';
-import Button from './Button';
-
-
+import Login from '../login';
+import Button from './button';
 
 const LoginBtn = () => {
     const [display, setDisplay] = useState(false);
@@ -13,7 +11,6 @@ const LoginBtn = () => {
         if (overlay !== null)
             overlay.style.display = !display ? 'block' : 'none';
     }
-
 
     return (
         <>

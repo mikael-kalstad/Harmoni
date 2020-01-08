@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 // Pages
-import FrontPage from './Components/Pages/FrontPage';
-import Register from './Components/Pages/Register';
+import FrontPage from './Components/Pages/frontPage';
+import Register from './Components/Pages/register';
 
 const Overlay = styled.div` 
   position: fixed;
