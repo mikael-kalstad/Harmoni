@@ -1,6 +1,13 @@
 const daoParentAttachment = require("./dao.ts");
 const Attachment = require("./Attachment.ts");
 
+export interface attachment{
+    attachmentId: number;
+    userId: number;
+    eventId: number;
+    data: File;
+}
+
 export default class attachmentDao extends daoParentAttachment{
     constructor(pool){
         super(pool);
@@ -14,16 +21,19 @@ export default class attachmentDao extends daoParentAttachment{
         super.query("SELECT * FROM attachment WHERE user_id = ?", [userId], callback);
     }
 
-    getAttachmentsForUserForEvent(eventId: number, userId: number, callback){
+    getAttachmentsForUserForEvent(userId: number, eventId: number, callback){
         super.query("SELECT * FROM attachment WHERE event_id = ? AND user_id = ?", [eventId, userId], callback)
     }
 
-    addAttachmentForUserForEvent(eventId: number, userId: number, data: string, callback){
-        super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?)", [eventId, userId, data], callback);
+    addAttachmentForUserForEvent(data: attachmentDao, callback){
+        super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?)", [data.eventId, data.userId, data.data], callback);
     }
 
-    updateAttachmentForUserForEvent(eventId: number, userId: number, data: string, callback){
-        super.query("UPDATE attachment SET data = ? WHERE event_id = ? AND user_id = ?", [data, eventId, userId], callback);
+    updateAttachment(data: attachmentDao, callback){
+        super.query("UPDATE attachment SET data = ? WHERE attachment_id = ?", [data.data, data.attachmentId], callback);
     }
-
+    
+    deleteAttachment(attachmentId: number, callback){
+        super.query("DELETE FROM attachment WHERE attachment_id = ?", [attachmentId], callback);
+    }
 }

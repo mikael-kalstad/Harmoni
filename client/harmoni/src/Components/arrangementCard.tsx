@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const StyledLink = styled(props => <Link {...props} />)`
-   
+    display: grid;
+    width: fit-content;
+    grid-template-rows: auto 15px auto;
+    grid-gap: 10px;
 
     :hover {
         text-decoration: none;    
@@ -12,29 +15,20 @@ const StyledLink = styled(props => <Link {...props} />)`
 
 const Container = styled.div`
     margin: 20px;
-    display: grid;
     width: fit-content;
-    grid-template-rows: auto 15px auto;
-    grid-gap: 10px;
-    transition: all 200ms ease;
-
-    :hover {
-        /* transform: scale(1.01); */
-
-    }
 `;
 
 const Img = styled.img`
-    width: 300px;
-    height: 170px;
+    width: 350px;
+    height: 210px;
     object-fit: cover;
     border-radius: 10px;
 `;
 
 const Overlay = styled.div`
     position: absolute;
-    width: 300px;
-    height: 170px;
+    width: 350px;
+    height: 210px;
     border-radius: 10px;
     transition: all 150ms ease;
 
@@ -57,15 +51,15 @@ const Title = styled.h3`
 `;
 
 const ArrangementCard = (props: any) => (
-    <StyledLink to={'/arrangement/' + props.id}>
-        <Container>
+    <Container>
+        <StyledLink to={'/arrangement/' + props.id}>
             <Overlay />   
             {props.img !== undefined && <Img src={props.img} />}
             
             <Category>{props.category}</Category>
             <Title>{props.title}</Title>
-        </Container>
-    </StyledLink>
+        </StyledLink>
+    </Container>
 );
 
 export default ArrangementCard;

@@ -3,7 +3,6 @@ import eventDao from '../dao/eventDao'
 import { pool } from '../dao/database'
 
 const router = express.Router();
-
 const dao = new eventDao(pool);
 // Routes to interact with events.
 
@@ -41,6 +40,7 @@ router.get("/organizer/:organizer", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+
 // Get all
 router.get("/", async (request, response) => {
     dao.getAllEvents((status, data) => {
