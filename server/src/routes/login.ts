@@ -1,8 +1,12 @@
+
+
+
 import express from 'express';
-import {pool} from "../dao/database";
+import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
+
 const router = express.Router();
 const dao = new userDao(pool);
 
@@ -12,7 +16,7 @@ let publicKey;
 let privateKey = (publicKey = "superSecret");
 
 function loginOk(mail,password) {
-    return password="123";
+    return password=="123";
 }
 
 router.use(express.static("public"));
@@ -57,10 +61,12 @@ router.get("/token", (req,res)=>{
             res.json({error:"Not authorized"});
         }else{
             newToken = jwt.sign({ brukernavn: req.body.email }, privateKey, {
-                expiresIn: 60  //*30
+                expiresIn: 60*30
             });
             res.json({ jwt: newToken });
         }
     });
 
 });
+
+module.exports = router;
