@@ -16,7 +16,7 @@ export default class TicketService extends Service {
     }
 
     getAllTicketsByEventId(){
-        return axios.get<Ticket[]>(this.path + "/ticket/FYLL INN").then(response => esponse.data);
+        return axios.get<Ticket[]>(this.path + "/ticket/FYLL INN").then(response => response.data);
     }
    
     addTickets(){
