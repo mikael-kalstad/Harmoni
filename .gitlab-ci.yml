@@ -24,7 +24,7 @@ run_tests:
   stage: test
   script:
     - ls
-    - npm test-ci
+    - npm run test-ci
     - ls
   artifacts:
     paths:
