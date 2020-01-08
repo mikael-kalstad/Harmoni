@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --runInBand",
     "dev": "ts-node src/server.ts",
     "start": "ts-node dist/server.js",
     "build": "tsc -p ."
