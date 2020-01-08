@@ -4,47 +4,49 @@ import { Link } from 'react-router-dom';
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 80px auto;
+    grid-template-columns: 350px auto;
     padding: 10px;
     background: #F0F0F0;;
-    width: fit-content;
-
+    height: 400px;
+    width: 800px;
     :hover {
         filter: brightness(98%);
     }
 `;
 
+ 
 const Img = styled.img`
-    width: 50px;
-    height: 50px;
+    object-fit: cover;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
-    margin: 10px;
+    margin: 20px;
 `;
 
 const TextWrapper = styled.div`
     display: grid;
     grid-template-rows: 1fr 1fr;
     margin-left: 10px;
-    margin-right: 30px;
+    margin-right: 10px;
+    margin-bottom: 50px;
 `;
 
 
 const Text = styled.p`
-    font-weight: 500;
-    font-size: 15px;
     margin: 0;
+    font-style: italic;
+    font-size: 30px;
     align-self: end;
-    color: black;
-    width: 100px;
-    overflow:hidden; 
-    white-space:nowrap; 
-    text-overflow: ellipsis;    
-
+    color: #868686;
+    
 `;
 
 const UnderText = styled.p`
-    font-size: 15px;
-    color: #868686;
+    font-weight: 500;
+    font-size: 50px;
+    width: 300px;
+    
+    
 `;
 
 
@@ -59,16 +61,15 @@ const StyledLink = styled(props => <Link {...props} />)`
     }
 `;
 
-const SmallProfileNav = (props: {img: string, name: string}) => (
-    <StyledLink to='/profile'>
-        <Container>
-            <Img src={props.img}/>
-            <TextWrapper>
-                <Text>Rhinna rhinna rhinna rhinna</Text>
-                <UnderText>Min side</UnderText>
+const ProfilePageImage = (props: {img: string, name: string}) => (
+    <Container>
+        <Img src={props.img}/>
+        <TextWrapper>
+                <Text>Artist</Text>
+                <UnderText>RIHANNA  </UnderText>
             </TextWrapper>
-        </Container>
-    </StyledLink>
+    </Container> 
+
 );
 
-export default SmallProfileNav;
+export default ProfilePageImage;

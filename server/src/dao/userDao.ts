@@ -1,5 +1,4 @@
 const daoParentUser = require("./dao.ts");
-const User = require("./User.ts");
 
 export interface user {
     user_id: number,
@@ -59,7 +58,7 @@ export default class userDao extends daoParentUser{
 
     // Adds a user 
     addUser(data:user, callback){
-        super.query("INSERT INTO user VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)",
+        super.query("INSERT INTO user VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)",
             [data.name, data.email, data.mobile, data.hash, data.salt, data.type, data.picture], callback);
     }
 
