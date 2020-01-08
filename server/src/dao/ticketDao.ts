@@ -21,7 +21,7 @@ export default class ticketDao extends daoParentTicket {
         super.query('SELECT * FROM ticket WHERE event_id = ?', [eventId], callback);
     }
 
-    addTicket(ticket, callback) {
+    addTicket(ticket : ticket, callback) {
         super.query('INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?)', [ticket.eventId, ticket.price, ticket.type], callback);
     }
 };

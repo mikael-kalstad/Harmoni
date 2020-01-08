@@ -8,7 +8,7 @@ export interface riderList {
     rider_id: number,
     quantity: string
 }
-export interface Rider {
+export interface rider {
     riderId : number;
     text : string;
 }
@@ -34,15 +34,15 @@ export default class riderDao extends daoParentRider{
         super.query('SELECT * FROM rider WHERE rider_id IN (SELECT rider_id FROM rider_list WHERE (event_id = ? AND user_id = ?))', [eventId, userId], callback);
     }
 
-    addRider(rider, callback) {
+    addRider(rider : rider, callback) {
         super.query('INSERT INTO rider VALUES(DEFAULT, ?)', [rider.text], callback);
     }
     
-    addRiderList(riderList, callback) {
+    addRiderList(riderList : riderList, callback) {
         super.query('INSERT INTO rider_list VALUES(DEFAULT, ?, ?, ?, ?)',[riderList.user_id, riderList.event_id, riderList.rider_id, riderList.quantity] , callback)
     }
 
-    updateRider(riderId: number, rider, callback) {
+    updateRider(riderId: number, rider : rider, callback) {
         super.query('UPDATE rider SET text = ? WHERE riderId = ?', [rider.text], callback);
     }
 
