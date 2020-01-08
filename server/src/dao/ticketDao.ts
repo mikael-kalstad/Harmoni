@@ -13,4 +13,8 @@ module.exports = class ticketDao extends daoParentTicket {
     getTicketsByEventId(eventId : number, callback) {
         super.query('SELECT * FROM ticket WHERE event_id = ?', [eventId], callback);
     }
+
+    addTicket(ticket, callback) {
+        super.query('INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?)', [ticket.eventId, ticket.price, ticket.type], callback);
+    }
 };
