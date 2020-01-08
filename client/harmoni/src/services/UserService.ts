@@ -19,15 +19,15 @@ export default class UserService extends Service {
     }
 
     getUserById(userId: number){
-        return axios.get<User>(this.path + "/user/" + userId).then(response => response.data);
+        return axios.get<User>(this.path + "Fyll inn her" + userId).then(response => response.data);
     }
 
     getUserOfType(type: string){
-        return axios.get<User[]>(this.path + "/user/type/" + type).then(response => response.data);
+        return axios.get<User[]>(this.path + "Fyll inn her" + type).then(response => response.data);
     }
 
     getHashOfUser(userId: number){
-        return axios.get(this.path + "FYLL INN").then(response => response.data);
+        return axios.get(this.path + "Fyll inn her").then(response => response.data);
     }
 
     getOrganizerForEvent(eventId: number){
@@ -39,7 +39,7 @@ export default class UserService extends Service {
     }
 
     updateUser(user: User){
-        return axios.put(this.path + "/user/" + user.userId, user).then(response => response.data);
+        return axios.put(this.path + "/user", user).then(response => response.data);
     }
 
     
