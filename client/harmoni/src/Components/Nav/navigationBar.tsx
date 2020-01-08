@@ -5,11 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from '../Button/button';
 import LoginBtn from '../Button/loginBtn';
 
-const loggedIn = (
-  
-);
-
-const NavigationBar = props => (
+const NavigationBar = (props:any) => (
     <Navbar bg="light" expand="lg" sticky='top'>
     <Navbar.Brand href="#home">
       <img
