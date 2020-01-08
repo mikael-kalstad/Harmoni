@@ -1,5 +1,4 @@
 const daoParentEvent = require('./dao.ts');
-const EventVar = require('./Event.ts');
 
 export interface event {
     event_id: number,
@@ -25,16 +24,20 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE event_id = ?', [eventId], callback);
     }
 
+    getEventsByOrganizer(organizer : string, callback) {
+        super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
+    }
+
     getEventsByAddress(location : string, callback) {
         super.query('SELECT * FROM event WHERE address = ?', [location], callback);
     }
 
-    getEventsByStatus(status : string, callback) {
-        super.query('SELECT * FROM event WHERE status = ?', [status], callback);
+    getEventsByCapacity(capacity : number, callback) {
+        super.query('SELECT * FROM event WHERE capacity = ?', [capacity], callback);
     }
 
-    getEventsByOrganizer(organizer : string, callback) {
-        super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
+    getEventsByStatus(status : string, callback) {
+        super.query('SELECT * FROM event WHERE status = ?', [status], callback);
     }
 
     addEvent(event, callback) {
