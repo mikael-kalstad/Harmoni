@@ -41,7 +41,7 @@ const HeaderCarousel = (props: any) => {
     let items: JSX.Element[] = [];
 
     const card = (a:any) => (
-        <>
+        <div key={a.event_id}>
             <Wrapper>
                 {a.picture &&
                     (<>
@@ -67,12 +67,12 @@ const HeaderCarousel = (props: any) => {
             <Carousel.Caption>
                 <Title dark={a.picture === undefined}>{a.name}</Title>
             </Carousel.Caption>
-        </>
+        </div>
     )
 
     // Lazy load carousel if data is not defined/loaded in props
     items.push(
-        <Carousel.Item>
+        <Carousel.Item key={1876}>
             {card([])}
         </Carousel.Item>
     );
@@ -84,8 +84,8 @@ const HeaderCarousel = (props: any) => {
 
         props.data.forEach((a:any) => {
             items.push(
-                <Carousel.Item>
-                    <Link to={'/event'+a.id}>
+                <Carousel.Item key={a.event_id}>
+                    <Link to={'/event'+a.event_id}>
                         {card(a)}
                     </Link>
                 </Carousel.Item>

@@ -31,6 +31,7 @@ router.post("/",(req,res)=>{
                 });
 
                 //window.localStorage.setItem("x-access-token",token);
+                // res.status()
                 res.json({ jwt: token });
             } else {
                 console.log("Brukernavn & passord IKKE ok");
@@ -87,7 +88,7 @@ router.post("/register",(req,res)=>{
     req.body.salt= data.salt;
 
     dao.addUser(req.body, (status) => {
-        if(status==200){
+        if(status==401){
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
