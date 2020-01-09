@@ -4,7 +4,7 @@ export interface attachment{
     attachment_id: number;
     user_id: number;
     event_id: number;
-    data: File;
+    data: string;
 }
 
 export default class attachmentDao extends daoParentAttachment{

@@ -1,8 +1,4 @@
 const daoParentUser = require("./dao.ts");
-<<<<<<< HEAD
-//const User = require("./users.ts");
-=======
->>>>>>> c6a33906684c40462bdef717a209d6bdc5be24e6
 
 export interface user {
     user_id: number,

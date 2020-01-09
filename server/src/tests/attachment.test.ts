@@ -74,13 +74,28 @@ test("Get all attachments by eventId and userID", done => {
     })
 })
 
+test("Add attachment", done => {
+    let input = 
+    {
+        attachment_id: 3,
+        event_id: 2,
+        user_id: 2,
+        data: "x'23B"
+    }
+    dao.addAttachmentForUserForEvent(input, (status, data) => {
+        expect(status).toBe(200);
+        expect(data.affectedRows).toBe(1);
+        done();
+    })
+})
+
 test("Update attachment", done => {
     let input =
         {
-            attachment_id:-1,
-            event_id: -1,
+            attachment_id: 3,
+            event_id: 2,
             user_id: 2,
-            data: null
+            data: "x'32A"
         }
     //Actual change
     dao.updateAttachment(input, (status, data) => {
@@ -92,7 +107,7 @@ test("Update attachment", done => {
         dao.updateAttachment( input, (status, data) => {
             expect(status).toBe(200);
             expect(data.affectedRows).toBe(1);
-            expect(data.changedRows).toBe(1);
+            expect(data.changedRows).toBe(0);
             done();
         })
     })
