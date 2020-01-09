@@ -29,7 +29,7 @@ const App: React.FC = () => {
   }, []);
 
   const fetchData = async() => {
-    setEventData(await eventService.getAllEvents());
+    // setEventData(await eventService.getAllEvents());
   }
 
   const logOut = () => {
@@ -41,11 +41,11 @@ const App: React.FC = () => {
     <Router>
       <Layout userData={userData} logOut={logOut}>
         <Switch>
-            <Route exact path='/' component={FrontPage} data={eventData}/>
+            <Route exact path='/' component={FrontPage}/>
             <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
-            <Route path='/event/:id' component={Event} data={eventData}/>
-            <Route exact path='/newevent' component={AddEvent} data={eventData}/>
+            <Route path='/event/:id' component={Event} />
+            <Route exact path='/newevent' component={AddEvent}/>
             <Route component={PageNotFound} />
             
         </Switch>
