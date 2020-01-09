@@ -1,42 +1,63 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface Props {
-   solid: boolean;
+/**
+ * --- General button component ---
+ * 
+ * Props that can be passed
+ * 
+ * - backgroundColor (dark blue defuault)
+ * - textColor (white default)
+ * - dropShadow (default off) 
+ * - onClick function 
+ * - All children (normally text) will be rendered inside button
+ */
+
+interface IProps {
+    children: any;
+    backgroundColor?: string;
+    textColor?: string;
+    dropShadow?: boolean;
+    onClick?: Function;
 }
 
-const StyledBtn = styled.button<Props>`
-    width: 100px;
-    height: 40px;
-    background: ${props => props.solid ? 'black' : 'white'};
-    border: ${props => props.solid ? 'none' : '1px solid black'}
-    color: ${props => props.solid ? 'white' : 'black'};;
-    font-size: 14px;
+interface IStyledButton {
+    backgroundColor?: string;
+    textColor?: string;
+    dropShadow?: boolean;
+}
+
+const StyledButton = styled.button<IStyledButton>`
+    display: block;
+    margin: auto;
     outline: none;
-    border-radius: 10px;
+    border: none;
+    height: 50px;
+    width: 100%;
+    background: ${props => props.backgroundColor ? props.backgroundColor : '#2A57AD'};
+    color: ${props => props.textColor ? props.textColor : 'white'};;
+    box-shadow: ${props => props.dropShadow && 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)'};
+    font-size: 16px;
     cursor: pointer;
-    margin: 15px;
 
     :hover {
         filter: brightness(90%);
     }
-
-
+    
     :active {
-        filter: brightness(90%);
-        outline: none;
+        filter: brightness(95%);
     }
 `;
 
-const Button = (props: any) => {
-    return (
-        <StyledBtn 
-            onClick={() => props.onClick !== undefined && props.onClick()}
-            solid={props.solid}
-        >
-            {props.children}
-        </StyledBtn>
-    );
-};
+const Button = (props: IProps) => (
+    <StyledButton 
+        backgroundColor={props.backgroundColor } 
+        textColor={props.textColor}
+        dropShadow={props.dropShadow !== undefined}
+        onClick={() => props.onClick !== undefined && props.onClick()}
+    >
+        {props.children}
+    </StyledButton>
+);
 
 export default Button;

@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import styled from 'styled-components';
+import Button from '../Button/button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const Wrapper = styled.div`
@@ -31,29 +32,6 @@ const Input = styled.input`
 
 const ButtonWrapper = styled.div`
     margin-top: 70px;
-`;
-
-const Button = styled.button`
-    display: block;
-    margin: auto;
-    outline: none;
-    border: none;
-    height: 50px;
-    width: 400px;
-    background: #2A57AD;
-    color: white;
-    font-size: 16px;
-    margin-top: 70px;
-    cursor: pointer;
-
-    :hover {
-        filter: brightness(90%);
-    }
-
-    
-    :active {
-        filter: brightness(95%);
-    }
 `;
 
 const WarningText = styled.p`
@@ -98,7 +76,7 @@ const Register = () => {
             setWarningText('Please fill out all fields');
         else 
             setWarningText('Email or password is wrong');
-        }
+    }
 
     return (
         <>
@@ -147,7 +125,9 @@ const Register = () => {
 
                 <WarningText>{warningText}</WarningText>
 
-                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>REGISTRER</Button>
+                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>
+                    REGISTRER
+                </Button>
             </Wrapper>
         </> 
     );

@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 const StyledLink = styled(props => <Link {...props} />)`
-    display: grid;
     width: fit-content;
-    grid-template-rows: auto 15px auto;
-    grid-gap: 10px;
 
     :hover {
         text-decoration: none;    
@@ -14,6 +12,9 @@ const StyledLink = styled(props => <Link {...props} />)`
 `;
 
 const Container = styled.div`
+    display: grid;
+    grid-template-rows: auto 15px auto;
+    grid-gap: 8px;
     width: fit-content;
 `;
 
@@ -40,6 +41,7 @@ const Category = styled.p`
     font-size: 14px;
     color: #A2A2A2;
     margin-left: 5px;
+    width: 30%;
 `;
 
 const Title = styled.h3`
@@ -47,18 +49,36 @@ const Title = styled.h3`
     font-size: 16px;
     color: black;
     margin-left: 5px;
+    width: 70%;
 `;
 
-const ArrangementCard = (props: any) => (
-    <Container>
-        <StyledLink to={'/event/' + props.id}>
-            <Overlay />   
-            {props.img !== undefined && <Img src={props.img} />}
+const ArrangementCard = (props: any) => {
+    const card = (
+        <Container>
+            {props.img 
+                ? (
+                    <>
+                        <Overlay />   
+                        <Img src={props.img} alt={props.title} />
+                    </>
+                )
+                : <Skeleton width='350px' height='210px' />
+            }
             
-            <Category>{props.category}</Category>
-            <Title>{props.title}</Title>
-        </StyledLink>
-    </Container>
-);
+            <Category>{props.category || <Skeleton />}</Category>
+            <Title>{props.title || <Skeleton />}</Title>
+        </Container>
+    );
+
+    if (props.id) {
+        return (
+            <StyledLink to={'/event/' + props.id}>
+                {card}
+             </StyledLink>
+        )
+    }
+
+    return card;
+}
 
 export default ArrangementCard;
