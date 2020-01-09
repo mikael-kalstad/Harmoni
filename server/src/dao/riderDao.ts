@@ -58,10 +58,10 @@ export default class riderDao extends daoParentRider {
     );
   }
 
-  updateRider(riderId: number, rider: rider, callback) {
+  updateRider(rider: rider, callback) {
     super.query(
       'UPDATE rider SET text = ? WHERE rider_id = ?',
-      [rider.text, riderId],
+      [rider.text, rider.rider_id],
       callback
     );
   }
