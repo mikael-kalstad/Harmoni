@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import TicketBar from '../Event/ticketBar';
+import Button from '../Button/button';
 
 let data = {
   id: 1234,
@@ -60,8 +61,25 @@ const ContentText = styled.p`
   margin-bottom: 50px;
 `;
 
+const TotalSumText = styled.h2`
+  font-weight: bold;
+  margin: 0;
+`;
+
+const TotalSumValueText = styled.label`
+  color: #47bd29;
+`;
+
+const BuyButtonWrapper = styled.div`
+  width: 35%;
+  margin: 20px auto;
+`;
+
 const Event = (props: any) => {
-  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+  const setTotalPrice = (sum: number) => {
+    setPrice(Math.max(price + sum, 0));
+  };
   return (
     <Wrapper>
       <EventImage src="https://i.imgur.com/Glo8oxy.jpg"></EventImage>
@@ -79,8 +97,20 @@ const Event = (props: any) => {
       </ContentText>
       <h3>Billetter</h3>
       {tickets.map(ticket => (
-        <TicketBar name={ticket.name} price={ticket.price} />
+        <TicketBar
+          name={ticket.name}
+          price={ticket.price}
+          addToTotal={setTotalPrice}
+        />
       ))}
+      <TotalSumText>
+        Total sum: <TotalSumValueText>{price + ',-'}</TotalSumValueText>
+      </TotalSumText>
+      <BuyButtonWrapper>
+        <Button backgroundColor={'#47BD29'} dropShadow={true}>
+          Kjøp
+        </Button>
+      </BuyButtonWrapper>
     </Wrapper>
   );
 };

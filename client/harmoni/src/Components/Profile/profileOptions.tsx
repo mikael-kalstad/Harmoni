@@ -4,18 +4,16 @@ import { Link } from 'react-router-dom';
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 350px auto;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    background: #F0F0F0;
     padding: 10px;
-    background: #F0F0F0;;
-    
     height: 400px;
+    overflow: hidden;
     :hover {
         filter: brightness(98%);
     }
     
-`;
-
-
+`;  
 
 const TextWrapper = styled.div`
     display: grid;
@@ -56,9 +54,66 @@ const StyledLink = styled(props => <Link {...props} />)`
     }
 `;
 
+
+
+const ProfileButton = styled.button`
+    
+    background-color: #B0BEC5;
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    border none;
+    padding: 10px 15px 10px;
+    margin: 15px;
+    cursor: pointer;
+    border-radius: 50px;
+    text-align: center;
+    outline: none;   
+    
+    :hover {
+        background-color: black;
+        color: white;
+        text-decoration: none;
+    }
+    
+`
+
+const ProfileLink = styled(props => <Link {...props} />)`
+    display: grid;
+    grid-template-rows: 1fr;
+    text-decoration: none;
+    :hover {
+        text-decoration: none;
+    }
+`;
+
+
+
+
 const ProfileOptions = (props: {img: string, name: string}) => (
     <Container>
-        <p>bytt bilde på profiln :)</p>
+        
+        <ProfileLink to='/event'>
+            <ProfileButton>
+                Opprett arrangement
+            </ProfileButton>
+        </ProfileLink>
+        <ProfileLink to='/password'>
+            <ProfileButton>
+                Endre passord
+            </ProfileButton>
+        </ProfileLink>
+        <ProfileLink to='/register'>
+            <ProfileButton>
+                Endre profil
+            </ProfileButton>
+        </ProfileLink>
+        <ProfileLink to='/home'>
+            <ProfileButton>
+                Endre noe annet nyttig
+            </ProfileButton>
+        </ProfileLink>
+        
     </Container> 
 
 );
