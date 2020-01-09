@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Login from '../login';
-import Button from './button';
+import OutlineButton from './outlineButton';
 
 const LoginBtn = () => {
     const [display, setDisplay] = useState(false);
@@ -11,7 +11,7 @@ const LoginBtn = () => {
 
     return (
         <>
-            <Button onClick={toggleDisplay} solid={true}>Logg inn</Button>
+            <OutlineButton onClick={toggleDisplay} solid={true}>Logg inn</OutlineButton>
 
             {/* Only display login popup if display(state) is true */}
             {display && <Login toggle={toggleDisplay} />}

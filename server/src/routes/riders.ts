@@ -15,7 +15,7 @@ router.post("/", async (request, response) => {
 })
 
 // Add rider list
-router.post("/", async (request, response) => {
+router.post("/riderlist/:user_id&:event_id", async (request, response) => {
     dao.addRiderList(request.body,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
@@ -36,14 +36,14 @@ router.get("/", async (request, response) => {
 })
 
 // Get all riders in event
-router.get("/:event_id", async (request, response) => {
+router.get("/riderlist/:event_id", async (request, response) => {
     dao.getRiderByEventId(parseInt(request.params.event_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });
 })
 
 // Get all riders of user in event 
-router.get("/:event_id&:user_id", async (request, response) => {
+router.get("/riderlist/:user_id&:event_id", async (request, response) => {
     dao.getRiderByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });
@@ -58,6 +58,13 @@ router.put("/:id", async (request, response) => {
 
 // Delete rider given id
 router.delete("/:id", async (request, response) => {
+    dao.deleteRider(parseInt(request.params.id), (status, data) => {
+        status == 500 ? response.status(500) : response.send(data)
+    });
+})
+
+//delete riderlist
+router.delete("/riderlist/:rider_list_id", async (request, response) => {
     dao.deleteRider(parseInt(request.params.id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
