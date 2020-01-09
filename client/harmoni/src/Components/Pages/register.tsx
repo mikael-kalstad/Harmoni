@@ -1,7 +1,6 @@
 import React, { useState} from 'react';
 import styled from 'styled-components';
 import Dropdown from 'react-bootstrap/Dropdown';
-import UploadBtn from '../Button/uploadBtn';
 
 const Wrapper = styled.div`
     margin: 80px auto 0 auto;
