@@ -1,9 +1,8 @@
 const daoParentTicket = require('./dao.ts');
-const Ticket = require('./Ticket.ts');
 
 export interface ticket {
-    ticketId : number;
-    eventId : number;
+    ticket_id : number;
+    event_id : number;
     price : number;
     type : string;
 }
@@ -22,7 +21,7 @@ export default class ticketDao extends daoParentTicket {
     }
 
     addTicket(ticket : ticket, callback) {
-        super.query('INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?)', [ticket.eventId, ticket.price, ticket.type], callback);
+        super.query('INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?)', [ticket.event_id, ticket.price, ticket.type], callback);
     }
 
 
@@ -31,7 +30,7 @@ export default class ticketDao extends daoParentTicket {
     }
     
     deleteAllTicketsForEvent(eventId: number, callback){
-        super.query('DELETE * FROM ticket WHERE event_id = ?', [eventId], callback);
+        super.query('DELETE FROM ticket WHERE event_id = ?', [eventId], callback);
     }
 
 };

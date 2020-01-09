@@ -148,4 +148,18 @@ CREATE TABLE IF NOT EXISTS attachment_user (
 
 
 
+ DROP TABLE IF EXISTS attachment_user;
 
+CREATE TABLE IF NOT EXISTS attachment_user (
+	attachment_id INT NOT NULL,
+	user_id INT NOT NULL,
+	PRIMARY KEY (attachment_id, user_id),
+		FOREIGN KEY (attachment_id)
+		REFERENCES attachment (attachment_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+		FOREIGN KEY (user_id)
+		REFERENCES user (user_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE)
+	ENGINE = InnoDB;
