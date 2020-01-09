@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { eventService } from './services/EventService';
+import { userService } from './services/UserService';
 
 // Bootstrap styling
 import 'bootstrap/dist/css/bootstrap.min.css'; 
@@ -21,7 +21,7 @@ interface IUserData {
 }
 
 const App: React.FC = () => {
-  const [userData, setUserData] = useState<IUserData | undefined>({'email':'test@mail.com', 'name': 'Bård Johansen', 'type':'artist'});
+  const [userData, setUserData] = useState<IUserData | undefined>();
 
   // Get data when component mounts
   useEffect(() => {
@@ -36,10 +36,14 @@ const App: React.FC = () => {
     // TODO: SOMETHING WITH JWT TOKEN?...
     setUserData(undefined);
   }
+
+  const logIn = async(email: string) => {
+    setUserData(await userService.getUserByEMail(email));
+  }
     
   return (
     <Router>
-      <Layout userData={userData} logOut={logOut}>
+      <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
             <Route exact path='/' component={FrontPage}/>
             <Route exact path='/registrer' component={Register}/>

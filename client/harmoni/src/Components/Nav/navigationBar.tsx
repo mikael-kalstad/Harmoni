@@ -62,14 +62,14 @@ const NavigationBar = (props: any) => (
 
           {props.userData  
             ? (<>
-                <SmallProfileNav picture={props.userData.picture} name={props.userData.name}/>
+                <SmallProfileNav picture={props.userData.picture} name={props.userData[0].name}/>
                 {/* TODO: ADD LOG OUT FUNCTIONALITY */}
                 <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
               </>)
             : (<>
                 <StyledLink to='/registrer'>
                   <OutlineButton>Registrer</OutlineButton></StyledLink>
-                <LoginBtn />
+                <LoginBtn logIn={props.logIn} />
               </>)
           }
         </Navbar.Collapse>

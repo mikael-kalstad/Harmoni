@@ -14,9 +14,10 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                localStorage.setItem("x-access-token",response.data.jwt)
+                localStorage.setItem("x-access-token", response.data.jwt)
+                return response;
             } )
-            .catch(error => alert(error));
+            .catch(error => console.log(error));
     }
     updateToken(){
         const headers = {
@@ -48,7 +49,9 @@ export default class LoginService {
         })
             .then(response =>{
                 localStorage.setItem("x-access-token",response.data.jwt)
-            } )
+            })
             .catch(error => alert(error));
     }
 }
+
+export let loginService = new LoginService();

@@ -23,19 +23,26 @@ router.use(express.static("public"));
 router.post("/",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         user = data[0];
-        if (compareHash(user.hash, req.body.password, user.salt)){
-            console.log("Brukernavn & passord ok");
-            let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
-            });
+        if(typeof user != "undefined"){
+            if (compareHash(user.hash, req.body.password, user.salt)){
+                console.log("Brukernavn & passord ok");
+                let token = jwt.sign({ email: req.body.email }, privateKey, {
+                    expiresIn: 60*30
+                });
 
-            //window.localStorage.setItem("x-access-token",token);
-            res.json({ jwt: token });
-        } else {
-            console.log("Brukernavn & passord IKKE ok");
+                //window.localStorage.setItem("x-access-token",token);
+                // res.status()
+                res.json({ jwt: token });
+            } else {
+                console.log("Brukernavn & passord IKKE ok");
+                res.status(401);
+                res.json({ error: "Not authorized" });
+            }
+        }else {
             res.status(401);
-            res.json({ error: "Not authorized" });
+            res.json({error: "brukeren finnes ikke"});
         }
+
     });
 
 });
@@ -81,7 +88,7 @@ router.post("/register",(req,res)=>{
     req.body.salt= data.salt;
 
     dao.addUser(req.body, (status) => {
-        if(status==200){
+        if(status==401){
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
