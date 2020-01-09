@@ -56,3 +56,51 @@ test("Get all attachments by eventId", done => {
         done();
     })
 })
+
+test("Get all attachments by userId", done => {
+    dao.getAttachmentsForUser(2, (status, data) => {
+        expect(status).toBe(200);
+        expect(data[0].attachment_id).toBe(2);
+        done();
+    })
+})
+
+test("Get all attachments by eventId and userID", done => {
+    dao.getAttachmentsForUserForEvent(1,2, (status, data) => {
+        expect(status).toBe(200);
+        expect(data[0].attachment_id).toBe(1);
+        done();
+    })
+})
+
+test("Update attachment", done => {
+    let input =
+        {
+            attachment_id:-1,
+            event_id: -1,
+            user_id: 2,
+            data: null
+        }
+    //Actual change
+    dao.updateAttachment(input, (status, data) => {
+        expect(status).toBe(200);
+        expect(data.affectedRows).toBe(1);
+        expect(data.changedRows).toBe(1);
+
+        //No change
+        dao.updateAttachment( input, (status, data) => {
+            expect(status).toBe(200);
+            expect(data.affectedRows).toBe(1);
+            expect(data.changedRows).toBe(1);
+            done();
+        })
+    })
+})
+
+test("Delete an attachment", done => {
+    dao.deleteAttachment(1, (status, data) => {
+        expect(status).toBe(200);
+        expect(data.affectedRows).toBe(1);
+        done();
+    })
+})
