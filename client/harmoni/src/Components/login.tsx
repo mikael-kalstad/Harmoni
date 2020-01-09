@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 
+const Overlay = styled.div` 
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+`;
+
 const Container = styled.div`
     z-index: 10000;
     position: fixed;
@@ -140,33 +150,36 @@ const Login = (props: { toggle: () => void; }) => {
     }
 
     return (
-        <Container>
-            <Exit src='/icons/cross.svg' onClick={() => props.toggle()} />
-            <Icon src='/icons/icon.svg' />
-            <Title>Harmoni</Title>
+        <>
+            <Overlay onClick={() => props.toggle()}/>
+            <Container>
+                <Exit src='/icons/cross.svg' onClick={() => props.toggle()} />
+                <Icon src='/icons/icon.svg' />
+                <Title>Harmoni</Title>
 
-            <Input 
-                type='email'
-                onChange={e => setEmailInput(e.target.value)}
-                value={emailInput}
-                placeholder='Email eller tlf'
-                onKeyDown={e => checkForEnterKey(e)}
-            />
+                <Input 
+                    type='email'
+                    onChange={e => setEmailInput(e.target.value)}
+                    value={emailInput}
+                    placeholder='Email eller tlf'
+                    onKeyDown={e => checkForEnterKey(e)}
+                />
 
-            <Input
-                type='password'
-                onChange={e => setPasswordInput(e.target.value)}
-                value={passwordInput}
-                placeholder='Passord'
-                onKeyDown={e => checkForEnterKey(e)}
-            />
+                <Input
+                    type='password'
+                    onChange={e => setPasswordInput(e.target.value)}
+                    value={passwordInput}
+                    placeholder='Passord'
+                    onKeyDown={e => checkForEnterKey(e)}
+                />
 
-            <WarningText>{warningText}</WarningText>
-            
-            <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
+                <WarningText>{warningText}</WarningText>
+                
+                <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
 
-            <StyledLink to="/register">Registrer deg</StyledLink>
-        </Container>
+                <StyledLink to="/register">Registrer deg</StyledLink>
+            </Container>
+        </>
     );
 }
 

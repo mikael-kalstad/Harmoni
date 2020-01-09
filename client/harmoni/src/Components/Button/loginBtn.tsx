@@ -4,12 +4,9 @@ import Button from './button';
 
 const LoginBtn = () => {
     const [display, setDisplay] = useState(false);
+    
     const toggleDisplay = () => {
         setDisplay(!display);
-
-        let overlay = document.getElementById('overlay');
-        if (overlay !== null)
-            overlay.style.display = !display ? 'block' : 'none';
     }
 
     return (
