@@ -44,7 +44,7 @@ export default class AttachmentService extends Service{
     addUserForAttachment(attachmentId: number, userId: number){
         return axios.post(this.path + "/attachment_user/"+attachmentId+"&"+userId).then(response => response.data);
     }
-    // Delete user to attachment in attachment_user table in DB
+    // Delete user to attachment in attachment_user table in DB 
     deleteAttachmentforUser(attachmentId: number, userId: number){
         return axios.post(this.path + "/attachment_user/"+attachmentId+"&"+userId).then(response => response.data);
     }
