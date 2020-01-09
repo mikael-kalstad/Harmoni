@@ -64,7 +64,7 @@ router.delete("/:id", async (request, response) => {
 })
 
 //delete riderlist
-router.delete("/riderlist/rider_id", async (request, response) => {
+router.delete("/riderlist/:rider_list_id", async (request, response) => {
     dao.deleteRider(parseInt(request.params.id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
