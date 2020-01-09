@@ -13,8 +13,8 @@ router.use(bodyParser.json());  //to transtalte JSON in the body
 
 let publicKey;
 let privateKey = (publicKey = "superSecret");
-let user;
 
+let user;
 router.use(express.static("public"));
 
 router.post("/",(req,res)=>{
@@ -25,7 +25,7 @@ router.post("/",(req,res)=>{
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
-    
+
             //window.localStorage.setItem("x-access-token",token);
             res.json({ jwt: token });
         } else {
@@ -34,7 +34,7 @@ router.post("/",(req,res)=>{
             res.json({ error: "Not authorized" });
         }
     });
-    
+
 });
 
 router.use("/api", (req, res, next) => {
@@ -54,7 +54,7 @@ router.use("/api", (req, res, next) => {
 router.get("/token", (req,res)=>{
     let newToken="";
     var token=req.headers["x-access-token"];
-    console.log("You got the following Token: =>  "+token);
+    console.log("You have the following Token: =>  "+token);
     jwt.verify(token,publicKey,(err)=>{
         if(err){
             console.log("Token has expired");
