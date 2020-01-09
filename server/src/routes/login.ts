@@ -15,32 +15,26 @@ let publicKey;
 let privateKey = (publicKey = "superSecret");
 let user;
 
-function loginOk(mail,password) {
-    console.log(user.name);
-   
-    return compareHash(user.hash, password, user.salt);
-}
-
 router.use(express.static("public"));
 
-router.post("/login",(req,res)=>{
+router.post("/",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         user = data[0];
-        console.log(user.name);
+        if (compareHash(user.hash, req.body.password, user.salt)){
+            console.log("Brukernavn & passord ok");
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 60*30
+            });
+    
+            //window.localStorage.setItem("x-access-token",token);
+            res.json({ jwt: token });
+        } else {
+            console.log("Brukernavn & passord IKKE ok");
+            res.status(401);
+            res.json({ error: "Not authorized" });
+        }
     });
-    if (loginOk(req.body.email, req.body.password)){
-        console.log("Brukernavn & passord ok");
-        let token = jwt.sign({ email: req.body.email }, privateKey, {
-            expiresIn: 60
-        });
-
-        //window.localStorage.setItem("x-access-token",token);
-        res.json({ jwt: token });
-    } else {
-        console.log("Brukernavn & passord IKKE ok");
-        res.status(401);
-        res.json({ error: "Not authorized" });
-    }
+    
 });
 
 router.use("/api", (req, res, next) => {
