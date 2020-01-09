@@ -7,8 +7,9 @@ const Container = styled.div`
     grid-template-columns: 350px auto;
     padding: 10px;
     background: #F0F0F0;;
-    height: 400px;
-    width: 800px;
+    height: 400px;  
+    overflow: hidden;
+    
     :hover {
         filter: brightness(98%);
     }
@@ -66,7 +67,7 @@ const ProfilePageImage = (props: {img: string, name: string}) => (
         <Img src={props.img}/>
         <TextWrapper>
                 <Text>Artist</Text>
-                <UnderText>RIHANNA  </UnderText>
+                <UnderText>RIHANNA</UnderText>
             </TextWrapper>
     </Container> 
 

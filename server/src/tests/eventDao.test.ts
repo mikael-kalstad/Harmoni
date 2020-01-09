@@ -107,14 +107,17 @@ test("Get events by organizer", done => {
 test("Add new event", done => {
     let event =
     {
-        event_id: -1,
+        event_id: 3,
         organizer: 2,
         name: "Awesome konsert!",
         address: "Fantasiveien 3",
         from_date: "2020-01-07 15:00:00",
         to_date: "2020-01-07 20:00:00",
         capacity: 10,
-        status: "kommende"
+        status: "kommende",
+        information: "Veldig bra konsert",
+        category: "concert",
+        picture: "x'12B"
     }
     dao.addEvent(event, (status, data) => {
         expect(status).toBe(200);
@@ -127,14 +130,17 @@ test("Add new event", done => {
 test("Update event", done => {
     let event =
     {
-        event_id: -1,
+        event_id: 3,
         organizer: 2,
         name: "Awesome konsert!",
         address: "Fantasiveien 3",
         from_date: "2020-01-07 15:00:00",
         to_date: "2020-01-07 20:00:00",
         capacity: 100,
-        status: "kommende"
+        status: "kommende",
+        information: "Veldig bra konsert",
+        category: "concert",
+        picture: "x'12B"
     }
     //Actual change
     dao.updateEvent(3, event, (status, data) => {

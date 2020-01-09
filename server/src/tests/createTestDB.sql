@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS `harmoni` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `harmoni`;
-
 DROP TABLE IF EXISTS ticket;
 DROP TABLE IF EXISTS attachment_user;
 DROP TABLE IF EXISTS attachment;
@@ -35,6 +32,9 @@ CREATE TABLE IF NOT EXISTS event (
   to_date DATETIME NOT NULL,
   capacity INT NOT NULL,
   status VARCHAR(45) NOT NULL,
+information TEXT NOT NULL,
+category VARCHAR(45) NOT NULL,
+picture LONGBLOB NOT NULL,
   PRIMARY KEY (event_id),
 	FOREIGN KEY (organizer)
 	REFERENCES user (user_id)
@@ -140,26 +140,3 @@ CREATE TABLE IF NOT EXISTS attachment_user (
 		ON UPDATE CASCADE)
 	ENGINE = InnoDB;
 
-
-
- 
- 
- 
-
-
-
- DROP TABLE IF EXISTS attachment_user;
-
-CREATE TABLE IF NOT EXISTS attachment_user (
-	attachment_id INT NOT NULL,
-	user_id INT NOT NULL,
-	PRIMARY KEY (attachment_id, user_id),
-		FOREIGN KEY (attachment_id)
-		REFERENCES attachment (attachment_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-		FOREIGN KEY (user_id)
-		REFERENCES user (user_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE)
-	ENGINE = InnoDB;

@@ -31,29 +31,25 @@ let data = [
         'title': 'Kurt Nilsen synger låter',
         'img': '/icons/test.jpg'
     },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    }
 ]
 
 const Wrapper = styled.div`
+    // overflow: hidden;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    @media only screen and (max-width: 700px;){
+    @media screen and (max-width: 1000px){
         grid-template-columns: 1fr;
     }
-
 `
 
 const Profile = (props:any) => (
+    <>
     <Wrapper>
         <ProfilePageImage img='/icons/test.jpg' name='Jahn Teigen'/>
         <ProfileOptions img='/icons/test.jpg' name='Jahn Teigen'/>
-        <ArrangementGrid data={data} title='Populære arrangementer'/>
     </Wrapper>
+    <ArrangementGrid data={data} title='Mine arrangementer'/>
+    </>
 );
 
 export default Profile;

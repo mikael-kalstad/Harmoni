@@ -1,15 +1,13 @@
-
-
-
-import express, {response} from 'express';
+import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
+import { compareHash } from "../hashing";
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
 
+
 const router = express.Router();
 const dao = new userDao(pool);
-import {compareHash} from "../hashing";
 
 router.use(bodyParser.json());  //to transtalte JSON in the body
 
@@ -19,16 +17,15 @@ let privateKey = (publicKey = "superSecret");
 let user;
 router.use(express.static("public"));
 
-
-
 router.post("/",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         user = data[0];
-        if (compareHash(user.hash,req.body.password,user.salt)){
+        if (compareHash(user.hash, req.body.password, user.salt)){
             console.log("Brukernavn & passord ok");
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
+
             //window.localStorage.setItem("x-access-token",token);
             res.json({ jwt: token });
         } else {
@@ -37,6 +34,7 @@ router.post("/",(req,res)=>{
             res.json({ error: "Not authorized" });
         }
     });
+
 });
 
 router.use("/api", (req, res, next) => {
@@ -53,7 +51,7 @@ router.use("/api", (req, res, next) => {
         }
     });
 });
-router.get("/", (req,res)=>{
+router.get("/token", (req,res)=>{
     let newToken="";
     var token=req.headers["x-access-token"];
     console.log("You have the following Token: =>  "+token);
