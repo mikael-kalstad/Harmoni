@@ -1,6 +1,6 @@
 import express from 'express';
-import ticketDAO from '../dao/ticketDao';
-import { pool } from '../dao/database';
+import ticketDAO from '../dao/ticketDao'
+import { pool } from '../dao/database'
 
 const router = express.Router();
 const dao = new ticketDAO(pool);
