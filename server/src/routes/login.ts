@@ -1,11 +1,10 @@
-
-
-
 import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
+import { compareHash } from "../hashing";
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
+
 
 const router = express.Router();
 const dao = new userDao(pool);
@@ -14,26 +13,28 @@ router.use(bodyParser.json());  //to transtalte JSON in the body
 
 let publicKey;
 let privateKey = (publicKey = "superSecret");
-
-function loginOk(mail,password) {
-    return password=="123";
-}
+let user;
 
 router.use(express.static("public"));
 
-router.post("/login",(req,res)=>{
-    if (loginOk(req.body.email, req.body.password)){
-        console.log("Brukernavn & passord ok");
-        let token = jwt.sign({ email: req.body.email }, privateKey, {
-            expiresIn: 60
-        });
-        //window.localStorage.setItem("x-access-token",token);
-        res.json({ jwt: token });
-    } else {
-        console.log("Brukernavn & passord IKKE ok");
-        res.status(401);
-        res.json({ error: "Not authorized" });
-    }
+router.post("/",(req,res)=>{
+    dao.getUserByEMail(req.body.email, (status,data) => {
+        user = data[0];
+        if (compareHash(user.hash, req.body.password, user.salt)){
+            console.log("Brukernavn & passord ok");
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 60*30
+            });
+    
+            //window.localStorage.setItem("x-access-token",token);
+            res.json({ jwt: token });
+        } else {
+            console.log("Brukernavn & passord IKKE ok");
+            res.status(401);
+            res.json({ error: "Not authorized" });
+        }
+    });
+    
 });
 
 router.use("/api", (req, res, next) => {
