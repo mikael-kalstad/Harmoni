@@ -32,6 +32,7 @@ const QuantityText = styled.p`
 interface TicketProps {
   name: string;
   price: number;
+  addToTotal: Function;
 }
 
 const TicketBar = (props: TicketProps) => {
@@ -39,6 +40,7 @@ const TicketBar = (props: TicketProps) => {
 
   const addToQuantity = (num: number) => {
     setQuantity(Math.max(quantity + num, 0));
+    props.addToTotal(props.price);
   };
   return (
     <Bar>
