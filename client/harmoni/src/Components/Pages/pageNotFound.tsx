@@ -17,15 +17,12 @@ const Wrapper = styled.div`
 
 const Title = styled.h2`
     font-size: 130px;
-    color: var(--color-border);
     font-weight: 900;
-    /* -webkit-text-stroke: 1px var(--color-main); */
     margin: 0;
 `;
 
 const UnderTitle = styled.h3`
     font-size: 30px;
-    color: var(--color-main);
     font-weight: 600;
     margin-bottom: 20px;
 `;
@@ -59,12 +56,11 @@ const PageNotFound = () => (
     <Container>
         <Wrapper>
             <Title>404</Title>
-            <UnderTitle>Page not found</UnderTitle>
-            <Text>The page you are looking for does not exist. Click the button to back to home</Text>
-
+            <UnderTitle>Side ikke funnet</UnderTitle>
+            <Text>Denne siden finnes ikke. Sjekk URL eller prøv å søke på siden du ønsker å finne. Klikk på knappen under for å gå tilbake</Text>
 
             <Link to='/'>
-                <Button>Go Back</Button>
+                <Button>Gå tilbake</Button>
             </Link>
         </Wrapper>
     </Container>

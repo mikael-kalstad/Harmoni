@@ -14,7 +14,6 @@ const StyledLink = styled(props => <Link {...props} />)`
 `;
 
 const Container = styled.div`
-    margin: 20px;
     width: fit-content;
 `;
 

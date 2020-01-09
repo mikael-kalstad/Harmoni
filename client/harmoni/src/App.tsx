@@ -19,7 +19,7 @@ const App: React.FC = () => {
       <Layout>
         <Switch>
             <Route exact path='/' component={FrontPage}/>
-            <Route exact path='/register' component={Register}/>
+            <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
             <Route path='/event/:id' component={Event}/>
             <Route component={PageNotFound} />

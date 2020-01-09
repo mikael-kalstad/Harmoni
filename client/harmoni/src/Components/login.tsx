@@ -177,7 +177,7 @@ const Login = (props: { toggle: () => void; }) => {
                 
                 <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
 
-                <StyledLink to="/register">Registrer deg</StyledLink>
+                <StyledLink to="/registrer" onClick={() => props.toggle()}>Registrer deg</StyledLink>
             </Container>
         </>
     );
