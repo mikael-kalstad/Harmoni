@@ -11,7 +11,7 @@ interface Ticket{
 export default class TicketService extends Service {
 
     getAllTickets(){
-        return axios.get<Ticket[]>(this.path + "/tickets").then(response => response.data);
+        return axios.get<Ticket[]>(this.path + "/tickets/").then(response => response.data);
     }
 
     getAllTicketsByEventId(eventId: number){
@@ -19,7 +19,7 @@ export default class TicketService extends Service {
     }
    
     addTickets(){
-        return axios.post(this.path + "/tickets").then(response => response.data);
+        return axios.post(this.path + "/tickets/").then(response => response.data);
     }
     deleteTicket(ticketId: number){
         return axios.delete(this.path + "/tickets/" + ticketId).then(response => response.data);

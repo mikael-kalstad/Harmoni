@@ -41,4 +41,7 @@ export default class EventService extends Service {
     getEventsByUser(userId:number){
         return axios.get(this.path+'/events/user/'+userId).then(response=>response.data);
     }
+    deleteEventById(eventId: number){
+        return axios.delete(this.path + '/events/'+eventId).then(response=>response.data);
+    }
 }

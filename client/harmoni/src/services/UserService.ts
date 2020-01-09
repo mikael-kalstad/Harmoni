@@ -16,7 +16,7 @@ export default class UserService extends Service {
 
     // Fetches all users
     getAllUsers(){
-        return axios.get<User[]>(this.path + "/users").then(response => response.data);
+        return axios.get<User[]>(this.path + "/users/").then(response => response.data);
     }
 
     // Fetches one user by its id
@@ -43,10 +43,18 @@ export default class UserService extends Service {
     getOrganizerForEvent(eventId: number){
         return axios.get(this.path + "/users/organizer/" + eventId).then(response => response.data);
     }
+    //Fetches all artists for an event
+    getArtistsForEvent(eventId: number){
+        return axios.get(this.path  + '/users/artists'+ eventId).then(response => response.data);
+    }
+    //Fetches all volunteers for an event
+    getVolunteersForEvent(eventId: number){
+        return axios.get(this.path  + '/users/volunteers'+ eventId).then(response => response.data);
+    }
 
     // Adds a user
     addUser(user: User){
-        return axios.post(this.path + "/users", user).then(response => response.data);
+        return axios.post(this.path + "/users/", user).then(response => response.data);
     }
 
     // Updates a user
