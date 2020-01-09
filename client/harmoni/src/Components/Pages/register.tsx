@@ -30,10 +30,6 @@ const Input = styled.input`
   }
 `;
 
-const ButtonWrapper = styled.div`
-  margin-top: 70px;
-`;
-
 const WarningText = styled.p`
   color: #e57652;
   font-size: 16px;
