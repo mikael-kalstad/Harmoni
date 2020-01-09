@@ -49,7 +49,7 @@ function getStepContent(step: number) {
     }
 }
 
-export default function addEvent() {
+export default function AddEvent() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set<number>());
