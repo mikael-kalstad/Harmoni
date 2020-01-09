@@ -140,6 +140,7 @@ const Register = () => {
         />
 
         <WarningText>{warningText}</WarningText>
+
         <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>
           REGISTRER
         </Button>
