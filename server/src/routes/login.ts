@@ -23,6 +23,10 @@ router.use(express.static("public"));
 router.post("/",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         user = data[0];
+        if(user==undefined){
+            res.status(401);
+            res.json({ error: "brukeren finnes ikke" });
+        }
         if (compareHash(user.hash, req.body.password, user.salt)){
             console.log("Brukernavn & passord ok");
             let token = jwt.sign({ email: req.body.email }, privateKey, {
