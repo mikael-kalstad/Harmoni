@@ -5,6 +5,7 @@ import ArrangementCard from './arrangementCard';
 const Container = styled.div`
     width: 80%;
     margin: auto;
+    margin-bottom: 100px;
 `
 
 const Grid = styled.div`
@@ -33,9 +34,10 @@ const arrangementGrid = (props:any) => {
         cards = [];
 
         props.data.forEach((a:any) => {
+            console.log(a);
             cards.push(
                 <ArrangementCard
-                    id={a.id}
+                    id={a.event_id}
                     category={a.category}
                     title={a.name}
                     img={a.picture}

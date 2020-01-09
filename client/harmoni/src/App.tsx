@@ -14,9 +14,14 @@ import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
 import AddEvent from './Components/AddEvent/addEvent';
 
+interface IUserData {
+  name: string;
+  email: string;
+  type: string;
+}
+
 const App: React.FC = () => {
-  const [userData, setUserData] = useState(undefined);
-  const [eventData, setEventData] = useState(undefined);
+  const [userData, setUserData] = useState<IUserData | undefined>({'email':'test@mail.com', 'name': 'Bård Johansen', 'type':'artist'});
 
   // Get data when component mounts
   useEffect(() => {
@@ -24,18 +29,23 @@ const App: React.FC = () => {
   }, []);
 
   const fetchData = async() => {
-    setEventData(await eventService.getAllEvents());
+    // setEventData(await eventService.getAllEvents());
   }
 
+  const logOut = () => {
+    // TODO: SOMETHING WITH JWT TOKEN?...
+    setUserData(undefined);
+  }
+    
   return (
     <Router>
-      <Layout>
+      <Layout userData={userData} logOut={logOut}>
         <Switch>
-            <Route exact path='/' component={FrontPage} data={eventData}/>
+            <Route exact path='/' component={FrontPage}/>
             <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
-            <Route path='/event/:id' component={Event} data={eventData}/>
-            <Route exact path='/newevent' component={AddEvent} data={eventData}/>
+            <Route path='/event/:id' component={Event} />
+            <Route exact path='/newevent' component={AddEvent}/>
             <Route component={PageNotFound} />
             
         </Switch>
