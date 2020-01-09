@@ -12,8 +12,6 @@ const Grid = styled.div`
     display: grid; 
     grid-template-columns: repeat(auto-fill, 350px);
     grid-gap: 30px 50px;
-    /* justify-content: center;  */
-    /* justify-items: center; */
 `;
 
 const Title = styled.h2`
@@ -25,16 +23,26 @@ const Title = styled.h2`
 const arrangementGrid = (props:any) => {
     let cards: JSX.Element[] = [];
 
-    props.data.forEach((a:any) => {
+    for (let i = 0; i < 8; i++) {
         cards.push(
-            <ArrangementCard
-                id={a.id}
-                category={a.category}
-                title={a.title}
-                img={a.img}
-            />
-        );
-    });
+            <ArrangementCard />
+        )
+    }
+
+    if (props.data) {
+        cards = [];
+
+        props.data.forEach((a:any) => {
+            cards.push(
+                <ArrangementCard
+                    id={a.id}
+                    category={a.category}
+                    title={a.name}
+                    img={a.picture}
+                />
+            );
+        });
+    }
 
     return (
         <Container>

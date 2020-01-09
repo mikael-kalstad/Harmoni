@@ -52,18 +52,27 @@ const Title = styled.h3`
     width: 70%;
 `;
 
+const Wrapper = styled.div`
+    width: 350px;
+    height: 210px;
+    background: #EFEFEF;
+    border-radius: 10px;
+`;
+
 const ArrangementCard = (props: any) => {
     const card = (
         <Container>
-            {props.img 
-                ? (
-                    <>
-                        <Overlay />   
-                        <Img src={props.img} alt={props.title} />
-                    </>
-                )
-                : <Skeleton width='350px' height='210px' />
-            }
+            <Wrapper>
+                {props.img 
+                    ? (
+                        <>
+                            <Overlay />   
+                            <Img src={props.img} alt={props.title} />
+                        </>
+                    )
+                    : <Skeleton width='350px' height='210px' />
+                }
+            </Wrapper>
             
             <Category>{props.category || <Skeleton />}</Category>
             <Title>{props.title || <Skeleton />}</Title>
