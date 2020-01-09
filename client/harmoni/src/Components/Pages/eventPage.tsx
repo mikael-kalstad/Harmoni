@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+import { eventService } from '../../services/EventService';
 
 import TicketBar from '../Event/ticketBar';
 import Button from '../Button/button';
@@ -77,8 +79,16 @@ const BuyButtonWrapper = styled.div`
 
 const Event = (props: any) => {
   const [price, setPrice] = useState(0);
+  const [eventData, setEventData] = useState(undefined);
+  useEffect(() => {
+    fetchEvent();
+  }, []);
   const setTotalPrice = (sum: number) => {
     setPrice(Math.max(price + sum, 0));
+  };
+
+  const fetchEvent = async () => {
+    setEventData(await eventService.getEventById(props.match.params.id));
   };
   return (
     <Wrapper>
