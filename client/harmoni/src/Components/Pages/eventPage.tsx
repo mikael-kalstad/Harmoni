@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import TicketBar from '../Event/TicketBar';
+import TicketBar from '../Event/ticketBar';
 
 let data = {
   id: 1234,
@@ -57,6 +57,7 @@ const ContentText = styled.p`
   font-size: 20px;
   width: 50vw;
   color: #535353;
+  margin-bottom: 50px;
 `;
 
 const Event = (props: any) => {
