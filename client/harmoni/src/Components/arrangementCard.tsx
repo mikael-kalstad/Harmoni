@@ -42,6 +42,10 @@ const Category = styled.p`
     color: #A2A2A2;
     margin-left: 5px;
     width: 30%;
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 `;
 
 const Title = styled.h3`
@@ -50,6 +54,10 @@ const Title = styled.h3`
     color: black;
     margin-left: 5px;
     width: 70%;
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 `;
 
 const Wrapper = styled.div`

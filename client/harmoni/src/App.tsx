@@ -13,8 +13,14 @@ import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
 
+interface IUserData {
+  name: string;
+  email: string;
+  type: string;
+}
+
 const App: React.FC = () => {
-  const [userData, setUserData] = useState(undefined);
+  const [userData, setUserData] = useState<IUserData | undefined>({'email':'test@mail.com', 'name': 'Bård Johansen', 'type':'artist'});
 
   // Get data when component mounts
   useEffect(() => {
@@ -24,10 +30,15 @@ const App: React.FC = () => {
   const fetchData = async() => {
     // TODO: FETCH!
   }
+
+  const logOut = () => {
+    // TODO: SOMETHING WITH JWT TOKEN?...
+    setUserData(undefined);
+  }
     
   return (
     <Router>
-      <Layout>
+      <Layout userData={userData} logOut={logOut}>
         <Switch>
             <Route exact path='/' component={FrontPage} />
             <Route exact path='/registrer' component={Register}/>
