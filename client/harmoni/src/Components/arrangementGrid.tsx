@@ -3,22 +3,23 @@ import styled from 'styled-components';
 import ArrangementCard from './arrangementCard';
 
 const Container = styled.div`
-    margin: 40px;
+    width: 80%;
+    margin: auto;
 `
 
 const Grid = styled.div`
     max-width: 100vw;
     display: grid; 
     grid-template-columns: repeat(auto-fill, 350px);
-    grid-gap: 30px;
-    justify-content: center; 
-    justify-items: center;
+    grid-gap: 30px 50px;
+    /* justify-content: center;  */
+    /* justify-items: center; */
 `;
 
 const Title = styled.h2`
     font-weight: 500;
     font-size: 36px;
-    margin: 80px 0 70px 70px;
+    margin: 70px 20px;
 `;
 
 const arrangementGrid = (props:any) => {

@@ -1,62 +1,44 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import Button from '../Button/button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const Wrapper = styled.div`
-    margin: 80px auto 0 auto;
-    width: 400px;
+  margin: 80px auto 0 auto;
+  width: 400px;
 `;
 
 const Title = styled.h2`
-    font-size: 48px;
-    font-weight: 500;
-    text-align: center; 
-    margin: 50px;
+  font-size: 48px;
+  font-weight: 500;
+  text-align: center;
+  margin: 50px;
 `;
 
 const Input = styled.input`
-    display: block;
-    margin: 25px auto;
-    width: 400px;
-    height: 55px;
-    border: none;
-    background: #EFEFEF;
-    font-size: 18px;
-    text-indent: 15px;
+  display: block;
+  margin: 25px auto;
+  width: 400px;
+  height: 55px;
+  border: none;
+  background: #efefef;
+  font-size: 18px;
+  text-indent: 15px;
 
-    :hover {
-        filter: brightness(98%);
-    }
+  :hover {
+    filter: brightness(98%);
+  }
 `;
 
-const Button = styled.button`
-    display: block;
-    margin: auto;
-    outline: none;
-    border: none;
-    height: 50px;
-    width: 400px;
-    background: #2A57AD;
-    color: white;
-    font-size: 16px;
-    margin-top: 70px;
-    cursor: pointer;
-
-    :hover {
-        filter: brightness(90%);
-    }
-
-    
-    :active {
-        filter: brightness(95%);
-    }
+const ButtonWrapper = styled.div`
+  margin-top: 70px;
 `;
 
 const WarningText = styled.p`
-    color: #E57652;
-    font-size: 16px;
-    font-weight: 500;
-    text-align: center;
+  color: #e57652;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
 `;
 
 const Register = () => {
@@ -94,7 +76,7 @@ const Register = () => {
             setWarningText('Please fill out all fields');
         else 
             setWarningText('Email or password is wrong');
-        }
+    }
 
     return (
         <>
@@ -143,7 +125,9 @@ const Register = () => {
 
                 <WarningText>{warningText}</WarningText>
 
-                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>REGISTRER</Button>
+                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>
+                    REGISTRER
+                </Button>
             </Wrapper>
         </> 
     );

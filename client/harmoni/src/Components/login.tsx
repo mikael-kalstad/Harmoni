@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
+import Button from './Button/button';
+
+const Overlay = styled.div` 
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+`;
 
 const Container = styled.div`
     z-index: 10000;
@@ -11,6 +22,11 @@ const Container = styled.div`
     height: 491px;
     border-radius: 5px;
     background: white;
+`;
+
+const Wrapper = styled.div`
+    width: 70%;
+    margin: auto;
 `;
 
 const Icon = styled.img`
@@ -28,33 +44,10 @@ const Title = styled.h2`
     margin-top: 0;
 `;
 
-const Button = styled.button`
-    display: block;
-    margin: auto;
-    outline: none;
-    border: none;
-    height: 50px;
-    width: 70%;
-    background: #2A57AD;
-    color: white;
-    font-size: 16px;
-    margin-top: 50px;
-    cursor: pointer;
-
-    :hover {
-        filter: brightness(90%);
-    }
-
-    
-    :active {
-        filter: brightness(95%);
-    }
-`;
-
 const Input = styled.input`
     display: block;
-    margin: 25px auto;
-    width: 70%;
+    margin: 25px 0;
+    width: 100%;
     height: 50px;
     border: none;
     background: #EFEFEF;
@@ -91,8 +84,7 @@ const Exit = styled.img`
 `;
 
 const WarningText = styled.p`
-    position: absolute;
-    margin: auto;
+    margin: 10px auto;
     left: 0; right: 0;
     color: #E57652;
     bottom: 180px;
@@ -113,11 +105,11 @@ const Login = (props: { toggle: () => void; }) => {
         
         // Check if inputs are empty
         if (username === '' || password === '')
-            setWarningText('Please fill out all fields');
+            setWarningText('Ett eller flere felter er tom');
         else if (username === 'hello' && password === '123')
             setRedirect(true);
         else 
-            setWarningText('Email or password is wrong');
+            setWarningText('Email eller passord er feil, prøv igjen');
     }
 
     // Check if enter key is clicked
@@ -140,33 +132,38 @@ const Login = (props: { toggle: () => void; }) => {
     }
 
     return (
-        <Container>
-            <Exit src='/icons/cross.svg' onClick={() => props.toggle()} />
-            <Icon src='/icons/icon.svg' />
-            <Title>Harmoni</Title>
+        <>
+            <Overlay onClick={() => props.toggle()}/>
+            <Container>
+                <Exit src='/icons/cross.svg' onClick={() => props.toggle()} />
+                <Icon src='/icons/icon.svg' />
+                <Title>Harmoni</Title>
 
-            <Input 
-                type='email'
-                onChange={e => setEmailInput(e.target.value)}
-                value={emailInput}
-                placeholder='Email eller tlf'
-                onKeyDown={e => checkForEnterKey(e)}
-            />
+                <Wrapper>
+                    <Input 
+                        type='email'
+                        onChange={e => setEmailInput(e.target.value)}
+                        value={emailInput}
+                        placeholder='Email eller tlf'
+                        onKeyDown={e => checkForEnterKey(e)}
+                    />
 
-            <Input
-                type='password'
-                onChange={e => setPasswordInput(e.target.value)}
-                value={passwordInput}
-                placeholder='Passord'
-                onKeyDown={e => checkForEnterKey(e)}
-            />
+                    <Input
+                        type='password'
+                        onChange={e => setPasswordInput(e.target.value)}
+                        value={passwordInput}
+                        placeholder='Passord'
+                        onKeyDown={e => checkForEnterKey(e)}
+                    />
 
-            <WarningText>{warningText}</WarningText>
-            
-            <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
+                    <WarningText>{warningText}</WarningText>
+                    
+                    <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
 
-            <StyledLink to="/register">Registrer deg</StyledLink>
-        </Container>
+                    <StyledLink to="/registrer" onClick={() => props.toggle()}>Registrer deg</StyledLink>
+                </Wrapper>
+            </Container>
+        </>
     );
 }
 
