@@ -1,5 +1,4 @@
 const daoParentAttachment = require("./dao.ts");
-const Attachment = require("./Attachment.ts");
 
 export interface attachment{
     attachmentId: number;

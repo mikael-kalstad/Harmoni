@@ -1,4 +1,4 @@
-import riderDao from "../dao/riderDao";
+import riderDao, {rider, riderList} from "../dao/riderDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
@@ -26,16 +26,17 @@ function run(filename, pool, done) {
     });
 };
 
-
-var conPool = mysql.createPool({
+let poolConfig = {
     connectionLimit: 1,
-    host: "localhost",
+    host: process.env.NODE_ENV == "ci" ? "mysql" : "localhost",
     user: "root",
     password: "humbug",
     database: "harmoni",
     debug: false,
     multipleStatements: true
-});
+}
+
+var conPool = mysql.createPool(poolConfig);
 
 const dao = new riderDao(conPool);
 
@@ -84,12 +85,12 @@ test("Get rider by user id in event", done => {
 })
 
 test("Add rider", done => {
-    let rider = 
+    let ridertest : rider = 
     {
         rider_id: -1,
         text: "Aass fatøl"
     }
-    dao.addRider(rider, (status, data) => {
+    dao.addRider(ridertest, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         done();
@@ -97,11 +98,12 @@ test("Add rider", done => {
 })
 
 test("Add rider list", done => {
-    let riderList = 
+    let riderList : riderList = 
     {
         rider_list_id: -1,
         user_id: 1,
         event_id: 1,
+        rider_id: 1,
         quantity: 1
     }
     dao.addRiderList(riderList, (status, data) => {
@@ -113,19 +115,19 @@ test("Add rider list", done => {
 
 test("Update rider", done => {
     let rider = {
-        rider_id: -1,
+        rider_id: 6,
         text: "Sørlandschips"
     }
-    dao.updateRider(-1, rider, (status, data) => {
+    dao.updateRider(rider, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
         done();
     })
-})
+})  
 
 test("Delete rider", done => {
-    dao.deleteRider(-1, (status, data) => {
+    dao.deleteRider(6, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         done();

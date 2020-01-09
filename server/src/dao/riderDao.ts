@@ -1,15 +1,14 @@
 const daoParentRider = require('./dao.ts');
-const Rider = require('./Rider.ts');
 
 export interface riderList {
     rider_list_id: number,
     user_id: number,
     event_id: number,
     rider_id: number,
-    quantity: string
+    quantity: number
 }
 export interface rider {
-    riderId : number;
+    rider_id : number;
     text : string;
 }
 
@@ -42,11 +41,11 @@ export default class riderDao extends daoParentRider{
         super.query('INSERT INTO rider_list VALUES(DEFAULT, ?, ?, ?, ?)',[riderList.user_id, riderList.event_id, riderList.rider_id, riderList.quantity] , callback)
     }
 
-    updateRider(riderId: number, rider : rider, callback) {
-        super.query('UPDATE rider SET text = ? WHERE riderId = ?', [rider.text], callback);
+    updateRider(rider : rider, callback) {
+        super.query('UPDATE rider SET text = ? WHERE rider_id = ?', [rider.text, rider.rider_id], callback);
     }
 
     deleteRider(riderId : number,  callback){
-        super.query('Delete * FROM rider WHERE rider_id = ?', [riderId], callback);
+        super.query('DELETE FROM rider WHERE rider_id = ?', [riderId], callback);
     }
 }

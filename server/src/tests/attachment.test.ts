@@ -52,7 +52,7 @@ afterAll(() => {
 test("Get all attachments by eventId", done => {
     dao.getAttachmentsForEvent(1, (status, data) => {
         expect(status).toBe(200);
-        expect(data[0].attachmentId).toBe(2);
+        expect(data[0].attachment_id).toBe(2);
         done();
     })
 })
