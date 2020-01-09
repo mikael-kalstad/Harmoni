@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
 
-import TicketBar from '../Event/ticketBar';
+import TicketMenu from '../Event/ticketMenu';
 import Button from '../Button/button';
 
 interface IEvent {
@@ -28,21 +28,6 @@ interface ITicket {
   price: number;
   type: string;
 }
-
-let tickets = [
-  {
-    name: 'Premium VIP Circle',
-    price: 19000
-  },
-  {
-    name: 'Meet & Greet & Hamburger',
-    price: 2000
-  },
-  {
-    name: 'Ståplass',
-    price: 10
-  }
-];
 
 const Wrapper = styled.div`
   justify-content: center;
@@ -77,31 +62,18 @@ const ContentText = styled.p`
   margin-bottom: 50px;
 `;
 
-const TotalSumText = styled.h2`
-  font-weight: bold;
-  margin: 0;
-`;
-
-const TotalSumValueText = styled.label`
-  color: #47bd29;
-`;
-
 const BuyButtonWrapper = styled.div`
   width: 35%;
   margin: 20px auto;
 `;
 
 const Event = (props: any) => {
-  const [price, setPrice] = useState(0);
   const [eventData, setEventData] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   useEffect(() => {
     fetchEvent();
     fetchTickets();
   }, []);
-  const setTotalPrice = (sum: number) => {
-    setPrice(Math.max(price + sum, 0));
-  };
 
   const fetchEvent = async () => {
     setEventData(await eventService.getEventById(props.match.params.id));
@@ -114,30 +86,19 @@ const Event = (props: any) => {
   };
 
   if (eventData != null && eventTickets != null) {
-    console.log(eventData[0]);
-    console.log(eventTickets);
-
     return (
       <Wrapper>
-        <EventImage src="https://i.imgur.com/Glo8oxy.jpg"></EventImage>
+        <EventImage
+          src="https://i.imgur.com/Glo8oxy.jpg"
+          alt={eventData[0].name}
+        ></EventImage>
         <DoubleColumnGrid>
           <DateText>{eventData[0].from_date}</DateText>
           <AddressText>{eventData[0].address}</AddressText>
         </DoubleColumnGrid>
         <Title>{eventData[0].name}</Title>
         <ContentText>{eventData[0].information}</ContentText>
-        <h3>Billetter</h3>
-        {eventTickets.map(ticket => (
-          <TicketBar
-            name={ticket.type}
-            price={ticket.price}
-            addToTotal={setTotalPrice}
-            key={ticket.type}
-          />
-        ))}
-        <TotalSumText>
-          Total sum: <TotalSumValueText>{price + ',-'}</TotalSumValueText>
-        </TotalSumText>
+        <TicketMenu tickets={eventTickets} />
         <BuyButtonWrapper>
           <Button backgroundColor={'#47BD29'} dropShadow={true}>
             Kjøp

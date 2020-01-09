@@ -23,6 +23,7 @@ const PriceText = styled.p`
 
 const NameText = styled.p`
   margin: 0;
+  padding-right: 10px;
 `;
 
 const QuantityText = styled.p`
@@ -30,28 +31,34 @@ const QuantityText = styled.p`
 `;
 
 interface TicketProps {
+  quantities: any;
+  ticketIndex: number;
   name: string;
   price: number;
-  addToTotal: Function;
+  incrementFunction: Function;
 }
 
 const TicketBar = (props: TicketProps) => {
-  const [quantity, setQuantity] = useState(0);
-
-  const addToQuantity = (num: number) => {
-    setQuantity(Math.max(quantity + num, 0));
-    props.addToTotal(props.price * num);
-  };
   return (
     <Bar>
       <NameText>{props.name}</NameText>
       <PriceText>{props.price + ',-'}</PriceText>
-      <button className="btn" onClick={() => addToQuantity(-1)}>
+      <button
+        className="btn"
+        onClick={() => {
+          props.incrementFunction(props.ticketIndex, -1);
+        }}
+      >
         <FaMinus />
       </button>
 
-      <QuantityText>{quantity}</QuantityText>
-      <button className="btn" onClick={() => addToQuantity(1)}>
+      <QuantityText>{props.quantities[props.ticketIndex]}</QuantityText>
+      <button
+        className="btn"
+        onClick={() => {
+          props.incrementFunction(props.ticketIndex, 1);
+        }}
+      >
         <FaPlus />
       </button>
     </Bar>
