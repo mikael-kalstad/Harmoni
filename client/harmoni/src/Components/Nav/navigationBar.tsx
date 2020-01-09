@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Button from '../Button/button';
+import OutlineButton from '../Button/outlineButton';
 import LoginBtn from '../Button/loginBtn';
 import SmallProfileNav from '../Profile/smallProfileNav';
 
@@ -17,12 +17,20 @@ const StyledLink = styled(props => <Link {...props} />)`
     color: #7f7f7f;
   }
 
+<<<<<<< HEAD
+    :hover {
+        text-decoration: none;
+    }
+    margin: 0;
+    margin-right: 20px;
+=======
   :hover {
     filter: brightness(70%);
     text-decoration: none;
   }
   margin: 0;
   margin-right: 20px;
+>>>>>>> c6d6ed27661cdfe345944183026f801aaee7885b
 `;
 
 const NavigationBar = (props: any) => (
@@ -61,22 +69,20 @@ const NavigationBar = (props: any) => (
         </NavDropdown>
       </Nav>
 
-      {props.isLoggedIn ? (
-        <>
-          <SmallProfileNav img="/icons/test.jpg" name="Jahn Teigen" />
-          {/* TODO: ADD LOG OUT FUNCTIONALITY */}
-          <Button>Logg ut</Button>
-        </>
-      ) : (
-        <>
-          <StyledLink to="/registrer">
-            <Button>Reigstrer</Button>
-          </StyledLink>
-          <LoginBtn />
-        </>
-      )}
-    </Navbar.Collapse>
-  </Navbar>
+          {props.isLoggedIn 
+            ? (<>
+                <SmallProfileNav img='/icons/test.jpg' name='Jahn Teigen'/>
+                {/* TODO: ADD LOG OUT FUNCTIONALITY */}
+                <OutlineButton>Logg ut</OutlineButton>
+              </>)
+            : (<>
+                <StyledLink to='/registrer'>
+                  <OutlineButton>Registrer</OutlineButton></StyledLink>
+                <LoginBtn />
+              </>)
+          }
+        </Navbar.Collapse>
+    </Navbar>
 );
 
 const handleIconClick = (path: any) => {

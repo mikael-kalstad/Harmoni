@@ -43,7 +43,7 @@ router.get("/hash/:id", async (request,response) => {
 })
 
 // Get singular organizer for event given id
-router.get("/:id", async (request,response) => {
+router.get("/organizer/:id", async (request,response) => {
     dao.getOrganizerForEvent(parseInt(request.params.id) , (status,data) => {
         status == 500 ? response.status(500) : response.send(data)
     });

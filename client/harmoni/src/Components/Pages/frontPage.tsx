@@ -5,16 +5,16 @@ import ArrangementGrid from '../arrangementGrid';
 
 let data = [
     {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        // 'id': 1234,
+        // 'category': 'Konsert',
+        // 'title': 'Kurt Nilsen synger låter',
+        // 'img': '/icons/test.jpg'
     },
     {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        // 'id': 1234,
+        // 'category': 'Konsert',
+        // 'title': 'Kurt Nilsen synger låter',
+        // 'img': '/icons/test.jpg'
     },
     {
         'id': 1234,
