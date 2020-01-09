@@ -1,9 +1,15 @@
 import React from 'react';
 import NavigationBar from './Nav/navigationBar';
 
-const Layout = (props: { children: any; }) => (
+interface IProps {
+    children: any;
+    userData: object | undefined;
+    logOut: Function;
+}
+
+const Layout = (props: IProps) => (
     <>
-        <NavigationBar  isLoggedIn={false} />
+        <NavigationBar userData={props.userData} logOut={props.logOut} />
         {props.children}
     </>
 );

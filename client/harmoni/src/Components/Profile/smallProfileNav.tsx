@@ -17,8 +17,16 @@ const Container = styled.div`
 const Img = styled.img`
     width: 50px;
     height: 50px;
+    object-fit: cover;
     border-radius: 50%;
+`;
+
+const Wrapper = styled.div`
+    width: 50px;
+    height: 50px;
     margin: 10px;
+    background: white;
+    border-radius: 50%;
 `;
 
 const TextWrapper = styled.div`
@@ -59,12 +67,15 @@ const StyledLink = styled(props => <Link {...props} />)`
     }
 `;
 
-const SmallProfileNav = (props: {img: string, name: string}) => (
+const SmallProfileNav = (props: {picture: string, name: string}) => (
     <StyledLink to='/profile'>
         <Container>
-            <Img src={props.img}/>
+            <Wrapper>
+                {props.picture && <Img src={props.picture}/>}
+            </Wrapper>
+
             <TextWrapper>
-                <Text>Rhinna rhinna rhinna rhinna</Text>
+                <Text>{props.name}</Text>
                 <UnderText>Min side</UnderText>
             </TextWrapper>
         </Container>

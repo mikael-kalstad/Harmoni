@@ -93,7 +93,7 @@ const ProfileLink = styled(props => <Link {...props} />)`
 const ProfileOptions = (props: {img: string, name: string}) => (
     <Container>
         
-        <ProfileLink to='/event'>
+        <ProfileLink to='/newevent'>
             <ProfileButton>
                 Opprett arrangement
             </ProfileButton>

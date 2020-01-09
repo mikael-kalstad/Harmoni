@@ -1,7 +1,10 @@
 import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
-import { compareHash } from "../hashing";
+import {compareHash, hash} from "../hashing";
+
+
+
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
 
@@ -39,14 +42,17 @@ router.post("/",(req,res)=>{
 
 router.use("/api", (req, res, next) => {
     var token = req.headers["x-access-token"];
-
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
             console.log("Token Not ok");
             res.status(401);
             res.json({ error: "Not authorized" });
         } else {
-            console.log("Token ok: " + decoded.email);
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 60*30
+            });
+            localStorage.setItem("x-access-token",token);
+            //console.log("Token ok: " + decoded.email);
             next();
         }
     });
@@ -61,11 +67,31 @@ router.get("/token", (req,res)=>{
             res.status(401);
             res.json({error:"Not authorized"});
         }else{
-            newToken = jwt.sign({ brukernavn: req.body.email }, privateKey, {
+            newToken = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
             res.json({ jwt: newToken });
         }
+    });
+
+});
+router.post("/register",(req,res)=>{
+    let data=hash(req.body.password);
+    req.body.hash= data.hash;
+    req.body.salt= data.salt;
+
+    dao.addUser(req.body, (status) => {
+        if(status==200){
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 60*30
+            });
+            res.json({ jwt: token });
+        }else{
+            console.log(status);
+            res.status(401);
+            res.json({ error: "Could not add user" });
+        }
+
     });
 
 });
