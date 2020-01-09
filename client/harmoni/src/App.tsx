@@ -12,6 +12,7 @@ import Profile from './Components/Pages/profile';
 import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
+import AddEvent from './Components/AddEvent/addEvent';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(undefined);
@@ -34,7 +35,9 @@ const App: React.FC = () => {
             <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
             <Route path='/event/:id' component={Event} data={eventData}/>
+            <Route exact path='/newevent' component={AddEvent} data={eventData}/>
             <Route component={PageNotFound} />
+            
         </Switch>
       </Layout>
     </Router>

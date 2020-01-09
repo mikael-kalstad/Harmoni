@@ -4,6 +4,8 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import {Button} from "react-bootstrap";
+import { Link } from 'react-router-dom';
+import ArtistForm from './EventForms/artistForm';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,10 +36,11 @@ function getStepContent(step: number) {
     switch (step) {
         case 0:
             return (
-                <h2>Form with basic info like name, location and date+time etc</h2>);
+                <h2>Form for info</h2>
+                );
         case 1:
             return (
-                <h2>Form to add artists that participate in the event</h2>);
+                <ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
         case 2:
             return (
                 <h2>Form to add the event´s different ticket types</h2>);
@@ -197,3 +200,4 @@ export default function AddEvent() {
         </div>
     );
 }
+
