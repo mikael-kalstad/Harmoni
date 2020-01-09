@@ -19,8 +19,12 @@ const App: React.FC = () => {
 
   // Get data when component mounts
   useEffect(() => {
-    setEventData(eventService.getAllEvents());
+    fetchData();
   }, []);
+
+  const fetchData = async() => {
+    setEventData(await eventService.getAllEvents());
+  }
 
   return (
     <Router>
