@@ -1,4 +1,5 @@
 const daoParentUser = require("./dao.ts");
+//const User = require("./User.ts");
 
 export interface user {
     user_id: number,
@@ -38,7 +39,7 @@ export default class userDao extends daoParentUser{
 
     // Gets the hash of a user
     getHashOfUser(userId: number, callback){
-        super.query("SELECT hash FROM user WHERE user_id = ?", [userId], callback)
+        super.query("SELECT hash, salt FROM user WHERE user_id = ?", [userId], callback)
     }
 
     // Gets the organizer for an event
