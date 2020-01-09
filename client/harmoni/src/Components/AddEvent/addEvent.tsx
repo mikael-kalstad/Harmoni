@@ -4,6 +4,10 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import {Button} from "react-bootstrap";
+import ArtistForm from './EventForms/artistForm';
+import BasicInfoForm from './EventForms/basicInfoForm';
+import styled from "styled-components";
+import TicketForm from "./EventForms/ticketForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,20 +34,21 @@ function getSteps() {
     return ['Info', 'Artister', 'Billett-typer', 'Program'];
 }
 
+const Wrapper = styled.div`
+  justify-content: center;
+  display: grid;
+`;
+
 function getStepContent(step: number) {
     switch (step) {
         case 0:
-            return (
-                <h2>Form with basic info like name, location and date+time etc</h2>);
+            return (<BasicInfoForm/>);
         case 1:
-            return (
-                <h2>Form to add artists that participate in the event</h2>);
+            return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
         case 2:
-            return (
-                <h2>Form to add the event´s different ticket types</h2>);
+            return (<TicketForm/>);
         case 3:
-            return (
-                <h2>Text-box(?) to add the events programme</h2>);
+            return (<p>Text-box(?) to add the events programme</p>);
         default:
             return 'Unknown step';
     }
@@ -155,6 +160,8 @@ export default function AddEvent() {
                     );
                 })}
             </Stepper>
+
+            <Wrapper>
             <div>
                 {stepsCompleted() ? (
                     <div>
@@ -194,6 +201,8 @@ export default function AddEvent() {
                     </div>
                 )}
             </div>
+            </Wrapper>
         </div>
     );
 }
+

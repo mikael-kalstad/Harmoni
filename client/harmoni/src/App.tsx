@@ -12,6 +12,7 @@ import Profile from './Components/Pages/profile';
 import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
+import AddEvent from './Components/AddEvent/addEvent';
 
 interface IUserData {
   name: string;
@@ -28,7 +29,7 @@ const App: React.FC = () => {
   }, []);
 
   const fetchData = async() => {
-    // TODO: FETCH!
+    setEventData(await eventService.getAllEvents());
   }
 
   const logOut = () => {
@@ -40,11 +41,13 @@ const App: React.FC = () => {
     <Router>
       <Layout userData={userData} logOut={logOut}>
         <Switch>
-            <Route exact path='/' component={FrontPage} />
+            <Route exact path='/' component={FrontPage} data={eventData}/>
             <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
-            <Route path='/event/:id' component={Event} />
+            <Route path='/event/:id' component={Event} data={eventData}/>
+            <Route exact path='/newevent' component={AddEvent} data={eventData}/>
             <Route component={PageNotFound} />
+            
         </Switch>
       </Layout>
     </Router>
@@ -52,3 +55,4 @@ const App: React.FC = () => {
 }
 
 export default App;
+
