@@ -1,44 +1,44 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const Wrapper = styled.div`
-    margin: 80px auto 0 auto;
-    width: 400px;
+  margin: 80px auto 0 auto;
+  width: 400px;
 `;
 
 const Title = styled.h2`
-    font-size: 48px;
-    font-weight: 500;
-    text-align: center; 
-    margin: 50px;
+  font-size: 48px;
+  font-weight: 500;
+  text-align: center;
+  margin: 50px;
 `;
 
 const Input = styled.input`
-    display: block;
-    margin: 25px auto;
-    width: 400px;
-    height: 55px;
-    border: none;
-    background: #EFEFEF;
-    font-size: 18px;
-    text-indent: 15px;
+  display: block;
+  margin: 25px auto;
+  width: 400px;
+  height: 55px;
+  border: none;
+  background: #efefef;
+  font-size: 18px;
+  text-indent: 15px;
 
-    :hover {
-        filter: brightness(98%);
-    }
+  :hover {
+    filter: brightness(98%);
+  }
 `;
 
 const ButtonWrapper = styled.div`
-    margin-top: 70px;
+  margin-top: 70px;
 `;
 
 const WarningText = styled.p`
-    color: #E57652;
-    font-size: 16px;
-    font-weight: 500;
-    text-align: center;
+  color: #e57652;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
 `;
 
 const Register = () => {
