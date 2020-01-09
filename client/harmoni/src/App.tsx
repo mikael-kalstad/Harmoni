@@ -16,7 +16,6 @@ import AddEvent from './Components/AddEvent/addEvent';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(undefined);
-  const [eventData, setEventData] = useState(undefined);
 
   // Get data when component mounts
   useEffect(() => {
@@ -24,18 +23,22 @@ const App: React.FC = () => {
   }, []);
 
   const fetchData = async() => {
-    setEventData(await eventService.getAllEvents());
+    // TODO: FETCH!
   }
-
+    
   return (
     <Router>
       <Layout>
         <Switch>
-            <Route exact path='/' component={FrontPage} data={eventData}/>
+            <Route exact path='/' component={FrontPage} />
             <Route exact path='/registrer' component={Register}/>
             <Route exact path='/profile' component={Profile}/>
+<<<<<<< HEAD
             <Route path='/event/:id' component={Event} data={eventData}/>
             <Route exact path='/newevent' component={AddEvent} data={eventData}/>
+=======
+            <Route path='/event/:id' component={Event} />
+>>>>>>> d2925d519c5136d4e3cc8c67f225d3d8517e956d
             <Route component={PageNotFound} />
             
         </Switch>

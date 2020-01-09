@@ -1,91 +1,26 @@
-import React from 'react';
-import Layout from '../layout';
+import React, { useState, useEffect} from 'react';
 import HeaderCarousel from '../headerCarousel';
 import ArrangementGrid from '../arrangementGrid';
+import { eventService } from '../../services/EventService';
 
-let data = [
-    {
-        // 'id': 1234,
-        // 'category': 'Konsert',
-        // 'title': 'Kurt Nilsen synger låter',
-        // 'img': '/icons/test.jpg'
-    },
-    {
-        // 'id': 1234,
-        // 'category': 'Konsert',
-        // 'title': 'Kurt Nilsen synger låter',
-        // 'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
-    },
-    {
-        'id': 1234,
-        'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+const FrontPage = () => {
+    const [eventData, setEventData] = useState(undefined);
+
+    // Get data when component mounts
+    useEffect(() => {
+      fetchData();
+    }, []);
+  
+    const fetchData = async() => {
+        setEventData(await eventService.getAllEvents());
     }
-]
 
-let data2: any[] = [
-    // {
-    //     'id': 1234,
-    //     'category': 'Konsert',
-    //     // 'title': 'Rihanna i Oslo Spektrum',,
-    //     // 'img': '/icons/test.jpg'
-    // },
-    // {
-    //     'id': 1234,
-    //     'category': 'Konsert',
-    //     // 'title': 'Kurt Nilsen synger låter',
-    //     // 'img': '/icons/test2.jpg'
-    // },
-    // {
-    //     'id': 1234,
-    //     'category': 'Konsert',
-    //     'title': 'Rock Boys',
-    //     'img': '/icons/test3.jpg'
-    // },
-]
+    return (
+        <>
+            <HeaderCarousel data={eventData} />
+            <ArrangementGrid data={eventData} title='Populære arrangementer'/>
+        </>
+    );
+}
 
-const FrontPage = () => (
-    <>
-        <HeaderCarousel data={undefined} />
-        <ArrangementGrid data={data} title='Populære arrangementer'/>
-    </>
-);
-//Test
 export default FrontPage;

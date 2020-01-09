@@ -28,14 +28,14 @@ const HeaderCarousel = (props: any) => {
 
     const card = (a:any) => (
         <>
-            {a.img
+            {a.picture
                 ? (<>
                         <Overlay />
 
                         <Img
                             className="d-block w-100"
-                            src={a.img}
-                            alt={a.title}
+                            src={a.picture}
+                            alt={a.name}
                         />
                     </>
                 )
@@ -45,7 +45,7 @@ const HeaderCarousel = (props: any) => {
                 )
             }
             <Carousel.Caption>
-                <Title>{a.title}</Title>
+                <Title>{a.name}</Title>
             </Carousel.Caption>
         </>
     )
