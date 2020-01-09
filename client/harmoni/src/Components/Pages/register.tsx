@@ -140,12 +140,9 @@ const Register = () => {
         />
 
         <WarningText>{warningText}</WarningText>
-
-        {/* <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>REGISTRER</Button> */}
-
-        <ButtonWrapper>
-          <UploadBtn name="REGISTRER" />
-        </ButtonWrapper>
+        <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>
+          REGISTRER
+        </Button>
       </Wrapper>
     </>
   );
