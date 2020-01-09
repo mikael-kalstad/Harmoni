@@ -78,7 +78,7 @@ const BuyButtonWrapper = styled.div`
 const Event = (props: any) => {
   const [price, setPrice] = useState(0);
   const setTotalPrice = (sum: number) => {
-    setPrice(price + sum);
+    setPrice(Math.max(price + sum, 0));
   };
   return (
     <Wrapper>

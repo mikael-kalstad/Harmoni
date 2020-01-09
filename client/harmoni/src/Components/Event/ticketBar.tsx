@@ -40,7 +40,7 @@ const TicketBar = (props: TicketProps) => {
 
   const addToQuantity = (num: number) => {
     setQuantity(Math.max(quantity + num, 0));
-    props.addToTotal(props.price);
+    props.addToTotal(props.price * num);
   };
   return (
     <Bar>
