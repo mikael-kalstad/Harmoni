@@ -72,7 +72,6 @@ test("Get all events", done => {
 test("Get event by id", done => {
     dao.getEvent(1, (status, data) => {
         expect(status).toBe(200);
-        console.log("her er vi: ", data)
         expect(data[0].organizer).toBe(2);
         expect(data[0].capacity).toBe(1000);
         done();
