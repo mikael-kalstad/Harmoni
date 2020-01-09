@@ -31,6 +31,7 @@ let poolConfig = {
     host: process.env.NODE_ENV == "ci" ? "mysql" : "localhost",
     user: "root",
     password: "humbug",
+    database: "harmoni",
     debug: false,
     multipleStatements: true
 }
