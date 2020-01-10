@@ -1,7 +1,10 @@
 import axios from 'axios';
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 
 export default class LoginService {
+
     login(email:string, password:string){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8'
@@ -49,8 +52,11 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                localStorage.setItem("x-access-token",response.data.jwt);
-                return response;
+                if (response.status==409){
+                    // TODO: Do something with user exists from before..
+                    console.log("User exists from before.")
+                }
+                else localStorage.setItem("x-access-token",response.data.jwt)
             })
             .catch(error => console.log(error));
     }

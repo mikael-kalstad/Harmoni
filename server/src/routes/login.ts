@@ -25,16 +25,16 @@ router.post("/",(req,res)=>{
         user = data[0];
         if(typeof user != "undefined"){
             if (compareHash(user.hash, req.body.password, user.salt)){
-                console.log("Brukernavn & passord ok");
+                console.log("email & password ok");
                 let token = jwt.sign({ email: req.body.email }, privateKey, {
                     expiresIn: 60*30
                 });
-
                 //window.localStorage.setItem("x-access-token",token);
                 // res.status()
                 res.json({ jwt: token });
+                res.status(200);
             } else {
-                console.log("Brukernavn & passord IKKE ok");
+                console.log("email & password NOT ok");
                 res.status(401);
                 res.json({ error: "Not authorized" });
             }
@@ -83,24 +83,32 @@ router.get("/token", (req,res)=>{
 
 });
 router.post("/register",(req,res)=>{
+
     let data=hash(req.body.password);
     req.body.hash= data.hash;
     req.body.salt= data.salt;
+    dao.getUserByEMail(req.body.email, (status,data) => {
+        user = data[0];
+        if (typeof user == "undefined") {
+            dao.addUser(req.body, (status) => {
+                if (status == 401) {
+                    let token = jwt.sign({email: req.body.email}, privateKey, {
+                        expiresIn: 60 * 30
+                    });
+                    res.json({jwt: token});
+                } else {
+                    console.log(status);
+                    res.status(401);
+                    res.json({error: "Could not add user"});
+                }
 
-    dao.addUser(req.body, (status) => {
-        if(status==200){
-            let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
             });
-            res.json({ jwt: token });
-        }else{
-            console.log(status);
-            res.status(401);
-            res.json({ error: "Could not add user" });
         }
-
+        else{
+            res.status(409);
+            res.json({error: "the user exists error code:" + res.status});
+        }
     });
-
 });
 
 module.exports = router;

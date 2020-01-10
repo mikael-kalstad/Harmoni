@@ -41,6 +41,7 @@ const App: React.FC = () => {
   const logIn = async(email: string) => {
     setUserData(await userService.getUserByEMail(email));
   }
+
     
   return (
     <Router>
