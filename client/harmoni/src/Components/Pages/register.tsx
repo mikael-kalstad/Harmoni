@@ -191,13 +191,13 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
                     onChange={e => setPasswordInput(e.target.value)}
                     onKeyDown={e => checkForEnterKey(e)}
                 />
-                <Input
+                {/* <Input
                     type='file'
                     onChange={e => setFile(e.target.value)}
                     value={file}
                     placeholder='file'
                     onKeyDown={e => checkForEnterKey(e)}
-                />
+                /> */}
 
 
                 <BtnWrapper>
