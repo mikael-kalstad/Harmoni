@@ -27,7 +27,7 @@ router.post("/",(req,res)=>{
             if (compareHash(user.hash, req.body.password, user.salt)){
                 console.log("email & password ok");
                 let token = jwt.sign({ email: req.body.email }, privateKey, {
-                    expiresIn: 60*30
+                    expiresIn: 30
                 });
                 //window.localStorage.setItem("x-access-token",token);
                 // res.status()
@@ -57,7 +57,7 @@ router.post("/token/update", (req, res, next) => {
             res.json({ error: "Not authorized" });
         } else {
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 30
             });
             localStorage.setItem("x-access-token",token);
             //console.log("Token ok: " + decoded.email);
@@ -76,7 +76,7 @@ router.post("/token", (req,res)=>{
         }else{
             console.log("Token ok");
             newToken = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 30
             });
             res.json({ jwt: newToken });
         }
@@ -95,7 +95,7 @@ router.post("/register",(req,res)=>{
             dao.addUser(req.body, (status) => {
                 if (status !== 401) {
                     let token = jwt.sign({email: req.body.email}, privateKey, {
-                        expiresIn: 60 * 30
+                        expiresIn: 30
                     });
                     res.json({jwt: token});
                 } else {
