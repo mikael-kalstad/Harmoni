@@ -61,13 +61,15 @@ const Register = (props: {userData?: object; logIn?: Function}) => {
     const types = ['organizer', 'artist', 'volunteer'];
 
     useEffect(() => {
-        // Phone is optional
-        if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
+        if (props.userData) {
+            // Phone is optional
+            if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
 
-        // All other inputs are required
-        setNameInput(props.userData[0]['name']);
-        setEmailInput(props.userData[0]['email']);
-        setType(props.userData[0]['type']);
+            // All other inputs are required
+            setNameInput(props.userData[0]['name']);
+            setEmailInput(props.userData[0]['email']);
+            setType(props.userData[0]['type']);
+        }
     });
 
     let menuItems: JSX.Element[] = [];
