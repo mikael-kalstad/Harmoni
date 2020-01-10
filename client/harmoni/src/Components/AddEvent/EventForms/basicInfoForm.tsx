@@ -26,7 +26,7 @@ const Title = styled.h2`
   bottom-margin: 10px;
 `;
 
-const BasicInfoForm = (props : any) => {
+const BasicInfoForm = () => {
 
     let menuItems: JSX.Element[] = [];
 
@@ -35,8 +35,6 @@ const BasicInfoForm = (props : any) => {
             <Title>Info</Title>
             <h5>Navn på arrangement</h5>
             <Input
-                onChange={e => props.setTitleInput}
-                value={props.titleInput}
                 placeholder='Navn'
             />
             <Dropdown>
@@ -51,13 +49,11 @@ const BasicInfoForm = (props : any) => {
             <br/>
             <h5>Lokasjon</h5>
             <Input
-                onChange={e => props.setLocationInput(e.target.value)}
-                value={props.locationInput}
                 placeholder='Lokasjon'
             />
 
             <h5>Dato og tid</h5>
-            <DateTimePicker dateTime={props.dateTimeInput}/>
+            <DateTimePicker/>
 
         </>
     );

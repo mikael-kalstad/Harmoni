@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function DateTimePicker(props: any) {
+export default function DateTimePicker() {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
         new Date('2020-01-01T00:00:00'),

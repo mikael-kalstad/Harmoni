@@ -43,10 +43,6 @@ function getStepContent(step: number) {
     switch (step) {
         case 0:
             return (<BasicInfoForm
-                titleInput={titleInput}
-                categoryInput={categoryInput}
-                locationInput={locationInput}
-                dateTimeInput={dateTimeInput}
             />);
         case 1:
             return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
@@ -59,24 +55,9 @@ function getStepContent(step: number) {
     }
 }
 
-const handleChange = (input : any) => {
-
-};
-
-const [titleInput, setTitleInput] = useState('');
-const [categoryInput, setCategoryInput] = useState('');
-const [locationInput, setLocationInput] = useState('');
-const [dateTimeInput, setDateTimeInput] = useState('');
-const [artistsInput, setArtistsInput] = useState('');
-const [ticketsInput, setTicketsInput] = useState('');
-const [programInput, setProgramInput] = useState('');
-
 const AddEvent = () => {
 
-    //pass data to the children then save it onclick (next)
-
-
-    const classes = useStyles();
+    const classes = useStyles({});
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set<number>());
     const [skipped, setSkipped] = useState(new Set<number>());
@@ -225,6 +206,6 @@ const AddEvent = () => {
             </Wrapper>
         </div>
     );
-}
+};
 
 export default AddEvent
