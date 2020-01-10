@@ -50,23 +50,21 @@ afterAll(() => {
     conPool.end();
 });
 
-test("search for events given input as an address", async () => {
-    await new Promise(resolve => setTimeout(resolve, 20000));
+test("search for events given input as an address", done => {
     dao.searchForEvents("Elgseter Gate 1", (status, data) => {
         expect(status).toBe(200);
-        console.log("hei", data)
         expect(data.length).toBe(1);
         expect(data[0].organizer).toBe(1);
         expect(data[0].capacity).toBe(300);
-        //done();
+        done();
     })
 })
 
-/*test("search for events given organizer ", done => {
+test("search for events given organizer ", done => {
     dao.searchForEvents("hans hansen", (status, data) => {
         expect(status).toBe(200);
-        expect(data.length).toBe(2);
-        expect(data[0].address).toBe("Nordpolen");
+        expect(data.length).toBe(1);
+        expect(data[0].address).toBe("Elgseter Gate 1");
         done();
     })
 })
@@ -75,7 +73,7 @@ test("search for events given organizer NR2 ", done => {
     dao.searchForEvents("Roy narvestad", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data.status).toBe("kommende");
+        expect(data[0].status).toBe("kommende");
         done();
     })
 })
@@ -84,7 +82,7 @@ test("search for events given one word in its information ", done => {
     dao.searchForEvents("kjøp", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data.category).toBe("festival");
+        expect(data[0].category).toBe("festival");
         done();
     })
-})*/
+})

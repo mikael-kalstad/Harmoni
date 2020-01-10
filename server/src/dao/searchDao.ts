@@ -32,36 +32,31 @@ export default class searchDao extends daoParentEvent {
     }
     // Search for an events
     searchForEvents(input: string, callback) {
-        var sql1 = 'SELECT * FROM event WHERE name like ? or address like ? or information like ? or category like ? order by event_id desc;';
+        var sql1 = 'SELECT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? ORDER BY event_id DESC;';
 
-        var sql2 = "Select * from event, user where event.organizer = user.user_id and user.name like ? order by event_id desc;";
+        var sql2 = "SELECT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? ORDER BY event_id DESC;";
 
-        let events: event[];
+        let events: event[] = [];
         super.query(sql1,
             ["%"+input+"%", "%"+input+"%","%"+input+"%","%"+input+"%"],
             (status , data) => {
                 if (status == 500){
-                    console.log("Error: search for event");
-                    callback("error search for events")
+                    callback(500, null);
                 }
                 else {
-                    events = data.forEach().concat(events);
-                    console.log("her er vi ", data);
-                    //callback;
+                    data.forEach(e => events.push(e));
+                    super.query(sql2, ["%"+input+"%"],
+                    (status , data) => {
+                        if (status == 500){
+                            callback(500, null);
+                        }
+                        else {
+                            data.forEach(e => events.push(e));
+                            callback(200, events);
+                        }
+                    }
+                );
                 }
             })
-
-        super.query(sql2, ["%"+input+"%"],
-            (status , data) => {
-                if (status == 500){
-                    console.log("Error: search for event");
-                    callback("error search for events")
-                }
-                else {
-                    events = data.forEach().concat(events);
-                    //callback;
-                }
-            }
-        );
     }
 }
