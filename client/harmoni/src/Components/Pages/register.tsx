@@ -44,7 +44,7 @@ interface User {
     picture: string;
 }
 
-const Register = (props: {userData?: array; logIn?: Function}) => {
+const Register = (props: {userData?: object; logIn?: Function}) => {
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [tlfInput, setTlfInput] = useState();
@@ -55,33 +55,6 @@ const Register = (props: {userData?: array; logIn?: Function}) => {
 
     // Used to display error on empty input when submitting
     const [submit, setSubmit] = useState(false);
-
-    useEffect(() => {
-        // Check jwt token
-        let res = await loginService.checkToken()
-
-        // Fetch user data if user data is defined in props
-        if (props.userData) fetchUserById(props.userData[0]['user_id']);
-    }, []);
-
-    const authentiCate = async(token:string) => {
-        
-    }
-
-    const fetchUserById = async(id:number) => {
-        userService.getUserById(id)
-        .then((data:any) => {
-            console.log(data[0]['type'])
-
-            // Mobile number is optional!
-            if (data[0]['mobile']) setTlfInput(data[0]['mobile']);
-
-            // All other inputs are required
-            setType(data[0]['type']);
-            setNameInput(data[0]['name']);
-            setEmailInput(data[0]['email']);
-        })
-    }
 
     // Render all types in array
     const types_translated = ['Arrangør', 'Artist/Manager', 'Frivillig'];
@@ -212,8 +185,8 @@ const Register = (props: {userData?: array; logIn?: Function}) => {
 
 
                 <BtnWrapper>
-                    <Button onClick={() => props.match.params.userId ? save() : register()}>
-                        {props.match.params.userId ? 'LAGRE' : 'OPPRETT KONTO'}
+                    <Button onClick={() => props.userData ? save() : register()}>
+                        {props.userData ? 'LAGRE' : 'OPPRETT KONTO'}
                     </Button>
                 </BtnWrapper>
             </Wrapper>
