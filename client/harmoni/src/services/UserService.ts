@@ -70,7 +70,9 @@ class UserService extends Service {
   // Adds a user
   addUser(user: User) {
     return axios
-      .post(this.path + '/users/', user)
+      .post(this.path + '/users/', user,{
+        headers:{ 'content-type': 'multipart/form-data' }
+      })
       .then(response => response.data);
   }
 

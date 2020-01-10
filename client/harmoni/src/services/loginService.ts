@@ -1,7 +1,10 @@
 import axios from 'axios';
+// import {Simulate} from "react-dom/test-utils";
+// import { error } = Simulate.error;
 
 
 export default class LoginService {
+
     login(email:string, password:string){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8'
@@ -30,7 +33,8 @@ export default class LoginService {
             localStorage.setItem("x-access-token",response.data.jwt)
         }).catch(error => alert(error));
     }
-    registrerPerson(name:string,email:string, mobile:number,password:string,type:string, picture:string ) {
+    
+    registrerPerson(name:string,email:string, mobile:(number|undefined), password:string,type:string, picture:string ) {
         var postData = {
             name:name,
             email: email,
@@ -48,9 +52,14 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                localStorage.setItem("x-access-token",response.data.jwt)
+                if (response.status==409){
+                    console.log("User exists from before.")
+                }
+                else localStorage.setItem("x-access-token",response.data.jwt)
+
+                return response;
             })
-            .catch(error => alert(error));
+            .catch(error => console.log(error));
     }
 }
 
