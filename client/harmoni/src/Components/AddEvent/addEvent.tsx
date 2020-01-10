@@ -42,8 +42,7 @@ const Wrapper = styled.div`
 function getStepContent(step: number) {
     switch (step) {
         case 0:
-            return (<BasicInfoForm
-            />);
+            return (<BasicInfoForm/>);
         case 1:
             return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
         case 2:
