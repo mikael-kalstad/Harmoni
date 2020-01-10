@@ -2,7 +2,7 @@ import axios from 'axios';
 import Service from './Service';
 
 interface User {
-  userId: number;
+  user_id: number;
   name: string;
   email: string;
   mobile: number;
@@ -57,7 +57,7 @@ class UserService extends Service {
   //Fetches all artists for an event
   getArtistsForEvent(eventId: number) {
     return axios
-      .get(this.path + '/users/artists' + eventId)
+      .get(this.path + '/users/artists/' + eventId)
       .then(response => response.data);
   }
   //Fetches all volunteers for an event
@@ -70,14 +70,16 @@ class UserService extends Service {
   // Adds a user
   addUser(user: User) {
     return axios
-      .post(this.path + '/users/', user)
+      .post(this.path + '/users/', user,{
+        headers:{ 'content-type': 'multipart/form-data' }
+      })
       .then(response => response.data);
   }
 
   // Updates a user
   updateUser(user: User) {
     return axios
-      .put(this.path + '/users/' + user.userId, user)
+      .put(this.path + '/users/' + user.user_id, user)
       .then(response => response.data);
   }
 

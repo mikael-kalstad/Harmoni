@@ -27,6 +27,7 @@ export default class userDao extends daoParentUser{
         super.query("SELECT * FROM user WHERE user_id = ?", [userId], callback);
     }
 
+
     // Gets a user by its mail
     getUserByEMail(email: string, callback){
         super.query("SELECT * FROM user WHERE email = ?", [email], callback);

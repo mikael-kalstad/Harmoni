@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FrontPage from './Components/Pages/frontPage';
 import Register from './Components/Pages/register';
 import Profile from './Components/Pages/profile';
+import Events from './Components/Pages/events';
 import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
@@ -33,22 +34,24 @@ const App: React.FC = () => {
   }
 
   const logOut = () => {
-    // TODO: SOMETHING WITH JWT TOKEN?...
+      localStorage.removeItem("x-access-token");
     setUserData(undefined);
   }
 
   const logIn = async(email: string) => {
     setUserData(await userService.getUserByEMail(email));
   }
-    
+
   return (
     <Router>
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
             <Route exact path='/' component={FrontPage}/>
-            <Route exact path='/registrer' component={Register}/>
+            <Route exact path='/registrer' render={props => <Register {...props} logIn={logIn} />} />
+            <Route exact path='/profile/change' render={props => <Registrer {...props} userId={userData} />} />
             <Route exact path='/profile' component={Profile}/>
-            <Route path='/event/:id' component={Event} />
+            <Route exact path='/events/:type' component={Events} />
+            <Route exact path='/event/:id' component={Event} />
             <Route exact path='/newevent' component={AddEvent}/>
             <Route component={PageNotFound} />
             
