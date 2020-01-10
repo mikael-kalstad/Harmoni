@@ -26,6 +26,10 @@ export default class userDao extends daoParentUser{
     getUser(userId: number, callback){
         super.query("SELECT * FROM user WHERE user_id = ?", [userId], callback);
     }
+    // Gets a user by its name
+    getUserByName(artistName: string, callback){
+        super.query("SELECT name, email, picture FROM user WHERE name = ?", [artistName], callback);
+    }
 
     // Gets a user by its mail
     getUserByEMail(email: string, callback){
@@ -73,4 +77,5 @@ export default class userDao extends daoParentUser{
     deleteUser(userId: number, callback){
         super.query("DELETE FROM user WHERE user_id=?", [userId], callback)
     }
+
 };

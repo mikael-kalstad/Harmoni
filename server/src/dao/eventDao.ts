@@ -43,6 +43,9 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE status = ?', [status], callback);
     }
 
+    getEventsByCategory(category : string, callback) {
+        super.query('SELECT * FROM event WHERE category = ?', [category], callback);
+    }
 
     addEvent(event : event, callback) {
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status, event.information, event.category, event.picture], callback);
@@ -58,5 +61,38 @@ export default class eventDao extends daoParentEvent {
 
     getEventsOfUser(userId : number, callback) {
         super.query('SELECT event.* FROM event, user_event WHERE user_event.user_id = ? AND event.event_id = user_event.event_id', [userId], callback)
+    }
+
+
+    // Search for an events
+    searchForEvents(input: string, callback) {
+        var sql1 = 'SELECT * FROM event WHERE name like ? or address like ? or information like ? or category like ? order by event_id desc;';
+
+        var sql2 = "Select * from event, user where event.organizer = user.user_id and user.name like ? order by event_id desc;";
+
+        let events: event[];
+        super.query(sql1,
+            ["%"+input+"%", "%"+input+"%","%"+input+"%","%"+input+"%"],
+            (status , data) => {
+                if (status == 500){
+                    console.log("Error: search for event");
+                    callback("error search for events")
+                }
+                else {
+                    events = data.forEach().concat(events);
+                }
+            })
+
+        super.query(sql2, ["%"+input+"%"],
+            (status , data) => {
+                if (status == 500){
+                    console.log("Error: search for event");
+                    callback("error search for events")
+                }
+                else {
+                    events = data.forEach().concat(events);
+                }
+            }
+        );
     }
 };

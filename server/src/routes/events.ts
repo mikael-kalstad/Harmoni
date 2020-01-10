@@ -40,6 +40,12 @@ router.get("/organizer/:organizer", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+// Get events given category
+router.get("/category/:category", async (request, response) => {
+    dao.getEventsByOrganizer(parseInt(request.params.category), (status, data) => {
+        status == 500 ? response.status(500) : response.send(data)
+    });
+})
 
 // Get all
 router.get("/", async (request, response) => {
