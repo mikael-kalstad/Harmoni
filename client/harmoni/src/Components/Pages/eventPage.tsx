@@ -116,6 +116,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState();
   const [user, setUser] = useState();
+
   useEffect(() => {
     fetchEvent();
     fetchTickets();
