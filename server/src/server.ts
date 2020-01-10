@@ -21,4 +21,7 @@ server.use("/login", require('./routes/login'));
 
 //server.use("api/v0/users", require("./routes/users"));
 
-server.listen(15016, () => console.log("Server started"));
+var portArg = process.argv.find((e) => e.match("port:"));
+var port = portArg == undefined ? 15016 : parseInt(portArg.replace("port:", ""));
+
+server.listen(port, () => console.log("Server started on port:", port));
