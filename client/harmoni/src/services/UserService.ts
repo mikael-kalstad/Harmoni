@@ -23,7 +23,7 @@ class UserService extends Service {
   // Fetches one user by its id
   getUserById(userId: number) {
     return axios
-      .get<User>(this.path + '/users/' + userId)
+      .get<User>(this.path + '/authorized/users/' + userId)
       .then(response => response.data);
   }
 
@@ -37,7 +37,7 @@ class UserService extends Service {
   // Fetches all users of one type
   getUsersOfType(type: string) {
     return axios
-      .get<User[]>(this.path + '/users/type/' + type)
+      .get<User[]>(this.path + '/authorized/users/type/' + type)
       .then(response => response.data);
   }
 
@@ -63,7 +63,7 @@ class UserService extends Service {
   //Fetches all volunteers for an event
   getVolunteersForEvent(eventId: number) {
     return axios
-      .get(this.path + '/users/volunteers' + eventId)
+      .get(this.path + '/authorized/users/volunteers' + eventId)
       .then(response => response.data);
   }
 
@@ -79,14 +79,14 @@ class UserService extends Service {
   // Updates a user
   updateUser(user: User) {
     return axios
-      .put(this.path + '/users/' + user.user_id, user)
+      .put(this.path + '/authorized/users/' + user.user_id, user)
       .then(response => response.data);
   }
 
   // Deletes a user
   deleteUser(userId: number) {
     return axios
-      .delete(this.path + '/users/' + userId)
+      .delete(this.path + '/authorized/users/' + userId)
       .then(response => response.data);
   }
 }

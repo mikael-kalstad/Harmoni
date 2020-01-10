@@ -54,7 +54,7 @@ function getStepContent(step: number) {
   }
 }
 
-export default function AddEvent() {
+const AddEvent = () => {
   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
@@ -172,9 +172,9 @@ export default function AddEvent() {
             </div>
           ) : (
             <div>
-              <p className={classes.instructions}>
+              <div className={classes.instructions}>
                 {getStepContent(activeStep)}
-              </p>
+              </div>
               <div>
                 <Button
                   disabled={activeStep === 0}
@@ -211,4 +211,6 @@ export default function AddEvent() {
       </Wrapper>
     </div>
   );
-}
+};
+
+export default AddEvent;

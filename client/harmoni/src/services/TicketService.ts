@@ -22,16 +22,16 @@ class TicketService extends Service {
   }
 
   addTickets() {
-    return axios.post(this.path + '/tickets/').then(response => response.data);
+    return axios.post(this.path + '/authorized/tickets/').then(response => response.data);
   }
   deleteTicket(ticketId: number) {
     return axios
-      .delete(this.path + '/tickets/' + ticketId)
+      .delete(this.path + '/authorized/tickets/' + ticketId)
       .then(response => response.data);
   }
   deleteTicketsByEventId(eventId: number) {
     return axios
-      .delete(this.path + '/tickets/event/' + eventId)
+      .delete(this.path + '/authorized/tickets/event/' + eventId)
       .then(response => response.data);
   }
 }
