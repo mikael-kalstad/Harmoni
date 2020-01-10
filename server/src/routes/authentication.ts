@@ -1,7 +1,6 @@
 import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
-import {compareHash, hash} from "../hashing";
 
 
 
@@ -10,11 +9,11 @@ var bodyParser = require("body-parser");
 
 
 const router = express.Router();
-const dao = new userDao(pool);
 
 router.use(bodyParser.json());
 let publicKey;
 let privateKey = (publicKey = "superSecret");
+router.use(express.static("public"));
 
 
 
@@ -34,3 +33,5 @@ router.use("/authorized", (req, res, next) => {
         }
     });
 });
+
+module.exports = router;
