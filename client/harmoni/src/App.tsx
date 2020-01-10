@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { userService } from './services/UserService';
 
 // Bootstrap styling
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Pages
 import FrontPage from './Components/Pages/frontPage';
@@ -32,36 +32,43 @@ const App: React.FC = () => {
     localStorage.getItem('x-access-token');
   }, []);
 
-  const fetchData = async() => {
+  const fetchData = async () => {
     // setEventData(await eventService.getAllEvents());
-  }
+  };
 
   const logOut = () => {
-      localStorage.removeItem("x-access-token");
+    localStorage.removeItem('x-access-token');
     setUserData(undefined);
-  }
+  };
 
-  const logIn = async(email: string) => {
+  const logIn = async (email: string) => {
     setUserData(await userService.getUserByEMail(email));
-  }
+  };
 
   return (
     <Router>
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
-            <Route exact path='/' component={FrontPage} />
-            <Route exact path='/registrer' render={props => <Register {...props} logIn={logIn} />} />
-            <Route exact path='/profile/change' render={props => <ChangeProfile {...props} userData={userData} />}  />
-            <Route exact path='/profile' component={Profile}/>
-            <Route exact path='/events/:type' component={Events} />
-            <Route exact path='/event/:id' component={Event} />
-            <Route exact path='/newevent' component={AddEvent}/>
-            <Route component={PageNotFound} />
+          <Route exact path="/" component={FrontPage} />
+          <Route
+            exact
+            path="/registrer"
+            render={props => <Register {...props} logIn={logIn} />}
+          />
+          <Route
+            exact
+            path="/profile/change"
+            render={props => <ChangeProfile {...props} userData={userData} />}
+          />
+          <Route exact path="/profile" component={Profile} />
+          <Route exact path="/events/:type" component={Events} />
+          <Route exact path="/event/:id" component={Event} />
+          <Route exact path="/newevent" component={AddEvent} />
+          <Route component={PageNotFound} />
         </Switch>
       </Layout>
     </Router>
   );
-}
+};
 
 export default App;
-

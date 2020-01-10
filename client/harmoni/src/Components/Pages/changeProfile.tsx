@@ -4,37 +4,33 @@ import { loginService } from '../../services/loginService';
 import { Redirect } from 'react-router-dom';
 import Register from './register';
 
-const ChangeProfile = (props:any) => {
-    const [redirect, setRedirect] = useState(false);
-    const [userData, setUserData] = useState();
+const ChangeProfile = (props: any) => {
+  const [redirect, setRedirect] = useState(false);
+  const [userData, setUserData] = useState();
 
-    useEffect(() => {
-       authentiCate();
-    }, []);
+  useEffect(() => {
+    authentiCate();
+  }, []);
 
-    const authentiCate = async() => {
-        // Check jwt token
-        let res = await loginService.checkToken()
-        
-        if (!res) {
-            setRedirect(true);
-            return;
-        }
+  const authentiCate = async () => {
+    // Check jwt token
+    let res = await loginService.checkToken();
 
-        else if(props.userData)
-            fetchUserById(props.userData[0]['user_id']);
-    }
+    if (!res) {
+      setRedirect(true);
+      return;
+    } else if (props.userData) fetchUserById(props.userData[0]['user_id']);
+  };
 
-    const fetchUserById = async(id:number) => {
-        setUserData(await userService.getUserById(id));
-    }
+  const fetchUserById = async (id: number) => {
+    setUserData(await userService.getUserById(id));
+  };
 
-    if (redirect) return <Redirect to='/'/>
+  if (redirect) return <Redirect to="/" />;
 
-    if (userData)
-        return <Register userData={userData} />
+  if (userData) return <Register userData={userData} />;
 
-    return <h1>Hackerman?</h1>
-}
+  return <h1>Hackerman?</h1>;
+};
 
 export default ChangeProfile;
