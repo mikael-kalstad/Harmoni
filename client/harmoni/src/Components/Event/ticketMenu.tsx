@@ -31,7 +31,8 @@ const BuyButtonWrapper = styled.div`
 let checkCircleStyle = {
   fontSize: 120,
   color: '#82c91e',
-  marginTop: 50
+  marginTop: 50,
+  marginBottom: 20
 };
 
 const TicketMenu = (props: { tickets: ITicket[] }) => {
@@ -62,10 +63,15 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
 
   const closeDialog = () => {
     setDisplayDialog(false);
+    setQuantities(quantities.map(q => 0));
   };
 
   const buyTickets = () => {
     setDisplayDialog(true);
+  };
+
+  const getTotalTickets = () => {
+    return quantities.reduce((sum, val) => sum + val);
   };
 
   return (
@@ -81,26 +87,36 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
           key={ticket.type}
         />
       ))}
-      <TicketSummary
-        tickets={props.tickets}
-        quantities={quantities}
-        totalPrice={totalPrice}
-      />
-      <TotalSumText>
-        Total pris: <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
-      </TotalSumText>
+      {getTotalTickets() > 0 ? (
+        <>
+          <TicketSummary
+            tickets={props.tickets}
+            quantities={quantities}
+            totalPrice={totalPrice}
+          />
+          <TotalSumText>
+            Total pris:{' '}
+            <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
+          </TotalSumText>
+        </>
+      ) : (
+        <></>
+      )}
+
       <BuyButtonWrapper>
         <Button
-          backgroundColor={'#47BD29'}
+          backgroundColor={getTotalTickets() > 0 ? '#47BD29' : 'grey'}
           dropShadow={true}
           onClick={buyTickets}
+          disabled={!(getTotalTickets() > 0)}
         >
           Kjøp
         </Button>
       </BuyButtonWrapper>
       {displayDialog && (
-        <InfoDialog width="300px" height="200px" closeDialog={closeDialog}>
+        <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
           <FaCheckCircle style={checkCircleStyle} />
+          <Button onClick={closeDialog}>Tilbake</Button>
         </InfoDialog>
       )}
     </div>
