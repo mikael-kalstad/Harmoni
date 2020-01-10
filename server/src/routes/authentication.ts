@@ -27,7 +27,7 @@ router.use("/authorized", (req, res, next) => {
             res.json({ error: "Not authorized" });
         } else {
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 6
+                expiresIn: 30
             });
             localStorage.setItem("x-access-token",token);
             next();
