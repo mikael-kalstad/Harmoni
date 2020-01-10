@@ -88,7 +88,7 @@ router.post("/register",(req,res)=>{
     req.body.salt= data.salt;
 
     dao.addUser(req.body, (status) => {
-        if(status==401){
+        if(status==200){
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });

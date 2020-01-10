@@ -108,7 +108,7 @@ const ProfileOptions = (props: {img: string, name: string}) => (
                 Endre profil
             </ProfileButton>
         </ProfileLink>
-        <ProfileLink to='/home'>
+        <ProfileLink to='/'>
             <ProfileButton>
                 Endre noe annet nyttig
             </ProfileButton>

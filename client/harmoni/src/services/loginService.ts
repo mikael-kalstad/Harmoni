@@ -30,7 +30,8 @@ export default class LoginService {
             localStorage.setItem("x-access-token",response.data.jwt)
         }).catch(error => alert(error));
     }
-    registrerPerson(name:string,email:string, mobile:number,password:string,type:string, picture:string ) {
+    
+    registrerPerson(name:string,email:string, mobile:(number|undefined), password:string,type:string, picture:string ) {
         var postData = {
             name:name,
             email: email,
@@ -48,9 +49,10 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                localStorage.setItem("x-access-token",response.data.jwt)
+                localStorage.setItem("x-access-token",response.data.jwt);
+                return response;
             })
-            .catch(error => alert(error));
+            .catch(error => console.log(error));
     }
 }
 

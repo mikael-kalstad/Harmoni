@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 import Button from './Button/button';
 import { loginService } from '../services/loginService';
+import TextField from '@material-ui/core/TextField';
+import { isAbsolute } from 'path';
 
 const Overlay = styled.div` 
   position: fixed;
@@ -19,8 +21,8 @@ const Container = styled.div`
     position: fixed;
     margin: auto;
     left: 0; right: 0; top: 0; bottom: 0;
-    width: 367px;
-    height: 491px;
+    width: 380px;
+    height: 530px;
     border-radius: 5px;
     background: white;
 `;
@@ -41,34 +43,19 @@ const Title = styled.h2`
     text-align: center;
     font-weight: bold;
     font-size: 28px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     margin-top: 0;
-`;
-
-const Input = styled.input`
-    display: block;
-    margin: 25px 0;
-    width: 100%;
-    height: 50px;
-    border: none;
-    background: #EFEFEF;
-    font-size: 18px;
-    text-indent: 15px;
-
-    :hover {
-        filter: brightness(98%);
-    }
 `;
 
 const StyledLink = styled(props => <Link {...props} />)`
     margin-top: 20px;
     text-align: center;
     display: block;
-    color: #868686;
+    color: #687faf;
     text-decoration: underline;
 
     :visited {
-        color: #868686;
+        color: #687faf;
     }
 
     :hover {
@@ -84,26 +71,36 @@ const Exit = styled.img`
     cursor: pointer;
 `;
 
-const WarningText = styled.p`
-    margin: 10px auto;
-    left: 0; right: 0;
-    color: #E57652;
-    bottom: 180px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
+const BtnWrapper = styled.div`
+    margin-top: 35px;
 `;
+
+const LinkWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+`;
+
+// Material UI input styling
+const inputStyle = {
+    width: '100%',
+    marginTop: '25px',
+}
 
 // Login popup dialog component
 const Login = (props: any) => {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
-    const [redirect, setRedirect] = useState(false);
     const [warningText, setWarningText] = useState('');
+    const [redirect, setRedirect] = useState(false);
+
+    // Used to display error on empty input when submitting
+    const [submit, setSubmit] = useState(false);
 
     // Check inputs and try to log in with the given username and password
     const login = async(username: string, password: string) => {
-        // // Check if inputs are empty
+        setSubmit(true);
+
+        // Check if inputs are empty
         if (username.trim() === '' || password.trim() === '') {
             setWarningText('Ett eller flere felter er tom');
             return;
@@ -147,27 +144,51 @@ const Login = (props: any) => {
                 <Title>Harmoni</Title>
 
                 <Wrapper>
-                    <Input 
-                        type='email'
+                    <TextField 
+                        style={inputStyle} 
+                        variant='outlined' 
+                        label='Email eller tlf*'
+                        error={(submit && emailInput === '') || warningText !== ''}
+                        helperText={submit && emailInput === '' ? 'Email er påkrevd' : ''}
                         onChange={e => setEmailInput(e.target.value)}
-                        value={emailInput}
-                        placeholder='Email eller tlf'
                         onKeyDown={e => checkForEnterKey(e)}
                     />
 
-                    <Input
+                    <TextField 
+                        style={inputStyle} 
+                        variant='outlined' 
+                        label='Passord*'
                         type='password'
+                        helperText={
+                            (submit && passwordInput === '' ? 'Passord er påkrevd' :
+                            warningText !== '' ? warningText : '')
+                        }
+                        error={(submit && passwordInput === '') || warningText !== ''}
                         onChange={e => setPasswordInput(e.target.value)}
-                        value={passwordInput}
-                        placeholder='Passord'
                         onKeyDown={e => checkForEnterKey(e)}
                     />
-
-                    <WarningText>{warningText}</WarningText>
                     
-                    <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
+                    <BtnWrapper>
+                        <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
+                    </BtnWrapper>
 
-                    <StyledLink to="/registrer" onClick={() => props.toggle()}>Registrer deg</StyledLink>
+                    <LinkWrapper>
+                        <StyledLink 
+                            style={{justifySelf: 'start'}}
+                            to="/glemt-passord" 
+                            onClick={() => props.toggle()}
+                        >
+                            Glemt passsord?
+                        </StyledLink>
+
+                        <StyledLink 
+                            style={{justifySelf: 'end'}}
+                            to="/registrer" 
+                            onClick={() => props.toggle()}
+                        >
+                            Registrer deg
+                        </StyledLink>
+                    </LinkWrapper>
                 </Wrapper>
             </Container>
         </>
