@@ -35,7 +35,7 @@ const App: React.FC = () => {
   }
 
   const logOut = () => {
-    // TODO: SOMETHING WITH JWT TOKEN?...
+      localStorage.removeItem("x-access-token");
     setUserData(undefined);
   }
 
@@ -43,7 +43,6 @@ const App: React.FC = () => {
     setUserData(await userService.getUserByEMail(email));
   }
 
-    
   return (
     <Router>
       <Layout userData={userData} logOut={logOut} logIn={logIn}>

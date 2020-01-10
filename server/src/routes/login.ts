@@ -64,6 +64,23 @@ router.use("/api", (req, res, next) => {
         }
     });
 });
+router.post("/token", (req, res, next) => {
+    var token = req.headers["x-access-token"];
+    jwt.verify(token, publicKey, (err, decoded) => {
+        if (err) {
+            console.log("Token Not ok");
+            res.status(202);
+            res.json({ error: "Not authorized" });
+        } else {
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 60*30
+            });
+            localStorage.setItem("x-access-token",token);
+            //console.log("Token ok: " + decoded.email);
+            next();
+        }
+    });
+});
 router.get("/token", (req,res)=>{
     let newToken="";
     var token=req.headers["x-access-token"];
@@ -89,7 +106,7 @@ router.post("/register",(req,res)=>{
     req.body.salt= data.salt;
     dao.getUserByEMail(req.body.email, (status,data) => {
         user = data[0];
-        if (typeof user == "undefined") {
+        if (typeof user === "undefined") {
             dao.addUser(req.body, (status) => {
                 if (status !== 401) {
                     let token = jwt.sign({email: req.body.email}, privateKey, {
@@ -101,7 +118,6 @@ router.post("/register",(req,res)=>{
                     res.status(401);
                     res.json({error: "Could not add user"});
                 }
-
             });
         }
         else{
