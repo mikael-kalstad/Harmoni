@@ -43,12 +43,12 @@ class EventService extends Service {
 
   addEvent(event: Event) {
     return axios
-      .post(this.path + '/events/', event)
+      .post(this.path + '/authorized/events/', event)
       .then(response => response.data);
   }
   updateEvent(event: Event) {
     return axios
-      .put(this.path + '/events/' + event.eventId, event)
+      .put(this.path + '/authorized/events/' + event.eventId, event)
       .then(response => response.data);
   }
   getEventsByUser(userId: number) {
@@ -58,7 +58,7 @@ class EventService extends Service {
   }
   deleteEventById(eventId: number) {
     return axios
-      .delete(this.path + '/events/' + eventId)
+      .delete(this.path + '/authorized/events/' + eventId)
       .then(response => response.data);
   }
 }
