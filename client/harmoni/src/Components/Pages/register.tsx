@@ -60,6 +60,15 @@ const Register = (props: {userData?: object; logIn?: Function}) => {
     const types_translated = ['Arrangør', 'Artist/Manager', 'Frivillig'];
     const types = ['organizer', 'artist', 'volunteer'];
 
+    useEffect(() => {
+        // Phone is optional
+        if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
+
+        // All other inputs are required
+        setNameInput(props.userData[0]['name']);
+        setEmailInput(props.userData[0]['email']);
+    });
+
     let menuItems: JSX.Element[] = [];
 
     for (let i = 0; i < types.length; i++) {

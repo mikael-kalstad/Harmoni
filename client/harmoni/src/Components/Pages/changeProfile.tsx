@@ -4,21 +4,25 @@ import { loginService } from '../../services/loginService';
 import { Redirect } from 'react-router-dom';
 import Register from './register';
 
-const ChangeProfile = () => {
+const ChangeProfile = (props:any) => {
     const [redirect, setRedirect] = useState(false);
     const [userData, setUserData] = useState();
 
     useEffect(() => {
-        if (!authentiCate()) {
-            setRedirect(true);
-            return;
-        }
+       authentiCate();
     }, []);
 
     const authentiCate = async() => {
         // Check jwt token
         let res = await loginService.checkToken()
-        console.log("AUTHENTICATE", res);
+        
+        if (!res) {
+            setRedirect(true);
+            return;
+        }
+
+        else if(props.userData)
+            fetchUserById(props.userData[0]['user_id']);
     }
 
     const fetchUserById = async(id:number) => {

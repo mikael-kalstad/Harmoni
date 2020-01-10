@@ -43,7 +43,7 @@ export default class LoginService {
         return axios.post("http://localhost:15016/login/token",{
             headers: headers
         }).then(response => {
-            if (response.status !== 401){
+            if (response.status === 401){
                 return false;
             }else{
                 localStorage.setItem("x-access-token",response.data.jwt)

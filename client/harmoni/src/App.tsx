@@ -49,7 +49,7 @@ const App: React.FC = () => {
         <Switch>
             <Route exact path='/' component={FrontPage} />
             <Route exact path='/registrer' render={props => <Register {...props} logIn={logIn} />} />
-            <Route exact path='/profile/change' component={ChangeProfile} />
+            <Route exact path='/profile/change' render={props => <ChangeProfile {...props} userData={userData} />}  />
             <Route exact path='/profile' component={Profile}/>
             <Route exact path='/events/:type' component={Events} />
             <Route exact path='/event/:id' component={Event} />
