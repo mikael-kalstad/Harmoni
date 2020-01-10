@@ -56,7 +56,7 @@ router.use("/api", (req, res, next) => {
             res.json({ error: "Not authorized" });
         } else {
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 6
             });
             localStorage.setItem("x-access-token",token);
             //console.log("Token ok: " + decoded.email);
@@ -91,6 +91,7 @@ router.post("/token", (req,res)=>{
             res.status(202);
             res.json({error:"Not authorized"});
         }else{
+            console.log("Token ok");
             newToken = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
