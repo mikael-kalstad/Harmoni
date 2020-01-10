@@ -1,4 +1,4 @@
-const daoParentUser = require("./dao.ts");
+const daoParentUser = require("./dao");
 //const User = require("./User.ts");
 
 export interface user {

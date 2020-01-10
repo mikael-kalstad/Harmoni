@@ -1,4 +1,4 @@
-const daoParentRider = require('./dao.ts');
+const daoParentRider = require('./dao');
 
 export interface riderList {
   rider_list_id: number;
@@ -58,10 +58,10 @@ export default class riderDao extends daoParentRider {
     );
   }
 
-  updateRider(rider: rider, callback) {
+  updateRider(rider_id: number, rider: rider, callback) {
     super.query(
       'UPDATE rider SET text = ? WHERE rider_id = ?',
-      [rider.text, rider.rider_id],
+      [rider.text, rider_id],
       callback
     );
   }
