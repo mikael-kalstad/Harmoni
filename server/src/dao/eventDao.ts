@@ -1,4 +1,4 @@
-const daoParentEvent = require('./dao.ts');
+const daoParentEvent = require('./dao');
 
 export interface event {
     event_id: number,
@@ -23,23 +23,23 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event', [], callback);
     }
 
-    getEvent(eventId : number, callback) {
+    getEvent(eventId: number, callback) {
         super.query('SELECT * FROM event WHERE event_id = ?', [eventId], callback);
     }
 
-    getEventsByAddress(location : string, callback) {
+    getEventsByAddress(location: string, callback) {
         super.query('SELECT * FROM event WHERE address = ?', [location], callback);
     }
 
-    getEventsByCapacity(capacity : number, callback) {
+    getEventsByCapacity(capacity: number, callback) {
         super.query('SELECT * FROM event WHERE capacity = ?', [capacity], callback);
     }
 
-    getEventsByOrganizer(organizer : number, callback) {
+    getEventsByOrganizer(organizer: number, callback) {
         super.query('SELECT * FROM event WHERE organizer = ?', [organizer], callback);
     }
 
-    getEventsByStatus(status : string, callback) {
+    getEventsByStatus(status: string, callback) {
         super.query('SELECT * FROM event WHERE status = ?', [status], callback);
     }
 
@@ -47,19 +47,19 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE category = ?', [category], callback);
     }
 
-    addEvent(event : event, callback) {
+    addEvent(event: event, callback) {
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status, event.information, event.category, event.picture], callback);
     }
 
-    updateEvent(eventId : number, data: event , callback){
+    updateEvent(eventId: number, data: event, callback) {
         super.query('UPDATE event SET name = ?, organizer = ?, address = ?, from_date = ?, to_date = ?, capacity = ?, status = ?, information = ?, category = ?, picture = ? WHERE event_id = ?',
             [data.name, data.organizer, data.address, data.from_date, data.to_date, data.capacity, data.status, data.information, data.category, data.picture, eventId], callback);
     }
-    deleteEvent(eventId : number,  callback){
+    deleteEvent(eventId: number, callback) {
         super.query('DELETE FROM event WHERE event_id = ?', [eventId], callback);
     }
 
-    getEventsOfUser(userId : number, callback) {
+    getEventsOfUser(userId: number, callback) {
         super.query('SELECT event.* FROM event, user_event WHERE user_event.user_id = ? AND event.event_id = user_event.event_id', [userId], callback)
     }
 };

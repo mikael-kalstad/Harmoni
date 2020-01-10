@@ -1,4 +1,4 @@
-const daoParentTicket = require('./dao.ts');
+const daoParentTicket = require('./dao');
 
 export interface ticket {
     ticket_id : number;

@@ -1,11 +1,11 @@
 import axios from 'axios';
 import Service from './Service';
-import { renderToStaticMarkup } from 'react-dom/server';
+
 interface Event {
   eventId: number;
   name: string;
   organizer: number;
-  location: string;
+  address: string;
   fromDate: string;
   toDate: string;
   capacity: number;
@@ -20,7 +20,8 @@ class EventService extends Service {
   }
 
   getAllEvents() {
-    return axios.get(this.path + '/events/').then(response => response.data);
+    return axios.get(this.path + '/events/')
+    .then(response => response.data);
   }
 
   getEventsByLocation(location: string) {

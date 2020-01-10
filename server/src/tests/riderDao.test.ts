@@ -118,7 +118,7 @@ test("Update rider", done => {
         rider_id: 6,
         text: "Sørlandschips"
     }
-    dao.updateRider(6,rider, (status, data) => {
+    dao.updateRider(rider.rider_id, rider, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);

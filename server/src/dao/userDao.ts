@@ -1,4 +1,4 @@
-const daoParentUser = require("./dao.ts");
+const daoParentUser = require("./dao");
 //const User = require("./User.ts");
 
 export interface user {
@@ -30,6 +30,7 @@ export default class userDao extends daoParentUser{
     getUserByName(artistName: string, callback){
         super.query("SELECT name, email, picture FROM user WHERE name = ?", [artistName], callback);
     }
+
 
     // Gets a user by its mail
     getUserByEMail(email: string, callback){

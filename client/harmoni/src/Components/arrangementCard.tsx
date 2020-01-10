@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Skeleton from 'react-loading-skeleton';
 
 const StyledLink = styled(props => <Link {...props} />)`
     width: fit-content;
@@ -42,6 +42,10 @@ const Category = styled.p`
     color: #A2A2A2;
     margin-left: 5px;
     width: 30%;
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 `;
 
 const Title = styled.h3`
@@ -50,6 +54,10 @@ const Title = styled.h3`
     color: black;
     margin-left: 5px;
     width: 70%;
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 `;
 
 const Wrapper = styled.div`
