@@ -64,6 +64,7 @@ router.use("/api", (req, res, next) => {
         }
     });
 });
+
 router.post("/token", (req, res, next) => {
     var token = req.headers["x-access-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
@@ -81,6 +82,7 @@ router.post("/token", (req, res, next) => {
         }
     });
 });
+
 router.get("/token", (req,res)=>{
     let newToken="";
     var token=req.headers["x-access-token"];
@@ -99,6 +101,7 @@ router.get("/token", (req,res)=>{
     });
 
 });
+
 router.post("/register",(req,res)=>{
 
     let data=hash(req.body.password);

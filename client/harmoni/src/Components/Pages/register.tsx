@@ -10,7 +10,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { userService } from '../../services/UserService';
 import { loginService } from '../../services/loginService';
 import { Redirect } from 'react-router-dom';
-import { FaSave } from 'react-icons/fa';
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -45,7 +44,7 @@ interface User {
     picture: string;
 }
 
-const Register = (props: {match?: any; logIn?: Function}) => {
+const Register = (props: {userData?: array; logIn?: Function}) => {
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [tlfInput, setTlfInput] = useState();
@@ -58,9 +57,16 @@ const Register = (props: {match?: any; logIn?: Function}) => {
     const [submit, setSubmit] = useState(false);
 
     useEffect(() => {
-        // Fetch user data if user id is defined in props
-        if (props.match.params.userId) fetchUserById(props.match.params.userId);
+        // Check jwt token
+        let res = await loginService.checkToken()
+
+        // Fetch user data if user data is defined in props
+        if (props.userData) fetchUserById(props.userData[0]['user_id']);
     }, []);
+
+    const authentiCate = async(token:string) => {
+        
+    }
 
     const fetchUserById = async(id:number) => {
         userService.getUserById(id)
@@ -132,7 +138,7 @@ const Register = (props: {match?: any; logIn?: Function}) => {
 
     return (
         <>
-            <Title>{props.match.params.userId ? 'Endre Profil' : 'Registrer bruker'}</Title>
+            <Title>{props.userData ? 'Endre Profil' : 'Registrer bruker'}</Title>
             <Wrapper>
                 <FormControl variant="outlined"  error={submit && type === ''} style={{width: '160px'}}>
                     <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
