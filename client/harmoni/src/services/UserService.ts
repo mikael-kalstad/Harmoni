@@ -23,7 +23,7 @@ class UserService extends Service {
   // Fetches one user by its id
   getUserById(userId: number) {
     return axios
-      .get<User>(this.path + '/users/' + userId)
+      .get<User>(this.path + '/authorized/users/' + userId)
       .then(response => response.data);
   }
 
