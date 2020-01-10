@@ -28,6 +28,8 @@ const App: React.FC = () => {
   // Get data when component mounts
   useEffect(() => {
     fetchData();
+
+    localStorage.getItem('x-access-token');
   }, []);
 
   const fetchData = async() => {

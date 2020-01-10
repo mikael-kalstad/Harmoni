@@ -67,6 +67,7 @@ const Register = (props: {userData?: object; logIn?: Function}) => {
         // All other inputs are required
         setNameInput(props.userData[0]['name']);
         setEmailInput(props.userData[0]['email']);
+        setType(props.userData[0]['type']);
     });
 
     let menuItems: JSX.Element[] = [];
