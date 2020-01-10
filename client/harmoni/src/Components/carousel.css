@@ -1,0 +1,9 @@
+/* CSS file needed to change color of arrow and index tab of bootstrap carousel */
+
+.carousel-indicators li {
+    background-color: darkgray;
+  }
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: brightness(30%);
+}

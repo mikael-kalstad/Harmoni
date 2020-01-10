@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 import Button from './Button/button';
+import { loginService } from '../services/loginService';
 
 const Overlay = styled.div` 
   position: fixed;
@@ -94,20 +95,26 @@ const WarningText = styled.p`
 `;
 
 // Login popup dialog component
-const Login = (props: { toggle: () => void; }) => {
+const Login = (props: any) => {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [redirect, setRedirect] = useState(false);
     const [warningText, setWarningText] = useState('');
 
     // Check inputs and try to log in with the given username and password
-    const login = (username: string, password: string) => {
-        
-        // Check if inputs are empty
-        if (username === '' || password === '')
+    const login = async(username: string, password: string) => {
+        // // Check if inputs are empty
+        if (username.trim() === '' || password.trim() === '') {
             setWarningText('Ett eller flere felter er tom');
-        else if (username === 'hello' && password === '123')
+            return;
+        }
+
+        let res = await loginService.login(username, password)
+        
+        if (res && res.status !== 401) {
             setRedirect(true);
+            props.logIn(username);
+        }
         else 
             setWarningText('Email eller passord er feil, prøv igjen');
     }

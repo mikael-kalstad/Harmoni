@@ -17,20 +17,11 @@ const StyledLink = styled(props => <Link {...props} />)`
     color: #7f7f7f;
   }
 
-<<<<<<< HEAD
     :hover {
         text-decoration: none;
     }
     margin: 0;
     margin-right: 20px;
-=======
-  :hover {
-    filter: brightness(70%);
-    text-decoration: none;
-  }
-  margin: 0;
-  margin-right: 20px;
->>>>>>> c6d6ed27661cdfe345944183026f801aaee7885b
 `;
 
 const NavigationBar = (props: any) => (
@@ -69,16 +60,16 @@ const NavigationBar = (props: any) => (
         </NavDropdown>
       </Nav>
 
-          {props.isLoggedIn 
+          {props.userData  
             ? (<>
-                <SmallProfileNav img='/icons/test.jpg' name='Jahn Teigen'/>
+                <SmallProfileNav picture={props.userData.picture} name={props.userData[0].name}/>
                 {/* TODO: ADD LOG OUT FUNCTIONALITY */}
-                <OutlineButton>Logg ut</OutlineButton>
+                <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
               </>)
             : (<>
                 <StyledLink to='/registrer'>
                   <OutlineButton>Registrer</OutlineButton></StyledLink>
-                <LoginBtn />
+                <LoginBtn logIn={props.logIn} />
               </>)
           }
         </Navbar.Collapse>

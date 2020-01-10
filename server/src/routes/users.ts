@@ -1,6 +1,6 @@
 import express from 'express';
-import userDAO from '../dao/userDao';
-import { pool } from '../dao/database';
+import userDAO from '../dao/userDao'
+import { pool } from '../dao/database'
 
 const router = express.Router();
 const dao = new userDAO(pool);

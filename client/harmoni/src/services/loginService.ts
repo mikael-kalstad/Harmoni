@@ -14,9 +14,10 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                localStorage.setItem("x-access-token",response.data.jwt)
+                localStorage.setItem("x-access-token", response.data.jwt)
+                return response;
             } )
-            .catch(error => alert(error));
+            .catch(error => console.log(error));
     }
     updateToken(){
         const headers = {
@@ -29,4 +30,28 @@ export default class LoginService {
             localStorage.setItem("x-access-token",response.data.jwt)
         }).catch(error => alert(error));
     }
+    registrerPerson(name:string,email:string, mobile:number,password:string,type:string, picture:string ) {
+        var postData = {
+            name:name,
+            email: email,
+            password: password,
+            mobile:mobile,
+            type:type,
+            picture:picture,
+            salt:"",
+            hash:""
+        };
+        const headers = {
+            "content-Type": "application/json;charset=utf-8",
+        }
+        return axios.post("http://localhost:15016/login/register",postData,{
+            headers: headers
+        })
+            .then(response =>{
+                localStorage.setItem("x-access-token",response.data.jwt)
+            })
+            .catch(error => alert(error));
+    }
 }
+
+export let loginService = new LoginService();

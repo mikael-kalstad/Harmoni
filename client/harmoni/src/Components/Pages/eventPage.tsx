@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Skeleton from 'react-loading-skeleton';
 
 import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
 
-import TicketBar from '../Event/ticketBar';
+import TicketMenu from '../Event/ticketMenu';
 import Button from '../Button/button';
 
-let data = {
-  id: 1234,
-  category: 'Konsert',
-  title: 'Rihanna i Oslo Spektrum',
-  summary:
-    'Kom og se rihanna live i Januar 2020. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris nunc congue nisi vitae suscipit tellus mauris a. Aliquet sagittis id consectetur purus. Nulla pharetra diam sit amet nisl suscipit. Iaculis eu non diam phasellus vestibulum lorem',
-  img: '/icons/test.jpg'
-};
+interface IEvent {
+  event_id: number;
+  name: string;
+  organizer: number;
+  address: string;
+  from_date: string;
+  to_date: string;
+  capacity: number;
+  status: string;
+  information: string;
+  category: string;
+  picture: File;
+}
 
-let tickets = [
-  {
-    name: 'Premium VIP Circle',
-    price: 19000
-  },
-  {
-    name: 'Meet & Greet & Hamburger',
-    price: 2000
-  },
-  {
-    name: 'Ståplass',
-    price: 10
-  }
-];
+interface ITicket {
+  ticketId: number;
+  eventId: number;
+  price: number;
+  type: string;
+}
 
 const Wrapper = styled.div`
   justify-content: center;
@@ -63,66 +62,53 @@ const ContentText = styled.p`
   margin-bottom: 50px;
 `;
 
-const TotalSumText = styled.h2`
-  font-weight: bold;
-  margin: 0;
-`;
-
-const TotalSumValueText = styled.label`
-  color: #47bd29;
-`;
-
 const BuyButtonWrapper = styled.div`
   width: 35%;
   margin: 20px auto;
 `;
 
 const Event = (props: any) => {
-  const [price, setPrice] = useState(0);
-  const [eventData, setEventData] = useState(undefined);
+  const [eventData, setEventData] = useState<IEvent[]>();
+  const [eventTickets, setEventTickets] = useState<ITicket[]>();
   useEffect(() => {
     fetchEvent();
+    fetchTickets();
   }, []);
-  const setTotalPrice = (sum: number) => {
-    setPrice(Math.max(price + sum, 0));
-  };
 
   const fetchEvent = async () => {
     setEventData(await eventService.getEventById(props.match.params.id));
   };
-  return (
-    <Wrapper>
-      <EventImage src="https://i.imgur.com/Glo8oxy.jpg"></EventImage>
-      <DoubleColumnGrid>
-        <DateText>Mandag, 10.februar 2020, 20:00</DateText>
-        <AddressText>Oslo Spektrum</AddressText>
-      </DoubleColumnGrid>
-      <Title>Jahn Teigen sine siste hits</Title>
-      <ContentText>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Mauris nunc congue
-        nisi vitae suscipit tellus mauris a. Aliquet sagittis id consectetur
-        purus. Nulla pharetra diam sit amet nisl suscipit. Iaculis eu non diam
-        phasellus vestibulum lorem
-      </ContentText>
-      <h3>Billetter</h3>
-      {tickets.map(ticket => (
-        <TicketBar
-          name={ticket.name}
-          price={ticket.price}
-          addToTotal={setTotalPrice}
-        />
-      ))}
-      <TotalSumText>
-        Total sum: <TotalSumValueText>{price + ',-'}</TotalSumValueText>
-      </TotalSumText>
-      <BuyButtonWrapper>
-        <Button backgroundColor={'#47BD29'} dropShadow={true}>
-          Kjøp
-        </Button>
-      </BuyButtonWrapper>
-    </Wrapper>
-  );
+
+  const fetchTickets = async () => {
+    setEventTickets(
+      await ticketService.getAllTicketsByEventId(props.match.params.id)
+    );
+  };
+
+  if (eventData != null && eventTickets != null) {
+    return (
+      <Wrapper>
+        <EventImage
+          src="https://i.imgur.com/Glo8oxy.jpg"
+          alt={eventData[0].name}
+        ></EventImage>
+        <DoubleColumnGrid>
+          <DateText>{eventData[0].from_date}</DateText>
+          <AddressText>{eventData[0].address}</AddressText>
+        </DoubleColumnGrid>
+        <Title>{eventData[0].name}</Title>
+        <ContentText>{eventData[0].information}</ContentText>
+        <TicketMenu tickets={eventTickets} />
+        <BuyButtonWrapper>
+          <Button backgroundColor={'#47BD29'} dropShadow={true}>
+            Kjøp
+          </Button>
+        </BuyButtonWrapper>
+      </Wrapper>
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default Event;

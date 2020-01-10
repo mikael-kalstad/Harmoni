@@ -3,11 +3,18 @@ import styled from 'styled-components';
 import Carousel from 'react-bootstrap/Carousel';
 import { Link } from 'react-router-dom';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import './carousel.css';
 
 const Img = styled.img`
     height: 450px;
     max-height: 450px;
     object-fit: cover;
+`;
+
+const Wrapper = styled.div`
+    height: 450px;
+    max-height: 450px;
+    background: #F1F1F9;
 `;
 
 const Overlay = styled.div`
@@ -18,41 +25,54 @@ const Overlay = styled.div`
     background-image: linear-gradient(rgba(0,0,0, 0.0), rgb(0,0,0));
 `;
 
-const Title = styled.h3`
+interface ITitle { dark: boolean }
+
+const Title = styled.h3<ITitle>`
+    color: ${props => props.dark ? 'black' : 'white'};
     width: 60%;
     margin: auto;
+
+    ::first-letter {
+        text-transform: capitalize;
+    }
 `;
 
 const HeaderCarousel = (props: any) => {
     let items: JSX.Element[] = [];
 
     const card = (a:any) => (
-        <>
-            {a.picture
-                ? (<>
+        <div key={a.event_id}>
+            <Wrapper>
+                {a.picture &&
+                    (<>
                         <Overlay />
-
                         <Img
                             className="d-block w-100"
                             src={a.picture}
                             alt={a.name}
                         />
                     </>
-                )
-                : (<SkeletonTheme color={'#F1F1F9'}>
-                        <Skeleton height='450px' />
-                    </SkeletonTheme>    
-                )
-            }
+                    )
+                }
+
+                {!a.picture && !a.name &&
+                    (<SkeletonTheme color={'#F1F1F9'}>
+                            <Skeleton height='450px' />
+                        </SkeletonTheme>    
+                    )
+                }
+    
+            </Wrapper>
+           
             <Carousel.Caption>
-                <Title>{a.name}</Title>
+                <Title dark={a.picture === undefined}>{a.name}</Title>
             </Carousel.Caption>
-        </>
+        </div>
     )
 
     // Lazy load carousel if data is not defined/loaded in props
     items.push(
-        <Carousel.Item>
+        <Carousel.Item key={1876}>
             {card([])}
         </Carousel.Item>
     );
@@ -64,8 +84,8 @@ const HeaderCarousel = (props: any) => {
 
         props.data.forEach((a:any) => {
             items.push(
-                <Carousel.Item>
-                    <Link to={'/event'+a.id}>
+                <Carousel.Item key={a.event_id}>
+                    <Link to={'/event'+a.event_id}>
                         {card(a)}
                     </Link>
                 </Carousel.Item>
