@@ -27,7 +27,7 @@ export default class LoginService {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.post("http://localhost:15016/login/token",{
+        return axios.post("http://localhost:15016/login/token/update",{
             headers: headers
         }).then(response => {
             localStorage.setItem("x-access-token",response.data.jwt)
@@ -38,7 +38,7 @@ export default class LoginService {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.get("http://localhost:15016/login/token",{
+        return axios.post("http://localhost:15016/login/token",{
             headers: headers
         }).then(response => {
             if(response.status==202){
