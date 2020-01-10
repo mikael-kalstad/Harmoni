@@ -44,6 +44,7 @@ const Register = () => {
     const [passwordInput, setPasswordInput] = useState('');
     const [type, setType] = useState('Velg type');
     const [warningText, setWarningText] = useState(' ');
+    const [file,setFile,fileName]=useState("");
 
     const types = ['Arrangør', 'Artist/Manager', 'Frivillig'];
 
@@ -118,6 +119,14 @@ const Register = () => {
                     placeholder='Passord'
                     onKeyDown={e => checkForEnterKey(e)}
                 />
+                <Input
+                    type='file'
+                    onChange={e => setFile(e.target.value)}
+                    value={file}
+                    placeholder='file'
+                    onKeyDown={e => checkForEnterKey(e)}
+                />
+
 
                 <WarningText>{warningText}</WarningText>
 
@@ -128,5 +137,6 @@ const Register = () => {
         </> 
     );
 }
+
 
 export default Register;
