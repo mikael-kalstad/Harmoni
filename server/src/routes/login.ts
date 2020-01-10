@@ -91,7 +91,7 @@ router.post("/register",(req,res)=>{
         user = data[0];
         if (typeof user == "undefined") {
             dao.addUser(req.body, (status) => {
-                if (status == 401) {
+                if (status !== 401) {
                     let token = jwt.sign({email: req.body.email}, privateKey, {
                         expiresIn: 60 * 30
                     });
@@ -106,7 +106,7 @@ router.post("/register",(req,res)=>{
         }
         else{
             res.status(409);
-            res.json({error: "the user exists error code:" + res.status});
+            res.json({error: "the user exists error code:" + status});
         }
     });
 });

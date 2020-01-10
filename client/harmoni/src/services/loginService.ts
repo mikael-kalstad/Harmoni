@@ -52,14 +52,14 @@ export default class LoginService {
             headers: headers
         })
             .then(response =>{
-                if (response.status==409){
+                if (response.status === 409){
                     console.log("User exists from before.")
                 }
                 else localStorage.setItem("x-access-token",response.data.jwt)
 
                 return response;
             })
-            .catch(error => console.log(error));
+            .catch(error => error.response);
     }
 }
 

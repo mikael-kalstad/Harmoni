@@ -10,6 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { userService } from '../../services/UserService';
 import { loginService } from '../../services/loginService';
 import { Redirect } from 'react-router-dom';
+import { FaSave } from 'react-icons/fa';
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -44,7 +45,7 @@ interface User {
     picture: string;
 }
 
-const Register = (props: {userId?: number; logIn?: Function}) => {
+const Register = (props: {match?: any; logIn?: Function}) => {
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [tlfInput, setTlfInput] = useState();
@@ -58,7 +59,7 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
 
     useEffect(() => {
         // Fetch user data if user id is defined in props
-        if (props.userId) fetchUserById(props.userId);
+        if (props.match.params.userId) fetchUserById(props.match.params.userId);
     }, []);
 
     const fetchUserById = async(id:number) => {
@@ -95,9 +96,13 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
             register();
     }
 
+    // Save changes to user info
+    const save = async() => {
+
+    }
+
     const register = async() => {
         setSubmit(true);
-        console.log("tlf", tlfInput)
 
         if (type.trim() === '' 
             || nameInput.trim() === ''
@@ -114,7 +119,7 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
         }
 
         // Status code 401 indicates that something went wrong
-        if (res && res.status !== 401) {
+        else if (res && res.status !== 401) {
             if (props.logIn !== undefined) props.logIn(emailInput);
             setRedirect(true);
         } 
@@ -127,7 +132,7 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
 
     return (
         <>
-            <Title>Registrer bruker</Title>
+            <Title>{props.match.params.userId ? 'Endre Profil' : 'Registrer bruker'}</Title>
             <Wrapper>
                 <FormControl variant="outlined"  error={submit && type === ''} style={{width: '160px'}}>
                     <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
@@ -201,8 +206,8 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
 
 
                 <BtnWrapper>
-                    <Button onClick={() => register()}>
-                        {props.userId ? 'LAGRE' : 'OPPRETT KONTO'}
+                    <Button onClick={() => props.match.params.userId ? save() : register()}>
+                        {props.match.params.userId ? 'LAGRE' : 'OPPRETT KONTO'}
                     </Button>
                 </BtnWrapper>
             </Wrapper>
