@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -42,7 +42,8 @@ const Wrapper = styled.div`
 function getStepContent(step: number) {
     switch (step) {
         case 0:
-            return (<BasicInfoForm/>);
+            return (<BasicInfoForm
+            />);
         case 1:
             return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
         case 2:
@@ -54,7 +55,8 @@ function getStepContent(step: number) {
     }
 }
 
-export default function AddEvent() {
+const AddEvent = () => {
+
     const classes = useStyles({});
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set<number>());
@@ -162,47 +164,48 @@ export default function AddEvent() {
             </Stepper>
 
             <Wrapper>
-            <div>
-                {stepsCompleted() ? (
-                    <div>
-                        <h1
-                            className={classes.instructions}>
-                            All steps completed - you&apos;re finished
-                        </h1>
-                        <Button onClick={handleReset}>Reset</Button>
-                    </div>
-                ) : (
-                    <div>
-                        <p className={classes.instructions}>{getStepContent(activeStep)}</p>
+                <div>
+                    {stepsCompleted() ? (
                         <div>
-                            <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                Tilbake
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={handleNext}
-                                className={classes.button}
-                            >
-                                Neste
-                            </Button>
-                            {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                            <h1
+                                className={classes.instructions}>
+                                All steps completed - you&apos;re finished
+                            </h1>
+                            <Button onClick={handleReset}>Reset</Button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className={classes.instructions}>{getStepContent(activeStep)}</div>
+                            <div>
+                                <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                    Tilbake
+                                </Button>
                                 <Button
                                     color="primary"
-                                    onClick={handleSkip}
+                                    onClick={handleNext}
                                     className={classes.button}
                                 >
-                                    Legg til senere
+                                    Neste
                                 </Button>
-                            )}
-                            <Button  color="primary" onClick={handleComplete}>
-                                {completedSteps() === totalSteps() - 1 ? 'Legg til arrangement' : 'Fullfør trinn'}
-                            </Button>
+                                {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                                    <Button
+                                        color="primary"
+                                        onClick={handleSkip}
+                                        className={classes.button}
+                                    >
+                                        Legg til senere
+                                    </Button>
+                                )}
+                                <Button color="primary" onClick={handleComplete}>
+                                    {completedSteps() === totalSteps() - 1 ? 'Legg til arrangement' : 'Fullfør trinn'}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
             </Wrapper>
         </div>
     );
-}
+};
 
+export default AddEvent
