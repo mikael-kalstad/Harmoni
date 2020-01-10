@@ -2,12 +2,11 @@
 // it is a function in eventDao class
 // Reason to have is to let search path be on the top level in the path
 import express from 'express';
-import eventDao from '../dao/eventDao'
-import userDao from "../dao/userDao";
 import { pool } from '../dao/database'
+import searchDao from "../dao/searchDao";
 
 const router = express.Router();
-const dao = new eventDao(pool);
+const dao = new searchDao(pool);
 // Routes to interact with events.
 
 

@@ -1,4 +1,4 @@
-import eventDao from "../dao/eventDao";
+import searchDao from "../dao/searchDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
@@ -38,7 +38,7 @@ let poolConfig = {
 
 var conPool = mysql.createPool(poolConfig);
 
-const dao = new eventDao(conPool);
+const dao = new searchDao(conPool);
 
 beforeAll(done => {
     run("src/tests/createTestDB.sql", conPool, () => {
@@ -50,18 +50,19 @@ afterAll(() => {
     conPool.end();
 });
 
-
-test("search for events given input as an address", done => {
+test("search for events given input as an address", async () => {
+    await new Promise(resolve => setTimeout(resolve, 20000));
     dao.searchForEvents("Elgseter Gate 1", (status, data) => {
         expect(status).toBe(200);
+        console.log("hei", data)
         expect(data.length).toBe(1);
         expect(data[0].organizer).toBe(1);
         expect(data[0].capacity).toBe(300);
-        done();
+        //done();
     })
 })
 
-test("search for events given organizer ", done => {
+/*test("search for events given organizer ", done => {
     dao.searchForEvents("hans hansen", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(2);
@@ -86,4 +87,4 @@ test("search for events given one word in its information ", done => {
         expect(data.category).toBe("festival");
         done();
     })
-})
+})*/
