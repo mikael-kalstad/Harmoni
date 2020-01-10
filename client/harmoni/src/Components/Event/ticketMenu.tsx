@@ -3,11 +3,11 @@ import styled from 'styled-components';
 
 import TicketBar from './ticketBar';
 import TicketSummary from './ticketSummary';
-import { ticketService } from '../../services/TicketService';
+import Button from '../Button/button';
 
 interface ITicket {
-  ticketId: number;
-  eventId: number;
+  ticket_id: number;
+  event_id: number;
   price: number;
   type: string;
 }
@@ -21,6 +21,10 @@ const TotalSumValueText = styled.label`
   color: #47bd29;
 `;
 
+const BuyButtonWrapper = styled.div`
+  width: 35%;
+  margin: 20px auto;
+`;
 const TicketMenu = (props: { tickets: ITicket[] }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantities, setQuantities] = useState(
@@ -45,9 +49,6 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
     );
   };
 
-  const getChosenTickets = () => {
-    return props.tickets.filter((ticket, i) => quantities[i] != 0);
-  };
   return (
     <div>
       <h3>Billetter</h3>
@@ -69,6 +70,11 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
       <TotalSumText>
         Total pris: <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
       </TotalSumText>
+      <BuyButtonWrapper>
+        <Button backgroundColor={'#47BD29'} dropShadow={true}>
+          Kjøp
+        </Button>
+      </BuyButtonWrapper>
     </div>
   );
 };

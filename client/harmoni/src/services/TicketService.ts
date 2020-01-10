@@ -2,8 +2,8 @@ import axios from 'axios';
 import Service from './Service';
 
 interface Ticket {
-  ticketId: number;
-  eventId: number;
+  ticket_id: number;
+  event_id: number;
   price: number;
   type: string;
 }
