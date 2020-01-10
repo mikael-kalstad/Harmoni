@@ -27,13 +27,30 @@ export default class LoginService {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.get("http://localhost:15016/login/token",{
+        return axios.post("http://localhost:15016/login/token",{
             headers: headers
         }).then(response => {
             localStorage.setItem("x-access-token",response.data.jwt)
         }).catch(error => alert(error));
     }
-    
+    checkToken(){
+        const headers = {
+            'Content-Type': 'application/json; charset=utf-8',
+            "x-access-token":localStorage.getItem("x-access-token")
+        }
+        return axios.get("http://localhost:15016/login/token",{
+            headers: headers
+        }).then(response => {
+            if(response.status==202){
+                return false;
+            }else{
+                console.log(response.status);
+                return true;
+            }
+
+        }).catch(error => alert(error));
+    }
+
     registrerPerson(name:string,email:string, mobile:(number|undefined), password:string,type:string, picture:string ) {
         var postData = {
             name:name,

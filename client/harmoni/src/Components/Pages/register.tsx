@@ -99,10 +99,10 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
         setSubmit(true);
         console.log("tlf", tlfInput)
 
-        if (type.trim() === '' 
+        if (type.trim() === ''
             || nameInput.trim() === ''
             || emailInput.trim() === ''
-            || passwordInput.trim() === ''         
+            || passwordInput.trim() === ''
             )
             return;
 
@@ -117,12 +117,12 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
         if (res && res.status !== 401) {
             if (props.logIn !== undefined) props.logIn(emailInput);
             setRedirect(true);
-        } 
+        }
     }
 
     // If registration is successfull
     if (redirect) {
-        return <Redirect to='/profile'/> 
+        return <Redirect to='/profile'/>
     }
 
     return (
@@ -139,13 +139,13 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
                     >
                         {menuItems}
                     </Select>
-                    
+
                     {submit && type === '' && <FormHelperText>Type er påkrevd</FormHelperText>}
                 </FormControl>
 
-                <TextField 
-                    style={inputStyle} 
-                    variant='outlined' 
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
                     label='Navn*'
                     value={nameInput}
                     error={submit && nameInput === ''}
@@ -154,9 +154,9 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
                     onKeyDown={e => checkForEnterKey(e)}
                 />
 
-                <TextField 
-                    style={inputStyle} 
-                    variant='outlined' 
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
                     label='Telefon'
                     type='number'
                     value={tlfInput}
@@ -165,9 +165,9 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
                     onKeyDown={e => checkForEnterKey(e)}
                 />
 
-                <TextField 
-                    style={inputStyle} 
-                    variant='outlined' 
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
                     label='Email*'
                     type='email'
                     value={emailInput}
@@ -180,9 +180,9 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
                     onKeyDown={e => checkForEnterKey(e)}
                 />
 
-                <TextField 
-                    style={inputStyle} 
-                    variant='outlined' 
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
                     label='Passord*'
                     type='password'
                     value={passwordInput}
