@@ -56,7 +56,7 @@ router.use("/api", (req, res, next) => {
             res.json({ error: "Not authorized" });
         } else {
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 6
             });
             localStorage.setItem("x-access-token",token);
             //console.log("Token ok: " + decoded.email);
@@ -64,8 +64,7 @@ router.use("/api", (req, res, next) => {
         }
     });
 });
-
-router.post("/token", (req, res, next) => {
+router.post("/token/update", (req, res, next) => {
     var token = req.headers["x-access-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
@@ -82,17 +81,17 @@ router.post("/token", (req, res, next) => {
         }
     });
 });
-
-router.get("/token", (req,res)=>{
+router.post("/token", (req,res)=>{
     let newToken="";
     var token=req.headers["x-access-token"];
     console.log("You have the following Token: =>  "+token);
     jwt.verify(token,publicKey,(err)=>{
         if(err){
             console.log("Token has expired");
-            res.status(401);
+            res.status(202);
             res.json({error:"Not authorized"});
         }else{
+            console.log("Token ok");
             newToken = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 60*30
             });
