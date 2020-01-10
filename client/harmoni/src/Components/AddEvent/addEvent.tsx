@@ -55,7 +55,7 @@ function getStepContent(step: number) {
 }
 
 export default function AddEvent() {
-  const classes = useStyles();
+  const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
