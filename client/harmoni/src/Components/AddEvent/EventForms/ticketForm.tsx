@@ -1,21 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-
-const Input = styled.input`
-  display: block;
-  margin: 40px auto;
-  margin-top: 0px;
-  width: 400px;
-  height: 55px;
-  border: none;
-  background: #efefef;
-  font-size: 18px;
-  text-indent: 15px;
-
-  :hover {
-    filter: brightness(98%);
-  }
-`;
+import TextField from "@material-ui/core/TextField";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -24,19 +9,40 @@ const Title = styled.h2`
   bottom-margin: 10px;
 `;
 
-const TicketForm = () => {
+const inputStyle = {
+    width: '100%',
+    marginBottom: '25px'
+};
+
+interface TicketProps {
+    ticketCategory : string;
+    setTicketCategory: Function;
+    price : string;
+    setPrice : Function;
+}
+
+const TicketForm = (props: TicketProps) => {
 
     return (
         <>
             <Title>Billetter</Title>
-            <h5>Pris</h5>
-            <Input
-                placeholder='Pris'
+            <h5>Billett-type</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
+                placeholder='Billett-type'
+                value={props.ticketCategory}
+                onChange={e => props.setTicketCategory(e.target.value)}
             />
 
-            <h5>Billett-type</h5>
-            <Input
-                placeholder='Type'
+            <h5>Pris</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
+                type="number"
+                placeholder='Pris'
+                value={props.price}
+                onChange={e => props.setPrice(e.target.value)}
             />
         </>
     );

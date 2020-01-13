@@ -1,24 +1,11 @@
 import React from 'react';
 import styled from "styled-components";
-import Dropdown from "react-bootstrap/Dropdown";
 import DateTimePicker from "./dateTimePicker";
 import MenuItem from "@material-ui/core/MenuItem";
-
-const Input = styled.input`
-  display: block;
-  margin: 40px auto;
-  margin-top: 0px;
-  width: 400px;
-  height: 55px;
-  border: none;
-  background: #efefef;
-  font-size: 18px;
-  text-indent: 15px;
-
-  :hover {
-    filter: brightness(98%);
-  }
-`;
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -27,7 +14,25 @@ const Title = styled.h2`
   bottom-margin: 10px;
 `;
 
-const BasicInfoForm = () => {
+const inputStyle = {
+    width: '100%',
+    marginBottom: '25px'
+};
+
+interface InfoProps {
+    name: string;
+    setName: Function;
+    category: string;
+    setCategory: Function;
+    location: string;
+    setLocation: Function;
+    fromDateTime: Date;
+    setFromDateTime: Function;
+    toDateTime: Date;
+    setToDateTime: Function;
+}
+
+const BasicInfoForm = (props: InfoProps) => {
 
     const types_translated = ['Konsert', 'Festival', 'Teater', 'Standup'];
     const types = ['concert', 'festival', 'theatre', 'standup'];
@@ -43,27 +48,49 @@ const BasicInfoForm = () => {
     return (
         <>
             <Title>Info</Title>
-            <h5>Navn på arrangement</h5>
-            <Input
+            <h5>Navn på arrangement*</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
                 placeholder='Navn'
+                value={props.name}
+                onChange={e => props.setName(e.target.value)}
             />
-            <Dropdown>
-                <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                    Kategori
-                </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+            <FormControl variant="outlined" style={{width: '160px'}}>
+                <InputLabel id="select-filled-label">Kategori*</InputLabel>
+                <Select
+                    labelId="select-outlined-label"
+                    value={props.category}
+                    labelWidth={300}
+                    style={inputStyle}
+                    onChange={(e: any) => props.setCategory(e.target.value)}
+                >
                     {menuItems}
-                </Dropdown.Menu>
-            </Dropdown>
-            <br/>
-            <h5>Lokasjon</h5>
-            <Input
+                </Select>
+            </FormControl>
+
+            <h5>Lokasjon*</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
                 placeholder='Lokasjon'
+                value={props.location}
+                onChange={e => props.setLocation(e.target.value)}
             />
 
-            <h5>Dato og tid</h5>
-            <DateTimePicker/>
+            <h5>Dato og tid*</h5>
+            <h6>Fra</h6>
+            <DateTimePicker
+                style={inputStyle}
+                selectedDate={props.fromDateTime}
+                setSelectedDate={props.setFromDateTime}/>
+
+            <h6>Til</h6>
+            <DateTimePicker
+                style={inputStyle}
+                selectedDate={props.toDateTime}
+                setSelectedDate={props.setToDateTime}/>
         </>
     );
 };
