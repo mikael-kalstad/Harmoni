@@ -1,13 +1,56 @@
 import React, { useState } from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import styled from "styled-components";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import {Button} from "react-bootstrap";
+
 import ArtistForm from './EventForms/artistForm';
 import BasicInfoForm from './EventForms/basicInfoForm';
-import styled from "styled-components";
 import TicketForm from "./EventForms/ticketForm";
+
+import Skeleton from 'react-loading-skeleton';
+
+import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
+import { userService } from '../../services/UserService';
+import { attachmentService } from '../../services/AttachmentService';
+import { loginService } from '../../services/loginService';
+import { riderService } from '../../services/RiderService';
+
+
+interface IEvent {
+    event_id: number;
+    name: string;
+    organizer: number;
+    address: string;
+    from_date: string;
+    to_date: string;
+    capacity: number;
+    status: string;
+    information: string;
+    category: string;
+    picture: File;
+  }
+  
+  interface ITicket {
+    ticketId: number;
+    eventId: number;
+    price: number;
+    type: string;
+  }
+
+  interface IUser {
+    userId: number;
+    name: string;
+    email: string;
+    mobile: number;
+    hash: string;
+    salt: string;
+    type: string;
+    picture: string;
+  }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -44,7 +87,7 @@ function getStepContent(step: number) {
         case 0:
             return (<BasicInfoForm/>);
         case 1:
-            return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
+            return (<ArtistForm/>);
         case 2:
             return (<TicketForm/>);
         case 3:
@@ -55,6 +98,7 @@ function getStepContent(step: number) {
 }
 
 export default function AddEvent() {
+
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set<number>());
