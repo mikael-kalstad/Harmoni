@@ -1,17 +1,12 @@
 import express from "express";
-import userDAO from "../dao/userDao";
+import userDAO, { sanitizeUser } from "../dao/userDao";
 import { pool } from "../dao/database";
 
 const router = express.Router();
 const dao = new userDAO(pool);
 
 // Routes to interact with users.
-function sanitizeUser(data){
-  if(data["hash"])
-    data["hash"] = null;
-  if(data["salt"])
-    data["salt"] = null;
-}
+
 // Create user
 router.post("/users/", async (request, response) => {
   dao.addUser(request.body, (status, data) => {
