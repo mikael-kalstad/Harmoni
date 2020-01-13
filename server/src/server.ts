@@ -17,6 +17,7 @@ server.use("/api/v0/rides", require('./routes/riders'));
 server.use("/api/v0/users", require('./routes/users'));
 server.use("/api/v0/attachment", require('./routes/attachments'));
 server.use("/api/v0/tickets", require('./routes/tickets'));
+server.use("/api/v0/search"),require('./routes/search');
 server.use("/login", require('./routes/login'));
 
 //server.use("api/v0/users", require("./routes/users"));
