@@ -24,14 +24,14 @@ router.post('/', (req, res) => {
       if (compareHash(user.hash, req.body.password, user.salt)) {
         console.log('email & password ok');
         let token = jwt.sign({ email: req.body.email }, privateKey, {
-          expiresIn: 30
+          expiresIn: 1800
         });
         //window.localStorage.setItem("x-access-token",token);
         // res.status()
         res.json({ jwt: token });
         res.status(200);
       } else {
-        console.log('email & password NOT ok');
+        //console.log('email & password NOT ok');
         res.status(401);
         res.json({ error: 'Not authorized' });
       }
@@ -42,65 +42,71 @@ router.post('/', (req, res) => {
   });
 });
 
-router.post('/token/update', (req, res, next) => {
-  var token = req.headers['x-access-token'];
-  jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) {
-      console.log('Token Not ok');
-      res.status(202);
-      res.json({ error: 'Not authorized' });
-    } else {
-      let token = jwt.sign({ email: req.body.email }, privateKey, {
-        expiresIn: 30
-      });
-      localStorage.setItem('x-access-token', token);
-      //console.log("Token ok: " + decoded.email);
-      next();
-    }
-  });
+
+router.post("/token/update", (req, res, next) => {
+    var token = req.headers["x-access-token"];
+    jwt.verify(token, publicKey, (err, decoded) => {
+        if (err) {
+            console.log("Token Not ok");
+            res.status(401);
+            res.json({ error: "Not authorized" });
+        } else {
+            let token = jwt.sign({ email: req.body.email }, privateKey, {
+                expiresIn: 1800
+            });
+            localStorage.setItem("x-access-token",token);
+            //console.log("Token ok: " + decoded.email);
+            next();
+        }
+    });
 });
 router.post('/token', (req, res) => {
   let newToken = '';
   var token = req.headers['x-access-token'];
-  jwt.verify(token, publicKey, err => {
+  jwt.verify(token, publicKey, (err, decoded) => {
     if (err) {
       console.log('Token has expired');
-      res.status(202);
+      res.status(401);
       res.json({ error: 'Not authorized' });
     } else {
-      console.log('Token ok');
+      console.log('Token ok for', decoded.email);
       newToken = jwt.sign({ email: req.body.email }, privateKey, {
-        expiresIn: 30
+        expiresIn: 1800
       });
-      res.json({ jwt: newToken });
+      dao.getUserByEMail(decoded.email,(status,data)=>{
+          user=data[0];
+      })
+      res.json({ jwt: newToken, userID:user.user_id });
     }
   });
 });
 
-router.post('/register', (req, res) => {
-  let data = hash(req.body.password);
-  req.body.hash = data.hash;
-  req.body.salt = data.salt;
-  dao.getUserByEMail(req.body.email, (status, data) => {
-    user = data[0];
-    if (typeof user === 'undefined') {
-      dao.addUser(req.body, status => {
-        if (status !== 401) {
-          let token = jwt.sign({ email: req.body.email }, privateKey, {
-            expiresIn: 30
-          });
-          res.json({ jwt: token });
-        } else {
-          console.log(status);
-          res.status(401);
-          res.json({ error: 'Could not add user' });
+router.post("/register",(req,res)=>{
+
+    let data=hash(req.body.password);
+    req.body.hash= data.hash;
+    req.body.salt= data.salt;
+    dao.getUserByEMail(req.body.email, (status,data) => {
+        user = data[0];
+        if (typeof user === "undefined") {
+            dao.addUser(req.body, (status) => {
+                if (status !== 401) {
+                    let token = jwt.sign({email: req.body.email}, privateKey, {
+                        expiresIn: 1800
+                    });
+                    res.json({jwt: token});
+                } else {
+                    console.log(status);
+                    res.status(401);
+                    res.json({error: "Could not add user"});
+                }
+            });
         }
-      });
-    } else {
-      res.status(409);
-      res.json({ error: 'the user exists error code:' + status });
-    }
-  });
+        else{
+            res.status(409);
+            res.json({error: "the user exists error code:" + status});
+        }
+    });
 });
 
 module.exports = router;

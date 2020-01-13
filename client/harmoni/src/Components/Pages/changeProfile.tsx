@@ -15,7 +15,6 @@ const ChangeProfile = (props: any) => {
   const authentiCate = async () => {
     // Check jwt token
     let res = await loginService.checkToken();
-
     if (!res) {
       setRedirect(true);
       return;
