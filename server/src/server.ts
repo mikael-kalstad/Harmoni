@@ -19,6 +19,7 @@ server.use("/api/v0", require('./routes/attachments'));
 server.use("/api/v0", require('./routes/tickets'));
 server.use("/api/v0/login", require('./routes/login'));
 server.use("/api/v0", require('./routes/authentication'));
+server.use("/auth", require('./routes/authentication'));
 
 //server.use("api/v0/users", require("./routes/users"));
 
