@@ -44,7 +44,7 @@ interface User {
     picture: string;
 }
 
-const Register = (props: {userId?: number; logIn?: Function}) => {
+const Register = (props: {userData?: object; logIn?: Function}) => {
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [tlfInput, setTlfInput] = useState();
@@ -56,29 +56,21 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
     // Used to display error on empty input when submitting
     const [submit, setSubmit] = useState(false);
 
-    useEffect(() => {
-        // Fetch user data if user id is defined in props
-        if (props.userId) fetchUserById(props.userId);
-    }, []);
-
-    const fetchUserById = async(id:number) => {
-        userService.getUserById(id)
-        .then((data:any) => {
-            console.log(data[0]['type'])
-
-            // Mobile number is optional!
-            if (data[0]['mobile']) setTlfInput(data[0]['mobile']);
-
-            // All other inputs are required
-            setType(data[0]['type']);
-            setNameInput(data[0]['name']);
-            setEmailInput(data[0]['email']);
-        })
-    }
-
     // Render all types in array
     const types_translated = ['Arrangør', 'Artist/Manager', 'Frivillig'];
     const types = ['organizer', 'artist', 'volunteer'];
+
+    useEffect(() => {
+        if (props.userData) {
+            // Phone is optional
+            if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
+
+            // All other inputs are required
+            setNameInput(props.userData[0]['name']);
+            setEmailInput(props.userData[0]['email']);
+            setType(props.userData[0]['type']);
+        }
+    });
 
     let menuItems: JSX.Element[] = [];
 
@@ -95,9 +87,13 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
             register();
     }
 
+    // Save changes to user info
+    const save = async() => {
+
+    }
+
     const register = async() => {
         setSubmit(true);
-        console.log("tlf", tlfInput)
 
         if (type.trim() === ''
             || nameInput.trim() === ''
@@ -114,7 +110,7 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
         }
 
         // Status code 401 indicates that something went wrong
-        if (res && res.status !== 401) {
+        else if (res && res.status !== 401) {
             if (props.logIn !== undefined) props.logIn(emailInput);
             setRedirect(true);
         }
@@ -127,7 +123,7 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
 
     return (
         <>
-            <Title>Registrer bruker</Title>
+            <Title>{props.userData ? 'Endre Profil' : 'Registrer bruker'}</Title>
             <Wrapper>
                 <FormControl variant="outlined"  error={submit && type === ''} style={{width: '160px'}}>
                     <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
@@ -201,8 +197,8 @@ const Register = (props: {userId?: number; logIn?: Function}) => {
 
 
                 <BtnWrapper>
-                    <Button onClick={() => register()}>
-                        {props.userId ? 'LAGRE' : 'OPPRETT KONTO'}
+                    <Button onClick={() => props.userData ? save() : register()}>
+                        {props.userData ? 'LAGRE' : 'OPPRETT KONTO'}
                     </Button>
                 </BtnWrapper>
             </Wrapper>

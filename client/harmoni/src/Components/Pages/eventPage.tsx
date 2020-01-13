@@ -116,6 +116,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState();
   const [user, setUser] = useState();
+
   useEffect(() => {
     fetchEvent();
     fetchTickets();
@@ -126,7 +127,7 @@ const Event = (props: any) => {
     eventService.getEventById(props.match.params.id).then(fetchedEvent => {
       setEvent(fetchedEvent);
       userService
-        .getUserById(fetchedEvent[0].organizer)
+        .getOrganizerForEvent(fetchedEvent[0].organizer)
         .then(fetchedUser => setUser(fetchedUser));
     });
   };

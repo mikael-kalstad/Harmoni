@@ -19,6 +19,7 @@ interface IProps {
   textColor?: string;
   dropShadow?: boolean;
   onClick?: Function;
+  disabled?: boolean;
 }
 
 interface IStyledButton {
@@ -57,6 +58,7 @@ const Button = (props: IProps) => (
     textColor={props.textColor}
     dropShadow={props.dropShadow !== undefined}
     onClick={() => props.onClick !== undefined && props.onClick()}
+    disabled={props.disabled}
   >
     {props.children}
   </StyledButton>

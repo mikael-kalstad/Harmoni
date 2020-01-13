@@ -13,7 +13,7 @@ export default class LoginService {
             email: email,
             password: password
         };
-        return axios.post("http://localhost:15016/login/",postData,{
+        return axios.post("http://localhost:15016/api/v0/login/",postData,{
             headers: headers
         })
             .then(response =>{
@@ -22,33 +22,35 @@ export default class LoginService {
             } )
             .catch(error => console.log(error));
     }
+
     updateToken(){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.post("http://localhost:15016/login/token/update",{
+        return axios.post("http://localhost:15016/api/v0/login/token/update",{
             headers: headers
         }).then(response => {
             localStorage.setItem("x-access-token",response.data.jwt)
         }).catch(error => alert(error));
     }
+
     checkToken(){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.post("http://localhost:15016/login/token",{
+        return axios.post("http://localhost:15016/api/v0/login/token",{
             headers: headers
         }).then(response => {
-            if(response.status==202){
+            if (response.status === 401){
                 return false;
             }else{
+                localStorage.setItem("x-access-token",response.data.jwt)
                 console.log(response.status);
                 return true;
             }
-
-        }).catch(error => alert(error));
+        }).catch(error => console.log(error));
     }
 
     registrerPerson(name:string,email:string, mobile:(number|undefined), password:string,type:string, picture:string ) {
@@ -65,18 +67,18 @@ export default class LoginService {
         const headers = {
             "content-Type": "application/json;charset=utf-8",
         }
-        return axios.post("http://localhost:15016/login/register",postData,{
+        return axios.post("http://localhost:15016/api/v0/login/register",postData,{
             headers: headers
         })
             .then(response =>{
-                if (response.status==409){
+                if (response.status === 409){
                     console.log("User exists from before.")
                 }
                 else localStorage.setItem("x-access-token",response.data.jwt)
 
                 return response;
             })
-            .catch(error => console.log(error));
+            .catch(error => error.response);
     }
 }
 
