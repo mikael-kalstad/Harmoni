@@ -32,13 +32,13 @@ export default class searchDao extends daoParentEvent {
     }
     // Search for an events
     searchForEvents(input: string, callback) {
-        var sql1 = 'SELECT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? ORDER BY event_id DESC;';
+        var sql1 = 'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
 
-        var sql2 = "SELECT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? ORDER BY event_id DESC;";
+        var sql2 = "SELECT DISTINCT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? ORDER BY event_id DESC;";
 
         let events: event[] = [];
         super.query(sql1,
-            ["%"+input+"%", "%"+input+"%","%"+input+"%","%"+input+"%"],
+            ["%"+input+"%", "%"+input+"%","%"+input+"%","%"+input+"%","%"+input+"%"],
             (status , data) => {
                 if (status == 500){
                     callback(500, null);
