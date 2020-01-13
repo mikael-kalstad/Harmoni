@@ -13,28 +13,28 @@ router.post("/authorized/events/", async (request, response) => {
     });
 })
 
-// Get singular event given id
+// Get singular event by id
 router.get("/events/:id", async (request, response) => {
     dao.getEvent(parseInt(request.params.id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Get events given address
+// Get events by address
 router.get("/events/address/:address", async (request, response) => {
     dao.getEventsByAddress(request.params.address, (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Get events given status
+// Get events by status
 router.get("/events/status/:status", async (request, response) => {
     dao.getEventsByStatus(request.params.status, (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Get events given organizer
+// Get events by organizer
 router.get("/events/organizer/:organizer", async (request, response) => {
     dao.getEventsByOrganizer(parseInt(request.params.organizer), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
@@ -48,14 +48,14 @@ router.get("/events/", async (request, response) => {
     });
 })
 
-// Update singular event given id
+// Update singular event by id
 router.put("/authorized/events/:id", async (request, response) => {
     dao.updateEvent(parseInt(request.params.id), request.body, (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
-// Delete event given id
+// Delete event by id
 router.delete("/authorized/events/:id", async (request, response) => {
     dao.deleteEvent(parseInt(request.params.id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
@@ -65,6 +65,12 @@ router.delete("/authorized/events/:id", async (request, response) => {
 // Get events by user
 router.get("/events/user/:id", async (request, response) => {
     dao.getEventsOfUser(parseInt(request.params.id), (status, data) => {
+        status == 500 ? response.status(500) : response.send(data)
+    })
+})
+// Get events by category
+router.get("/events/user/:category", async (request, response) => {
+    dao.getEventsByCategory(request.params.category, (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     })
 })
