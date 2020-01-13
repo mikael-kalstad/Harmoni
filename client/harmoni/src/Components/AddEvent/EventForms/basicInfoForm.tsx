@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import Dropdown from "react-bootstrap/Dropdown";
 import DateTimePicker from "./dateTimePicker";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const Input = styled.input`
   display: block;
@@ -28,7 +29,16 @@ const Title = styled.h2`
 
 const BasicInfoForm = () => {
 
+    const types_translated = ['Konsert', 'Festival', 'Teater', 'Standup'];
+    const types = ['concert', 'festival', 'theatre', 'standup'];
+
     let menuItems: JSX.Element[] = [];
+
+    for (let i = 0; i < types.length; i++) {
+        menuItems.push(
+            <MenuItem key={i} value={types[i]}>{types_translated[i]}</MenuItem>
+        );
+    }
 
     return (
         <>
@@ -54,7 +64,6 @@ const BasicInfoForm = () => {
 
             <h5>Dato og tid</h5>
             <DateTimePicker/>
-
         </>
     );
 };
