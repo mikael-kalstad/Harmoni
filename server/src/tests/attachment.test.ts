@@ -85,7 +85,12 @@ test("Add attachment", done => {
     dao.addAttachmentForUserForEvent(input, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
-        done();
+
+        dao.getAttachmentsForUser(2, (status, data2) => {
+            expect(status).toBe(200);
+            expect(data2.filter(e => e.attachment_id == data.insertId).length).toBe(1);
+            done();
+        })
     })
 })
 
