@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { loginService } from "./services/loginService";
 import { userService } from "./services/UserService";
 
 // Bootstrap styling
@@ -25,18 +26,24 @@ interface IUserData {
 }
 
 const App: React.FC = () => {
-  const [userData, setUserData] = useState<IUserData | undefined>();
+  const [userData, setUserData] = useState();
 
   // Get data when component mounts
   useEffect(() => {
-    fetchData();
-
-    localStorage.getItem("x-access-token");
+    checkToken();
   }, []);
 
-  const fetchData = async () => {
-    // setEventData(await eventService.getAllEvents());
+  const checkToken = async () => {
+    console.log("token in app", localStorage.getItem("x-access-token"));
+    let res = await loginService.checkToken();
+    console.log("res in app", res);
+    if (res) {
+      setUserData(res["userData"]);
+      console.log("updatin!");
+    }
   };
+
+  console.log("USER DATA Ah ye!", userData);
 
   const logOut = () => {
     localStorage.removeItem("x-access-token");

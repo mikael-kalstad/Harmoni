@@ -35,7 +35,8 @@ const Authenticate = (props: IProps) => {
 
   const authenticate = async () => {
     // Check jwt token
-    let res = await loginService.checkToken();
+    let res: any;
+    res = await loginService.checkToken();
     console.log("res: ", res);
 
     if (res instanceof Error) {
