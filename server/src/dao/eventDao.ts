@@ -43,16 +43,7 @@ export default class eventDao extends daoParentEvent {
         super.query('SELECT * FROM event WHERE status = ?', [status], callback);
     }
 
-
     addEvent(event: event, callback) {
-/*         const afterInsertEvent = (status, data) => {
-            if(status == 500){
-                callback(500);
-            }
-            else{
-                super.query('INSERT INTO user_event VALUES(?, ?)', [event.organizer, data.insertId], () => {callback(status, data)})
-            }
-        } */
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status, event.information, event.category, event.picture], callback);
     }
 
