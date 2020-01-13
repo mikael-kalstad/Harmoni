@@ -25,7 +25,7 @@ interface IProps {
 
 const Authenticate = (props: IProps) => {
   const [auth, setAuth] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [deniedAccess, setDeniedAccess] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
 
   useEffect(() => {
@@ -42,10 +42,10 @@ const Authenticate = (props: IProps) => {
       setConnectionError(true);
       return;
     } else if (res && res.status === 401) {
-      setRedirect(true);
+      setDeniedAccess(true);
       return;
     } else if (!props.userData) {
-      setRedirect(true);
+      setDeniedAccess(true);
     } else {
       setAuth(true);
     }
@@ -55,7 +55,7 @@ const Authenticate = (props: IProps) => {
   };
 
   // Connection error
-  if (redirect)
+  if (connectionError)
     return (
       <WarningInfo
         title="Noe feil skjedde"
@@ -65,6 +65,7 @@ const Authenticate = (props: IProps) => {
           <OutlineButton
             width="140px"
             height="60px"
+            solid={true}
             onClick={() => window.location.reload(false)}
           >
             Prøv igjen
@@ -73,7 +74,7 @@ const Authenticate = (props: IProps) => {
       />
     );
   // User not logged in
-  else if (redirect)
+  else if (deniedAccess)
     return (
       <WarningInfo
         title="Ingen tilgang"
