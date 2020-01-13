@@ -51,9 +51,8 @@ router.post("/",(req,res)=>{
         let user = data[0];
         if(typeof user != "undefined"){
             console.log("Fant bruker");
-            
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 60*60*24
             });
             console.log("Lagde token: "+token);
             var emailinfo = {
@@ -80,7 +79,7 @@ router.post("/",(req,res)=>{
               console.log("Brukernavnet finnes ikke");
         }
     })
-})
+});
 
 router.post("/password_reset",(req,res)=>{
     var token = req.headers["password-token"];
@@ -116,6 +115,9 @@ router.post("/password_reset",(req,res)=>{
 
 router.post("/update_password",(req,res)=>{
 
-}) 
+});
+
+
+
 module.exports = router;
 

@@ -1,4 +1,5 @@
 const daoParentUser = require("./dao");
+import { compareHash, hash } from '../hashing';
 //const User = require("./User.ts");
 
 export interface user {
@@ -66,6 +67,9 @@ export default class userDao extends daoParentUser{
 
     // Updates a user
     updateUser(userId: number, data: user, callback){
+        let userData=hash(data.body.password);
+        data.hash= userData.hash;
+        data.salt= userData.salt;
         super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?",
             [data.name, data.email, data.mobile, data.hash, data.salt, data.type, data.picture, userId], callback);
     }

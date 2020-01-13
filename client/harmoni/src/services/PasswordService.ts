@@ -15,7 +15,6 @@ export default class PasswordService {
     requestPasswordReset(email:string){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8'
-            
         }
         var postData = {
             email: email
@@ -36,7 +35,6 @@ export default class PasswordService {
         return axios.post("http://localhost:15016/auth/update_password",postData,{
             headers:{
                 'Content-Type': 'application/json; charset=utf-8'
-                
             }
         })
             .then(response =>{
