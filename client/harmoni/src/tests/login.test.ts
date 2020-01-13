@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { mount, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure } from 'enzyme';
-import Login from '../Components/Login'
+import Login from '../Components/login'
 import App from '../App'
 
 

@@ -13,7 +13,7 @@ export default class LoginService {
             email: email,
             password: password
         };
-        return axios.post("http://localhost:15016/login/",postData,{
+        return axios.post("http://localhost:15016/api/v0/login/",postData,{
             headers: headers
         })
             .then(response =>{
@@ -28,7 +28,7 @@ export default class LoginService {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.post("http://localhost:15016/login/token/update",{
+        return axios.post("http://localhost:15016/api/v0/login/token/update",{
             headers: headers
         }).then(response => {
             localStorage.setItem("x-access-token",response.data.jwt)
@@ -40,10 +40,10 @@ export default class LoginService {
             'Content-Type': 'application/json; charset=utf-8',
             "x-access-token":localStorage.getItem("x-access-token")
         }
-        return axios.post("http://localhost:15016/login/token",{
+        return axios.post("http://localhost:15016/api/v0/login/token",{
             headers: headers
         }).then(response => {
-            if (response.status !== 401){
+            if (response.status === 401){
                 return false;
             }else{
                 localStorage.setItem("x-access-token",response.data.jwt)
@@ -67,7 +67,7 @@ export default class LoginService {
         const headers = {
             "content-Type": "application/json;charset=utf-8",
         }
-        return axios.post("http://localhost:15016/login/register",postData,{
+        return axios.post("http://localhost:15016/api/v0/login/register",postData,{
             headers: headers
         })
             .then(response =>{

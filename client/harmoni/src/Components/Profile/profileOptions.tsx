@@ -103,7 +103,7 @@ const ProfileOptions = (props: {img: string, name: string}) => (
                 Endre passord
             </ProfileButton>
         </ProfileLink>
-        <ProfileLink to='/register'>
+        <ProfileLink to='/profile/change'>
             <ProfileButton>
                 Endre profil
             </ProfileButton>
