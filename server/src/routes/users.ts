@@ -77,8 +77,18 @@ router.get("/authorized/users/", async (request, response) => {
 
 // Update singular user given id
 router.put("/authorized/users/:id", async (request, response) => {
-  dao.updateUser(parseInt(request.params.id), request.body, "slett meg", (status, data) => {
+  dao.updateUser(parseInt(request.params.id), request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(sanitizeUser(data));
+  });
+});
+router.put("/authorized/users/change_password/:id", async (request, response) => {
+  dao.changePassword(parseInt(request.params.id), request.body, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+router.put("/authorized/users/change_picture/:id", async (request, response) => {
+  dao.changePicture(parseInt(request.params.id), request.body, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
   });
 });
 

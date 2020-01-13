@@ -170,18 +170,18 @@ test("Update user", done => {
         picture: new Buffer("")
     }
     // Actual change
-    dao.updateUser(5, updatedUser, "nyttpassord", (status, data) => {
+    dao.updateUser(5, updatedUser, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
         done();
-        // No change - 13. jan 2020 WILL cause change due to updateUser forcing password change
-/*         dao.updateUser(5, updatedUser, "nyttpassord" (status, data) => {
+        // No change
+        dao.updateUser(5, updatedUser, (status, data) => {
             expect(status).toBe(200);
             expect(data.affectedRows).toBe(1);
             expect(data.changedRows).toBe(0);
             done();
-        }) */
+        })
     })
 })
 

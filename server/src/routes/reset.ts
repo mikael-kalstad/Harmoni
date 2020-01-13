@@ -3,7 +3,6 @@ import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
 import {compareHash, hash} from "../hashing";
 
-
 var fs = require('fs');
 var path = require('path');
 var async = require('async');
@@ -12,8 +11,8 @@ var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
 var nodemailer = require('nodemailer');
 var hbs = require('nodemailer-handlebars');
-//var email = process.env.MAILER_EMAIL_ID || 'auth_email_address@gmail.com';
-//var pass = process.env.MAILER_PASSWORD || 'auth_email_pass';
+var email = process.env.gmail_email;
+var password = process.env.gmail_password;
 
 const router = express.Router();
 const dao = new userDao(pool);
@@ -26,8 +25,8 @@ let privateKey = (publicKey = "superSecret");
 var smtpTransport = nodemailer.createTransport({
     service:  'gmail',
     auth: {
-        user: "harmoniteam8@gmail.com",
-        pass: "harmoni8email"
+        user: email,
+        pass: password
     }
 });
 
@@ -46,7 +45,7 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 let user;
 
-router.post("/",(req,res)=>{
+router.post("/reset",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         let user = data[0];
         if(typeof user != "undefined"){
@@ -56,18 +55,17 @@ router.post("/",(req,res)=>{
             });
             console.log("Lagde token: "+token);
             var emailinfo = {
-                to: "msandn3s@gmail.com",
-                from: 'harmoniteam8@gmail.com',
+                to: user.email,
+                from: email,
                 template: 'resetpassword',
                 subject: 'Password help has arrived!',
                 context: {
                 name: user.name,
-                url: 'http://localhost:15016/auth/reset_password?token=' + token
+                url: 'http://localhost:15016/api/v0/reset/reset_password/' + token
                 }
             }
 
             smtpTransport.sendMail(emailinfo, function(err) {
-                console.log("sender mail????");
                 if (!err) {
                     return res.json({ message: 'Kindly check your email for further instructions' });
                 } else {
@@ -79,10 +77,24 @@ router.post("/",(req,res)=>{
               console.log("Brukernavnet finnes ikke");
         }
     })
-});
+})
 
-router.post("/password_reset",(req,res)=>{
-    var token = req.headers["password-token"];
+router.get("/reset/reset_password/:token",(req,res)=>{
+    var token = req.params.token;
+    jwt.verify(token, publicKey, (err, decoded) => {
+        if (err) {
+            console.log("Token Not ok");
+            res.status(401);
+            res.json({ error: "Not authorized" });
+        } else{
+            res.json({jwt: token})
+        }
+    })
+})
+
+router.post("/reset/reset_password/:token",(req,res)=>{
+    var token = req.params.token;
+   // var token = req.headers["password-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
             console.log("Token Not ok");
@@ -92,32 +104,17 @@ router.post("/password_reset",(req,res)=>{
             dao.getUserByEMail(decoded.email,(status,data)=>{
                 let user = data[0];
                 let pass=hash(req.body.password);
+                console.log(req.body.password);
                 user.hash= pass.hash;
                 user.salt= pass.salt;
                 console.log(user);
-                res.json({jwt: token, userId:user.user_id })
+                dao.updateUser(user.user_id, user, (status, data) => {
+                })
+                res.json({message: "Endret passord"})
             })
         }
     })
 })
-
-    //Send tilbakemelding til bruker
-  /* dao.getUserByEMail(req.body.email, (status,data) => {
-        let user = data[0];
-        let pass=hash(req.body.password);
-        user.hash= pass.hash;
-        user.salt= pass.salt;
-        console.log(user);
-        dao.updateUser(parseInt(user.user_id), user, (status, data) => {
-            
-          })
-    })*/
-
-router.post("/update_password",(req,res)=>{
-
-});
-
-
 
 module.exports = router;
 
