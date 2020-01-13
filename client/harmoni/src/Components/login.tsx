@@ -125,7 +125,7 @@ const Login = (props: any) => {
     }
 
     // Email/tlf or password is wrong (not authenticated)
-    else if (res && res.status === 401) {
+    else if (res && res.status === 204) {
       setWarningText("Email eller passord er feil, prøv igjen");
       setLoading(false);
     }

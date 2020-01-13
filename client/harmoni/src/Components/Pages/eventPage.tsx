@@ -20,7 +20,7 @@ interface IEvent {
   status: string;
   information: string;
   category: string;
-  picture: File;
+  picture: string;
 }
 
 interface ITicket {
@@ -43,62 +43,83 @@ interface IUser {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-areas:
-    'img img artists'
-    'info info info'
-    'tickets tickets tickets';
-
+  grid-template-columns: 1fr;
   @media screen and (max-width: 800px) {
-    grid-template-areas:
-      'img img img'
-      'info info info'
-      'artists artists artists'
-      'tickets tickets tickets';
     justify-content: center;
     margin: auto;
   }
 `;
 
 const ImageGrid = styled.div`
-  grid-area: img;
+  justify-items: center;
+
   @media screen and (max-width: 800px) {
-    justify-content: center;
     margin: auto;
+    margin-top: 10px;
+    width: 70%;
   }
 `;
 
 const InfoGrid = styled.div`
-  grid-area: info;
   margin: 0 20px;
 `;
 
+const ArtistsAndMapGrid = styled.div`
+  display: grid;
+  margin: 10px 20px;
+
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr;
+    grid-gap: 30px;
+  }
+`;
+
 const ArtistsGrid = styled.div`
-  grid-area: artists;
+  justify-self: start;
+  @media screen and (max-width: 800px) {
+    justify-self: center;
+  }
+`;
+
+const MapGrid = styled.div`
+  border: solid;
+  width: 400px;
+  height: 400px;
 `;
 
 const TicketsGrid = styled.div`
-  grid-area: tickets;
   width: 70%;
   margin: auto;
 `;
 
 const EventImage = styled.img`
-  height: 65vh;
+  width: 100%;
+  height: 60vh;
   object-fit: cover;
-
   @media screen and (max-width: 800px) {
-    border-radius: 10px;
     height: 40vh;
+    justify-self: center;
+    border-radius: 10px;
   }
+`;
+
+const DoubleColumnGrid = styled.div`
+  margin: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: center;
 `;
 
 const DateText = styled.p`
   color: grey;
+  justify-self: end;
 `;
 
 const AddressText = styled.p`
   color: grey;
-  justify-self: end;
 `;
 
 const OrganizerText = styled.p``;
@@ -114,22 +135,18 @@ const ContentText = styled.p`
 const Event = (props: any) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
-  const [artists, setArtists] = useState();
-  const [user, setUser] = useState();
+  const [artists, setArtists] = useState<IUser[]>();
+  const [organizer, setOrganizer] = useState();
 
   useEffect(() => {
     fetchEvent();
     fetchTickets();
     fetchArtists();
+    fetchOrganizer();
   }, []);
 
   const fetchEvent = async () => {
-    eventService.getEventById(props.match.params.id).then(fetchedEvent => {
-      setEvent(fetchedEvent);
-      userService
-        .getOrganizerForEvent(fetchedEvent[0].organizer)
-        .then(fetchedUser => setUser(fetchedUser));
-    });
+    setEvent(await eventService.getEventById(props.match.params.id));
   };
 
   const fetchTickets = async () => {
@@ -142,25 +159,42 @@ const Event = (props: any) => {
     setArtists(await userService.getArtistsForEvent(props.match.params.id));
   };
 
-  if (event != null && eventTickets != null && user != null) {
+  const fetchOrganizer = async () => {
+    setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
+  };
+
+  if (
+    event != null &&
+    eventTickets != null &&
+    organizer != null &&
+    artists != null
+  ) {
+    let eventImage = new Buffer(event[0].picture).toString('base64');
+
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src="https://i.imgur.com/Glo8oxy.jpg"
+            src={'data:image/png;base64,' + eventImage}
             alt={event[0].name}
           ></EventImage>
+          <DoubleColumnGrid>
+            <AddressText>{event[0].address}</AddressText>
+            <DateText>{event[0].from_date}</DateText>
+          </DoubleColumnGrid>
         </ImageGrid>
         <InfoGrid>
-          <DateText>{event[0].from_date}</DateText>
-          <AddressText>{event[0].address}</AddressText>
           <Title>{event[0].name}</Title>
-          <OrganizerText>Arrangør: {user[0].name}</OrganizerText>
+          <OrganizerText>Arrangør: {organizer[0].name}</OrganizerText>
           <ContentText>{event[0].information}</ContentText>
         </InfoGrid>
-        <ArtistsGrid>
-          <ArtistsList artists={artists} />
-        </ArtistsGrid>
+        <ArtistsAndMapGrid>
+          <ArtistsGrid>
+            <ArtistsList artists={artists} />
+          </ArtistsGrid>
+          <MapGrid>Kartet går her</MapGrid>
+        </ArtistsAndMapGrid>
+
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
         </TicketsGrid>
