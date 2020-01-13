@@ -11,6 +11,7 @@ export interface user {
     salt: string,
     type: string,
     picture: string
+    password:string
 }
 
 export default class userDao extends daoParentUser{
@@ -67,7 +68,7 @@ export default class userDao extends daoParentUser{
 
     // Updates a user
     updateUser(userId: number, data: user, callback){
-        let userData=hash(data.body.password);
+        let userData=hash(data.password);
         data.hash= userData.hash;
         data.salt= userData.salt;
         super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?",
