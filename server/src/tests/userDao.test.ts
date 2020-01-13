@@ -138,7 +138,7 @@ test("Add user", done => {
         hash: "wgwrgwdgfqe",
         salt: "efnbvwwrtuj",
         type: "volunteer",
-        picture: "DEFAULT"
+        picture: new Buffer("")
     }
 
     dao.addUser(user, (status, data) => {
@@ -167,14 +167,14 @@ test("Update user", done => {
         hash: "wgwrgwdgfqe",
         salt: "efnbvwwrtuj",
         type: "volunteer",
-        picture: "DEFAULT"
+        picture: new Buffer("")
     }
     // Actual change
     dao.updateUser(5, updatedUser, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
-
+        done();
         // No change
         dao.updateUser(5, updatedUser, (status, data) => {
             expect(status).toBe(200);

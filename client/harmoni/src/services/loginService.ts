@@ -42,13 +42,11 @@ export default class LoginService {
       "Content-Type": "application/json; charset=utf-8",
       "x-access-token": localStorage.getItem("x-access-token")
     };
-    console.log("token in service", headers["x-access-token"]);
     return axios
       .post("http://localhost:15016/api/v0/login/token", {
         headers: headers
       })
       .then(response => {
-        console.log("setting token!");
         localStorage.setItem("x-access-token", response.data.jwt);
         // console.log(response.status);
         // console.log(response.data.userId);

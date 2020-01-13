@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import SearchArtistBar from '../../Button/searchArtistBar';
 import {Typeahead, AsyncTypeahead} from 'react-bootstrap-typeahead';
 import PropTypes from 'prop-types';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
@@ -22,6 +23,7 @@ import { loginService } from '../../../services/loginService';
 import { riderService } from '../../../services/RiderService';
 
 import ArtistsList from '../../Event/artistsList';
+import styled from 'styled-components';
 
 interface IEvent {
     event_id: number;
@@ -57,11 +59,22 @@ interface IEvent {
 
 
 
-  
+  const ArtistImage = styled.img`
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    object-fit: content;
+  `;
+
+  const DelButton = styled.button`
+    color: red;
+    
+  `;
 const ArtistForm = (props: any) => {
     
     const [userData, setUserData] = useState<IUser[]>();
     const [artistState, setArtistState] = useState();
+    const [listOfArtists, setListOfArtists] = useState([]);
     
     useEffect(() => {
         fetchUsers();
@@ -72,29 +85,27 @@ const ArtistForm = (props: any) => {
         setUserData(await userService.getUsersOfType('artist'));
       };
 
-      const listOfArtists: any[] = [];
-
-      const fetchArtistState = async (s: { user: IUser; }[]) => {
-        console.log('HEIHEIHEIHEHIIEHIEHIHIE');
+      const fetchArtistState = (s: { user: IUser; }[]) => {
         if(s[0] != null){
-            console.log(s[0].user.name);
-            
-            listOfArtists.push(s[0]);
-            
-            console.log(listOfArtists);
-
+            let newList = listOfArtists.map(i => i);
+            newList.push(s[0]);
+            setListOfArtists(newList);
         };
       };
 
-
-      if (userData != null){
-
-      const test = userData.map((user) => (
-        {user}
-      ))
-      }
-
-      
+      const deleteArtist = (item) => {
+        if(item != null){
+            let newList = listOfArtists.map(i => i);
+            
+            let a = newList.findIndex((r) =>{
+              return r.user.user_id == item.user.user_id;
+            });
+            newList.splice(a, 1);
+           
+            setListOfArtists(newList);
+          
+        };
+      };
 
     if (userData != null) {
 
@@ -102,6 +113,7 @@ const ArtistForm = (props: any) => {
             <>
                 <p>Legg til artister:</p>
                 <Typeahead
+                
                     labelKey={artistName => `${artistName.user.name}`}
                     options= {userData.map((user) => (
                         {user}
@@ -112,11 +124,21 @@ const ArtistForm = (props: any) => {
                     selected={props.userData}
                 />
                 
-                
-                <ul>
-                    <li>{}</li>
-                </ul>
-                <ArtistsList artists={listOfArtists} />
+                <p><br></br>Artistliste: </p>
+                       
+                <ListGroup>
+                  {listOfArtists.map(item => {
+                   
+                   let base64 = new Buffer(item.user.picture).toString('base64'); 
+                   return(
+                    <ListGroup.Item>
+                      <ArtistImage src={'data:image/png;base64,' + base64}/> 
+                      <b>{item.user.type}</b>: {item.user.name} 
+                      <DelButton onClick={d => deleteArtist(item)}>X</DelButton>
+                    </ListGroup.Item>
+                   )
+                  })}
+                </ListGroup>
 
                 <p></p>
                 
@@ -125,7 +147,7 @@ const ArtistForm = (props: any) => {
     } else {
         return(
             <>
-                <p>Null?</p>
+                <p>Loading...</p>
             </>
         )
     }
