@@ -11,7 +11,6 @@ export interface user {
     salt: string,
     type: string,
     picture: string
-    password:string
 }
 
 export default class userDao extends daoParentUser{
@@ -68,11 +67,44 @@ export default class userDao extends daoParentUser{
 
     // Updates a user
     updateUser(userId: number, data: user, callback){
-        let userData=hash(data.password);
-        data.hash= userData.hash;
-        data.salt= userData.salt;
-        super.query("UPDATE user SET name = ?, email = ?, mobile = ?, hash = ?, salt = ?, type = ?, picture = ? WHERE user_id = ?",
-            [data.name, data.email, data.mobile, data.hash, data.salt, data.type, data.picture, userId], callback);
+        let user;
+        this.getUser(userId, (status, data) => {
+            user = data[0];
+            if (typeof data.name=="undefined"){
+                data.name=user.name;
+            }
+            if (typeof data.email=="undefined"){
+                data.email=user.email;
+            }if (typeof data.type=="undefined"){
+                data.type=user.type;
+            }if (typeof data.mobile=="undefined"){
+                data.mobile=user.mobile;
+            }
+            super.query("UPDATE user SET name = ?, email = ?, mobile = ?, type = ? WHERE user_id = ?",
+                [data.name, data.email, data.mobile, data.type, userId], callback);
+        });
+    }
+    changePassword(userId: number, data, callback){
+        let user;
+        this.getUser(userId, (status, data) => {
+            user = data[0];
+            let oldHash= user.hash;
+            let oldSalt= user.salt;
+            let okPassword=compareHash(oldHash,data.oldPassword,oldSalt);
+            if(okPassword){
+                let newData=hash(data.newPassword);
+                let newHash= newData.hash;
+                let newSalt= newData.salt;
+                super.query("UPDATE user SET  hash = ?, salt = ? WHERE user_id = ?",
+                    [newHash, newSalt, userId], callback);
+            }
+            else{
+                callback.sendStatus(403); //Forbidden
+            }
+        });
+    }
+    changePicture(userId: number, data, callback){
+        super.query("UPDATE user SET  picture = ? WHERE user_id = ?", [data.picture,userId], callback);
     }
 
     // Deletes a user by its id

@@ -83,6 +83,22 @@ class UserService extends Service {
       .then(response => response.data);
   }
 
+  changePicture(userID:number,picture){
+    return axios
+        .put(this.path + '/authorized/users/change_picture/' + userID, picture)
+        .then(response => response.data);
+  }
+
+
+  changePassword(userID:number,newPassword:string, oldPassword:string){
+    let postData={
+      userID:userID,newPassword:newPassword,oldPassword:oldPassword
+    };
+    return axios
+        .put(this.path+'/authorized/users/change_password/'+userID, postData)
+        .then(response => response.data);
+  }
+
   // Deletes a user
   deleteUser(userId: number) {
     return axios

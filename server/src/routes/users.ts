@@ -76,6 +76,16 @@ router.put("/authorized/users/:id", async (request, response) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+router.put("/authorized/users/change_password/:id", async (request, response) => {
+  dao.changePassword(parseInt(request.params.id), request.body, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+router.put("/authorized/users/change_picture/:id", async (request, response) => {
+  dao.changePicture(parseInt(request.params.id), request.body, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
 
 // Delete user given id
 router.delete("/authorized/users/:id", async (request, response) => {
