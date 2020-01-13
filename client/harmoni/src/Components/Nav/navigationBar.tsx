@@ -11,7 +11,6 @@ import SmallProfileNav from '../Profile/smallProfileNav';
 const StyledLink = styled(props => <Link {...props} />)`
   color: #7f7f7f;
   text-decoration: none;
-  // line-height: 96px;
 
   :visited {
     color: #7f7f7f;
@@ -67,8 +66,7 @@ const NavigationBar = (props: any) => (
                 <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
               </>)
             : (<>
-                <StyledLink to='/registrer'>
-                  <OutlineButton>Registrer</OutlineButton></StyledLink>
+                <OutlineButton to='/registrer'>Registrer</OutlineButton>
                 <LoginBtn logIn={props.logIn} />
               </>)
           }
