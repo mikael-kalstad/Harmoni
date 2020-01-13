@@ -1,20 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import {Button} from "react-bootstrap";
-
-const Input = styled.input`
-  display: block;
-  width: 400px;
-  height: 300px;
-  border: none;
-  background: #efefef;
-  font-size: 18px;
-  text-indent: 15px;
-
-  :hover {
-    filter: brightness(98%);
-  }
-`;
+import TextField from "@material-ui/core/TextField";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -23,16 +9,33 @@ const Title = styled.h2`
   bottom-margin: 10px;
 `;
 
-const ProgramForm = () => {
+const inputStyle = {
+    width: '100%',
+    marginBottom: '25px'
+};
+
+interface ProgramProps {
+    programText : string;
+    setProgramText : Function;
+}
+
+const ProgramForm = (props: ProgramProps) => {
 
     return (
         <>
-            <Title>Program</Title>
-            <h5>Skriv inn programmet her</h5>
-            <Input
-                placeholder='program'
+            <Title>Program:</Title>
+            <h5>Skriv inn her:</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
+                placeholder='Program'
+                id="multiline-static"
+                label="Program"
+                multiline
+                rows="8"
+                value={props.programText}
+                onChange={e => props.setProgramText(e.target.value)}
             />
-            <Button>Legg til</Button>
         </>
     );
 };

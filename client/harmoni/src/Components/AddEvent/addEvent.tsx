@@ -3,54 +3,12 @@ import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
-import {Button} from "react-bootstrap";
 import ArtistForm from './EventForms/artistForm';
 import BasicInfoForm from './EventForms/basicInfoForm';
 import styled from "styled-components";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
-
-import Skeleton from 'react-loading-skeleton';
-
-import { eventService } from '../../services/EventService';
-import { ticketService } from '../../services/TicketService';
-import { userService } from '../../services/UserService';
-import { attachmentService } from '../../services/AttachmentService';
-import { loginService } from '../../services/loginService';
-import { riderService } from '../../services/RiderService';
-
-
-interface IEvent {
-    event_id: number;
-    name: string;
-    organizer: number;
-    address: string;
-    from_date: string;
-    to_date: string;
-    capacity: number;
-    status: string;
-    information: string;
-    category: string;
-    picture: File;
-  }
-  
-  interface ITicket {
-    ticketId: number;
-    eventId: number;
-    price: number;
-    type: string;
-  }
-
-  interface IUser {
-    userId: number;
-    name: string;
-    email: string;
-    mobile: number;
-    hash: string;
-    salt: string;
-    type: string;
-    picture: string;
-  }
+import {Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
         },
         button: {
-            marginRight: theme.spacing(1),
+            margin: theme.spacing(1),
+            marginLeft: 0
         },
         backButton: {
             marginRight: theme.spacing(1),
@@ -75,8 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 const Wrapper = styled.div`
-  justify-content: center;
-  display: grid;
+  margin: 80px auto 0 auto;
+  width: 400px;
 `;
 
 function getSteps() {
@@ -91,16 +50,46 @@ const AddEvent = () => {
     const [skipped, setSkipped] = useState(new Set<number>());
     const steps = getSteps();
 
+    //info:
+    const [name, setName] = useState('');
+    const [category, setCategory] = useState('');
+    const [location, setLocation] = useState('');
+    const [fromDateTime, setFromDateTime] = useState<Date | null>(
+        new Date('2020-01-01T00:00:00'),
+    );
+    const [toDateTime, setToDateTime] = useState<Date | null>(
+        new Date('2020-01-01T00:00:00'),
+    );
+
+    const infoProps = {name, setName, category, setCategory, location, setLocation, fromDateTime, setFromDateTime, toDateTime, setToDateTime};
+
+
+    //artists:
+    //artist props go here
+    //const artistProps = {};
+
+
+    //tickets, this needs a list of tickets (not done)
+    const [ticketCategory, setTicketCategory] = useState('');
+    const [price, setPrice] = useState('');
+
+    const ticketProps = {ticketCategory, setTicketCategory, price, setPrice};
+
+    //program:
+    const [programText, setProgramText] = useState('');
+    const programProps = {programText, setProgramText};
+
+
     function getStepContent(step: number) {
         switch (step) {
             case 0:
-                return (<BasicInfoForm/>);
+                return (<BasicInfoForm {...infoProps}/>);
             case 1:
                 return (<ArtistForm/>);
             case 2:
-                return (<TicketForm/>);
+                return (<TicketForm {...ticketProps}/>);
             case 3:
-                return (<ProgramForm/>);
+                return (<ProgramForm {...programProps}/>);
             default:
                 return 'Unknown step';
         }
@@ -229,6 +218,7 @@ const AddEvent = () => {
                                     className={classes.button}
                                 >
                                     Neste
+                                    {}
                                 </Button>
                                 {isStepOptional(activeStep) && !completed.has(activeStep) && (
                                     <Button

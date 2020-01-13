@@ -6,59 +6,41 @@ import {
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        pickerBox: {
-            marginBottom: '40px',
-            height: '55px',
-            border: 'none',
-            background: '#efefef',
-        },
-    }),
-);
-
-export default function DateTimePicker() {
-
-    const classes = useStyles({});
-
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-        new Date('2020-01-01T00:00:00'),
-    );
+const DateTimePicker = (props : any) => {
 
     const handleDateChange = (date: Date | null) => {
-        setSelectedDate(date);
+        props.setSelectedDate(date);
     };
 
     return (
+        <div>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-                disableToolbar
-                className={classes.pickerBox}
+                inputVariant="outlined"
                 margin="normal"
-                id="date-picker-inline"
-                variant="inline"
                 format="dd/MM/yyyy"
                 label="Dato"
-                value={selectedDate}
+                value={props.selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
                     'aria-label': 'change date',
                 }}
             />
-            <br/>
             <KeyboardTimePicker
-                className={classes.pickerBox}
+                inputVariant="outlined"
                 margin="normal"
-                id="time-picker"
                 label="Tid"
-                value={selectedDate}
+                value={props.selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
                     'aria-label': 'change time',
                 }}
             />
         </MuiPickersUtilsProvider>
+        </div>
     );
-}
+};
+
+export default DateTimePicker;
+
