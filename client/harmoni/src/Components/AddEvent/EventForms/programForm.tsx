@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from "styled-components";
+import {Button} from "react-bootstrap";
 
 const Input = styled.input`
   display: block;
-  margin: 40px auto;
-  margin-top: 0px;
   width: 400px;
-  height: 55px;
+  height: 300px;
   border: none;
   background: #efefef;
   font-size: 18px;
@@ -24,22 +23,18 @@ const Title = styled.h2`
   bottom-margin: 10px;
 `;
 
-const TicketForm = () => {
+const ProgramForm = () => {
 
     return (
         <>
-            <Title>Billetter</Title>
-            <h5>Pris</h5>
+            <Title>Program</Title>
+            <h5>Skriv inn programmet her</h5>
             <Input
-                placeholder='Pris'
+                placeholder='program'
             />
-
-            <h5>Billett-type</h5>
-            <Input
-                placeholder='Type'
-            />
+            <Button>Legg til</Button>
         </>
     );
 };
 
-export default TicketForm;
+export default ProgramForm;
