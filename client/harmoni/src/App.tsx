@@ -19,14 +19,8 @@ import AddEvent from "./Components/AddEvent/addEvent";
 // Authentication component
 import Authenticate from "./Components/authenticate";
 
-interface IUserData {
-  name: string;
-  email: string;
-  type: string;
-}
-
 const App: React.FC = () => {
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState(undefined);
 
   // Get data when component mounts
   useEffect(() => {
@@ -34,16 +28,10 @@ const App: React.FC = () => {
   }, []);
 
   const checkToken = async () => {
-    console.log("token in app", localStorage.getItem("x-access-token"));
     let res = await loginService.checkToken();
-    console.log("res in app", res);
-    if (res) {
-      setUserData(res["userData"]);
-      console.log("updatin!");
-    }
-  };
 
-  console.log("USER DATA Ah ye!", userData);
+    if (res) setUserData(res["data"]["userData"]);
+  };
 
   const logOut = () => {
     localStorage.removeItem("x-access-token");
@@ -51,7 +39,8 @@ const App: React.FC = () => {
   };
 
   const logIn = async (email: string) => {
-    setUserData(await userService.getUserByEMail(email));
+    let res = await userService.getUserByEMail(email);
+    setUserData(res[0]);
   };
 
   interface IProps {

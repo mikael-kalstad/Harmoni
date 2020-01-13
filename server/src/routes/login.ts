@@ -62,23 +62,17 @@ router.post("/token/update", (req, res, next) => {
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.body.headers["x-access-token"];
-  console.log("token", token);
   jwt.verify(token, publicKey, (err, decoded) => {
     if (err) {
       console.log("Token has expired");
       res.status(401);
       res.json({ error: "Not authorized" });
     } else {
-      console.log("decoded", decoded);
-      console.log("Token ok for", decoded.email);
-      // console.log("Req", req);
       newToken = jwt.sign({ email: decoded.email }, privateKey, {
         expiresIn: 1800
       });
       dao.getUserByEMail(decoded.email, (status, data) => {
         let id = data[0] === undefined ? undefined : data[0];
-        console.log("id", id);
-        console.log("data", data);
         res.json({ jwt: newToken, userData: data[0] });
       });
     }

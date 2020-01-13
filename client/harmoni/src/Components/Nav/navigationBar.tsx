@@ -62,10 +62,9 @@ const NavigationBar = (props: any) => (
       {props.userData ? (
         <>
           <SmallProfileNav
-            picture={props.userData[0].picture}
-            name={props.userData[0].name}
+            picture={props.userData.picture}
+            name={props.userData.name}
           />
-          {/* TODO: ADD LOG OUT FUNCTIONALITY */}
           <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
         </>
       ) : (

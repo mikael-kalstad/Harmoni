@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Button from '../Button/button';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { userService } from '../../services/UserService';
-import { loginService } from '../../services/loginService';
-import { Redirect } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Button from "../Button/button";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { userService } from "../../services/UserService";
+import { loginService } from "../../services/loginService";
+import { Redirect } from "react-router-dom";
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const BtnWrapper = styled.div`
-    margin-top: 65px;
+  margin-top: 65px;
 `;
 
 const Title = styled.h2`
@@ -29,165 +29,183 @@ const Title = styled.h2`
 
 // Material UI input styling
 const inputStyle = {
-    width: '100%',
-    marginTop: '25px'
-}
+  width: "100%",
+  marginTop: "25px"
+};
 
 interface User {
-    userId: number;
-    name: string;
-    email: string;
-    mobile: number;
-    hash: string;
-    salt: string;
-    type: string;
-    picture: string;
+  userId: number;
+  name: string;
+  email: string;
+  mobile: number;
+  hash: string;
+  salt: string;
+  type: string;
+  picture: string;
 }
 
-const Register = (props: {userData?: object; logIn?: Function}) => {
-    const [nameInput, setNameInput] = useState('');
-    const [emailInput, setEmailInput] = useState('');
-    const [tlfInput, setTlfInput] = useState();
-    const [passwordInput, setPasswordInput] = useState('');
-    const [type, setType] = useState('');
-    const [redirect, setRedirect] = useState(false);
-    const [emailWarning, setEmailWarning] = useState('');
+const Register = (props: { userData?: object; logIn?: Function }) => {
+  const [nameInput, setNameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [tlfInput, setTlfInput] = useState();
+  const [passwordInput, setPasswordInput] = useState("");
+  const [type, setType] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  const [emailWarning, setEmailWarning] = useState("");
 
-    // Used to display error on empty input when submitting
-    const [submit, setSubmit] = useState(false);
+  // Used to display error on empty input when submitting
+  const [submit, setSubmit] = useState(false);
 
-    // Render all types in array
-    const types_translated = ['Arrangør', 'Artist/Manager', 'Frivillig'];
-    const types = ['organizer', 'artist', 'volunteer'];
+  // Render all types in array
+  const types_translated = ["Arrangør", "Artist/Manager", "Frivillig"];
+  const types = ["organizer", "artist", "volunteer"];
 
-    useEffect(() => {
-        if (props.userData) {
-            // Phone is optional
-            if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
+  useEffect(() => {
+    if (props.userData) {
+      // Phone is optional
+      if (props.userData["phone"]) setTlfInput(props.userData[0]["phone"]);
 
-            // All other inputs are required
-            setNameInput(props.userData[0]['name']);
-            setEmailInput(props.userData[0]['email']);
-            setType(props.userData[0]['type']);
-        }
-    });
+      // All other inputs are required
+      setNameInput(props.userData["name"]);
+      setEmailInput(props.userData["email"]);
+      setType(props.userData["type"]);
+    }
+  });
 
-    let menuItems: JSX.Element[] = [];
+  let menuItems: JSX.Element[] = [];
 
-    for (let i = 0; i < types.length; i++) {
-        menuItems.push(
-            <MenuItem key={i} value={types[i]}>{types_translated[i]}</MenuItem>
-        );
+  for (let i = 0; i < types.length; i++) {
+    menuItems.push(
+      <MenuItem key={i} value={types[i]}>
+        {types_translated[i]}
+      </MenuItem>
+    );
+  }
+
+  // Check if enter key is clicked
+  const checkForEnterKey = (e: { key: string } | undefined) => {
+    // Try to register if enter key is pressed down
+    if (e !== undefined && e.key === "Enter") register();
+  };
+
+  // Save changes to user info
+  const save = async () => {};
+
+  const register = async () => {
+    setSubmit(true);
+
+    if (
+      type.trim() === "" ||
+      nameInput.trim() === "" ||
+      emailInput.trim() === "" ||
+      passwordInput.trim() === ""
+    )
+      return;
+
+    let res = await loginService.registrerPerson(
+      nameInput,
+      emailInput,
+      tlfInput,
+      passwordInput,
+      type,
+      ""
+    );
+
+    // Status code 409 indicates that the email is already registered
+    if (res && res.status === 409) {
+      setEmailWarning("Email er allerede registrert");
     }
 
-    // Check if enter key is clicked
-    const checkForEnterKey = (e: { key: string; } | undefined) =>  {
-        // Try to register if enter key is pressed down
-        if (e !== undefined && e.key === 'Enter') 
-            register();
+    // Status code 401 indicates that something went wrong
+    else if (res && res.status !== 401) {
+      if (props.logIn !== undefined) props.logIn(emailInput);
+      setRedirect(true);
     }
+  };
 
-    // Save changes to user info
-    const save = async() => {
+  // If registration is successfull
+  if (redirect) {
+    return <Redirect to="/profile" />;
+  }
 
-    }
+  return (
+    <>
+      <Title>{props.userData ? "Endre Profil" : "Registrer bruker"}</Title>
+      <Wrapper>
+        <FormControl
+          variant="outlined"
+          error={submit && type === ""}
+          style={{ width: "160px" }}
+        >
+          <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            value={type}
+            labelWidth={300}
+            onChange={(e: any) => setType(e.target.value)}
+          >
+            {menuItems}
+          </Select>
 
-    const register = async() => {
-        setSubmit(true);
+          {submit && type === "" && (
+            <FormHelperText>Type er påkrevd</FormHelperText>
+          )}
+        </FormControl>
 
-        if (type.trim() === ''
-            || nameInput.trim() === ''
-            || emailInput.trim() === ''
-            || passwordInput.trim() === ''
-            )
-            return;
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="Navn*"
+          value={nameInput}
+          error={submit && nameInput === ""}
+          helperText={submit && nameInput === "" ? "Navn er påkrevd" : ""}
+          onChange={e => setNameInput(e.target.value)}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
 
-        let res = await loginService.registrerPerson(nameInput, emailInput, tlfInput, passwordInput, type, "");
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="Telefon"
+          type="number"
+          value={tlfInput}
+          helperText="Valgfritt å oppgi telefonnummer"
+          onChange={e => setTlfInput(Number.parseInt(e.target.value))}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
 
-        // Status code 409 indicates that the email is already registered
-        if (res && res.status === 409) {
-            setEmailWarning('Email er allerede registrert');
-        }
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="Email*"
+          type="email"
+          value={emailInput}
+          error={(submit && emailInput === "") || emailWarning !== ""}
+          helperText={
+            submit && emailInput === ""
+              ? "Email er påkrevd"
+              : emailWarning !== ""
+              ? emailWarning
+              : ""
+          }
+          onChange={e => setEmailInput(e.target.value)}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
 
-        // Status code 401 indicates that something went wrong
-        else if (res && res.status !== 401) {
-            if (props.logIn !== undefined) props.logIn(emailInput);
-            setRedirect(true);
-        }
-    }
-
-    // If registration is successfull
-    if (redirect) {
-        return <Redirect to='/profile'/>
-    }
-
-    return (
-        <>
-            <Title>{props.userData ? 'Endre Profil' : 'Registrer bruker'}</Title>
-            <Wrapper>
-                <FormControl variant="outlined"  error={submit && type === ''} style={{width: '160px'}}>
-                    <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-outlined-label"
-                        value={type}
-                        labelWidth={300}
-                        onChange={(e:any) => setType(e.target.value)}
-                    >
-                        {menuItems}
-                    </Select>
-
-                    {submit && type === '' && <FormHelperText>Type er påkrevd</FormHelperText>}
-                </FormControl>
-
-                <TextField
-                    style={inputStyle}
-                    variant='outlined'
-                    label='Navn*'
-                    value={nameInput}
-                    error={submit && nameInput === ''}
-                    helperText={submit && nameInput === '' ? 'Navn er påkrevd' : ''}
-                    onChange={e => setNameInput(e.target.value)}
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-
-                <TextField
-                    style={inputStyle}
-                    variant='outlined'
-                    label='Telefon'
-                    type='number'
-                    value={tlfInput}
-                    helperText='Valgfritt å oppgi telefonnummer'
-                    onChange={e => setTlfInput(Number.parseInt(e.target.value))}
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-
-                <TextField
-                    style={inputStyle}
-                    variant='outlined'
-                    label='Email*'
-                    type='email'
-                    value={emailInput}
-                    error={(submit && emailInput === '') || emailWarning !== ''}
-                    helperText={
-                        submit && emailInput === '' ? 'Email er påkrevd' :
-                        emailWarning !== '' ? emailWarning : ''
-                    }
-                    onChange={e => setEmailInput(e.target.value)}
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-
-                <TextField
-                    style={inputStyle}
-                    variant='outlined'
-                    label='Passord*'
-                    type='password'
-                    value={passwordInput}
-                    error={submit && passwordInput === ''}
-                    helperText={submit && passwordInput === '' ? 'Passord er påkrevd' : ''}
-                    onChange={e => setPasswordInput(e.target.value)}
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-                {/* <Input
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="Passord*"
+          type="password"
+          value={passwordInput}
+          error={submit && passwordInput === ""}
+          helperText={
+            submit && passwordInput === "" ? "Passord er påkrevd" : ""
+          }
+          onChange={e => setPasswordInput(e.target.value)}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
+        {/* <Input
                     type='file'
                     onChange={e => setFile(e.target.value)}
                     value={file}
@@ -195,16 +213,14 @@ const Register = (props: {userData?: object; logIn?: Function}) => {
                     onKeyDown={e => checkForEnterKey(e)}
                 /> */}
 
-
-                <BtnWrapper>
-                    <Button onClick={() => props.userData ? save() : register()}>
-                        {props.userData ? 'LAGRE' : 'OPPRETT KONTO'}
-                    </Button>
-                </BtnWrapper>
-            </Wrapper>
-        </> 
-    );
-}
-
+        <BtnWrapper>
+          <Button onClick={() => (props.userData ? save() : register())}>
+            {props.userData ? "LAGRE" : "OPPRETT KONTO"}
+          </Button>
+        </BtnWrapper>
+      </Wrapper>
+    </>
+  );
+};
 
 export default Register;
