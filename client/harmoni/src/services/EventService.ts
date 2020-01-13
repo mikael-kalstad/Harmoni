@@ -35,6 +35,7 @@ class EventService extends Service {
       .get(this.path + '/events/status/' + status)
       .then(respnse => respnse.data);
   }
+  // Gets events to an organizer by id
   getEventsByOrganizer(userId: number) {
     return axios
       .get(this.path + '/events/organizer/' + userId)
@@ -56,6 +57,12 @@ class EventService extends Service {
       .get(this.path + '/events/user/' + userId)
       .then(response => response.data);
   }
+  getEventsByCategory(category: string) {
+    return axios
+        .get(this.path + '/events/category/' + category)
+        .then(response => response.data);
+  }
+  // Gets events by eventId
   deleteEventById(eventId: number) {
     return axios
       .delete(this.path + '/authorized/events/' + eventId)

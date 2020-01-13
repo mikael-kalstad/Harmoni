@@ -67,6 +67,14 @@ export default class eventDao extends daoParentEvent {
             "FROM event WHERE status = ?", [status], callback);
     }
 
+    getEventsByCategory(category: string, callback) {
+        super.query("SELECT event_id, organizer, name, address, capacity, " +
+            "status, information, category, picture, " +
+            "DATE_FORMAT(to_date, \"%d.%m.%Y %H:%i\") as to_date, " +
+            "DATE_FORMAT(from_date, \"%d.%m.%Y %H:%i\") as from_date " +
+            "FROM event WHERE category = ?", [category], callback);
+    }
+
     addEvent(event: event, callback) {
         super.query('INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [event.organizer, event.name, event.address, event.from_date, event.to_date, event.capacity, event.status, event.information, event.category, event.picture], callback);
     }

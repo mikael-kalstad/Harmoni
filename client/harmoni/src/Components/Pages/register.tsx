@@ -10,10 +10,18 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import { userService } from "../../services/UserService";
 import { loginService } from "../../services/loginService";
 import { Redirect } from "react-router-dom";
+import ImgUpload from "../imgUpload";
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
   width: 400px;
+`;
+
+const TopWrapper = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-items: end;
+  align-items: center;
 `;
 
 const BtnWrapper = styled.div`
@@ -50,8 +58,15 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
   const [tlfInput, setTlfInput] = useState();
   const [passwordInput, setPasswordInput] = useState("");
   const [type, setType] = useState("");
-  const [redirect, setRedirect] = useState(false);
+
+  // User already registered warning for email
   const [emailWarning, setEmailWarning] = useState("");
+
+  // Redirect to page if registration is successfull
+  const [redirect, setRedirect] = useState(false);
+
+  // Show loading while waiting async API call
+  const [loading, setLoading] = useState(false);
 
   // Used to display error on empty input when submitting
   const [submit, setSubmit] = useState(false);
@@ -89,7 +104,26 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
   };
 
   // Save changes to user info
-  const save = async () => {};
+  const save = async () => {
+    setSubmit(true);
+
+    if (
+      type.trim() === "" ||
+      nameInput.trim() === "" ||
+      emailInput.trim() === ""
+    )
+      return;
+
+    setLoading(true);
+
+    let user = {
+      name: nameInput,
+      type: type,
+      email: emailInput
+    };
+
+    // let res = userService.updateUser();
+  };
 
   const register = async () => {
     setSubmit(true);
@@ -101,6 +135,8 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
       passwordInput.trim() === ""
     )
       return;
+
+    setLoading(true);
 
     let res = await loginService.registrerPerson(
       nameInput,
@@ -114,12 +150,14 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
     // Status code 409 indicates that the email is already registered
     if (res && res.status === 409) {
       setEmailWarning("Email er allerede registrert");
+      setLoading(false);
     }
 
     // Status code 401 indicates that something went wrong
     else if (res && res.status !== 401) {
       if (props.logIn !== undefined) props.logIn(emailInput);
       setRedirect(true);
+      setLoading(false);
     }
   };
 
@@ -132,25 +170,28 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
     <>
       <Title>{props.userData ? "Endre Profil" : "Registrer bruker"}</Title>
       <Wrapper>
-        <FormControl
-          variant="outlined"
-          error={submit && type === ""}
-          style={{ width: "160px" }}
-        >
-          <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            value={type}
-            labelWidth={300}
-            onChange={(e: any) => setType(e.target.value)}
+        <TopWrapper>
+          <FormControl
+            variant="outlined"
+            error={submit && type === ""}
+            style={{ width: "160px" }}
           >
-            {menuItems}
-          </Select>
+            <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              value={type}
+              labelWidth={300}
+              onChange={(e: any) => setType(e.target.value)}
+            >
+              {menuItems}
+            </Select>
 
-          {submit && type === "" && (
-            <FormHelperText>Type er påkrevd</FormHelperText>
-          )}
-        </FormControl>
+            {submit && type === "" && (
+              <FormHelperText>Type er påkrevd</FormHelperText>
+            )}
+          </FormControl>
+          <ImgUpload />
+        </TopWrapper>
 
         <TextField
           style={inputStyle}
@@ -169,7 +210,7 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
           label="Telefon"
           type="number"
           value={tlfInput}
-          helperText="Valgfritt å oppgi telefonnummer"
+          helperText="Det er valgfritt å oppgi telefonnummer"
           onChange={e => setTlfInput(Number.parseInt(e.target.value))}
           onKeyDown={e => checkForEnterKey(e)}
         />
@@ -192,29 +233,28 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
           onKeyDown={e => checkForEnterKey(e)}
         />
 
-        <TextField
-          style={inputStyle}
-          variant="outlined"
-          label="Passord*"
-          type="password"
-          value={passwordInput}
-          error={submit && passwordInput === ""}
-          helperText={
-            submit && passwordInput === "" ? "Passord er påkrevd" : ""
-          }
-          onChange={e => setPasswordInput(e.target.value)}
-          onKeyDown={e => checkForEnterKey(e)}
-        />
-        {/* <Input
-                    type='file'
-                    onChange={e => setFile(e.target.value)}
-                    value={file}
-                    placeholder='file'
-                    onKeyDown={e => checkForEnterKey(e)}
-                /> */}
+        {/* Only render password box if user is registrating, not changing info */}
+        {!props.userData && (
+          <TextField
+            style={inputStyle}
+            variant="outlined"
+            label={"Passord*"}
+            type="password"
+            value={passwordInput}
+            error={submit && passwordInput === ""}
+            helperText={
+              submit && passwordInput === "" ? "Passord er påkrevd" : ""
+            }
+            onChange={e => setPasswordInput(e.target.value)}
+            onKeyDown={e => checkForEnterKey(e)}
+          />
+        )}
 
         <BtnWrapper>
-          <Button onClick={() => (props.userData ? save() : register())}>
+          <Button
+            loading={loading}
+            onClick={() => (props.userData ? save() : register())}
+          >
             {props.userData ? "LAGRE" : "OPPRETT KONTO"}
           </Button>
         </BtnWrapper>

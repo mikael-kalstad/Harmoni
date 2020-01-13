@@ -32,11 +32,11 @@ router.post("/", (req, res) => {
         res.status(200);
       } else {
         //console.log('email & password NOT ok');
-        res.status(401);
+        res.status(204);
         res.json({ error: "Not authorized" });
       }
     } else {
-      res.status(401);
+      res.status(204);
       res.json({ error: "brukeren finnes ikke" });
     }
   });
