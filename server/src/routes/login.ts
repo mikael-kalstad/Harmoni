@@ -105,12 +105,8 @@ router.post("/register",(req,res)=>{
             res.status(409);
             res.json({error: "the user exists error code:" + status});
         }
-      });
-    } else {
-      res.status(409);
-      res.json({ error: "the user exists error code:" + status });
-    }
-  });
+
+    });
 });
 
 module.exports = router;
