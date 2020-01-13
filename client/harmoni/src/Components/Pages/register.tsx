@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/button';
-import Dropdown from 'react-bootstrap/Dropdown';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import { userService } from '../../services/UserService';
+import { loginService } from '../../services/loginService';
+import { Redirect } from 'react-router-dom';
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
   width: 400px;
+`;
+
+const BtnWrapper = styled.div`
+    margin-top: 65px;
 `;
 
 const Title = styled.h2`
@@ -15,118 +27,184 @@ const Title = styled.h2`
   margin: 50px;
 `;
 
-const Input = styled.input`
-  display: block;
-  margin: 25px auto;
-  width: 400px;
-  height: 55px;
-  border: none;
-  background: #efefef;
-  font-size: 18px;
-  text-indent: 15px;
+// Material UI input styling
+const inputStyle = {
+    width: '100%',
+    marginTop: '25px'
+}
 
-  :hover {
-    filter: brightness(98%);
-  }
-`;
+interface User {
+    userId: number;
+    name: string;
+    email: string;
+    mobile: number;
+    hash: string;
+    salt: string;
+    type: string;
+    picture: string;
+}
 
-const WarningText = styled.p`
-  color: #e57652;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: center;
-`;
-
-const Register = () => {
+const Register = (props: {userData?: object; logIn?: Function}) => {
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
-    const [tlfInput, setTlfInput] = useState('');
+    const [tlfInput, setTlfInput] = useState();
     const [passwordInput, setPasswordInput] = useState('');
-    const [type, setType] = useState('Velg type');
-    const [warningText, setWarningText] = useState(' ');
+    const [type, setType] = useState('');
+    const [redirect, setRedirect] = useState(false);
+    const [emailWarning, setEmailWarning] = useState('');
 
-    const types = ['Arrangør', 'Artist/Manager', 'Frivillig'];
+    // Used to display error on empty input when submitting
+    const [submit, setSubmit] = useState(false);
+
+    // Render all types in array
+    const types_translated = ['Arrangør', 'Artist/Manager', 'Frivillig'];
+    const types = ['organizer', 'artist', 'volunteer'];
+
+    useEffect(() => {
+        if (props.userData) {
+            // Phone is optional
+            if (props.userData[0]['phone']) setTlfInput(props.userData[0]['phone']);
+
+            // All other inputs are required
+            setNameInput(props.userData[0]['name']);
+            setEmailInput(props.userData[0]['email']);
+            setType(props.userData[0]['type']);
+        }
+    });
 
     let menuItems: JSX.Element[] = [];
 
-    types.forEach(type => {
+    for (let i = 0; i < types.length; i++) {
         menuItems.push(
-            <Dropdown.Item 
-                onClick={() => setType(type)}
-            >{type}</Dropdown.Item>
+            <MenuItem key={i} value={types[i]}>{types_translated[i]}</MenuItem>
         );
-    });
+    }
 
     // Check if enter key is clicked
     const checkForEnterKey = (e: { key: string; } | undefined) =>  {
         // Try to register if enter key is pressed down
         if (e !== undefined && e.key === 'Enter') 
-            register(nameInput, emailInput, tlfInput, type);
+            register();
     }
 
-    const register = (name: string, email: string, tlf: string, type: string) => {
-        // TODO: Do something here...
+    // Save changes to user info
+    const save = async() => {
 
-         // Check if inputs are empty
-        if (name === '' || email === '' || type === 'Velg type')
-            setWarningText('Please fill out all fields');
-        else 
-            setWarningText('Email or password is wrong');
+    }
+
+    const register = async() => {
+        setSubmit(true);
+
+        if (type.trim() === ''
+            || nameInput.trim() === ''
+            || emailInput.trim() === ''
+            || passwordInput.trim() === ''
+            )
+            return;
+
+        let res = await loginService.registrerPerson(nameInput, emailInput, tlfInput, passwordInput, type, "");
+
+        // Status code 409 indicates that the email is already registered
+        if (res && res.status === 409) {
+            setEmailWarning('Email er allerede registrert');
+        }
+
+        // Status code 401 indicates that something went wrong
+        else if (res && res.status !== 401) {
+            if (props.logIn !== undefined) props.logIn(emailInput);
+            setRedirect(true);
+        }
+    }
+
+    // If registration is successfull
+    if (redirect) {
+        return <Redirect to='/profile'/>
     }
 
     return (
         <>
-            <Title>Registrer bruker</Title>
+            <Title>{props.userData ? 'Endre Profil' : 'Registrer bruker'}</Title>
             <Wrapper>
-                <Dropdown>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                        {type}
-                    </Dropdown.Toggle>
+                <FormControl variant="outlined"  error={submit && type === ''} style={{width: '160px'}}>
+                    <InputLabel id="demo-simple-select-filled-label">Type*</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        value={type}
+                        labelWidth={300}
+                        onChange={(e:any) => setType(e.target.value)}
+                    >
+                        {menuItems}
+                    </Select>
 
-                    <Dropdown.Menu>
-                    {menuItems}
-                    </Dropdown.Menu>
-                </Dropdown>
+                    {submit && type === '' && <FormHelperText>Type er påkrevd</FormHelperText>}
+                </FormControl>
 
-                <Input
-                    onChange={e => setNameInput(e.target.value)}
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
+                    label='Navn*'
                     value={nameInput}
-                    placeholder='Navn'
+                    error={submit && nameInput === ''}
+                    helperText={submit && nameInput === '' ? 'Navn er påkrevd' : ''}
+                    onChange={e => setNameInput(e.target.value)}
                     onKeyDown={e => checkForEnterKey(e)}
                 />
 
-                <Input 
-                    type='email'
-                    onChange={e => setEmailInput(e.target.value)}
-                    value={emailInput}
-                    placeholder='Email'
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-
-                <Input
-                    onChange={e => setTlfInput(e.target.value)}
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
+                    label='Telefon'
+                    type='number'
                     value={tlfInput}
-                    id='tlfInput'
-                    placeholder='Telefon (valgfritt)'
+                    helperText='Valgfritt å oppgi telefonnummer'
+                    onChange={e => setTlfInput(Number.parseInt(e.target.value))}
                     onKeyDown={e => checkForEnterKey(e)}
                 />
 
-                <Input
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
+                    label='Email*'
+                    type='email'
+                    value={emailInput}
+                    error={(submit && emailInput === '') || emailWarning !== ''}
+                    helperText={
+                        submit && emailInput === '' ? 'Email er påkrevd' :
+                        emailWarning !== '' ? emailWarning : ''
+                    }
+                    onChange={e => setEmailInput(e.target.value)}
+                    onKeyDown={e => checkForEnterKey(e)}
+                />
+
+                <TextField
+                    style={inputStyle}
+                    variant='outlined'
+                    label='Passord*'
                     type='password'
-                    onChange={e => setPasswordInput(e.target.value)}
                     value={passwordInput}
-                    placeholder='Passord'
+                    error={submit && passwordInput === ''}
+                    helperText={submit && passwordInput === '' ? 'Passord er påkrevd' : ''}
+                    onChange={e => setPasswordInput(e.target.value)}
                     onKeyDown={e => checkForEnterKey(e)}
                 />
+                {/* <Input
+                    type='file'
+                    onChange={e => setFile(e.target.value)}
+                    value={file}
+                    placeholder='file'
+                    onKeyDown={e => checkForEnterKey(e)}
+                /> */}
 
-                <WarningText>{warningText}</WarningText>
 
-                <Button onClick={() => register(nameInput, emailInput, tlfInput, type)}>
-                    REGISTRER
-                </Button>
+                <BtnWrapper>
+                    <Button onClick={() => props.userData ? save() : register()}>
+                        {props.userData ? 'LAGRE' : 'OPPRETT KONTO'}
+                    </Button>
+                </BtnWrapper>
             </Wrapper>
         </> 
     );
 }
+
 
 export default Register;

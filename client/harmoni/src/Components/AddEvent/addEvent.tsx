@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -8,6 +8,49 @@ import ArtistForm from './EventForms/artistForm';
 import BasicInfoForm from './EventForms/basicInfoForm';
 import styled from "styled-components";
 import TicketForm from "./EventForms/ticketForm";
+import ProgramForm from "./EventForms/programForm";
+
+import Skeleton from 'react-loading-skeleton';
+
+import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
+import { userService } from '../../services/UserService';
+import { attachmentService } from '../../services/AttachmentService';
+import { loginService } from '../../services/loginService';
+import { riderService } from '../../services/RiderService';
+
+
+interface IEvent {
+    event_id: number;
+    name: string;
+    organizer: number;
+    address: string;
+    from_date: string;
+    to_date: string;
+    capacity: number;
+    status: string;
+    information: string;
+    category: string;
+    picture: File;
+  }
+  
+  interface ITicket {
+    ticketId: number;
+    eventId: number;
+    price: number;
+    type: string;
+  }
+
+  interface IUser {
+    userId: number;
+    name: string;
+    email: string;
+    mobile: number;
+    hash: string;
+    salt: string;
+    type: string;
+    picture: string;
+  }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,36 +73,38 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-function getSteps() {
-    return ['Info', 'Artister', 'Billett-typer', 'Program'];
-}
 
 const Wrapper = styled.div`
   justify-content: center;
   display: grid;
 `;
 
-function getStepContent(step: number) {
-    switch (step) {
-        case 0:
-            return (<BasicInfoForm/>);
-        case 1:
-            return (<ArtistForm img='/icons/test.jpg' name='Jahn Teigen'/>);
-        case 2:
-            return (<TicketForm/>);
-        case 3:
-            return (<p>Text-box(?) to add the events programme</p>);
-        default:
-            return 'Unknown step';
-    }
+function getSteps() {
+    return ['Info', 'Artister', 'Billett-typer', 'Program'];
 }
 
-export default function AddEvent() {
-    const classes = useStyles();
+const AddEvent = () => {
+
+    const classes = useStyles({});
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState(new Set<number>());
     const [skipped, setSkipped] = useState(new Set<number>());
     const steps = getSteps();
+
+    function getStepContent(step: number) {
+        switch (step) {
+            case 0:
+                return (<BasicInfoForm/>);
+            case 1:
+                return (<ArtistForm/>);
+            case 2:
+                return (<TicketForm/>);
+            case 3:
+                return (<ProgramForm/>);
+            default:
+                return 'Unknown step';
+        }
+    }
 
     const totalSteps = () => {
         return getSteps().length;
@@ -162,47 +207,48 @@ export default function AddEvent() {
             </Stepper>
 
             <Wrapper>
-            <div>
-                {stepsCompleted() ? (
-                    <div>
-                        <h1
-                            className={classes.instructions}>
-                            All steps completed - you&apos;re finished
-                        </h1>
-                        <Button onClick={handleReset}>Reset</Button>
-                    </div>
-                ) : (
-                    <div>
-                        <p className={classes.instructions}>{getStepContent(activeStep)}</p>
+                <div>
+                    {stepsCompleted() ? (
                         <div>
-                            <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                Tilbake
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={handleNext}
-                                className={classes.button}
-                            >
-                                Neste
-                            </Button>
-                            {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                            <h1
+                                className={classes.instructions}>
+                                Sykt bra jobba
+                            </h1>
+                            <Button onClick={handleReset}>Reset</Button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className={classes.instructions}>{getStepContent(activeStep)}</div>
+                            <div>
+                                <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                    Tilbake
+                                </Button>
                                 <Button
                                     color="primary"
-                                    onClick={handleSkip}
+                                    onClick={handleNext}
                                     className={classes.button}
                                 >
-                                    Legg til senere
+                                    Neste
                                 </Button>
-                            )}
-                            <Button  color="primary" onClick={handleComplete}>
-                                {completedSteps() === totalSteps() - 1 ? 'Legg til arrangement' : 'Fullfør trinn'}
-                            </Button>
+                                {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                                    <Button
+                                        color="primary"
+                                        onClick={handleSkip}
+                                        className={classes.button}
+                                    >
+                                        Legg til senere
+                                    </Button>
+                                )}
+                                <Button color="primary" onClick={handleComplete}>
+                                    {completedSteps() === totalSteps() - 1 ? 'Legg til arrangement' : 'Fullfør trinn'}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
             </Wrapper>
         </div>
     );
-}
+};
 
+export default AddEvent

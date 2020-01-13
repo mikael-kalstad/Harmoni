@@ -10,26 +10,26 @@ let data = [
     {
         'id': 1234,
         'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        'name': 'Kurt Nilsen synger låter',
+        'picture': '/icons/test.jpg'
     },
     {
         'id': 1234,
         'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        'name': 'Kurt Nilsen synger låter',
+        'picture': '/icons/test.jpg'
     },
     {
         'id': 1234,
         'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        'name': 'Kurt Nilsen synger låter',
+        'picture': '/icons/test.jpg'
     },
     {
         'id': 1234,
         'category': 'Konsert',
-        'title': 'Kurt Nilsen synger låter',
-        'img': '/icons/test.jpg'
+        'name': 'Kurt Nilsen synger låter',
+        'picture': '/icons/test.jpg'
     },
 ]
 
@@ -48,7 +48,7 @@ const Profile = (props:any) => (
         <ProfilePageImage img='/icons/test.jpg' name='Jahn Teigen'/>
         <ProfileOptions img='/icons/test.jpg' name='Jahn Teigen'/>
     </Wrapper>
-    <ArrangementGrid data={data} title='Mine arrangementer'/>
+    <ArrangementGrid data={data} name='Mine arrangementer'/>
     </>
 );
 

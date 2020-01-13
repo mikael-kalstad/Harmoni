@@ -12,6 +12,7 @@ server.use(cors());
 
 
 //Our routes
+<<<<<<< HEAD
 server.use("/api/v0/events", require('./routes/events'));
 server.use("/api/v0/rides", require('./routes/riders'));
 server.use("/api/v0/users", require('./routes/users'));
@@ -19,6 +20,15 @@ server.use("/api/v0/attachment", require('./routes/attachments'));
 server.use("/api/v0/tickets", require('./routes/tickets'));
 server.use("/login", require('./routes/login'));
 server.use("/auth", require('./routes/auth'));
+=======
+server.use("/api/v0", require('./routes/events'));
+server.use("/api/v0", require('./routes/riders'));
+server.use("/api/v0", require('./routes/users'));
+server.use("/api/v0", require('./routes/attachments'));
+server.use("/api/v0", require('./routes/tickets'));
+server.use("/api/v0/login", require('./routes/login'));
+server.use("/api/v0", require('./routes/authentication'));
+>>>>>>> db6cc42370ca765d3c17279ebc42aba1aee24102
 
 //server.use("api/v0/users", require("./routes/users"));
 

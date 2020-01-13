@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Redirect, Link } from 'react-router-dom';
-import Button from './Button/button';
-import { loginService } from '../services/loginService';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Redirect, Link } from "react-router-dom";
+import Button from "./Button/button";
+import { loginService } from "../services/loginService";
+import TextField from "@material-ui/core/TextField";
+import { isAbsolute } from "path";
 
-const Overlay = styled.div` 
+const Overlay = styled.div`
   position: fixed;
   z-index: 9999;
   width: 100vw;
@@ -15,163 +17,211 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-    z-index: 10000;
-    position: fixed;
-    margin: auto;
-    left: 0; right: 0; top: 0; bottom: 0;
-    width: 367px;
-    height: 491px;
-    border-radius: 5px;
-    background: white;
+  z-index: 10000;
+  position: fixed;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  height: 530px;
+  border-radius: 5px;
+  background: white;
 `;
 
 const Wrapper = styled.div`
-    width: 70%;
-    margin: auto;
+  width: 70%;
+  margin: auto;
 `;
 
 const Icon = styled.img`
-    padding-top: 30px;
-    display: block;
-    margin: 0 auto;
-    width: 32px;
+  padding-top: 30px;
+  display: block;
+  margin: 0 auto;
+  width: 32px;
 `;
 
 const Title = styled.h2`
-    text-align: center;
-    font-weight: bold;
-    font-size: 28px;
-    margin-bottom: 50px;
-    margin-top: 0;
-`;
-
-const Input = styled.input`
-    display: block;
-    margin: 25px 0;
-    width: 100%;
-    height: 50px;
-    border: none;
-    background: #EFEFEF;
-    font-size: 18px;
-    text-indent: 15px;
-
-    :hover {
-        filter: brightness(98%);
-    }
+  text-align: center;
+  font-weight: bold;
+  font-size: 28px;
+  margin-bottom: 30px;
+  margin-top: 0;
 `;
 
 const StyledLink = styled(props => <Link {...props} />)`
-    margin-top: 20px;
-    text-align: center;
-    display: block;
-    color: #868686;
-    text-decoration: underline;
+  margin-top: 20px;
+  text-align: center;
+  display: block;
+  color: #687faf;
+  text-decoration: underline;
 
-    :visited {
-        color: #868686;
-    }
+  :visited {
+    color: #687faf;
+  }
 
-    :hover {
-        color: black;
-    }
+  :hover {
+    color: black;
+  }
 `;
 
 const Exit = styled.img`
-    height: 15px;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    cursor: pointer;
+  height: 15px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  cursor: pointer;
 `;
 
-const WarningText = styled.p`
-    margin: 10px auto;
-    left: 0; right: 0;
-    color: #E57652;
-    bottom: 180px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
+const BtnWrapper = styled.div`
+  margin-top: 35px;
 `;
+
+const LinkWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+// Material UI input styling
+const inputStyle = {
+  width: "100%",
+  marginTop: "25px"
+};
 
 // Login popup dialog component
 const Login = (props: any) => {
-    const [emailInput, setEmailInput] = useState('');
-    const [passwordInput, setPasswordInput] = useState('');
-    const [redirect, setRedirect] = useState(false);
-    const [warningText, setWarningText] = useState('');
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [warningText, setWarningText] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    // Check inputs and try to log in with the given username and password
-    const login = async(username: string, password: string) => {
-        // // Check if inputs are empty
-        if (username.trim() === '' || password.trim() === '') {
-            setWarningText('Ett eller flere felter er tom');
-            return;
-        }
+  // Used to display error on empty input when submitting
+  const [submit, setSubmit] = useState(false);
 
-        let res = await loginService.login(username, password)
-        
-        if (res && res.status !== 401) {
-            setRedirect(true);
-            props.logIn(username);
-        }
-        else 
-            setWarningText('Email eller passord er feil, prøv igjen');
+  // Check inputs and try to log in with the given username and password
+  const login = async (username: string, password: string) => {
+    // User tries to submit/login, will activate error checks in inputs
+    setSubmit(true);
+
+    // Check if inputs are empty
+    if (username.trim() === "" || password.trim() === "") {
+      setWarningText("Ett eller flere felter er tom");
+      return;
     }
 
-    // Check if enter key is clicked
-    const checkForEnterKey = (e: { key: string; } | undefined) =>  {
-        // Try to Log in if enter key is pressed down
-        if (e !== undefined && e.key === 'Enter') 
-            login(emailInput, passwordInput);
+    // Show loading while waiting for API
+    setLoading(true);
+
+    // Try to log user in
+    let res = await loginService.login(username, password);
+
+    // Network or other errors
+    if (res && res instanceof Error) {
+      setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
+      setLoading(false);
     }
 
-    // Close dialog if overlay is clicked
-    let overlay = document.getElementById('overlay');
-    if (overlay !== null)
-        overlay.onclick = () => props.toggle();
-
-    // If username and passwords matches
-    if (redirect) {
-        // Close login popup and overlay
-        props.toggle();
-        return <Redirect to='/profile'/> 
+    // Email/tlf or password is wrong (not authenticated)
+    else if (res && res.status === 401) {
+      setWarningText("Email eller passord er feil, prøv igjen");
+      setLoading(false);
     }
 
-    return (
-        <>
-            <Overlay onClick={() => props.toggle()}/>
-            <Container>
-                <Exit src='/icons/cross.svg' onClick={() => props.toggle()} />
-                <Icon src='/icons/icon.svg' />
-                <Title>Harmoni</Title>
+    // Email/tlf and password match, log user in
+    else {
+      setLoading(false);
 
-                <Wrapper>
-                    <Input 
-                        type='email'
-                        onChange={e => setEmailInput(e.target.value)}
-                        value={emailInput}
-                        placeholder='Email eller tlf'
-                        onKeyDown={e => checkForEnterKey(e)}
-                    />
+      // Redirect user to a certain site
+      setRedirect(true);
+      props.logIn(username);
+    }
+  };
 
-                    <Input
-                        type='password'
-                        onChange={e => setPasswordInput(e.target.value)}
-                        value={passwordInput}
-                        placeholder='Passord'
-                        onKeyDown={e => checkForEnterKey(e)}
-                    />
+  // Check if enter key is clicked
+  const checkForEnterKey = (e: { key: string } | undefined) => {
+    // Try to Log in if enter key is pressed down
+    if (e !== undefined && e.key === "Enter") login(emailInput, passwordInput);
+  };
 
-                    <WarningText>{warningText}</WarningText>
-                    
-                    <Button onClick={() => login(emailInput, passwordInput)}>LOGIN</Button>
+  // Close dialog if overlay is clicked
+  let overlay = document.getElementById("overlay");
+  if (overlay !== null) overlay.onclick = () => props.toggle();
 
-                    <StyledLink to="/registrer" onClick={() => props.toggle()}>Registrer deg</StyledLink>
-                </Wrapper>
-            </Container>
-        </>
-    );
-}
+  // If username and passwords matches
+  if (redirect) {
+    // Close login popup and overlay
+    props.toggle();
+    return <Redirect to="/profile" />;
+  }
+
+  return (
+    <>
+      <Overlay onClick={() => props.toggle()} />
+      <Container>
+        <Exit src="/icons/cross.svg" onClick={() => props.toggle()} />
+        <Icon src="/icons/icon.svg" />
+        <Title>Harmoni</Title>
+
+        <Wrapper>
+          <TextField
+            style={inputStyle}
+            variant="outlined"
+            label="Email eller tlf*"
+            error={(submit && emailInput === "") || warningText !== ""}
+            helperText={submit && emailInput === "" ? "Email er påkrevd" : ""}
+            onChange={e => setEmailInput(e.target.value)}
+            onKeyDown={e => checkForEnterKey(e)}
+          />
+
+          <TextField
+            style={inputStyle}
+            variant="outlined"
+            label="Passord*"
+            type="password"
+            helperText={
+              submit && passwordInput === ""
+                ? "Passord er påkrevd"
+                : warningText !== ""
+                ? warningText
+                : ""
+            }
+            error={(submit && passwordInput === "") || warningText !== ""}
+            onChange={e => setPasswordInput(e.target.value)}
+            onKeyDown={e => checkForEnterKey(e)}
+          />
+
+          <BtnWrapper>
+            <Button
+              onClick={() => login(emailInput, passwordInput)}
+              loading={loading}
+            >
+              LOGIN
+            </Button>
+          </BtnWrapper>
+
+          <LinkWrapper>
+            <StyledLink
+              style={{ justifySelf: "start" }}
+              to="/glemt-passord"
+              onClick={() => props.toggle()}
+            >
+              Glemt passsord?
+            </StyledLink>
+
+            <StyledLink
+              style={{ justifySelf: "end" }}
+              to="/registrer"
+              onClick={() => props.toggle()}
+            >
+              Registrer deg
+            </StyledLink>
+          </LinkWrapper>
+        </Wrapper>
+      </Container>
+    </>
+  );
+};
 
 export default Login;

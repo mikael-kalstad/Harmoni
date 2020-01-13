@@ -11,7 +11,6 @@ import SmallProfileNav from '../Profile/smallProfileNav';
 const StyledLink = styled(props => <Link {...props} />)`
   color: #7f7f7f;
   text-decoration: none;
-  // line-height: 96px;
 
   :visited {
     color: #7f7f7f;
@@ -47,9 +46,9 @@ const NavigationBar = (props: any) => (
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
-        <StyledLink to="/even?konsert">Konsert</StyledLink>
-        <StyledLink to="/event?teater">Teater</StyledLink>
-        <StyledLink to="/event?Standup">Standup</StyledLink>
+        <StyledLink to="/events/Konsert">Konsert</StyledLink>
+        <StyledLink to="/events/Teater">Teater</StyledLink>
+        <StyledLink to="/events/Standup">Standup</StyledLink>
 
         <NavDropdown title="Annet" id="basic-nav-dropdown">
           <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -67,8 +66,7 @@ const NavigationBar = (props: any) => (
                 <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
               </>)
             : (<>
-                <StyledLink to='/registrer'>
-                  <OutlineButton>Registrer</OutlineButton></StyledLink>
+                <OutlineButton to='/registrer'>Registrer</OutlineButton>
                 <LoginBtn logIn={props.logIn} />
               </>)
           }
