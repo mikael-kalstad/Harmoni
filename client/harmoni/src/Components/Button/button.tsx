@@ -1,6 +1,3 @@
-import React from 'react';
-import styled from 'styled-components';
-
 /**
  * --- General button component ---
  *
@@ -11,7 +8,12 @@ import styled from 'styled-components';
  * - dropShadow (default off)
  * - onClick function
  * - All children (normally text) will be rendered inside button
+ * - Loading state for example if the button will have an async API call.
  */
+
+import React, { useState } from "react";
+import styled from "styled-components";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface IProps {
   children: any;
@@ -20,6 +22,7 @@ interface IProps {
   dropShadow?: boolean;
   onClick?: Function;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 interface IStyledButton {
@@ -36,10 +39,10 @@ const StyledButton = styled.button<IStyledButton>`
   height: 50px;
   width: 100%;
   background: ${props =>
-    props.backgroundColor ? props.backgroundColor : '#2A57AD'};
-  color: ${props => (props.textColor ? props.textColor : 'white')};
+    props.backgroundColor ? props.backgroundColor : "#2A57AD"};
+  color: ${props => (props.textColor ? props.textColor : "white")};
   box-shadow: ${props =>
-    props.dropShadow ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : 'none'};
+    props.dropShadow ? "0px 4px 4px rgba(0, 0, 0, 0.25)" : "none"};
   font-size: 16px;
   cursor: pointer;
 
@@ -60,7 +63,11 @@ const Button = (props: IProps) => (
     onClick={() => props.onClick !== undefined && props.onClick()}
     disabled={props.disabled}
   >
-    {props.children}
+    {props.loading ? (
+      <CircularProgress color="secondary" size={25} />
+    ) : (
+      props.children
+    )}
   </StyledButton>
 );
 
