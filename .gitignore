@@ -17,6 +17,7 @@ build/
 dist/
 
 # misc
+.idea/
 .DS_Store
 .env.local
 .env.development.local

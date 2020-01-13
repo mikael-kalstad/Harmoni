@@ -8,7 +8,7 @@ import { ticketService } from '../../services/TicketService';
 import TicketMenu from '../Event/ticketMenu';
 import Button from '../Button/button';
 
-interface IEvent {
+export interface IEvent {
   event_id: number;
   name: string;
   organizer: number;

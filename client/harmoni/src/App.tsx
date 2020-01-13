@@ -14,6 +14,7 @@ import Event from './Components/Pages/eventPage';
 import PageNotFound from './Components/Pages/pageNotFound';
 import Layout from './Components/layout';
 import AddEvent from './Components/AddEvent/addEvent';
+import SearchEvents from "./Components/Pages/searchPage";
 
 interface IUserData {
   name: string;
@@ -53,6 +54,7 @@ const App: React.FC = () => {
             <Route exact path='/events/:type' component={Events} />
             <Route exact path='/event/:id' component={Event} />
             <Route exact path='/newevent' component={AddEvent}/>
+            <Route path='/search/events' component={SearchEvents}/>
             <Route component={PageNotFound} />
             
         </Switch>
