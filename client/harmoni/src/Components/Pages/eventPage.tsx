@@ -127,7 +127,7 @@ const Event = (props: any) => {
     eventService.getEventById(props.match.params.id).then(fetchedEvent => {
       setEvent(fetchedEvent);
       userService
-        .getUserById(fetchedEvent[0].organizer)
+        .getOrganizerForEvent(fetchedEvent[0].organizer)
         .then(fetchedUser => setUser(fetchedUser));
     });
   };

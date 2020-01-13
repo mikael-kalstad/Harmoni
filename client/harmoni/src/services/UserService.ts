@@ -23,7 +23,7 @@ class UserService extends Service {
   // Fetches one user by its id
   getUserById(userId: number) {
     return axios
-      .get<User>(this.path + '/authorized/users/' + userId)
+      .get<User>(this.path + '/users/' + userId)
       .then(response => response.data);
   }
 
@@ -70,8 +70,8 @@ class UserService extends Service {
   // Adds a user
   addUser(user: User) {
     return axios
-      .post(this.path + '/users/', user,{
-        headers:{ 'content-type': 'multipart/form-data' }
+      .post(this.path + '/users/', user, {
+        headers: { 'content-type': 'multipart/form-data' }
       })
       .then(response => response.data);
   }
