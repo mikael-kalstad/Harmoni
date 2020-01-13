@@ -99,6 +99,9 @@ router.post("/password_reset",(req,res)=>{
                 res.json({jwt: token, userId:user.user_id })
             })
         }
+    })
+})
+
     //Send tilbakemelding til bruker
   /* dao.getUserByEMail(req.body.email, (status,data) => {
         let user = data[0];
@@ -110,13 +113,9 @@ router.post("/password_reset",(req,res)=>{
             
           })
     })*/
-})
 
 router.post("/update_password",(req,res)=>{
 
-})
-
-
-
+}) 
 module.exports = router;
 
