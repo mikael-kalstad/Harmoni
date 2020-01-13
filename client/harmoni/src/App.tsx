@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { loginService } from "./services/loginService";
 import { userService } from "./services/UserService";
 
 // Bootstrap styling
@@ -18,24 +19,18 @@ import AddEvent from "./Components/AddEvent/addEvent";
 // Authentication component
 import Authenticate from "./Components/authenticate";
 
-interface IUserData {
-  name: string;
-  email: string;
-  type: string;
-}
-
 const App: React.FC = () => {
-  const [userData, setUserData] = useState<IUserData | undefined>();
+  const [userData, setUserData] = useState(undefined);
 
   // Get data when component mounts
   useEffect(() => {
-    fetchData();
-
-    localStorage.getItem("x-access-token");
+    checkToken();
   }, []);
 
-  const fetchData = async () => {
-    // setEventData(await eventService.getAllEvents());
+  const checkToken = async () => {
+    let res = await loginService.checkToken();
+
+    if (res) setUserData(res["data"]["userData"]);
   };
 
   const logOut = () => {
@@ -44,7 +39,8 @@ const App: React.FC = () => {
   };
 
   const logIn = async (email: string) => {
-    setUserData(await userService.getUserByEMail(email));
+    let res = await userService.getUserByEMail(email);
+    setUserData(res[0]);
   };
 
   interface IProps {

@@ -50,9 +50,8 @@ router.post("/reset",(req,res)=>{
         let user = data[0];
         if(typeof user != "undefined"){
             console.log("Fant bruker");
-            
             let token = jwt.sign({ email: req.body.email }, privateKey, {
-                expiresIn: 60*30
+                expiresIn: 60*60*24
             });
             console.log("Lagde token: "+token);
             var emailinfo = {

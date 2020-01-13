@@ -4,7 +4,6 @@ export default class PasswordService {
     requestPasswordReset(email:string){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8'
-            
         }
         var postData = {
             email: email
@@ -25,7 +24,6 @@ export default class PasswordService {
         return axios.post(window.location.host + "/" + window.location.pathname, postData,{  
             headers:{
                 'Content-Type': 'application/json; charset=utf-8'
-                
             }
         })
             .then(response =>{

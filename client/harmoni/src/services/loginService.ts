@@ -34,27 +34,25 @@ export default class LoginService {
       .then(response => {
         localStorage.setItem("x-access-token", response.data.jwt);
       })
-      .catch(error => alert(error));
+      .catch(error => error);
   }
 
-  checkToken(){
+  checkToken() {
     const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      "x-access-token":localStorage.getItem("x-access-token")
-    }
-    console.log(headers["x-access-token"]);
-    return axios.post("http://localhost:15016/api/v0/login/token",{
-      headers: headers
-    }).then(response => {
-      if (response.status === 401){
-        return false;
-      }else{
-        localStorage.setItem("x-access-token",response.data.jwt)
-        console.log(response.status);
-        console.log(response.data.userId);
-        return true;
-      }
-    }).catch(error => console.log(error));
+      "Content-Type": "application/json; charset=utf-8",
+      "x-access-token": localStorage.getItem("x-access-token")
+    };
+    return axios
+      .post("http://localhost:15016/api/v0/login/token", {
+        headers: headers
+      })
+      .then(response => {
+        localStorage.setItem("x-access-token", response.data.jwt);
+        // console.log(response.status);
+        // console.log(response.data.userId);
+        return response;
+      })
+      .catch(error => console.log(error));
   }
 
   registrerPerson(

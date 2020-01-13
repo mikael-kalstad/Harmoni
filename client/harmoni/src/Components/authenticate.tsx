@@ -30,13 +30,12 @@ const Authenticate = (props: IProps) => {
 
   useEffect(() => {
     authenticate();
-    console.log("token: ", localStorage.getItem("x-access-token"));
   }, []);
 
   const authenticate = async () => {
     // Check jwt token
-    let res = await loginService.checkToken();
-    console.log("res: ", res);
+    let res: any;
+    res = await loginService.checkToken();
 
     if (res instanceof Error) {
       setConnectionError(true);

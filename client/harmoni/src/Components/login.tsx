@@ -116,6 +116,7 @@ const Login = (props: any) => {
 
     // Try to log user in
     let res = await loginService.login(username, password);
+    console.log("res in LOGIN", res);
 
     // Network or other errors
     if (res && res instanceof Error) {
