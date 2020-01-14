@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Button from "../Button/button";
 import {userService} from "../../services/UserService";
+import {passwordService} from "../../services/PasswordService";
 
 const Container = styled.div`
   margin: 60px auto 0 auto;
@@ -66,7 +67,7 @@ const ForgotPassword = (props: any) => {
 
     return (
         <>
-            <Title>Reset passord</Title>
+            <Title>Glemt passord</Title>
             <Container>
                 <Text> Vennligst skriv inn e-postaddressen din.
                     Du vil få en e-post med link til å lage en ny passord</Text>
@@ -82,7 +83,7 @@ const ForgotPassword = (props: any) => {
                 />
                 <BtnWrapper>
                     <Button
-                        onClick={() => forgotPasswrod(emailInput)}
+                        onClick={() => passwordService.requestPasswordReset(emailInput)}
                     >
                         Reset passord
                     </Button>
