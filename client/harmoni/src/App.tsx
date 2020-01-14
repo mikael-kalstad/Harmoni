@@ -92,7 +92,7 @@ const App: React.FC = () => {
           />
           <Route
               exact
-              path="/reset-passord/:token"
+              path="/reset/reset_password/:token"
               component={ResetPassword}
           />
           {/* <RouteWithAuth exact path='/newevent' component={AddEvent} /> */}

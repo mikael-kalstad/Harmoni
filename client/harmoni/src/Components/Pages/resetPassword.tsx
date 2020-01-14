@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Button from "../Button/button";
+import {passwordService} from "../../services/PasswordService";
 
 const Container = styled.div`
   margin: 60px auto 0 auto;
@@ -78,7 +79,7 @@ const ResetPassword = (props: any) => {
                     style={inputStyle}
                     variant="outlined"
                     label="Skriv inn det nye passordet igjen"
-                    type="email"
+                    type="password"
                     error={(submit && passwordInput === "") || warningText !== ""}
                     helperText={submit && passwordInput === "" ? "E-postadressen er påkrevd" : ""}
                     onChange={e => setPasswordInput(e.target.value)}
@@ -86,7 +87,7 @@ const ResetPassword = (props: any) => {
                 />
                 <BtnWrapper>
                     <Button
-                        onClick={() => resetPassword(passwordInput,confirmPasswrod)}
+                        onClick={() => passwordService.newPassword(passwordInput)}
                     >
                         Reset passord
                     </Button>

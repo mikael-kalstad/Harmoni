@@ -61,7 +61,7 @@ router.post("/reset",(req,res)=>{
                 subject: 'Password help has arrived!',
                 context: {
                 name: user.name,
-                url: 'http://localhost:3000/reset-passord/' + token
+                url: 'http://localhost:3000/reset/reset_password/' + token
                 }
             }
 
