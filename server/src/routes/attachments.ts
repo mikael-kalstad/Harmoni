@@ -62,6 +62,21 @@ router.get('/authorized/attachments/user/:userId&:eventId', async (request, resp
   );
 });
 
+//Get attachment by id (***for downloading the file***)
+router.get('/authorized/attachments/download/:id', async (request, response) => {
+  dao.getAttachmentById(parseInt(request.params.id), (status, data) => {
+    if (status == 500)
+      response.sendStatus(500);
+    else {
+      response.setHeader('Content-disposition', 'attachment; filename=' + data[0].filename);
+      response.setHeader('Content-type', data[0].filetype);
+      console.log("Sending attachment download response");
+      response.send(data[0].data);
+      console.log("Completed sending attachment response.");
+    }
+  })
+})
+
 //TODO: Is this "overwrite"? Path to update file name only?
 // Update singular attachment given attachmentId
 router.put('/authorized/attachments/:id', async (request, response) => {

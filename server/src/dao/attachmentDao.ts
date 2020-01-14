@@ -27,13 +27,17 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("SELECT * FROM attachment WHERE event_id = ? AND user_id = ?", [eventId, userId], callback)
     }
 
+    getAttachmentById(attachment_id: number, callback){
+        super.query("SELECT * FROM attachment WHERE attachment_id = ?", [attachment_id], callback);
+    }
+
     addAttachmentForUserForEvent(data: any, callback) {
         const afterInsertEvent = (status, rows) => {
             if (status == 500) {
                 callback(500, rows);
             }
             else {
-                super.query('INSERT INTO attachment_user VALUES(?, ?)', [rows.insertId, data.user_id], () => { callback(status, rows) })
+                super.query('INSERT INTO attachment_user VALUES(?, ?)', [rows.insertId, data.body.user_id], () => { callback(status, rows) })
             }
         }
         super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)",
