@@ -7,10 +7,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { userService } from "../../services/UserService";
 import { loginService } from "../../services/loginService";
 import { Redirect } from "react-router-dom";
-import ImgUpload from "../imgUpload";
+import ImgUpload from "../Upload/profileImgUpload";
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -195,8 +194,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
             setImgData={setImgData}
             picture={
               props.userData &&
-              "data:image/jpg;base64," +
-                new Buffer(props.userData.picture).toString("base64")
+              new Buffer(props.userData.picture).toString("ascii")
             }
           />
         </TopWrapper>
