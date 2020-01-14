@@ -34,7 +34,7 @@ const QuantityText = styled.p`
 interface TicketProps {
   quantities: any;
   ticketIndex: number;
-  name: string;
+  type: string;
   price: number;
   incrementFunction: Function;
 }
@@ -42,7 +42,7 @@ interface TicketProps {
 const TicketBar = (props: TicketProps) => {
   return (
     <Bar>
-      <NameText>{props.name}</NameText>
+      <NameText>{props.type}</NameText>
       <PriceText>{props.price + ',-'}</PriceText>
       <button
         className="btn"

@@ -1,6 +1,6 @@
 import express from "express";
 import { pool } from "../dao/database";
-import userDao from "../dao/userDao";
+import userDao, { sanitizeUser } from "../dao/userDao";
 import { compareHash, hash } from "../hashing";
 
 var jwt = require("jsonwebtoken");
@@ -73,7 +73,7 @@ router.post("/token", (req, res) => {
       });
       dao.getUserByEMail(decoded.email, (status, data) => {
         let id = data[0] === undefined ? undefined : data[0];
-        res.json({ jwt: newToken, userData: data[0] });
+        res.json({ jwt: newToken, userData: sanitizeUser(data[0]) });
       });
     }
   });

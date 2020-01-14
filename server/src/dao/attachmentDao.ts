@@ -5,6 +5,9 @@ export interface attachment{
     user_id: number;
     event_id: number;
     data: string;
+    filetype: string
+    filename: string
+    filesize: number
 }
 
 export default class attachmentDao extends daoParentAttachment{
@@ -33,7 +36,7 @@ export default class attachmentDao extends daoParentAttachment{
                 super.query('INSERT INTO attachment_user VALUES(?, ?)', [rows.insertId, data.user_id], () => {callback(status, rows)})
             }
         }
-        super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?)", [data.event_id, data.user_id, data.data], afterInsertEvent);
+        super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?,?,?,?)", [data.event_id, data.user_id, data.data, data.filetype, data.filename,data.filesize], afterInsertEvent);
     }
     addUserForAttachment(attachmentId:number , userId: number, callback){
         super.query("INSERT INTO attachment_user VALUES( ?, ?)", [attachmentId ,userId], callback);

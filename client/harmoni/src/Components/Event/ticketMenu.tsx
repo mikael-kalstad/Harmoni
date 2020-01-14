@@ -81,7 +81,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
         <TicketBar
           quantities={quantities}
           ticketIndex={index}
-          name={ticket.type}
+          type={ticket.type}
           price={ticket.price}
           incrementFunction={incrementQuantityOfTicket}
           key={ticket.type}
