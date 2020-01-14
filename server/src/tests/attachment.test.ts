@@ -85,7 +85,7 @@ test("Add attachment", done => {
         filetype: "document/txt",
         filesize: 100
     }
-    dao.addAttachmentForUserForEvent({data: input, body: input}, (status, data) => {
+    dao.addAttachmentForUserForEvent({attachment: input, body: input}, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
 
