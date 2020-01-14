@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import ImageUpload from "../../Upload/imageUpload";
 
 const Title = styled.h2`
@@ -29,21 +30,30 @@ const inputStyle = {
 };
 
 interface IProps {
-  name: string;
-  setName: Function;
-  imgData: string;
-  setImgData: Function;
-  category: string;
-  setCategory: Function;
-  location: string;
-  setLocation: Function;
-  fromDateTime: Date;
-  setFromDateTime: Function;
-  toDateTime: Date;
-  setToDateTime: Function;
+  // name: string;
+  // setName: Function;
+  // imgData: string;
+  // setImgData: Function;
+  // category: string;
+  // setCategory: Function;
+  // location: string;
+  // setLocation: Function;
+  // fromDateTime: Date;
+  // setFromDateTime: Function;
+  // toDateTime: Date;
+  // setToDateTime: Function;
+  infoSubmit: boolean;
+  setInfoCompleted: Function;
 }
 
 const BasicInfoForm = (props: IProps) => {
+  const [name, setName] = useState("");
+  const [imgData, setImgData] = useState("");
+  const [category, setCategory] = useState("");
+  const [location, setLocation] = useState("");
+  const [fromDateTime, setFromDateTime] = useState<Date | null>(null);
+  const [toDateTime, setToDateTime] = useState<Date | null>(null);
+
   const types_translated = ["Konsert", "Festival", "Teater", "Standup"];
   const types = ["concert", "festival", "theatre", "standup"];
 
@@ -57,6 +67,17 @@ const BasicInfoForm = (props: IProps) => {
     );
   }
 
+  const checkInputs = () =>
+    name !== "" ||
+    category !== "" ||
+    location !== "" ||
+    fromDateTime !== null ||
+    toDateTime !== null;
+
+  if (props.infoSubmit && checkInputs()) {
+    props.setInfoCompleted(true);
+  }
+
   return (
     <>
       <Title>Info</Title>
@@ -65,25 +86,34 @@ const BasicInfoForm = (props: IProps) => {
         style={inputStyle}
         variant="outlined"
         placeholder="Navn"
-        value={props.name}
-        onChange={e => props.setName(e.target.value)}
+        error={props.infoSubmit && name === ""}
+        helperText={props.infoSubmit && name === "" ? "Navn er påkrevd" : ""}
+        value={name}
+        onChange={e => setName(e.target.value)}
       />
 
       <UnderTitle>Bilde</UnderTitle>
-      <ImageUpload setImgData={props.setImgData} />
+      <ImageUpload setImgData={setImgData} />
 
       <UnderTitle>Kategori*</UnderTitle>
-      <FormControl variant="outlined" style={{ width: "160px" }}>
+      <FormControl
+        variant="outlined"
+        style={{ width: "160px" }}
+        error={props.infoSubmit && category === ""}
+      >
         <InputLabel id="select-filled-label">Kategori*</InputLabel>
         <Select
           labelId="select-outlined-label"
-          value={props.category}
+          value={category}
           labelWidth={300}
           style={inputStyle}
-          onChange={(e: any) => props.setCategory(e.target.value)}
+          onChange={(e: any) => setCategory(e.target.value)}
         >
           {menuItems}
         </Select>
+        {props.infoSubmit && category === "" && (
+          <FormHelperText>Kategori er påkrevd</FormHelperText>
+        )}
       </FormControl>
 
       <UnderTitle>Lokasjon*</UnderTitle>
@@ -91,24 +121,32 @@ const BasicInfoForm = (props: IProps) => {
         style={inputStyle}
         variant="outlined"
         placeholder="Lokasjon"
-        value={props.location}
-        onChange={e => props.setLocation(e.target.value)}
+        value={location}
+        error={props.infoSubmit && location === ""}
+        helperText={
+          props.infoSubmit && location === "" ? "Lokasjon er påkrevd" : ""
+        }
+        onChange={e => setLocation(e.target.value)}
       />
 
       <UnderTitle>Dato og tid*</UnderTitle>
       <MiniTitle>Fra</MiniTitle>
       <DateTimePicker
+        minDate={new Date()}
+        disablePast={true}
         style={inputStyle}
-        selectedDate={props.fromDateTime}
-        setSelectedDate={props.setFromDateTime}
+        selectedDate={fromDateTime}
+        setSelectedDate={setFromDateTime}
+        error={true}
       />
       <MiniTitle>Til</MiniTitle>
       <DateTimePicker
         fullWidth
         style={inputStyle}
-        selectedDate={props.toDateTime}
-        setSelectedDate={props.setToDateTime}
+        selectedDate={toDateTime}
+        setSelectedDate={setToDateTime}
       />
+      {props.infoSubmit && <p>Fyll inn alle inputs!</p>}
     </>
   );
 };

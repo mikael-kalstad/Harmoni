@@ -29,6 +29,14 @@ export default class ticketDao extends daoParentTicket {
     );
   }
 
+  decreaseAvailableOfTicket(ticketId: number, value: number, callback) {
+    super.query(
+      'UPDATE ticket SET available = available - ? WHERE ticket_id = ?',
+      [value, ticketId],
+      callback
+    );
+  }
+
   deleteTicket(ticketId: number, callback) {
     super.query('DELETE FROM ticket WHERE ticket_id = ?', [ticketId], callback);
   }
