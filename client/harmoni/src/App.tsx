@@ -18,6 +18,8 @@ import AddEvent from "./Components/AddEvent/addEvent";
 
 // Authentication component
 import Authenticate from "./Components/authenticate";
+import ForgotPassword from "./Components/Pages/forgotPasswordPage";
+import ResetPassword from "./Components/Pages/resetPassword";
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(undefined);
@@ -82,6 +84,11 @@ const App: React.FC = () => {
             exact
             path="/profile"
             render={props => <Profile userData={userData} />}
+          />
+          <Route
+            exact
+            path="/glemt-passord"
+            component={ForgotPassword}
           />
           {/* <RouteWithAuth exact path='/newevent' component={AddEvent} /> */}
 
