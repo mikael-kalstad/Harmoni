@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
     if (typeof user != "undefined") {
       if (compareHash(user.hash, req.body.password, user.salt)) {
         let token = jwt.sign({ email: req.body.email }, privateKey, {
-          expiresIn: 60
+          expiresIn: 3600
         });
         res.json({ jwt: token });
         res.status(200);
