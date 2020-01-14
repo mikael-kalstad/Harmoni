@@ -10,6 +10,7 @@ import { hash, compareHash } from './hashing'
 server.use(body_parser.json());
 server.use(cors());
 
+server.use("/api/v0", require('./routes/authentication'));
 
 //Our routes
 server.use("/api/v0", require('./routes/events'));
@@ -18,7 +19,6 @@ server.use("/api/v0", require('./routes/users'));
 server.use("/api/v0", require('./routes/attachments'));
 server.use("/api/v0", require('./routes/tickets'));
 server.use("/api/v0/login", require('./routes/login'));
-server.use("/api/v0", require('./routes/authentication'));
 server.use("/api/v0", require('./routes/reset'));
 
 //server.use("api/v0/users", require("./routes/users"));

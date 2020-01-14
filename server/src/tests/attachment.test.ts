@@ -80,9 +80,12 @@ test("Add attachment", done => {
         attachment_id: 3,
         event_id: 2,
         user_id: 2,
-        data: "x'23B"
+        data: "x'23B",
+        filename: "testdata.txt",
+        filetype: "document/txt",
+        filesize: 100
     }
-    dao.addAttachmentForUserForEvent(input, (status, data) => {
+    dao.addAttachmentForUserForEvent({data: input, body: input}, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
 
@@ -100,7 +103,10 @@ test("Update attachment", done => {
             attachment_id: 3,
             event_id: 2,
             user_id: 2,
-            data: "x'32A"
+            data: "x'32A",
+            filename: "testdata.txt",
+            filetype: "document/txt",
+            filesize: 100
         }
     //Actual change
     dao.updateAttachment(input, (status, data) => {
