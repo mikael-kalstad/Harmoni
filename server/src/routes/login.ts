@@ -1,4 +1,5 @@
 import express from "express";
+
 import { pool } from "../dao/database";
 import userDao, { sanitizeUser } from "../dao/userDao";
 import { compareHash, hash } from "../hashing";
@@ -12,7 +13,7 @@ const dao = new userDao(pool);
 router.use(bodyParser.json()); //to transtalte JSON in the body
 
 let publicKey;
-let privateKey = (publicKey = "superSecret");
+const privateKey =(publicKey="This is my super secret key");
 
 let user;
 router.use(express.static("public"));
@@ -22,12 +23,9 @@ router.post("/", (req, res) => {
     user = data[0];
     if (typeof user != "undefined") {
       if (compareHash(user.hash, req.body.password, user.salt)) {
-        console.log("email & password ok");
         let token = jwt.sign({ email: req.body.email }, privateKey, {
-          expiresIn: 1800
+          expiresIn: 3600
         });
-        //window.localStorage.setItem("x-access-token",token);
-        // res.status()
         res.json({ jwt: token });
         res.status(200);
       } else {
@@ -42,41 +40,43 @@ router.post("/", (req, res) => {
   });
 });
 
-router.post("/token/update", (req, res, next) => {
-  var token = req.headers["x-access-token"];
+/*router.post("/token/update", (req, res, next) => {
+  var token = req.headers["harmoni-token"];
   jwt.verify(token, publicKey, (err, decoded) => {
     if (err) {
-      console.log("Token Not ok");
-      res.status(401);
-      res.json({ error: "Not authorized" });
+      next();
     } else {
-      let token = jwt.sign({ email: req.body.email }, privateKey, {
+      let token = jwt.sign({ email: decoded.email }, privateKey, {
         expiresIn: 1800
       });
-      localStorage.setItem("x-access-token", token);
+
+      res.json({jwt: token});
       //console.log("Token ok: " + decoded.email);
       next();
     }
   });
-});
+});*/
 router.post("/token", (req, res) => {
   let newToken = "";
-  var token = req.body.headers["x-access-token"];
-  jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) {
-      console.log("Token has expired");
-      res.status(401);
-      res.json({ error: "Not authorized" });
-    } else {
-      newToken = jwt.sign({ email: decoded.email }, privateKey, {
-        expiresIn: 1800
-      });
-      dao.getUserByEMail(decoded.email, (status, data) => {
-        let id = data[0] === undefined ? undefined : data[0];
-        res.json({ jwt: newToken, userData: sanitizeUser(data[0]) });
-      });
-    }
-  });
+  var token = req.headers["harmoni-token"];
+  if(token!=undefined){
+    jwt.verify(token, publicKey, (err, decoded) => {
+      if (err) {
+        console.log("Token has expired");
+        res.status(401);
+        res.json({ error: "Not authorized" });
+      } else {
+        newToken = jwt.sign({ email: decoded.email }, privateKey, {
+          expiresIn: 1800
+        });
+        dao.getUserByEMail(decoded.email, (status, data) => {
+          let id = data[0] === undefined ? undefined : data[0];
+          res.json({ jwt: newToken, userData: sanitizeUser(data[0]) });
+        });
+      }
+    });
+  }else{}
+
 });
 
 router.post("/register", (req, res) => {
@@ -99,7 +99,6 @@ router.post("/register", (req, res) => {
         }
       });
     } else {
-      res.status(409);
       res.json({ error: "the user exists error code:" + status });
     }
   });

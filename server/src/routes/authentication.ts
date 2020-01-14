@@ -1,30 +1,41 @@
 import express from "express";
-import { pool } from "../dao/database";
-import userDao from "../dao/userDao";
-
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
 
-const router = express.Router();
 
+const router = express.Router();
 router.use(bodyParser.json());
-let publicKey;
-let privateKey = (publicKey = "superSecret");
 router.use(express.static("public"));
 
+let publicKey;
+let privateKey = (publicKey = "This is my super secret key");
+
+
 router.use("/authorized", (req, res, next) => {
-  var token = req.headers["x-access-token"];
+  var token = req.headers["harmoni-token"];
   jwt.verify(token, publicKey, (err, decoded) => {
     if (err) {
       console.log("Token Not ok");
       res.status(401);
       res.json({ error: "Not authorized" });
     } else {
-      let token = jwt.sign({ email: req.body.email }, privateKey, {
-        expiresIn: 1800
-      });
-      //localStorage.setItem("x-access-token", token);
       next();
+    }
+  });
+});
+
+
+router.post("/updatetoken", async (req, res, next) => {
+  var token = req.headers["harmoni-token"];
+  jwt.verify(token, publicKey, (err, decoded) => {
+    if (err) {
+      console.log("Token can not be updated")
+      res.sendStatus(204)
+    } else {
+      let newToken = jwt.sign({ email: decoded.email}, privateKey, {
+        expiresIn: 3600
+      });
+      res.json({ jwt: newToken });
     }
   });
 });
