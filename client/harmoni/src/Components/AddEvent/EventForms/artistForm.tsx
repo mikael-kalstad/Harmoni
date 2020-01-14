@@ -1,156 +1,145 @@
-import React, { useState, useEffect } from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepButton from '@material-ui/core/StepButton';
-import {Button} from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepButton from "@material-ui/core/StepButton";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-import SearchArtistBar from '../../Button/searchArtistBar';
-import {Typeahead, AsyncTypeahead} from 'react-bootstrap-typeahead';
-import PropTypes from 'prop-types';
-import ListGroup from 'react-bootstrap/ListGroup';
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
 
-import 'react-bootstrap-typeahead/css/Typeahead.css';
+import SearchArtistBar from "../../Button/searchArtistBar";
+import { Typeahead, AsyncTypeahead } from "react-bootstrap-typeahead";
+import PropTypes from "prop-types";
+import ListGroup from "react-bootstrap/ListGroup";
 
-import Skeleton from 'react-loading-skeleton';
+import "react-bootstrap-typeahead/css/Typeahead.css";
 
-import { eventService } from '../../../services/EventService';
-import { ticketService } from '../../../services/TicketService';
-import { userService } from '../../../services/UserService';
-import { attachmentService } from '../../../services/AttachmentService';
-import { loginService } from '../../../services/loginService';
-import { riderService } from '../../../services/RiderService';
+import Skeleton from "react-loading-skeleton";
 
-import ArtistsList from '../../Event/artistsList';
-import styled from 'styled-components';
+import { eventService } from "../../../services/EventService";
+import { ticketService } from "../../../services/TicketService";
+import { userService } from "../../../services/UserService";
+import { attachmentService } from "../../../services/AttachmentService";
+import { loginService } from "../../../services/loginService";
+import { riderService } from "../../../services/RiderService";
 
-interface IEvent {
-    event_id: number;
-    name: string;
-    organizer: number;
-    address: string;
-    from_date: string;
-    to_date: string;
-    capacity: number;
-    status: string;
-    information: string;
-    category: string;
-    picture: File;
-  }
-  
-  interface ITicket {
-    ticketId: number;
-    eventId: number;
-    price: number;
-    type: string;
-  }
+import ArtistsList from "../../Event/artistsList";
+import styled from "styled-components";
 
-  interface IUser {
-    user_id: number;
-    name: string;
-    email: string;
-    mobile: number;
-    hash: string;
-    salt: string;
-    type: string;
-    picture: string;
-  }
+interface IUser {
+  user_id: number;
+  name: string;
+  email: string;
+  mobile: number;
+  hash: string;
+  salt: string;
+  type: string;
+  picture: string;
+}
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  vertical-align: middle;
+`;
 
+const ArtistImage = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  object-fit: content;
+`;
 
-  const ArtistImage = styled.img`
-    width: 60px;
-    height: 60px;
-    border-radius: 50px;
-    object-fit: content;
-  `;
+const DelButton = styled.img`
+  cursor: pointer;
+  height: 50%;
+`;
 
-  const DelButton = styled.button`
-    color: red;
-    
-  `;
+const Title = styled.h2`
+  font-size: 48px;
+  font-weight: 500;
+  text-align: center;
+  bottom-margin: 10px;
+`;
+
 const ArtistForm = (props: any) => {
-    
-    const [userData, setUserData] = useState<IUser[]>();
-    const [artistState, setArtistState] = useState();
-    const [listOfArtists, setListOfArtists] = useState([]);
-    
-    useEffect(() => {
-        fetchUsers();
-        
-      }, []);
+  const [userData, setUserData] = useState<IUser[]>();
 
-      const fetchUsers = async () => {
-        setUserData(await userService.getUsersOfType('artist'));
-      };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-      const fetchArtistState = (s: { user: IUser; }[]) => {
-        if(s[0] != null){
-            let newList = listOfArtists.map(i => i);
-            newList.push(s[0]);
-            setListOfArtists(newList);
-        };
-      };
+  const fetchUsers = async () => {
+    setUserData(await userService.getUsersOfType("artist"));
+  };
 
-      const deleteArtist = (item) => {
-        if(item != null){
-            let newList = listOfArtists.map(i => i);
-            
-            let a = newList.findIndex((r) =>{
-              return r.user.user_id == item.user.user_id;
-            });
-            newList.splice(a, 1);
-           
-            setListOfArtists(newList);
-          
-        };
-      };
-
-    if (userData != null) {
-
-        return(
-            <>
-                <p>Legg til artister:</p>
-                <Typeahead
-                
-                    labelKey={artistName => `${artistName.user.name}`}
-                    options= {userData.map((user) => (
-                        {user}
-                    ))}
-                    onChange={(s) => fetchArtistState(s)}
-                    onPaginate={() => console.log('clicked on name!')}                    
-                    placeholder='Søk etter artister...'
-                    selected={props.userData}
-                />
-                
-                <p><br></br>Artistliste: </p>
-                       
-                <ListGroup>
-                  {listOfArtists.map(item => {
-                   
-                   let base64 = new Buffer(item.user.picture).toString('base64'); 
-                   return(
-                    <ListGroup.Item>
-                      <ArtistImage src={'data:image/png;base64,' + base64}/> 
-                      <b>{item.user.type}</b>: {item.user.name} 
-                      <DelButton onClick={d => deleteArtist(item)}>X</DelButton>
-                    </ListGroup.Item>
-                   )
-                  })}
-                </ListGroup>
-
-                <p></p>
-                
-            </> 
-        );
-    } else {
-        return(
-            <>
-                <p>Loading...</p>
-            </>
-        )
+  const fetchArtistState = (s: { user: IUser }[]) => {
+    if (s[0] != null) {
+      let checker = props.listOfArtists.includes(s[0].user);
+      if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
     }
+  };
+
+  const deleteArtist = user => {
+    if (user != null) {
+      props.setListOfArtists(
+        props.listOfArtists.filter(u => u.user_id !== user.user_id)
+      );
+    }
+  };
+  if (userData && userData != null) {
+    return (
+      <>
+        <Title>Artister</Title>
+        <h5>Legg til artister:</h5>
+        <Typeahead
+          labelKey={artistName => `${artistName.user.name}`}
+          options={userData.map(user => ({ user }))}
+          onChange={s => fetchArtistState(s)}
+          onPaginate={() => console.log("clicked on name!")}
+          placeholder="Søk etter artister..."
+          selected={props.userData}
+        />
+
+        <h5>
+          <br></br>Artistliste:{" "}
+        </h5>
+
+        <ListGroup>
+          {props.listOfArtists &&
+            props.listOfArtists.map(item => {
+              return (
+                <ListGroup.Item>
+                  <Wrapper>
+                    <ArtistImage
+                      src={new Buffer(item.picture).toString("ASCII")}
+                    />
+                    <p>
+                      <b>{item.name}</b>
+                    </p>
+                    <DelButton
+                      src="/icons/cross.svg"
+                      onClick={d => deleteArtist(item)}
+                    />
+                  </Wrapper>
+                </ListGroup.Item>
+              );
+            })}
+        </ListGroup>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <p>Loading...</p>
+      </>
+    );
+  }
 };
 
 export default ArtistForm;
