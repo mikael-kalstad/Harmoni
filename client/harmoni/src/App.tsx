@@ -90,6 +90,11 @@ const App: React.FC = () => {
             path="/glemt-passord"
             component={ForgotPassword}
           />
+          <Route
+              exact
+              path="/reset-passord"
+              component={ForgotPassword}
+          />
           {/* <RouteWithAuth exact path='/newevent' component={AddEvent} /> */}
 
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
