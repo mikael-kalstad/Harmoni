@@ -27,6 +27,15 @@ class TicketService extends Service {
       .post(this.path + '/authorized/tickets/')
       .then(response => response.data);
   }
+
+  decreaseAvailableOfTicket(ticketId: number, value: number) {
+    return axios
+      .put(
+        this.path + '/authorized/tickets/available/' + ticketId + '&' + value
+      )
+      .then(response => response.data);
+  }
+
   deleteTicket(ticketId: number) {
     return axios
       .delete(this.path + '/authorized/tickets/' + ticketId)
