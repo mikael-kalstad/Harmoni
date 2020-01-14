@@ -170,6 +170,7 @@ const Event = (props: any) => {
     artists != null
   ) {
     let eventImage = new Buffer(event[0].picture).toString('base64');
+    console.log(organizer[0]);
 
     return (
       <Wrapper>

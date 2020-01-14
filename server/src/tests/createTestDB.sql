@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS rider_list (
   user_id INT,
   event_id INT,
   rider_id INT,
-quantity INT,
-  PRIMARY KEY (rider_list_id),
+  quantity INT,
+    PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)
 	ON DELETE SET NULL
@@ -98,6 +98,9 @@ CREATE TABLE IF NOT EXISTS attachment (
   event_id INT NOT NULL,
   user_id INT,
   data LONGBLOB NOT NULL,
+  filetype VARCHAR(50) NOT NULL,
+  filename VARCHAR(50) NOT NULL,
+  filesize INT NOT NULL,
   PRIMARY KEY (attachment_id),
 	FOREIGN KEY (event_id)
 	REFERENCES event (event_id)
