@@ -32,13 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-<<<<<<< HEAD
-=======
 const Container = styled.div`
-  margin: 80px 0;
+  margin: 100px 0;
 `;
 
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
   width: 400px;
@@ -54,14 +51,6 @@ function getSteps() {
   return ["Info", "Artister", "Billett-typer", "Program"];
 }
 
-<<<<<<< HEAD
-=======
-interface ITicket {
-  price: number;
-  type: string;
-}
-
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
 const AddEvent = () => {
   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
@@ -69,18 +58,6 @@ const AddEvent = () => {
   const [skipped, setSkipped] = useState(new Set<number>());
   const steps = getSteps();
 
-<<<<<<< HEAD
-  //info:
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [fromDateTime, setFromDateTime] = useState<Date | null>(
-    new Date("2020-01-01T00:00:00")
-  );
-  const [toDateTime, setToDateTime] = useState<Date | null>(
-    new Date("2020-01-01T00:00:00")
-  );
-=======
   // Info inputs
   const [name, setName] = useState("");
   const [imgData, setImgData] = useState("");
@@ -88,16 +65,12 @@ const AddEvent = () => {
   const [location, setLocation] = useState("");
   const [fromDateTime, setFromDateTime] = useState<Date | null>();
   const [toDateTime, setToDateTime] = useState<Date | null>();
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
 
   const infoProps = {
     name,
     setName,
-<<<<<<< HEAD
-=======
     imgData,
     setImgData,
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
     category,
     setCategory,
     location,
@@ -112,7 +85,6 @@ const AddEvent = () => {
   //artist props go here
   //const artistProps = {};
 
-<<<<<<< HEAD
   const [listOfArtists, setListOfArtists] = useState([]);
   // const [artists, setArtists] = useState([]);
   const artistProps = { listOfArtists, setListOfArtists };
@@ -122,41 +94,26 @@ const AddEvent = () => {
   const [price, setPrice] = useState("");
 
   const ticketProps = { ticketCategory, setTicketCategory, price, setPrice };
-=======
   //tickets, this needs a list of tickets (not done)
   //const [ticketCategory, setTicketCategory] = useState('');
   //const [price, setPrice] = useState('');
 
-  const [eventTickets, setEventTickets] = useState<ITicket[]>();
-
-  const ticketProps = { eventTickets, setEventTickets };
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
+  //   const [eventTickets, setEventTickets] = useState<ITicket[]>();
 
   //program:
   const [programText, setProgramText] = useState("");
   const programProps = { programText, setProgramText };
 
-<<<<<<< HEAD
-=======
-  // Render component based on which "step" the user is on
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
   function getStepContent(step: number) {
     switch (step) {
       case 0:
         return <BasicInfoForm {...infoProps} />;
       case 1:
-<<<<<<< HEAD
         return <ArtistForm {...artistProps} />;
-=======
-        return <ArtistForm />;
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
       case 2:
         return <TicketForm {...ticketProps} />;
       case 3:
         return <ProgramForm {...programProps} />;
-<<<<<<< HEAD
-      default:
-        return "Unknown step";
     }
   }
 
@@ -164,15 +121,6 @@ const AddEvent = () => {
     return getSteps().length;
   };
 
-=======
-    }
-  }
-
-  const totalSteps = () => {
-    return getSteps().length;
-  };
-
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
   const isStepOptional = (step: number) => {
     return step === 1;
   };
@@ -247,11 +195,7 @@ const AddEvent = () => {
   }
 
   return (
-<<<<<<< HEAD
-    <div className={classes.root}>
-=======
     <Container className={classes.root}>
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
       <Stepper alternativeLabel nonLinear activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -285,11 +229,7 @@ const AddEvent = () => {
               <div className={classes.instructions}>
                 {getStepContent(activeStep)}
               </div>
-<<<<<<< HEAD
-              <div>
-=======
               <LinkWrapper>
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
                 <Button
                   disabled={activeStep === 0}
                   onClick={handleBack}
@@ -319,20 +259,12 @@ const AddEvent = () => {
                     ? "Legg til arrangement"
                     : "Fullfør trinn"}
                 </Button>
-<<<<<<< HEAD
-              </div>
-=======
               </LinkWrapper>
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
             </div>
           )}
         </div>
       </Wrapper>
-<<<<<<< HEAD
-    </div>
-=======
     </Container>
->>>>>>> 949f77b32a0aaab1d38b66b338f2e3e0bc1ff39c
   );
 };
 
