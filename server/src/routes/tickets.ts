@@ -25,6 +25,12 @@ router.post('/authorized/tickets/', async (request, response) => {
   });
 });
 
+router.put('/authorized/tickets/available/:ticketId&:value', async (request, response) => {
+  dao.decreaseAvailableOfTicket(parseInt(request.params.ticketId), parseInt(request.params.value), (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  }
+})
+
 //Delete ticket given id
 router.delete('/authorized/tickets/:id', async (request, response) => {
   dao.deleteTicket(parseInt(request.params.id), (status, data) => {
