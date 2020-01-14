@@ -19,7 +19,6 @@ const Title = styled.h2`
   font-size: 130px;
   font-weight: 900;
   margin: 0;
-  color: #f66a61;
 `;
 
 const UnderTitle = styled.h3`
