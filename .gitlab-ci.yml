@@ -10,6 +10,11 @@ variables:
   MYSQL_ROOT_PASSWORD: humbug
   NODE_ENV: ci
 
+stages:
+  - test-server
+  - test-client
+  - deploy
+
 # Install node libraries
 before_script:
   - cd client/harmoni
@@ -20,7 +25,7 @@ before_script:
   - npm install
 
 # Run JEST tests
-run_tests:
+run_tests_server:
   stage: test-server
   script:
     - ls
@@ -30,7 +35,7 @@ run_tests:
     paths:
       - server/coverage/
 
-run_tests:
+run_tests_client:
   stage: test-client
   script:
     - cd ../client/harmoni
@@ -44,7 +49,8 @@ run_tests:
 pages:
   stage: deploy
   dependencies:
-    - run_tests
+    - run_tests_server
+    - run_tests_client
   script:
     - cd ..
     - mkdir .public
@@ -56,5 +62,5 @@ pages:
   artifacts:
     paths:
       - public
-  only: 
+  only:
     - master
