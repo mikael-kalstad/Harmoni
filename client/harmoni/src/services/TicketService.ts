@@ -6,6 +6,7 @@ interface Ticket {
   event_id: number;
   price: number;
   type: string;
+  available: number;
 }
 
 class TicketService extends Service {
@@ -22,7 +23,9 @@ class TicketService extends Service {
   }
 
   addTickets() {
-    return axios.post(this.path + '/authorized/tickets/').then(response => response.data);
+    return axios
+      .post(this.path + '/authorized/tickets/')
+      .then(response => response.data);
   }
   deleteTicket(ticketId: number) {
     return axios
