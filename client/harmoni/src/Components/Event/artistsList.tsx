@@ -82,17 +82,12 @@ const ArtistsList = (props: ArtistsListProps) => {
         </TitleText>
         <ListGroup>
           {props.artists.map(artist => {
-            let base64 = new Buffer(artist.picture).toString('base64');
-
             return (
               <ListGroup.Item key={artist.user_id}>
                 <ArtistBar>
                   <ArtistImage
-                    src={
-                      artist.picture != null
-                        ? 'data:image/jpg;base64,' + base64
-                        : ''
-                    }
+                    src={new Buffer(artist.picture).toString('ascii')}
+                    alt={artist.name}
                   />
                   <ArtistNameText>{artist.name}</ArtistNameText>
                 </ArtistBar>
@@ -107,7 +102,7 @@ const ArtistsList = (props: ArtistsListProps) => {
       <Wrapper empty={props.artists.length == 0}>
         <FaRegFrownOpen style={FaIconStyle} />
         <TitleText empty={props.artists.length == 0}>
-          Foreløpig er ingen artister knyttet til dette arrangementet
+          Foreløpig er ingen personer knyttet til dette arrangementet
         </TitleText>
       </Wrapper>
     );
