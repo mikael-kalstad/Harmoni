@@ -66,8 +66,8 @@ const InfoGrid = styled.div`
 
 const ArtistsAndMapGrid = styled.div`
   display: grid;
-  margin: 10px 20px;
-
+  margin: 20px 20px;
+  grid-gap: 30px;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
 
@@ -79,6 +79,8 @@ const ArtistsAndMapGrid = styled.div`
 
 const ArtistsGrid = styled.div`
   justify-self: start;
+  border-radius: 10px;
+  height: 100%;
   @media screen and (max-width: 800px) {
     justify-self: center;
   }
@@ -86,8 +88,8 @@ const ArtistsGrid = styled.div`
 
 const MapGrid = styled.div`
   border: solid;
-  width: 400px;
-  height: 400px;
+  width: 350px;
+  height: 350px;
 `;
 
 const TicketsGrid = styled.div`
@@ -170,6 +172,7 @@ const Event = (props: any) => {
     artists != null
   ) {
     let eventImage = new Buffer(event[0].picture).toString('base64');
+    console.log(organizer[0]);
 
     return (
       <Wrapper>

@@ -18,53 +18,56 @@ const Input = styled.input`
 `;
 
 const ImgWrapper = styled.div`
-  width: 80px;
-  height: 80px;
+  width: 400px;
+  height: 200px;
   background: #f0f0f0;
-  border-radius: 50%;
   display: grid;
   align-items: center;
   justify-items: center;
   cursor: pointer;
+  border-radius: 5px;
 
   :hover {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
+    filter: brightness(95%);
   }
 
   :active {
-    box-shadow: none;
+    filter: brightness(98%);
   }
 `;
 
 const ImgPlaceHolder = styled.img`
-  width: 50%;
+  height: 50%;
 `;
 
 const ImagePreview = styled.img`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 `;
 
-const ImgUpload = () => {
+const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
   const [imgLink, setImgLink] = useState();
-  const [file, setFile] = useState();
+  // const [file, setFile] = useState();
 
   // While image uploads locally
   const [loading, setLoading] = useState();
 
   const handleChange = e => {
     setLoading(true);
-    console.log("first");
-    setFile(e.target.files[0]);
+    // setFile(e.target.files[0]);
 
     let reader = new FileReader();
 
-    reader.onloadend = () => setImgLink(reader.result);
+    reader.onloadend = () => {
+      setImgLink(reader.result);
+      props.setImgData(reader.result);
+    };
     reader.readAsDataURL(e.target.files[0]);
-    console.log("last");
   };
+
+  // console.log("File", file);
+  console.log("imgLink", imgLink);
 
   return (
     <>
@@ -77,12 +80,12 @@ const ImgUpload = () => {
         />
         <label htmlFor="text-button-file">
           <ImgWrapper>
-            {imgLink ? (
-              <ImagePreview src={imgLink} />
+            {imgLink || props.picture ? (
+              <ImagePreview src={imgLink || props.picture} />
             ) : loading ? (
               <CircularProgress size={30} />
             ) : (
-              <ImgPlaceHolder src="/icons/imagePlaceHolder.svg" />
+              <ImgPlaceHolder src={"/icons/imagePlaceHolder.svg"} />
             )}
           </ImgWrapper>
         </label>

@@ -21,8 +21,8 @@ INSERT INTO ticket VALUES(default, 1, 600, 'ståplass');
 INSERT INTO ticket VALUES(default, 2, 500, 'sitteplass');
 INSERT INTO ticket VALUES(default, 2, 1000, 'vip');
  
-INSERT INTO attachment VALUES(default, 2, 1, 'x’12F');
-INSERT INTO attachment VALUES(default, 1, 2, 'x’34E');
+INSERT INTO attachment VALUES(default, 2, 1, 'x’12F','txt','test',1024);
+INSERT INTO attachment VALUES(default, 1, 2, 'x’34E','xml','test2',10);
  
 INSERT INTO user_event VALUES(2,1);
 INSERT INTO user_event VALUES(1,1);

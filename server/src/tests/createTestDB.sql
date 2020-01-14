@@ -12,10 +12,10 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE IF NOT EXISTS user (
   user_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL,
-  email VARCHAR(45) NOT NULL,
+  email VARCHAR(45) NOT NULL UNIQUE,
   mobile INT NULL,
   hash VARCHAR(45) NOT NULL,
-  salt VARCHAR(128) NOT NULL,
+  salt VARCHAR(256) NOT NULL,
   type VARCHAR(45)  NOT NULL,
   picture LONGBLOB NULL,
   PRIMARY KEY (user_id))
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS rider_list (
   user_id INT,
   event_id INT,
   rider_id INT,
-quantity INT,
-  PRIMARY KEY (rider_list_id),
+  quantity INT,
+    PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)
 	ON DELETE SET NULL
@@ -98,6 +98,9 @@ CREATE TABLE IF NOT EXISTS attachment (
   event_id INT NOT NULL,
   user_id INT,
   data LONGBLOB NOT NULL,
+  filetype VARCHAR(50) NOT NULL,
+  filename VARCHAR(50) NOT NULL,
+  filesize INT NOT NULL,
   PRIMARY KEY (attachment_id),
 	FOREIGN KEY (event_id)
 	REFERENCES event (event_id)
@@ -139,4 +142,13 @@ CREATE TABLE IF NOT EXISTS attachment_user (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE)
 	ENGINE = InnoDB;
+
+
+
+ 
+ 
+ 
+
+
+
 

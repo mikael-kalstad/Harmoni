@@ -23,7 +23,7 @@ router.use("/authorized", (req, res, next) => {
       let token = jwt.sign({ email: req.body.email }, privateKey, {
         expiresIn: 1800
       });
-      localStorage.setItem("x-access-token", token);
+      //localStorage.setItem("x-access-token", token);
       next();
     }
   });

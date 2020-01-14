@@ -1,6 +1,10 @@
 import express from 'express';
 import attachmentDao from '../dao/attachmentDao';
 import { pool } from '../dao/database';
+var multer = require('multer');
+
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage })
 
 const router = express.Router();
 const dao = new attachmentDao(pool);
@@ -8,10 +12,19 @@ const dao = new attachmentDao(pool);
 // Routes to interact with attachments.
 
 // Create attachment
-router.post('/authorized/attachments/', async (request, response) => {
-  dao.addAttachmentForUserForEvent(request.body, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
-  });
+router.post('/authorized/attachments/', upload.single("attachment"), async (request, response) => {
+  var attachment =
+  {
+    data: request.file.buffer,
+    filename: request.file.originalname,
+    filesize: request.file.size,
+    filetype: request.file.mimetype,
+  }
+  console.log("File: ", request.file)
+  dao.addAttachmentForUserForEvent({ body: request.body, attachment: attachment },
+    (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    });
 });
 
 // Add user to attachment in attachment_user table i DB
@@ -49,6 +62,7 @@ router.get('/authorized/attachments/user/:userId&:eventId', async (request, resp
   );
 });
 
+//TODO: Is this "overwrite"? Path to update file name only?
 // Update singular attachment given attachmentId
 router.put('/authorized/attachments/:id', async (request, response) => {
   dao.updateAttachment(request.body, (status, data) => {

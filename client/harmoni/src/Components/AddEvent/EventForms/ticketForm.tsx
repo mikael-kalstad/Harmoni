@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
+import {Button} from "@material-ui/core";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -14,14 +15,10 @@ const inputStyle = {
     marginBottom: '25px'
 };
 
-interface TicketProps {
-    ticketCategory : string;
-    setTicketCategory: Function;
-    price : string;
-    setPrice : Function;
-}
+const TicketForm = (props : any) => {
 
-const TicketForm = (props: TicketProps) => {
+    const [price, setPrice] = useState('');
+    const [type, setType] = useState('');
 
     return (
         <>
@@ -31,8 +28,8 @@ const TicketForm = (props: TicketProps) => {
                 style={inputStyle}
                 variant='outlined'
                 placeholder='Billett-type'
-                value={props.ticketCategory}
-                onChange={e => props.setTicketCategory(e.target.value)}
+                value={price}
+                onChange={e => setPrice(e.target.value)}
             />
 
             <h5>Pris</h5>
@@ -41,9 +38,13 @@ const TicketForm = (props: TicketProps) => {
                 variant='outlined'
                 type="number"
                 placeholder='Pris'
-                value={props.price}
-                onChange={e => props.setPrice(e.target.value)}
+                value={type}
+                onChange={e => setType(e.target.value)}
             />
+
+            <Button>
+                Legg til
+            </Button>
         </>
     );
 };
