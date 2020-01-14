@@ -15,19 +15,12 @@ stages:
   - test-client
   - deploy
 
-# Install node libraries
-before_script:
-  - cd client/harmoni
-  - npm install
-  - cd ..
-  - cd ..
-  - cd server
-  - npm install
-
 # Run JEST tests
 run_tests_server:
   stage: test-server
   script:
+    - cd server
+    - npm install
     - ls
     - npm run test-ci
     - ls
@@ -38,7 +31,8 @@ run_tests_server:
 run_tests_client:
   stage: test-client
   script:
-    - cd ../client/harmoni
+    - cd client/harmoni
+    - npm install
     - npm run test
     - ls
   artifacts:
