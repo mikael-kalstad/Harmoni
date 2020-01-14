@@ -12,27 +12,12 @@ export default class LoginService {
       password: password
     };
     return axios
-      .post("http://localhost:15016/api/v0/login/", postData, {
+      .post("http://localhost:15016/api/login/", postData, {
         headers: headers
       })
       .then(response => {
-        localStorage.setItem("x-access-token", response.data.jwt);
+        localStorage.setItem("harmoni-token", response.data.jwt);
         return response;
-      })
-      .catch(error => error);
-  }
-
-  updateToken() {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "x-access-token": localStorage.getItem("x-access-token")
-    };
-    return axios
-      .post("http://localhost:15016/api/v0/login/token/update", {
-        headers: headers
-      })
-      .then(response => {
-        localStorage.setItem("x-access-token", response.data.jwt);
       })
       .catch(error => error);
   }
@@ -40,22 +25,20 @@ export default class LoginService {
   checkToken() {
     const headers = {
       "Content-Type": "application/json; charset=utf-8",
-      "x-access-token": localStorage.getItem("x-access-token")
+      "harmoni-token": localStorage.getItem("harmoni-token")
     };
     return axios
-      .post("http://localhost:15016/api/v0/login/token", {
+      .post("http://localhost:15016/api/login/token", {
         headers: headers
       })
       .then(response => {
-        localStorage.setItem("x-access-token", response.data.jwt);
-        // console.log(response.status);
-        // console.log(response.data.userId);
+        localStorage.setItem("harmoni-token", response.data.jwt);
         return response;
       })
       .catch(error => console.log(error));
   }
 
-  registrerPerson(
+  registerPerson(
     name: string,
     email: string,
     mobile: number | undefined,
@@ -77,13 +60,13 @@ export default class LoginService {
       "content-Type": "application/json;charset=utf-8"
     };
     return axios
-      .post("http://localhost:15016/api/v0/login/register", postData, {
+      .post("http://localhost:15016/api/login/register", postData, {
         headers: headers
       })
       .then(response => {
         if (response.status === 409) {
           console.log("User exists from before.");
-        } else localStorage.setItem("x-access-token", response.data.jwt);
+        } else localStorage.setItem("harmoni-token", response.data.jwt);
 
         return response;
       })
