@@ -21,7 +21,7 @@ export default class PasswordService {
             password: password
         };
         //Litt usikkert om denne URL'en fungerer
-        return axios.post(window.location.host + "/" + window.location.pathname, postData,{  
+        return axios.post("/reset/reset_password/:token" + "/" + window.location.pathname, postData,{  
             headers:{
                 'Content-Type': 'application/json; charset=utf-8'
             }
