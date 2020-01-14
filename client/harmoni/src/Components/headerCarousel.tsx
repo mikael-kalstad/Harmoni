@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import Carousel from 'react-bootstrap/Carousel';
-import { Link } from 'react-router-dom';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import './carousel.css';
+import React from "react";
+import styled from "styled-components";
+import Carousel from "react-bootstrap/Carousel";
+import { Link } from "react-router-dom";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "./carousel.css";
 
 const Img = styled.img`
   height: 450px;
@@ -30,7 +30,7 @@ interface ITitle {
 }
 
 const Title = styled.h3<ITitle>`
-  color: ${props => (props.dark ? 'black' : 'white')};
+  color: ${props => (props.dark ? "black" : "white")};
   width: 60%;
   margin: auto;
 
@@ -48,12 +48,16 @@ const HeaderCarousel = (props: any) => {
         {a.picture && (
           <>
             <Overlay />
-            <Img className="d-block w-100" src={a.picture} alt={a.name} />
+            <Img
+              className="d-block w-100"
+              src={new Buffer(a.picture, "base64").toString("ascii")}
+              alt={a.name}
+            />
           </>
         )}
 
         {!a.picture && !a.name && (
-          <SkeletonTheme color={'#F1F1F9'}>
+          <SkeletonTheme color={"#F1F1F9"}>
             <Skeleton height="450px" />
           </SkeletonTheme>
         )}
@@ -76,7 +80,7 @@ const HeaderCarousel = (props: any) => {
     props.data.forEach((a: any) => {
       items.push(
         <Carousel.Item key={a.event_id}>
-          <Link to={'/event/' + a.event_id}>{card(a)}</Link>
+          <Link to={"/event/" + a.event_id}>{card(a)}</Link>
         </Carousel.Item>
       );
     });
