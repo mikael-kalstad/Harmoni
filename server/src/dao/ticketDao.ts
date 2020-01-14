@@ -23,7 +23,7 @@ export default class ticketDao extends daoParentTicket {
 
   addTicket(ticket: ticket, callback) {
     super.query(
-      'INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?)',
+      'INSERT INTO ticket VALUES(DEFAULT, ?, ?, ?, ?)',
       [ticket.event_id, ticket.price, ticket.type, ticket.available],
       callback
     );
