@@ -27,7 +27,7 @@ const ForgotPassword = () => {
       return;
     }
 
-    // Show loading while waiting for API
+    // Show loading while waiting for API call
     setLoading(true);
   };
 
