@@ -6,8 +6,7 @@ import { configure } from 'enzyme';
 import Login from '../Components/login'
 import App from '../App'
 
-
-/* describe("<Login /> with empty props", () => {
+ /*describe("<Login /> with empty props", () => {
     test("Login renders", () => {
         const wrapper = shallow(React.createElement(Login, {toggle: () => { return true}}));
         console.log(wrapper)
@@ -17,7 +16,20 @@ import App from '../App'
         expect(wrapper1.html()).toBeInTheDocument()
     })
 })
- */
+
+describe("<Login />", () => {
+    test("Login renders", done => {
+        const login = shallow(<Login/>);
+        //console.log("HER ER VI: " + login.find('Wrapper').length);
+        expect(login.find('Exit src=').props.toEqual({
+            src: '/icons/cross.svg',
+            onClick
+        }
+        expect(1).toBe(1);
+        done();
+    })
+})*/
+ 
 
  test("One equals One", done => {
     expect(1).toBe(1);
