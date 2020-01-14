@@ -138,7 +138,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
 
     setLoading(true);
 
-    let res = await loginService.registrerPerson(
+    let res = await loginService.registerPerson(
       nameInput,
       emailInput,
       tlfInput,

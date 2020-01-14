@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service from './Service';
+import Service, {updateToken} from './Service';
 
 interface Ticket {
   ticket_id: number;
@@ -11,28 +11,33 @@ interface Ticket {
 
 class TicketService extends Service {
   getAllTickets() {
+    updateToken();
     return axios
       .get<Ticket[]>(this.path + '/tickets/')
       .then(response => response.data);
   }
 
   getAllTicketsByEventId(eventId: number) {
+    updateToken();
     return axios
       .get<Ticket[]>(this.path + '/tickets/event/' + eventId)
       .then(response => response.data);
   }
 
   addTickets() {
+    updateToken();
     return axios
       .post(this.path + '/authorized/tickets/')
       .then(response => response.data);
   }
   deleteTicket(ticketId: number) {
+    updateToken();
     return axios
       .delete(this.path + '/authorized/tickets/' + ticketId)
       .then(response => response.data);
   }
   deleteTicketsByEventId(eventId: number) {
+    updateToken();
     return axios
       .delete(this.path + '/authorized/tickets/event/' + eventId)
       .then(response => response.data);
