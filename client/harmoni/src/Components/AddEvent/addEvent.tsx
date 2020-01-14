@@ -58,50 +58,39 @@ const AddEvent = () => {
   const [skipped, setSkipped] = useState(new Set<number>());
   const steps = getSteps();
 
-  // Info inputs
-  const [name, setName] = useState("");
-  const [imgData, setImgData] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [fromDateTime, setFromDateTime] = useState<Date | null>();
-  const [toDateTime, setToDateTime] = useState<Date | null>();
+  // 1. Info
+  const [infoSubmit, setInfoSubmit] = useState<boolean>(false);
+  const [infoCompleted, setInfoCompleted] = useState<boolean>(false);
 
-  const infoProps = {
-    name,
-    setName,
-    imgData,
-    setImgData,
-    category,
-    setCategory,
-    location,
-    setLocation,
-    fromDateTime,
-    setFromDateTime,
-    toDateTime,
-    setToDateTime
-  };
-
-  //artists:
-  //artist props go here
-  //const artistProps = {};
-
+  // 2. Artists
   const [listOfArtists, setListOfArtists] = useState([]);
-  // const [artists, setArtists] = useState([]);
-  const artistProps = { listOfArtists, setListOfArtists };
 
-  //tickets, this needs a list of tickets (not done)
+  // 3. Tickets
   const [ticketCategory, setTicketCategory] = useState("");
   const [price, setPrice] = useState("");
 
-  const ticketProps = { ticketCategory, setTicketCategory, price, setPrice };
-  //tickets, this needs a list of tickets (not done)
-  //const [ticketCategory, setTicketCategory] = useState('');
-  //const [price, setPrice] = useState('');
-
-  //   const [eventTickets, setEventTickets] = useState<ITicket[]>();
-
-  //program:
+  // 4. Program
   const [programText, setProgramText] = useState("");
+
+  const infoProps = {
+    infoSubmit,
+    setInfoCompleted
+    // name,
+    // setName,
+    // imgData,
+    // setImgData,
+    // category,
+    // setCategory,
+    // location,
+    // setLocation,
+    // fromDateTime,
+    // setFromDateTime,
+    // toDateTime,
+    // setToDateTime
+  };
+
+  const artistProps = { listOfArtists, setListOfArtists };
+  const ticketProps = { ticketCategory, setTicketCategory, price, setPrice };
   const programProps = { programText, setProgramText };
 
   function getStepContent(step: number) {
@@ -155,6 +144,18 @@ const AddEvent = () => {
   };
 
   const handleNext = () => {
+    // Set step to completed
+    const newCompleted = new Set(completed);
+    newCompleted.add(activeStep);
+    setCompleted(newCompleted);
+
+    if (activeStep === 0) {
+      setInfoSubmit(true);
+      if (infoCompleted) nextStep();
+    }
+  };
+
+  const nextStep = () => {
     const newActiveStep =
       isLastStep() && !stepsCompleted()
         ? steps.findIndex((step, i) => !completed.has(i))
@@ -163,6 +164,11 @@ const AddEvent = () => {
   };
 
   const handleBack = () => {
+    // Set step to uncompleted
+    const newCompleted = new Set(completed);
+    newCompleted.delete(activeStep - 1);
+    setCompleted(newCompleted);
+
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
@@ -170,15 +176,7 @@ const AddEvent = () => {
     setActiveStep(step);
   };
 
-  const handleComplete = () => {
-    const newCompleted = new Set(completed);
-    newCompleted.add(activeStep);
-    setCompleted(newCompleted);
-
-    if (completed.size !== totalSteps() - skippedSteps()) {
-      handleNext();
-    }
-  };
+  const submit = () => {};
 
   const handleReset = () => {
     setActiveStep(0);
@@ -243,9 +241,8 @@ const AddEvent = () => {
                   className={classes.button}
                 >
                   Neste
-                  {}
                 </Button>
-                {isStepOptional(activeStep) && !completed.has(activeStep) && (
+                {/* {isStepOptional(activeStep) && !completed.has(activeStep) && (
                   <Button
                     color="primary"
                     onClick={handleSkip}
@@ -253,12 +250,12 @@ const AddEvent = () => {
                   >
                     Legg til senere
                   </Button>
+                )} */}
+                {completedSteps() === totalSteps() && (
+                  <Button color="primary" onClick={submit}>
+                    Legg til arrangement
+                  </Button>
                 )}
-                <Button color="primary" onClick={handleComplete}>
-                  {completedSteps() === totalSteps() - 1
-                    ? "Legg til arrangement"
-                    : "Fullfør trinn"}
-                </Button>
               </LinkWrapper>
             </div>
           )}
