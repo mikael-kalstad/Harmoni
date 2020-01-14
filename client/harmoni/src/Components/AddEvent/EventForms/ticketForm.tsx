@@ -17,8 +17,13 @@ const inputStyle = {
 
 const TicketForm = (props : any) => {
 
-    const [price, setPrice] = useState('');
-    const [type, setType] = useState('');
+    const [price, setPrice] = useState(0);
+    const [available, setAvailable] = useState(0);
+
+    function handleChange(newInt : any, setFunc : Function) {
+        if (newInt < 0) setFunc(0);
+        else setFunc(newInt)
+    }
 
     return (
         <>
@@ -27,9 +32,9 @@ const TicketForm = (props : any) => {
             <TextField
                 style={inputStyle}
                 variant='outlined'
-                placeholder='Billett-type'
-                value={price}
-                onChange={e => setPrice(e.target.value)}
+                placeholder='(Sitteplass, ståplass, VIP, etc.)'
+                //value={newTicket.price}
+                //onChange={e => newTicket.setPrice(e.target.value)}
             />
 
             <h5>Pris</h5>
@@ -37,9 +42,19 @@ const TicketForm = (props : any) => {
                 style={inputStyle}
                 variant='outlined'
                 type="number"
-                placeholder='Pris'
-                value={type}
-                onChange={e => setType(e.target.value)}
+                placeholder='Pris for kategori'
+                value={price}
+                onChange={e => handleChange(e.target.value, setPrice)}
+            />
+
+            <h5>Antall tilgjengelige</h5>
+            <TextField
+                style={inputStyle}
+                variant='outlined'
+                type="number"
+                placeholder='Antall tilgjengelige plasser i kategori'
+                value={available}
+                onChange={e => handleChange(e.target.value, setAvailable)}
             />
 
             <Button>

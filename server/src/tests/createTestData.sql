@@ -17,9 +17,9 @@ INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12', '2020-01
  
 INSERT INTO event VALUES(DEFAULT, 1, 'Astrid S konsert', 'Elgseter Gate 1', '2020-01-18 21:00:00', '2020-01-08 23:30:00', 300, 'kommende', 'Detta må du få med deg', 'konsert', 'x’12D');
  
-INSERT INTO ticket VALUES(default, 1, 600, 'ståplass');
-INSERT INTO ticket VALUES(default, 2, 500, 'sitteplass');
-INSERT INTO ticket VALUES(default, 2, 1000, 'vip');
+INSERT INTO ticket VALUES(default, 1, 600, 'ståplass', 20);
+INSERT INTO ticket VALUES(default, 2, 500, 'sitteplass', 75);
+INSERT INTO ticket VALUES(default, 2, 1000, 'vip', 16);
  
 INSERT INTO attachment VALUES(default, 2, 1, 'x’12F','txt','test',1024);
 INSERT INTO attachment VALUES(default, 1, 2, 'x’34E','xml','test2',10);
