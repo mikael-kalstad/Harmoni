@@ -95,8 +95,8 @@ export default class userDao extends daoParentUser {
     }
     changePassword(userId: number, data, callback) {
         let user;
-        this.getUser(userId, (status, data) => {
-            user = data[0];
+        this.getUser(userId, (status, olddata) => {
+            user = olddata[0];
             let oldHash = user.hash;
             let oldSalt = user.salt;
             let okPassword = compareHash(oldHash, data.oldPassword, oldSalt);

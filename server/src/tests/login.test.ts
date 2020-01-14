@@ -5,8 +5,6 @@ import { domainToASCII } from "url";
 var mysql = require("mysql");
 var fs = require("fs");
 
-
-
 function run(filename, pool, done) {
     console.log("runsqlfile: reading file " + filename);
     let sql = fs.readFileSync(filename, "utf8");
@@ -71,7 +69,7 @@ test("Add user with password", done => {
         hash: pass.hash,
         salt: pass.salt,
         type: "artist",
-        picture: new Buffer("")
+        picture: null
     }
     dao.addUser(input, (status, data) => {
         expect(status).toBe(200);
@@ -117,25 +115,23 @@ test("Check if password is case sensitive", done => {
     })
 }, 3000)
 
-/*
+
 
 test("Test for change of password using CORRECT old password", done => {
     let pass = {oldPassword: "Passord", newPassword: "nyttPassord"};
-
-    dao.changePassword(5, pass, callback =>{
-        //expect(status).toBe(200);
-      //  expect(data.length).toBe(1);
+    dao.changePassword(5, pass, (status, data) => {
+        expect(status).toBe(200);
         done();
-    })
-},3000)
+    })    
+}, 3000)
 
+/*
+//Ikke ferdig da jeg ikke klarer å ta i bruk det som står i else-blokken i dao.changePassword
 test("Test for change of password using WRONG old password", done => {
-    let pass = {oldPassword: "nyttPassord", newPassword: "nyestePassord"};
-
-    dao.changePassword(5, pass, callback =>{
+    let pass = {oldPassword: "feilPassord", newPassword: "nyestePassord"};
+    dao.changePassword(5, pass, (status, data) => {
        // expect(status).toBe(200);
-        //expect(data.length).toBe(1);
         done();
-    })
-},3000)
+    })    
+}, 5000)
 */
