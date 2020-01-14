@@ -42,6 +42,11 @@ function getSteps() {
     return ['Info', 'Artister', 'Billett-typer', 'Program'];
 }
 
+interface ITicket {
+    price: number;
+    type: string;
+}
+
 const AddEvent = () => {
 
     const classes = useStyles({});
@@ -70,15 +75,17 @@ const AddEvent = () => {
 
 
     //tickets, this needs a list of tickets (not done)
-    const [ticketCategory, setTicketCategory] = useState('');
-    const [price, setPrice] = useState('');
+    //const [ticketCategory, setTicketCategory] = useState('');
+    //const [price, setPrice] = useState('');
 
-    const ticketProps = {ticketCategory, setTicketCategory, price, setPrice};
+    const [eventTickets, setEventTickets] = useState<ITicket[]>();
+
+    const ticketProps = {eventTickets, setEventTickets};
+
 
     //program:
     const [programText, setProgramText] = useState('');
     const programProps = {programText, setProgramText};
-
 
     function getStepContent(step: number) {
         switch (step) {

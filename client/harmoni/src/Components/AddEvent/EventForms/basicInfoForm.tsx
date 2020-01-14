@@ -57,6 +57,7 @@ const BasicInfoForm = (props: InfoProps) => {
                 onChange={e => props.setName(e.target.value)}
             />
 
+            <h5>Kategori*</h5>
             <FormControl variant="outlined" style={{width: '160px'}}>
                 <InputLabel id="select-filled-label">Kategori*</InputLabel>
                 <Select
@@ -84,13 +85,14 @@ const BasicInfoForm = (props: InfoProps) => {
             <DateTimePicker
                 style={inputStyle}
                 selectedDate={props.fromDateTime}
-                setSelectedDate={props.setFromDateTime}/>
-
+                setSelectedDate={props.setFromDateTime}
+            />
             <h6>Til</h6>
             <DateTimePicker
                 style={inputStyle}
                 selectedDate={props.toDateTime}
-                setSelectedDate={props.setToDateTime}/>
+                setSelectedDate={props.setToDateTime}
+            />
         </>
     );
 };

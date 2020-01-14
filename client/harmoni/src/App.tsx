@@ -59,6 +59,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
+      {console.log("user data", userData)}
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
           <Route exact path="/" component={FrontPage} />
@@ -69,7 +70,7 @@ const App: React.FC = () => {
           />
           <Route exact path="/events/:type" component={Events} />
           <Route exact path="/event/:id" component={Event} />
-          <Route exact path="/newevent" component={AddEvent} />
+          <Route exact path="/newEvent" component={AddEvent} />
 
           {/* ROUTES WITH AUTHENTICATION */}
           <RouteWithAuth
@@ -77,7 +78,11 @@ const App: React.FC = () => {
             path="/profile/change"
             render={props => <Register userData={userData} />}
           />
-          <RouteWithAuth exact path="/profile" component={Profile} />
+          <RouteWithAuth
+            exact
+            path="/profile"
+            render={props => <Profile userData={userData} />}
+          />
           {/* <RouteWithAuth exact path='/newevent' component={AddEvent} /> */}
 
           {/* 404 PAGE NOT FOUND (if not other routes match) */}

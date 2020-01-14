@@ -52,12 +52,13 @@ interface User {
   picture: string;
 }
 
-const Register = (props: { userData?: object; logIn?: Function }) => {
+const Register = (props: { userData?: any; logIn?: Function }) => {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [tlfInput, setTlfInput] = useState();
   const [passwordInput, setPasswordInput] = useState("");
   const [type, setType] = useState("");
+  const [imgData, setImgData] = useState("");
 
   // User already registered warning for email
   const [emailWarning, setEmailWarning] = useState("");
@@ -144,7 +145,7 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
       tlfInput,
       passwordInput,
       type,
-      ""
+      imgData.toString()
     );
 
     // Status code 409 indicates that the email is already registered
@@ -190,7 +191,14 @@ const Register = (props: { userData?: object; logIn?: Function }) => {
               <FormHelperText>Type er påkrevd</FormHelperText>
             )}
           </FormControl>
-          <ImgUpload />
+          <ImgUpload
+            setImgData={setImgData}
+            picture={
+              props.userData &&
+              "data:image/jpg;base64," +
+                new Buffer(props.userData.picture).toString("base64")
+            }
+          />
         </TopWrapper>
 
         <TextField

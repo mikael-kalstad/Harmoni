@@ -4,7 +4,6 @@ import { Redirect, Link } from "react-router-dom";
 import Button from "./Button/button";
 import { loginService } from "../services/loginService";
 import TextField from "@material-ui/core/TextField";
-import { isAbsolute } from "path";
 
 const Overlay = styled.div`
   position: fixed;
