@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS ticket (
   event_id INT NOT NULL,
   price INT NOT NULL,
   type VARCHAR(45) NOT NULL,
-  available INT NOT NULL
+  available INT NOT NULL,
   PRIMARY KEY (ticket_id),
 	FOREIGN KEY (event_id)
 	REFERENCES event (event_id)
