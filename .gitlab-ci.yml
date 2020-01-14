@@ -21,7 +21,7 @@ before_script:
 
 # Run JEST tests
 run_tests:
-  stage: test
+  stage: test-server
   script:
     - ls
     - npm run test-ci
@@ -29,6 +29,16 @@ run_tests:
   artifacts:
     paths:
       - server/coverage/
+
+run_tests:
+  stage: test-client
+  script:
+    - cd ../client/harmoni
+    - npm run test
+    - ls
+  artifacts:
+    paths:
+      - client/coverage/
 
 # Publish coverage report on gitlab-pages
 pages:
