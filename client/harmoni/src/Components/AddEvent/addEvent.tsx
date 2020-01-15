@@ -10,6 +10,7 @@ import BasicInfoForm from "./EventForms/basicInfoForm";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
 import Summary from "./EventForms/summary";
+import Success from "./success";
 
 // Services
 import { eventService } from "../../services/EventService";
@@ -68,8 +69,9 @@ const AddEvent = (props: { userData: any }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [warningText, setWarningText] = useState("");
+  const [uploaded, setUploaded] = useState<boolean>(false);
   const steps = [
     "Info",
     "Artister",
@@ -204,8 +206,8 @@ const AddEvent = (props: { userData: any }) => {
       name: infoData.name,
       //organizer: props.userData.user_id,
       organizer: 1,
-      address: infoData.location,
-      fromDate: infoData.dateFrom,
+      address: infoData.location.toString(),
+      fromDate: infoData.dateFrom.toString(),
       toDate: infoData.dateTo,
       capacity: 0,
       status: "Kommende",
@@ -213,10 +215,16 @@ const AddEvent = (props: { userData: any }) => {
       category: infoData.category,
       picture: infoData.imgData
     };
+
     setLoading(true);
     setWarningText("Det skjedde noe feil. Spør bård på tlf: 38721421");
     let res = await eventService.addEvent(newEvent);
     console.log("res add event", res);
+
+    if (res) {
+        setLoading(false);
+        setUploaded(true);
+    }
   };
 
   const handleReset = () => {
@@ -245,7 +253,9 @@ const AddEvent = (props: { userData: any }) => {
             </div>
           ) : (
             <div>
-              {loading ? (
+              {uploaded ? (
+                <Success />
+              ) : loading ? (
                 <LoadingWrapper>
                   <CircularProgress size={30} />
                   <LoadingText>Vennligst vent</LoadingText>
