@@ -59,12 +59,12 @@ router.post("/", (req, res) => {
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.headers["harmoni-token"];
-  if(token!=undefined){
+  console.log("token in check: ",token);
+  if(token!==undefined){
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {
-        console.log("Token has expired");
+        console.log("You are not logged in");
         res.status(401);
-        res.json({ error: "Not authorized" });
       } else {
         newToken = jwt.sign({ email: decoded.email }, privateKey, {
           expiresIn: 1800
@@ -75,7 +75,9 @@ router.post("/token", (req, res) => {
         });
       }
     });
-  }else{}
+  }else{
+    res.status(401);
+  }
 
 });
 
