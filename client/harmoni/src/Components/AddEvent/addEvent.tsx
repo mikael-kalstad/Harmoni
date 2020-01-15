@@ -259,53 +259,51 @@ const AddEvent = (props: { userData: any }) => {
 
       <Wrapper>
         <div>
-          {uploaded ? (
-            <div>
-              <Button onClick={handleReset}>Ny event</Button>
-            </div>
-          ) : (
-            <div>
-              {uploaded && <Success />}
-              {loading ? (
-                <LoadingWrapper>
-                  <CircularProgress size={30} />
-                  <LoadingText>Vennligst vent</LoadingText>
-                </LoadingWrapper>
-              ) : (
-                <>
-                  <div>{getStepContent(activeStep)}</div>
+          <div>
+            {uploaded && (
+              <>
+                <Success />
+                <Button onClick={handleReset}>Nytt arrangement</Button>
+              </>
+            )}
+            {loading ? (
+              <LoadingWrapper>
+                <CircularProgress size={30} />
+                <LoadingText>Vennligst vent</LoadingText>
+              </LoadingWrapper>
+            ) : (
+              <>
+                <div>{getStepContent(activeStep)}</div>
 
-                  {!uploaded && (
-                    <LinkWrapper>
+                {!uploaded && (
+                  <LinkWrapper>
+                    <Button
+                      disabled={activeStep === 0 || loading}
+                      onClick={handleBack}
+                    >
+                      Tilbake
+                    </Button>
+
+                    {completedSteps() === totalSteps() || activeStep === 4 ? (
                       <Button
-                        disabled={activeStep === 0 || loading}
-                        onClick={handleBack}
+                        disabled={
+                          completedSteps() !== totalSteps() - 1 || loading
+                        }
+                        color="primary"
+                        onClick={submit}
                       >
-                        Tilbake
+                        Legg til arrangement
                       </Button>
-
-                      {completedSteps() === totalSteps() || activeStep === 4 ? (
-                        <Button
-                          disabled={
-                            completedSteps() !== totalSteps() - 1 || loading
-                          }
-                          color="primary"
-                          onClick={submit}
-                        >
-                          Legg til arrangement
-                        </Button>
-                      ) : (
-                        <Button color="primary" onClick={handleNext}>
-                          Neste
-                        </Button>
-                      )}
-                    </LinkWrapper>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-
+                    ) : (
+                      <Button color="primary" onClick={handleNext}>
+                        Neste
+                      </Button>
+                    )}
+                  </LinkWrapper>
+                )}
+              </>
+            )}
+          </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
