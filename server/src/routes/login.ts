@@ -19,7 +19,7 @@ let user;
 router.use(express.static("public"));
 
 router.post("/", (req, res) => {
-  dao.getUserByEMail(req.body.email, (status, data) => {
+  dao.getHashOfUser(req.body.email, (status, data) => {
     user = data[0];
     if (typeof user != "undefined") {
       if (compareHash(user.hash, req.body.password, user.salt)) {
@@ -59,7 +59,6 @@ router.post("/", (req, res) => {
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.headers["harmoni-token"];
-  console.log("token in check: ",token);
   if(token!==undefined){
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {
