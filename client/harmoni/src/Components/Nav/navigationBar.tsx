@@ -1,13 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import OutlineButton from "../Button/outlineButton";
-import LoginBtn from "../Button/loginBtn";
-import SmallProfileNav from "../Profile/smallProfileNav";
-import { LinkContainer } from "react-router-bootstrap";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import OutlineButton from '../Button/outlineButton';
+import LoginBtn from '../Button/loginBtn';
+import SmallProfileNav from '../Profile/smallProfileNav';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const StyledLink = styled(props => <Link {...props} />)`
   color: #7f7f7f;
@@ -39,7 +39,7 @@ const NavigationBar = (props: any) => (
     bg="white"
     expand="lg"
     sticky="top"
-    style={{ boxShadow: "0px 1px 8px rgba(0, 0, 0, 0.25)" }}
+    style={{ boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)' }}
   >
     <Navbar.Brand>
       <Link to="/">
@@ -49,8 +49,8 @@ const NavigationBar = (props: any) => (
           height="30"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
-          style={{ margin: "25px" }}
-          onClick={() => handleIconClick("/")}
+          style={{ margin: '25px' }}
+          onClick={() => handleIconClick('/')}
         />
       </Link>
     </Navbar.Brand>
@@ -102,7 +102,9 @@ const NavigationBar = (props: any) => (
             picture={props.userData.picture}
             name={props.userData.name}
           />
-          <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
+          <OutlineButton onClick={() => props.logOut()} to="/">
+            Logg ut
+          </OutlineButton>
         </>
       ) : (
         <>
@@ -117,7 +119,7 @@ const NavigationBar = (props: any) => (
 const handleIconClick = (path: any) => {
   //Smooth scroll to top if already on the home page
   if (window.location.pathname === path)
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   else window.scrollTo(0, 0);
 };
 
