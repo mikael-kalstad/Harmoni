@@ -171,13 +171,11 @@ const Event = (props: { match: { params: { id: number } } }) => {
     organizer != null &&
     artists != null
   ) {
-    let eventImage = new Buffer(event[0].picture).toString('base64');
-
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={'data:image/png;base64,' + eventImage}
+            src={new Buffer(event[0].picture).toString('ascii')}
             alt={event[0].name}
           ></EventImage>
           <DoubleColumnGrid>
