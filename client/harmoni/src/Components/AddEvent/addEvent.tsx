@@ -11,6 +11,25 @@ import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
 import Summary from "./EventForms/summary";
 
+// Services
+import { eventService } from "../../services/EventService";
+import { ticketService } from "../../services/TicketService";
+import { userService } from "../../services/UserService";
+
+interface Event {
+  eventId: number;
+  name: string;
+  organizer: number;
+  address: string;
+  fromDate: string;
+  toDate: string;
+  capacity: number;
+  status: string;
+  information: string;
+  category: string;
+  picture: string;
+}
+
 const Container = styled.div`
   margin: 100px 0;
 `;
@@ -37,11 +56,12 @@ const LoadingText = styled.p`
   font-size: 24px;
 `;
 
-const AddEvent = () => {
+const AddEvent = (props: { userData: any }) => {
   //   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
+  const [loading, setLoading] = useState(false);
   const steps = [
     "Info",
     "Artister",
@@ -170,7 +190,23 @@ const AddEvent = () => {
     setActiveStep(step);
   };
 
-  const submit = () => {};
+  const submit = async () => {
+    let newEvent: Event = {
+      eventId: -1,
+      name: infoData.name,
+      organizer: props.userData.user_id,
+      address: infoData.location,
+      fromDate: infoData.dateFrom,
+      toDate: infoData.dateTo,
+      capacity: 0,
+      status: "Kommende",
+      information: programText,
+      category: infoData.category,
+      picture: infoData.imgData
+    };
+    setLoading(true);
+    let res = await eventService.addEvent(newEvent);
+  };
 
   const handleReset = () => {
     setActiveStep(0);
@@ -222,12 +258,12 @@ const AddEvent = () => {
         </div>
       </Wrapper>
 
-      {/* {loading && 
-       <LoadingWrapper>
-       <CircularProgress size={30} />
-       <LoadingText>Vennligst vent</LoadingText>
-     </LoadingWrapper>
-     } */}
+      {loading && (
+        <LoadingWrapper>
+          <CircularProgress size={30} />
+          <LoadingText>Vennligst vent</LoadingText>
+        </LoadingWrapper>
+      )}
     </Container>
   );
 };

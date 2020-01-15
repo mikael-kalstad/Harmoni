@@ -37,7 +37,7 @@ run_tests_client:
     - ls
   artifacts:
     paths:
-      - client/coverage/
+      - client/harmoni/coverage/
 
 # Publish coverage report on gitlab-pages
 pages:
@@ -49,6 +49,7 @@ pages:
     - cd ..
     - mkdir .public
     - cp -r server/coverage/* .public
+    - cp -r client/harmoni/coverage* .public
     - mv .public public
     - mv public/lcov-report/* public/
     - cd public

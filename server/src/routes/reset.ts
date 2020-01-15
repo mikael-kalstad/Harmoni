@@ -61,7 +61,7 @@ router.post("/reset",(req,res)=>{
                 subject: 'Password help has arrived!',
                 context: {
                 name: user.name,
-                url: 'http://localhost:3000/reset-passord/' + token
+                url: 'http://localhost:3000/reset/reset_password/' + token
                 }
             }
 
@@ -108,7 +108,7 @@ router.post("/reset/reset_password/:token",(req,res)=>{
                 user.hash= pass.hash;
                 user.salt= pass.salt;
                 console.log(user);
-                dao.updateUser(user.user_id, user, (status, data) => {
+                dao.resetPassword(user.user_id, user, (status, data) => {
                 })
                 res.json({message: "Endret passord"})
             })

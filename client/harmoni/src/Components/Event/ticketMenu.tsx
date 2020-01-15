@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
 import { FaCheckCircle } from 'react-icons/fa';
 
 import { ticketService } from '../../services/TicketService';

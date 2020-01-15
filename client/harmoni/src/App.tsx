@@ -72,7 +72,11 @@ const App: React.FC = () => {
           />
           <Route exact path="/events/:type" component={Events} />
           <Route exact path="/event/:id" component={Event} />
-          <Route exact path="/newEvent" component={AddEvent} />
+          <Route
+            exact
+            path="/newEvent"
+            render={props => <AddEvent userData={userData} />}
+          />
 
           {/* ROUTES WITH AUTHENTICATION */}
           <RouteWithAuth
@@ -85,15 +89,11 @@ const App: React.FC = () => {
             path="/profile"
             render={props => <Profile userData={userData} />}
           />
+          <Route exact path="/glemt-passord" component={ForgotPassword} />
           <Route
             exact
-            path="/glemt-passord"
-            component={ForgotPassword}
-          />
-          <Route
-              exact
-              path="/reset-passord/:token"
-              component={ResetPassword}
+            path="/reset/reset_password/:token"
+            component={ResetPassword}
           />
           {/* <RouteWithAuth exact path='/newevent' component={AddEvent} /> */}
 
