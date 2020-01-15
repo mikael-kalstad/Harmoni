@@ -248,9 +248,8 @@ const AddEvent = (props: { userData: any }) => {
 
       <Wrapper>
         <div>
-          {stepsCompleted() ? (
+          {uploaded ? (
             <div>
-              <h1>Sykt bra jobba</h1>
               <Button onClick={handleReset}>Ny event</Button>
             </div>
           ) : (
@@ -265,30 +264,32 @@ const AddEvent = (props: { userData: any }) => {
                 <>
                   <div>{getStepContent(activeStep)}</div>
 
-                  <LinkWrapper>
-                    <Button
-                      disabled={activeStep === 0 || loading}
-                      onClick={handleBack}
-                    >
-                      Tilbake
-                    </Button>
-
-                    {completedSteps() === totalSteps() || activeStep === 4 ? (
+                  {!uploaded && (
+                    <LinkWrapper>
                       <Button
-                        disabled={
-                          completedSteps() !== totalSteps() - 1 || loading
-                        }
-                        color="primary"
-                        onClick={submit}
+                        disabled={activeStep === 0 || loading}
+                        onClick={handleBack}
                       >
-                        Legg til arrangement
+                        Tilbake
                       </Button>
-                    ) : (
-                      <Button color="primary" onClick={handleNext}>
-                        Neste
-                      </Button>
-                    )}
-                  </LinkWrapper>
+
+                      {completedSteps() === totalSteps() || activeStep === 4 ? (
+                        <Button
+                          disabled={
+                            completedSteps() !== totalSteps() - 1 || loading
+                          }
+                          color="primary"
+                          onClick={submit}
+                        >
+                          Legg til arrangement
+                        </Button>
+                      ) : (
+                        <Button color="primary" onClick={handleNext}>
+                          Neste
+                        </Button>
+                      )}
+                    </LinkWrapper>
+                  )}
                 </>
               )}
             </div>
