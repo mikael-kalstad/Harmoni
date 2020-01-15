@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   grid-template-columns: 1fr;
   @media screen and (max-width: 800px) {
     justify-content: center;
-    margin: auto;
+    margin: auto 30px;
   }
 `;
 
@@ -134,18 +134,30 @@ const ContentText = styled.p`
   color: #535353;
   white-space: pre-wrap;
 `;
+const Event = (props: {
+  preview?: boolean;
+  eventData?: any;
+  artistsData?: any;
+  ticketsData?: any;
 
-const Event = (props: any) => {
+  match: { params: { id: number } };
+}) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
 
   useEffect(() => {
-    fetchEvent();
-    fetchTickets();
-    fetchArtists();
-    fetchOrganizer();
+    if (!props.preview) {
+      fetchEvent();
+      fetchTickets();
+      fetchArtists();
+      fetchOrganizer();
+    } else {
+      setEvent(props.eventData);
+      setArtists(props.artistsData);
+      setEventTickets(props.ticketsData);
+    }
   }, []);
 
   const fetchEvent = async () => {
@@ -173,7 +185,6 @@ const Event = (props: any) => {
     artists != null
   ) {
     let eventImage = new Buffer(event[0].picture).toString('base64');
-    console.log(eventTickets);
 
     return (
       <Wrapper>
@@ -190,7 +201,11 @@ const Event = (props: any) => {
         <InfoGrid>
           <Title>{event[0].name}</Title>
           <OrganizerText>Arrangør: {organizer[0].name}</OrganizerText>
-          <ContentText>{event[0].information}</ContentText>
+          <ContentText>
+            {event[0].information === ''
+              ? 'Arrangementet har ingen beskrivelse eller program'
+              : event[0].information}
+          </ContentText>
         </InfoGrid>
         <ArtistsAndMapGrid>
           <ArtistsGrid>

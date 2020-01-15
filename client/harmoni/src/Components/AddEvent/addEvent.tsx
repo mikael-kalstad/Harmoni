@@ -105,22 +105,20 @@ const AddEvent = () => {
   };
 
   const handleNext = () => {
+    // Info step is required
+    if (activeStep === 0) {
+      console.log(infoData);
+      setInfoSubmit(true);
+      if (isInfoDataEmpty()) return;
+    }
+
     // Set step to completed
     const newCompleted = new Set(completed);
     newCompleted.add(activeStep);
     setCompleted(newCompleted);
 
-    // Info step is required
-    if (activeStep === 0) {
-      console.log(infoData);
-      setInfoSubmit(true);
-      if (!isInfoDataEmpty()) nextStep();
-    }
-
     // All other steps is optional
-    else {
-      nextStep();
-    }
+    nextStep();
   };
 
   const nextStep = () => {
