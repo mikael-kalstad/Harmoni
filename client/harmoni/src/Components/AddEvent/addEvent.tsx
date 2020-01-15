@@ -223,13 +223,15 @@ const AddEvent = (props: { userData: any }) => {
     };
 
     setLoading(true);
-    setWarningText("Det skjedde noe feil. Spør bård på tlf: 38721421");
     let res = await eventService.addEvent(newEvent);
     console.log("res add event", res);
 
     if (res) {
       setLoading(false);
       setUploaded(true);
+    } else {
+      setLoading(false);
+      setWarningText("Det skjedde noe feil. Prøv igjen");
     }
   };
 
