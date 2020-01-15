@@ -204,8 +204,7 @@ const AddEvent = (props: { userData: any }) => {
     let newEvent: Event = {
       eventId: -1,
       name: infoData.name,
-      //organizer: props.userData.user_id,
-      organizer: 1,
+      organizer: props.userData.user_id,
       address: infoData.location,
       from_date: infoData.dateFrom
         .toISOString()
@@ -223,16 +222,22 @@ const AddEvent = (props: { userData: any }) => {
     };
 
     setLoading(true);
-    let res = await eventService.addEvent(newEvent);
-    console.log("res add event", res);
-
-    if (res) {
-      setLoading(false);
-      setUploaded(true);
-    } else {
-      setLoading(false);
-      setWarningText("Det skjedde noe feil. Prøv igjen");
-    }
+    eventService.addEvent(newEvent).then(res => {
+      listOfTickets.forEach(ticket => {
+        ticket["event_id"] = res.insertId;
+        ticketService.addTickets(ticket);
+      });
+      listOfArtists.forEach(artist => {
+        eventService.addUserToEvent(artist.user_id, res.insertId);
+      });
+      if (res) {
+        setLoading(false);
+        setUploaded(true);
+      } else {
+        setLoading(false);
+        setWarningText("Det skjedde noe feil. Prøv igjen");
+      }
+    });
   };
 
   const handleReset = () => {
