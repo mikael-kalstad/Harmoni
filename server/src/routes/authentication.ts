@@ -13,8 +13,6 @@ let privateKey = (publicKey = "This is my super secret key");
 
 router.use("/authorized", (req, res, next) => {
   var token = req.headers["harmoni-token"];
-  console.log("Token for authorized: ", token);
-  console.log("request for authorized: ", token);
   jwt.verify(token, publicKey, (err, decoded) => {
     if (err) {
       console.log("Token Not ok");
