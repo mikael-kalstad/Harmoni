@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaCheckCircle } from 'react-icons/fa';
 
+import { ticketService } from '../../services/TicketService';
+
 import TicketBar from './ticketBar';
 import TicketSummary from './ticketSummary';
 import Button from '../Button/button';
@@ -12,6 +14,7 @@ interface ITicket {
   event_id: number;
   price: number;
   type: string;
+  available: number;
 }
 
 const TotalSumText = styled.h2`
@@ -63,11 +66,19 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
 
   const closeDialog = () => {
     setDisplayDialog(false);
-    setQuantities(quantities.map(q => 0));
   };
 
   const buyTickets = () => {
     setDisplayDialog(true);
+    props.tickets.map((ticket, i) =>
+      quantities[i] > 0
+        ? ticketService.decreaseAvailableOfTicket(
+            ticket.ticket_id,
+            quantities[i]
+          )
+        : ''
+    );
+    setQuantities(quantities.map(q => 0));
   };
 
   const getTotalTickets = () => {
@@ -84,6 +95,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
           type={ticket.type}
           price={ticket.price}
           incrementFunction={incrementQuantityOfTicket}
+          unavailable={ticket.available <= 0}
           key={ticket.type}
         />
       ))}

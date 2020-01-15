@@ -6,8 +6,14 @@ import TicketBar from '../Components/Event/ticketBar';
 
 describe('Tests for ticketMenu', () => {
   let tickets = [
-    { ticket_id: 1, event_id: 1, price: 20, type: 'Vanlig billett' },
-    { ticket_id: 2, event_id: 1, price: 7000, type: 'Deluxe' }
+    {
+      ticket_id: 1,
+      event_id: 1,
+      price: 20,
+      type: 'Vanlig billett',
+      available: 60
+    },
+    { ticket_id: 2, event_id: 1, price: 7000, type: 'Deluxe', available: 90 }
   ];
   const wrapper = mount(<TicketMenu tickets={tickets} />);
   let ticketBars = wrapper.find(TicketBar);
@@ -53,13 +59,18 @@ describe('Tests for ticketMenu', () => {
     ).toBe(amountBeforeClick);
   });
 
-  test('Attempt to buy when to tickets are selected', () => {
+  test('Attempt to buy when no tickets are selected', () => {
     // Buybutton is disabled
-    //expect(buyButton.getDOMNode().disabled).toBeTruthy();
+    expect(
+      wrapper
+        .find('button')
+        .last()
+        .props().disabled
+    ).toBeTruthy();
 
     // Checks that no popup confirming purchase is shown
     let divsBeforeClick = wrapper.find('div').length;
-    expect(divsBeforeClick).toBe(4);
+    expect(divsBeforeClick).toBe(6);
 
     wrapper
       .find('button')
@@ -140,16 +151,25 @@ describe('Tests for ticketMenu', () => {
 
     // Checks that a popup confirming purchase is shown
     let divsBeforeClick = wrapper.find('div').length;
-    expect(divsBeforeClick).toBe(10);
+    expect(divsBeforeClick).toBe(12);
 
     wrapper
       .find('button')
       .last()
       .simulate('click');
 
-    // Checks that a popup (div) has appeared
+    // Checks that a popup (div) has appeared and ticketsummary has been removed
     let divsAfterClick = wrapper.find('div').length;
-    expect(divsAfterClick).toBeGreaterThan(divsBeforeClick);
+    expect(divsAfterClick).toBe(10);
+
+    expect(
+      wrapper
+        .find('div')
+        .last()
+        .find('button')
+        .last()
+        .text()
+    ).toBe('Tilbake');
 
     // Click "tilbake" to remove popup
     const backButton = wrapper

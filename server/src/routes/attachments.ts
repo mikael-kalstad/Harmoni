@@ -9,6 +9,19 @@ var upload = multer({ storage: storage })
 const router = express.Router();
 const dao = new attachmentDao(pool);
 
+function checkIfAccessRights(user_id: number, attachment_id: number): Promise<boolean> {
+
+  return new Promise((resolve, reject) => {
+    dao.getAttachmentsForUser(user_id, (status, data: any[]) => {
+      if (status == 500)
+        resolve(false);
+      else
+        resolve(data.some(e => { e.attachment_id == attachment_id }));
+    })
+  })
+}
+
+
 // Routes to interact with attachments.
 
 // Create attachment
@@ -29,11 +42,15 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
 
 // Add user to attachment in attachment_user table i DB
 router.post(
-  '/authorized/attachments/attachment_user/:attachmentId&:userId',
+  '/authorized/attachments/attachment_user/:attachmentId/:userId',
   async (request, response) => {
-    dao.addUserForAttachment(request.body, request.body, (status, data) => {
-      status == 500 ? response.status(500) : response.send(data);
-    });
+    console.log("HERE!")
+    checkIfAccessRights(parseInt(request.params.userId), parseInt(request.params.attachmentId)).then(valid => {
+      valid ? response.status(401) :
+        dao.addUserForAttachment(parseInt(request.params.attachmentId), parseInt(request.params.userId), (status, data) => {
+          status == 500 ? response.status(500) : response.send(data);
+        });
+    })
   }
 );
 

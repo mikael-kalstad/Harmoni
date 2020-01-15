@@ -28,6 +28,7 @@ interface ITicket {
   event_id: number;
   price: number;
   type: string;
+  available: number;
 }
 
 interface IUser {
