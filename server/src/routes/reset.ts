@@ -93,6 +93,7 @@ router.get("/reset/reset_password/:token",(req,res)=>{
 })
 
 router.post("/reset/reset_password/:token",(req,res)=>{
+    res.setHeader('Access-Control-Allow-Origin', '*');
     var token = req.params.token;
    // var token = req.headers["password-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
@@ -108,7 +109,7 @@ router.post("/reset/reset_password/:token",(req,res)=>{
                 user.hash= pass.hash;
                 user.salt= pass.salt;
                 console.log(user);
-                dao.updateUser(user.user_id, user, (status, data) => {
+                dao.resetPassword(user.user_id, user, (status, data) => {
                 })
                 res.json({message: "Endret passord"})
             })

@@ -25,7 +25,7 @@ export default class PasswordService {
         console.log(url);
         return axios.post(url, postData,{  
             headers:{
-                'Content-Type': 'application/json; charset=utf-8'
+                'Content-Type': 'application/json; charset=utf-8',
             }
         })
             .then(response =>{
