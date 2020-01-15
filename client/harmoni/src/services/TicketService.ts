@@ -11,70 +11,74 @@ interface Ticket {
 
 class TicketService extends Service {
   getAllTickets() {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "harmoni-token": localStorage.getItem("harmoni-token")
-    };
     updateToken();
-    return axios
-      .get<Ticket[]>(this.path + '/tickets/', {headers:headers})
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/tickets/',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 
   getAllTicketsByEventId(eventId: number) {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "harmoni-token": localStorage.getItem("harmoni-token")
-    };
     updateToken();
-    return axios
-      .get<Ticket[]>(this.path + '/tickets/event/' + eventId, {headers:headers})
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url:this.path + '/tickets/event/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 
   addTickets() {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "harmoni-token": localStorage.getItem("harmoni-token")
-    };
     updateToken();
-    return axios
-      .post(this.path + '/authorized/tickets/', {headers:headers})
-      .then(response => response.data);
+    return axios({
+      method: 'post',
+      url:this.path + '/authorized/tickets/',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 
   decreaseAvailableOfTicket(ticketId: number, value: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
-    return axios
-      .put(
-        this.path + '/authorized/tickets/available/' + ticketId + '&' + value,
-        { headers: headers }
-      )
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'put',
+      url: this.path + '/authorized/tickets/available/' + ticketId + '&' + value,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 
   deleteTicket(ticketId: number) {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "harmoni-token": localStorage.getItem("harmoni-token")
-    };
     updateToken();
-    return axios
-      .delete(this.path + '/authorized/tickets/' + ticketId, {headers:headers})
-      .then(response => response.data);
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/tickets/' + ticketId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   deleteTicketsByEventId(eventId: number) {
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "harmoni-token": localStorage.getItem("harmoni-token")
-    };
     updateToken();
-    return axios
-      .delete(this.path + '/authorized/tickets/event/' + eventId, {headers:headers})
-      .then(response => response.data);
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/tickets/event/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 }
 
