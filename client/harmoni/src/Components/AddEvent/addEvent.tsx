@@ -22,8 +22,8 @@ interface Event {
   name: string;
   organizer: number;
   address: string;
-  fromDate: string;
-  toDate: string;
+  from_date: string;
+  to_date: string;
   capacity: number;
   status: string;
   information: string;
@@ -204,11 +204,16 @@ const AddEvent = (props: { userData: any }) => {
     let newEvent: Event = {
       eventId: -1,
       name: infoData.name,
-      //organizer: props.userData.user_id,
-      organizer: 1,
-      address: infoData.location.toString(),
-      fromDate: infoData.dateFrom.toString(),
-      toDate: infoData.dateTo,
+      organizer: props.userData.user_id,
+      address: infoData.location,
+      from_date: infoData.dateFrom
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
+      to_date: infoData.dateTo
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
       capacity: 0,
       status: "Kommende",
       information: programText,
@@ -217,16 +222,22 @@ const AddEvent = (props: { userData: any }) => {
     };
 
     setLoading(true);
-    let res = await eventService.addEvent(newEvent);
-    console.log("res add event", res);
-
-    if (res) {
-      setLoading(false);
-      setUploaded(true);
-    } else {
-      setLoading(false);
-      setWarningText("Det skjedde noe feil. Prøv igjen");
-    }
+    eventService.addEvent(newEvent).then(res => {
+      listOfTickets.forEach(ticket => {
+        ticket["event_id"] = res.insertId;
+        ticketService.addTickets(ticket);
+      });
+      listOfArtists.forEach(artist => {
+        eventService.addUserToEvent(artist.user_id, res.insertId);
+      });
+      if (res) {
+        setLoading(false);
+        setUploaded(true);
+      } else {
+        setLoading(false);
+        setWarningText("Det skjedde noe feil. Prøv igjen");
+      }
+    });
   };
 
   const handleReset = () => {
@@ -248,23 +259,23 @@ const AddEvent = (props: { userData: any }) => {
 
       <Wrapper>
         <div>
-          {stepsCompleted() ? (
-            <div>
-              <h1>Sykt bra jobba</h1>
-              <Button onClick={handleReset}>Ny event</Button>
-            </div>
-          ) : (
-            <div>
-              {uploaded && <Success />}
-              {loading ? (
-                <LoadingWrapper>
-                  <CircularProgress size={30} />
-                  <LoadingText>Vennligst vent</LoadingText>
-                </LoadingWrapper>
-              ) : (
-                <>
-                  <div>{getStepContent(activeStep)}</div>
+          <div>
+            {uploaded && (
+              <>
+                <Success />
+                <Button onClick={handleReset}>Nytt arrangement</Button>
+              </>
+            )}
+            {loading ? (
+              <LoadingWrapper>
+                <CircularProgress size={30} />
+                <LoadingText>Vennligst vent</LoadingText>
+              </LoadingWrapper>
+            ) : (
+              <>
+                <div>{getStepContent(activeStep)}</div>
 
+                {!uploaded && (
                   <LinkWrapper>
                     <Button
                       disabled={activeStep === 0 || loading}
@@ -289,11 +300,10 @@ const AddEvent = (props: { userData: any }) => {
                       </Button>
                     )}
                   </LinkWrapper>
-                </>
-              )}
-            </div>
-          )}
-
+                )}
+              </>
+            )}
+          </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
