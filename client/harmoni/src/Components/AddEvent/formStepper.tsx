@@ -32,6 +32,7 @@ interface IProps {
   completed: Set<number>;
   skipped: Set<number>;
   handleStep: Function;
+  loading: boolean;
 }
 
 const FormStepper = (props: IProps) => {
@@ -59,7 +60,7 @@ const FormStepper = (props: IProps) => {
           stepProps.completed = false;
         }
         return (
-          <Step key={label} {...stepProps}>
+          <Step key={label} {...stepProps} disabled={props.loading}>
             <StepButton
               onClick={props.handleStep(index)}
               completed={isStepComplete(index)}
