@@ -21,8 +21,8 @@ interface Event {
   name: string;
   organizer: number;
   address: string;
-  fromDate: string;
-  toDate: string;
+  from_date: string;
+  to_date: string;
   capacity: number;
   status: string;
   information: string;
@@ -205,8 +205,14 @@ const AddEvent = (props: { userData: any }) => {
       //organizer: props.userData.user_id,
       organizer: 1,
       address: infoData.location,
-      fromDate: infoData.dateFrom,
-      toDate: infoData.dateTo,
+      from_date: infoData.dateFrom
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
+      to_date: infoData.dateTo
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
       capacity: 0,
       status: "Kommende",
       information: programText,
