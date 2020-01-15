@@ -66,11 +66,11 @@ class UserService extends Service {
   }
 
   // Fetches the hash of one user
-  getHashOfUser(userId: number) {
+  getHashOfUser(email: string) {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/users/hash/' + userId,
+      url: this.path + '/users/hash/' + email,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -157,14 +157,14 @@ class UserService extends Service {
   }
 
 
-  changePassword(userID:number,newPassword:string, oldPassword:string){
+  changePassword(email:string,newPassword:string, oldPassword:string){
     let postData={
-      userID:userID,newPassword:newPassword,oldPassword:oldPassword
+      email:email,newPassword:newPassword,oldPassword:oldPassword
     };
     updateToken();
     return axios({
       method: 'put',
-      url: this.path+'/authorized/users/change_password/'+userID,
+      url: this.path+'/authorized/users/change_password/'+email,
       data:postData,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
