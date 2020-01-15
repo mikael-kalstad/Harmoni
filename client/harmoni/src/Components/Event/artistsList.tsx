@@ -57,12 +57,16 @@ const ArtistImage = styled.img`
   object-fit: content;
   margin: 0;
   margin-right: 10px;
+  box-shadow: 0px 3px 2px 0px #bababa;
 `;
 
 const ArtistNameText = styled.label`
+  font-family: Arial;
   font-size: 20px;
   margin: 0;
   justify-self: start;
+  font-weight: bold;
+  color: #434343;
 `;
 
 const FaIconStyle = {

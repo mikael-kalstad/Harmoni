@@ -6,7 +6,7 @@ interface IBar {
   unavailable: boolean;
 }
 const Bar = styled.div<IBar>`
-  background: ${props => (props.unavailable ? '#f3f3f3' : '#ffffff')};
+  background-color: ${props => (props.unavailable ? '#f3f3f3' : '#ffffff')};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin: 18px 0;
@@ -15,7 +15,10 @@ const Bar = styled.div<IBar>`
   font-size: 4vh;
   align-items: center;
   padding: 10px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid #dfdfdf;
+  @media screen and (max-width: 650px) {
+    font-size: 4.5vw;
+  }
 `;
 
 const QuantityGrid = styled.div`
@@ -23,9 +26,12 @@ const QuantityGrid = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
 `;
 
-const PriceText = styled.p`
+interface IPriceText {
+  unavailable: boolean;
+}
+const PriceText = styled.p<IPriceText>`
   font-weight: bold;
-  color: #47bd29;
+  color: ${props => (props.unavailable ? 'grey' : '#47bd29')};
   margin: 0;
 `;
 
@@ -36,14 +42,21 @@ const NameText = styled.p`
 `;
 
 const QuantityText = styled.p`
-  margin: 0 auto;
+  margin: auto;
 `;
 
 const SoldOutText = styled.p`
   font-weight: bold;
-  color: #ff3414;
+  color: #e74c3c;
   margin: 0;
+  grid-column: 1 / span 3;
+  justify-self: center;
 `;
+
+const FaIconStyle = {
+  color: '#434343',
+  fontSize: '130%'
+};
 
 interface TicketProps {
   quantities: any;
@@ -58,12 +71,12 @@ const TicketBar = (props: TicketProps) => {
   return (
     <Bar unavailable={props.unavailable}>
       <NameText>{props.type}</NameText>
-      <PriceText>{props.price + ',-'}</PriceText>
+      <PriceText unavailable={props.unavailable}>
+        {props.price + ',-'}
+      </PriceText>
       {props.unavailable ? (
         <QuantityGrid>
-          <div></div>
           <SoldOutText>Utsolgt</SoldOutText>
-          <div></div>
         </QuantityGrid>
       ) : (
         <QuantityGrid>
@@ -73,7 +86,7 @@ const TicketBar = (props: TicketProps) => {
               props.incrementFunction(props.ticketIndex, -1);
             }}
           >
-            <FaMinus />
+            <FaMinus style={FaIconStyle} />
           </button>
 
           <QuantityText>{props.quantities[props.ticketIndex]}</QuantityText>
@@ -83,7 +96,7 @@ const TicketBar = (props: TicketProps) => {
               props.incrementFunction(props.ticketIndex, 1);
             }}
           >
-            <FaPlus />
+            <FaPlus style={FaIconStyle} />
           </button>
         </QuantityGrid>
       )}
