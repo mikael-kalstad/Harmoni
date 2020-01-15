@@ -45,7 +45,7 @@ export default class attachmentDao extends daoParentAttachment {
             data.attachment.filename, data.attachment.filesize], afterInsertEvent);
     }
     addUserForAttachment(attachmentId: number, userId: number, callback) {
-        super.query("INSERT INTO attachment_user VALUES( ?, ?)", [attachmentId, userId], callback);
+        super.query("INSERT INTO attachment_user VALUES(?, ?)", [attachmentId, userId], callback);
     }
     deleteAttachmentForUser(attachmentId: number, userId: number, callback) {
         super.query("DELETE FROM attachment_user WHERE attachment_id = ? AND user_id = ?", [attachmentId, userId], callback);
