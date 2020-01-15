@@ -1,6 +1,6 @@
 import express from 'express';
-import ticketDAO from '../dao/ticketDao'
-import { pool } from '../dao/database'
+import ticketDAO from '../dao/ticketDao';
+import { pool } from '../dao/database';
 
 const router = express.Router();
 const dao = new ticketDAO(pool);
@@ -24,6 +24,19 @@ router.post('/authorized/tickets/', async (request, response) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+
+router.put(
+  '/authorized/tickets/available/:ticketId&:value',
+  async (request, response) => {
+    dao.decreaseAvailableOfTicket(
+      parseInt(request.params.ticketId),
+      parseInt(request.params.value),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
+);
 
 //Delete ticket given id
 router.delete('/authorized/tickets/:id', async (request, response) => {

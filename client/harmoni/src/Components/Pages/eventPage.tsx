@@ -28,6 +28,7 @@ interface ITicket {
   event_id: number;
   price: number;
   type: string;
+  available: number;
 }
 
 interface IUser {
@@ -172,7 +173,7 @@ const Event = (props: any) => {
     artists != null
   ) {
     let eventImage = new Buffer(event[0].picture).toString('base64');
-    console.log(organizer[0]);
+    console.log(eventTickets);
 
     return (
       <Wrapper>
