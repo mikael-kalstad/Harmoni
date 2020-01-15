@@ -1,26 +1,26 @@
-import React, { useState, useEffect} from 'react';
-import HeaderCarousel from '../headerCarousel';
-import ArrangementGrid from '../arrangementGrid';
-import { eventService } from '../../services/EventService';
+import React, { useState, useEffect } from "react";
+import HeaderCarousel from "../headerCarousel";
+import ArrangementGrid from "../arrangementGrid";
+import { eventService } from "../../services/EventService";
 
 const FrontPage = () => {
-    const [eventData, setEventData] = useState(undefined);
+  const [eventData, setEventData] = useState(undefined);
 
-    // Get data when component mounts
-    useEffect(() => {
-      fetchData();
-    }, []);
-  
-    const fetchData = async() => {
-        setEventData(await eventService.getAllEvents());
-    }
+  // Get data when component mounts
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    return (
-        <>
-            <HeaderCarousel data={eventData} />
-            <ArrangementGrid data={eventData} title='Populære arrangementer'/>
-        </>
-    );
-}
+  const fetchData = async () => {
+    setEventData(await eventService.getAllEvents());
+  };
+
+  return (
+    <>
+      <HeaderCarousel data={eventData} />
+      <ArrangementGrid data={eventData} title="Populære arrangementer" />
+    </>
+  );
+};
 
 export default FrontPage;

@@ -101,14 +101,14 @@ router.post("/reset/reset_password/:token",(req,res)=>{
             res.status(401);
             res.json({ error: "Not authorized" });
         } else{
-            dao.getUserByEMail(decoded.email,(status,data)=>{
+            dao.getHashOfUser(decoded.email,(status,data)=>{
                 let user = data[0];
                 let pass=hash(req.body.password);
                 console.log(req.body.password);
                 user.hash= pass.hash;
                 user.salt= pass.salt;
                 console.log(user);
-                dao.resetPassword(user.user_id, user, (status, data) => {
+                dao.resetPassword(decoded.email, user, (status, data) => {
                 })
                 res.json({message: "Endret passord"})
             })

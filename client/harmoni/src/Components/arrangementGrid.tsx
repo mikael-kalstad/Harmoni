@@ -40,6 +40,17 @@ const arrangementGrid = (props: any) => {
   }
 
   if (props.data) {
+    // Sort by date
+    props.data.sort((a: any, b: any) => {
+      let fromA: any;
+      fromA = new Date(a.fromDate);
+
+      let fromB: any;
+      fromB = new Date(b.fromDate);
+
+      return fromA - fromB;
+    });
+
     cards = [];
 
     props.data.forEach((a: any) => {
