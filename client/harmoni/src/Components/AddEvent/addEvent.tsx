@@ -1,36 +1,11 @@
 import React, { useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepButton from "@material-ui/core/StepButton";
 import ArtistForm from "./EventForms/artistForm";
 import BasicInfoForm from "./EventForms/basicInfoForm";
 import styled from "styled-components";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
 import { Button } from "@material-ui/core";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%"
-    },
-    button: {
-      margin: theme.spacing(1),
-      marginLeft: 0
-    },
-    backButton: {
-      marginRight: theme.spacing(1)
-    },
-    completed: {
-      display: "inline-block"
-    },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
-    }
-  })
-);
+import FormStepper from "./formStepper";
 
 const Container = styled.div`
   margin: 100px 0;
@@ -43,54 +18,57 @@ const Wrapper = styled.div`
 
 const LinkWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   margin-top: 40px;
 `;
 
-function getSteps() {
-  return ["Info", "Artister", "Billett-typer", "Program"];
-}
-
 const AddEvent = () => {
-  const classes = useStyles({});
+  //   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
-  const steps = getSteps();
+  const steps = [
+    "Info",
+    "Artister",
+    "Billett-typer",
+    "Beskrivelse og program",
+    "Oppsummering"
+  ];
 
   // 1. Info
   const [infoSubmit, setInfoSubmit] = useState<boolean>(false);
-  const [infoCompleted, setInfoCompleted] = useState<boolean>(false);
+  const [infoData, setInfoData] = useState({
+    name: "",
+    imgData: "",
+    category: "",
+    location: "",
+    dateFrom: null,
+    dateTo: null
+  });
+
+  const isInfoDataEmpty = () => {
+    return (
+      infoData.name === "" ||
+      infoData.category === "" ||
+      infoData.location === "" ||
+      infoData.dateFrom === null ||
+      infoData.dateTo === null
+    );
+  };
 
   // 2. Artists
   const [listOfArtists, setListOfArtists] = useState([]);
 
   // 3. Tickets
-  const [ticketCategory, setTicketCategory] = useState("");
-  const [price, setPrice] = useState("");
+  const [listOfTickets, setListOfTickets] = useState([]);
 
   // 4. Program
   const [programText, setProgramText] = useState("");
 
-  const infoProps = {
-    infoSubmit,
-    setInfoCompleted
-    // name,
-    // setName,
-    // imgData,
-    // setImgData,
-    // category,
-    // setCategory,
-    // location,
-    // setLocation,
-    // fromDateTime,
-    // setFromDateTime,
-    // toDateTime,
-    // setToDateTime
-  };
-
+  const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
-  const ticketProps = { ticketCategory, setTicketCategory, price, setPrice };
+  const ticketProps = { listOfTickets, setListOfTickets };
+
   const programProps = { programText, setProgramText };
 
   function getStepContent(step: number) {
@@ -107,24 +85,7 @@ const AddEvent = () => {
   }
 
   const totalSteps = () => {
-    return getSteps().length;
-  };
-
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      throw new Error("Du kan ikke hoppe over et trinn som ikke er valgfritt");
-    }
-
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
+    return steps.length;
   };
 
   const skippedSteps = () => {
@@ -144,15 +105,20 @@ const AddEvent = () => {
   };
 
   const handleNext = () => {
+    // Info step is required
+    if (activeStep === 0) {
+      console.log(infoData);
+      setInfoSubmit(true);
+      if (isInfoDataEmpty()) return;
+    }
+
     // Set step to completed
     const newCompleted = new Set(completed);
     newCompleted.add(activeStep);
     setCompleted(newCompleted);
 
-    if (activeStep === 0) {
-      setInfoSubmit(true);
-      if (infoCompleted) nextStep();
-    }
+    // All other steps is optional
+    nextStep();
   };
 
   const nextStep = () => {
@@ -184,76 +150,42 @@ const AddEvent = () => {
     setSkipped(new Set<number>());
   };
 
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
-
-  function isStepComplete(step: number) {
-    return completed.has(step);
-  }
-
   return (
-    <Container className={classes.root}>
-      <Stepper alternativeLabel nonLinear activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const buttonProps: { optional?: React.ReactNode } = {};
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepButton
-                onClick={handleStep(index)}
-                completed={isStepComplete(index)}
-                {...buttonProps}
-              >
-                {label}
-              </StepButton>
-            </Step>
-          );
-        })}
-      </Stepper>
+    <Container>
+      <FormStepper
+        steps={steps}
+        activeStep={activeStep}
+        skipped={skipped}
+        completed={completed}
+        handleStep={handleStep}
+      />
 
       <Wrapper>
         <div>
           {stepsCompleted() ? (
             <div>
-              <h1 className={classes.instructions}>Sykt bra jobba</h1>
-              <Button onClick={handleReset}>Reset</Button>
+              <h1>Sykt bra jobba</h1>
+              <Button onClick={handleReset}>Ny event</Button>
             </div>
           ) : (
             <div>
-              <div className={classes.instructions}>
-                {getStepContent(activeStep)}
-              </div>
+              <div>{getStepContent(activeStep)}</div>
               <LinkWrapper>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
+                <Button disabled={activeStep === 0} onClick={handleBack}>
                   Tilbake
                 </Button>
-                <Button
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  Neste
-                </Button>
-                {/* {isStepOptional(activeStep) && !completed.has(activeStep) && (
+
+                {completedSteps() === totalSteps() || activeStep === 4 ? (
                   <Button
+                    disabled={completedSteps() !== totalSteps() - 1}
                     color="primary"
-                    onClick={handleSkip}
-                    className={classes.button}
+                    onClick={submit}
                   >
-                    Legg til senere
-                  </Button>
-                )} */}
-                {completedSteps() === totalSteps() && (
-                  <Button color="primary" onClick={submit}>
                     Legg til arrangement
+                  </Button>
+                ) : (
+                  <Button color="primary" onClick={handleNext}>
+                    Neste
                   </Button>
                 )}
               </LinkWrapper>

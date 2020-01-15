@@ -29,53 +29,33 @@ const inputStyle = {
   marginBottom: "25px"
 };
 
+const WarningText = styled.p`
+  margin: 30px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #d55951;
+`;
+
 interface IProps {
-  // name: string;
-  // setName: Function;
-  // imgData: string;
-  // setImgData: Function;
-  // category: string;
-  // setCategory: Function;
-  // location: string;
-  // setLocation: Function;
-  // fromDateTime: Date;
-  // setFromDateTime: Function;
-  // toDateTime: Date;
-  // setToDateTime: Function;
   infoSubmit: boolean;
-  setInfoCompleted: Function;
+  infoData: any;
+  setInfoData: Function;
+  isInfoDataEmpty: Function;
 }
 
 const BasicInfoForm = (props: IProps) => {
-  const [name, setName] = useState("");
-  const [imgData, setImgData] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [fromDateTime, setFromDateTime] = useState<Date | null>(null);
-  const [toDateTime, setToDateTime] = useState<Date | null>(null);
-
   const types_translated = ["Konsert", "Festival", "Teater", "Standup"];
   const types = ["concert", "festival", "theatre", "standup"];
 
   let menuItems: JSX.Element[] = [];
 
+  // Add menu items to dropdown list
   for (let i = 0; i < types.length; i++) {
     menuItems.push(
       <MenuItem key={i} value={types[i]}>
         {types_translated[i]}
       </MenuItem>
     );
-  }
-
-  const checkInputs = () =>
-    name !== "" ||
-    category !== "" ||
-    location !== "" ||
-    fromDateTime !== null ||
-    toDateTime !== null;
-
-  if (props.infoSubmit && checkInputs()) {
-    props.setInfoCompleted(true);
   }
 
   return (
@@ -86,32 +66,44 @@ const BasicInfoForm = (props: IProps) => {
         style={inputStyle}
         variant="outlined"
         placeholder="Navn"
-        error={props.infoSubmit && name === ""}
-        helperText={props.infoSubmit && name === "" ? "Navn er påkrevd" : ""}
-        value={name}
-        onChange={e => setName(e.target.value)}
+        error={props.infoSubmit && props.infoData.name === ""}
+        helperText={
+          props.infoSubmit && props.infoData.name === ""
+            ? "Navn er påkrevd"
+            : ""
+        }
+        value={props.infoData.name}
+        onChange={e =>
+          props.setInfoData({ ...props.infoData, name: e.target.value })
+        }
       />
 
       <UnderTitle>Bilde</UnderTitle>
-      <ImageUpload setImgData={setImgData} />
+      <ImageUpload
+        setImgData={data =>
+          props.setInfoData({ ...props.infoData, imgData: data })
+        }
+      />
 
       <UnderTitle>Kategori*</UnderTitle>
       <FormControl
         variant="outlined"
         style={{ width: "160px" }}
-        error={props.infoSubmit && category === ""}
+        error={props.infoSubmit && props.infoData.category === ""}
       >
         <InputLabel id="select-filled-label">Kategori*</InputLabel>
         <Select
           labelId="select-outlined-label"
-          value={category}
+          value={props.infoData.category}
           labelWidth={300}
           style={inputStyle}
-          onChange={(e: any) => setCategory(e.target.value)}
+          onChange={(e: any) => {
+            props.setInfoData({ ...props.infoData, category: e.target.value });
+          }}
         >
           {menuItems}
         </Select>
-        {props.infoSubmit && category === "" && (
+        {props.infoSubmit && props.infoData.category === "" && (
           <FormHelperText>Kategori er påkrevd</FormHelperText>
         )}
       </FormControl>
@@ -121,12 +113,16 @@ const BasicInfoForm = (props: IProps) => {
         style={inputStyle}
         variant="outlined"
         placeholder="Lokasjon"
-        value={location}
-        error={props.infoSubmit && location === ""}
+        value={props.infoData.location}
+        error={props.infoSubmit && props.infoData.location === ""}
         helperText={
-          props.infoSubmit && location === "" ? "Lokasjon er påkrevd" : ""
+          props.infoSubmit && props.infoData.location === ""
+            ? "Lokasjon er påkrevd"
+            : ""
         }
-        onChange={e => setLocation(e.target.value)}
+        onChange={e => {
+          props.setInfoData({ ...props.infoData, location: e.target.value });
+        }}
       />
 
       <UnderTitle>Dato og tid*</UnderTitle>
@@ -135,18 +131,44 @@ const BasicInfoForm = (props: IProps) => {
         minDate={new Date()}
         disablePast={true}
         style={inputStyle}
-        selectedDate={fromDateTime}
-        setSelectedDate={setFromDateTime}
-        error={true}
+        selectedDate={props.infoData.dateFrom}
+        setSelectedDate={date =>
+          props.setInfoData({
+            ...props.infoData,
+            dateFrom: date
+          })
+        }
+        error={props.infoSubmit && props.infoData.dateFrom === null}
+        helperText={
+          props.infoSubmit && props.infoData.dateFrom === null
+            ? "Dato og tid fra er påkrevd"
+            : ""
+        }
       />
       <MiniTitle>Til</MiniTitle>
       <DateTimePicker
         fullWidth
         style={inputStyle}
-        selectedDate={toDateTime}
-        setSelectedDate={setToDateTime}
+        selectedDate={props.infoData.dateTo}
+        setSelectedDate={date =>
+          props.setInfoData({
+            ...props.infoData,
+            dateTo: date
+          })
+        }
+        error={props.infoSubmit && props.infoData.dateTo === null}
+        helperText={
+          props.infoSubmit && props.infoData.dateTo === null
+            ? "Dato og tid til er påkrevd"
+            : ""
+        }
       />
-      {props.infoSubmit && <p>Fyll inn alle inputs!</p>}
+      {props.infoSubmit && props.isInfoDataEmpty() && (
+        <WarningText>
+          Noen felter som er påkrevd er tomme, vennligst fyll disse ut før du
+          fortsetter.
+        </WarningText>
+      )}
     </>
   );
 };

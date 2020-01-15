@@ -48,7 +48,6 @@ const ImagePreview = styled.img`
 
 const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
   const [imgLink, setImgLink] = useState();
-  // const [file, setFile] = useState();
 
   // While image uploads locally
   const [loading, setLoading] = useState();
@@ -65,9 +64,6 @@ const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
     };
     reader.readAsDataURL(e.target.files[0]);
   };
-
-  // console.log("File", file);
-  console.log("imgLink", imgLink);
 
   return (
     <>

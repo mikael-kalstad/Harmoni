@@ -41,6 +41,13 @@ const Title = styled.h2`
   margin-bottom: 10px;
 `;
 
+const Text = styled.p`
+  margin-top: 45px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #777777;
+`;
+
 const ArtistForm = (props: any) => {
   const [userData, setUserData] = useState<IUser[]>();
 
@@ -66,17 +73,21 @@ const ArtistForm = (props: any) => {
       );
     }
   };
-  console.log("Artist list user data", userData);
+
   if (userData && userData != null) {
     return (
       <>
         <Title>Artister</Title>
+        <Text>
+          Du kan legge til artister senere ved å redigere arrangementet i min
+          side.
+        </Text>
         <UnderTitle>Legg til artister:</UnderTitle>
         <Typeahead
           labelKey={artistName => `${artistName.user.name}`}
           options={userData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
-          onPaginate={() => console.log("clicked on name!")}
+          // onPaginate={() => console.log("clicked on name!")}
           placeholder="Søk etter artister..."
           selected={props.userData}
         />
