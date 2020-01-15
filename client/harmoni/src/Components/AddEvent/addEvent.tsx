@@ -259,9 +259,8 @@ const AddEvent = (props: { userData: any }) => {
             </div>
           ) : (
             <div>
-              {uploaded ? (
-                <Success />
-              ) : loading ? (
+              {uploaded && <Success />}
+              {loading ? (
                 <LoadingWrapper>
                   <CircularProgress size={30} />
                   <LoadingText>Vennligst vent</LoadingText>
