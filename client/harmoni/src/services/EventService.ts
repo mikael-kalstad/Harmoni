@@ -15,68 +15,108 @@ interface Event {
 
 class EventService extends Service{
   getEventById(eventId: number) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
      return axios
-      .get(this.path + '/events/' + eventId)
+      .get(this.path + '/events/' + eventId, {headers:headers})
       .then(response => response.data);
   }
 
   getAllEvents() {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
-    return axios.get(this.path + '/events/')
+    return axios.get(this.path + '/events/', {headers:headers})
     .then(response => response.data);
   }
 
   getEventsByLocation(location: string) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .get(this.path + '/events/address/' + location)
+      .get(this.path + '/events/address/' + location, {headers:headers})
       .then(response => response.data);
   }
 
   getEventsByStatus(status: string) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .get(this.path + '/events/status/' + status)
+      .get(this.path + '/events/status/' + status, {headers:headers})
       .then(respnse => respnse.data);
   }
   // Gets events to an organizer by id
   getEventsByOrganizer(userId: number) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .get(this.path + '/events/organizer/' + userId)
+      .get(this.path + '/events/organizer/' + userId, {headers:headers})
       .then(response => response.data);
   }
 
   addEvent(event: Event) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .post(this.path + '/authorized/events/', event)
+      .post(this.path + '/authorized/events/', event, {headers:headers})
       .then(response => response.data);
   }
   updateEvent(event: Event) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .put(this.path + '/authorized/events/' + event.eventId, event)
+      .put(this.path + '/authorized/events/' + event.eventId, event, {headers:headers})
       .then(response => response.data);
   }
   getEventsByUser(userId: number) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .get(this.path + '/events/user/' + userId)
+      .get(this.path + '/events/user/' + userId, {headers:headers})
       .then(response => response.data);
   }
   getEventsByCategory(category: string) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-        .get(this.path + '/events/category/' + category)
+        .get(this.path + '/events/category/' + category, {headers:headers})
         .then(response => response.data);
   }
   // Gets events by eventId
   deleteEventById(eventId: number) {
+    const headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "harmoni-token": localStorage.getItem("harmoni-token")
+    };
     updateToken();
     return axios
-      .delete(this.path + '/authorized/events/' + eventId)
+      .delete(this.path + '/authorized/events/' + eventId, {headers:headers})
       .then(response => response.data);
   }
 }

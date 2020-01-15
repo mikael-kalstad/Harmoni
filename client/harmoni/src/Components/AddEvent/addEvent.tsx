@@ -60,15 +60,15 @@ const AddEvent = () => {
   const [listOfArtists, setListOfArtists] = useState([]);
 
   // 3. Tickets
-  const [ticketSubmit, setTicketSubmit] = useState<boolean>(false);
-  const [ticketCompleted, setTicketCompleted] = useState<boolean>(false);
+  const [listOfTickets, setListOfTickets] = useState([]);
 
   // 4. Program
   const [programText, setProgramText] = useState("");
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
-  const ticketProps = { ticketSubmit, setTicketCompleted };
+  const ticketProps = { listOfTickets, setListOfTickets };
+
   const programProps = { programText, setProgramText };
 
   function getStepContent(step: number) {
@@ -110,22 +110,16 @@ const AddEvent = () => {
     newCompleted.add(activeStep);
     setCompleted(newCompleted);
 
-    // Info step
+    // Info step is required
     if (activeStep === 0) {
       console.log(infoData);
       setInfoSubmit(true);
       if (!isInfoDataEmpty()) nextStep();
     }
 
-    // Artists step (OPTIONAL)
-    else if (activeStep === 1) {
+    // All other steps is optional
+    else {
       nextStep();
-    }
-
-    // Ticket step
-    else if (activeStep === 2) {
-      setTicketSubmit(true);
-      if (ticketCompleted) nextStep();
     }
   };
 
