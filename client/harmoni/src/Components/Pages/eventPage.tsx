@@ -134,30 +134,17 @@ const ContentText = styled.p`
   color: #535353;
   white-space: pre-wrap;
 `;
-const Event = (props: {
-  preview?: boolean;
-  eventData?: any;
-  artistsData?: any;
-  ticketsData?: any;
-
-  match: { params: { id: number } };
-}) => {
+const Event = (props: { match: { params: { id: number } } }) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
 
   useEffect(() => {
-    if (!props.preview) {
-      fetchEvent();
-      fetchTickets();
-      fetchArtists();
-      fetchOrganizer();
-    } else {
-      setEvent(props.eventData);
-      setArtists(props.artistsData);
-      setEventTickets(props.ticketsData);
-    }
+    fetchEvent();
+    fetchTickets();
+    fetchArtists();
+    fetchOrganizer();
   }, []);
 
   const fetchEvent = async () => {
