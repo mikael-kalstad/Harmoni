@@ -93,6 +93,16 @@ export default class userDao extends daoParentUser {
                 [data.name, data.email, data.mobile, data.type, userId], callback);
         });
     }
+    resetPassword(userId: number, data: user, callback) {
+        let user;
+        this.getUser(userId, (status, olddata) => {
+            user=olddata[0];
+            let newHash = data.hash;
+            let newSalt = data.salt;
+            super.query("UPDATE user SET  hash = ?, salt = ? WHERE user_id = ?",
+                    [newHash, newSalt, userId], callback);
+        })
+    }
     changePassword(userId: number, data, callback) {
         let user;
         this.getUser(userId, (status, olddata) => {

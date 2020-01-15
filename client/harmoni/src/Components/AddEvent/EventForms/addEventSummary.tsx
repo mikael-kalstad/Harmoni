@@ -101,7 +101,7 @@ const AddEventSummary = (props: IEvent) => {
             <ImageGrid>
                 <EventImage
                     src={props.img}
-                    alt='hei'
+                    alt='placeholder?'
                 />
                 <DoubleColumnGrid>
                     <AddressText>{props.location}</AddressText>
@@ -126,7 +126,6 @@ const AddEventSummary = (props: IEvent) => {
                             <p>Du har ikke lagt til noen artister</p>
                         )
                     }
-                    <ArtistsList artists={props.artists}/>
                 </ArtistsGrid>
             </ArtistsAndMapGrid>
         </Wrapper>

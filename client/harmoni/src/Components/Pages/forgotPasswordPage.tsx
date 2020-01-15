@@ -57,6 +57,9 @@ const ForgotPassword = (props: any) => {
         let res = await userService.getUserByEMail(email);
         console.log("res in forgotPassword", res);
 
+        if(!res)
+            setEmailWarning("Email er ikke registrert")
+
     };
     // Check if enter key is clicked
     const checkForEnterKey = (e: { key: string } | undefined) => {
