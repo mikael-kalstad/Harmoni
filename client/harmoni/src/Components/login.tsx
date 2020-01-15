@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect, Link, BrowserRouter } from "react-router-dom";
 import Button from "./Button/button";
 import { loginService } from "../services/loginService";
 import TextField from "@material-ui/core/TextField";
@@ -202,6 +202,7 @@ const Login = (props: any) => {
           </BtnWrapper>
 
           <LinkWrapper>
+          <BrowserRouter>
             <StyledLink
               style={{ justifySelf: "start" }}
               to="/glemt-passord"
@@ -217,6 +218,7 @@ const Login = (props: any) => {
             >
               Registrer deg
             </StyledLink>
+            </BrowserRouter>
           </LinkWrapper>
         </Wrapper>
       </Container>
