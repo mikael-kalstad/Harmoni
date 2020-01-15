@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service from './Service';
+import Service, {updateToken} from './Service';
 
 interface User {
   user_id: number;
@@ -15,6 +15,7 @@ interface User {
 class UserService extends Service {
   // Fetches all users
   getAllUsers() {
+    updateToken();
     return axios
       .get<User[]>(this.path + '/users/')
       .then(response => response.data);
@@ -22,6 +23,7 @@ class UserService extends Service {
 
   // Fetches one user by its id
   getUserById(userId: number) {
+    updateToken();
     return axios
       .get<User>(this.path + '/users/' + userId)
       .then(response => response.data);
@@ -29,6 +31,7 @@ class UserService extends Service {
 
   // Fetches one user by its email
   getUserByEMail(email: string) {
+    updateToken();
     return axios
       .get<User>(this.path + '/users/email/' + email)
       .then(response => response.data);
@@ -36,6 +39,7 @@ class UserService extends Service {
 
   // Fetches all users of one type
   getUsersOfType(type: string) {
+    updateToken();
     return axios
       .get<User[]>(this.path + '/authorized/users/type/' + type)
       .then(response => response.data);
@@ -43,6 +47,7 @@ class UserService extends Service {
 
   // Fetches the hash of one user
   getHashOfUser(userId: number) {
+    updateToken();
     return axios
       .get(this.path + '/users/hash/' + userId)
       .then(response => response.data);
@@ -50,18 +55,21 @@ class UserService extends Service {
 
   // Fetches the organizer of an event by its id
   getOrganizerForEvent(eventId: number) {
+    updateToken();
     return axios
       .get(this.path + '/users/organizer/' + eventId)
       .then(response => response.data);
   }
   //Fetches all artists for an event
   getArtistsForEvent(eventId: number) {
+    updateToken();
     return axios
       .get(this.path + '/users/artists/' + eventId)
       .then(response => response.data);
   }
   //Fetches all volunteers for an event
   getVolunteersForEvent(eventId: number) {
+    updateToken();
     return axios
       .get(this.path + '/authorized/users/volunteers' + eventId)
       .then(response => response.data);
@@ -69,6 +77,7 @@ class UserService extends Service {
 
   // Adds a user
   addUser(user: User) {
+    updateToken();
     return axios
       .post(this.path + '/users/', user, {
         headers: { 'content-type': 'multipart/form-data' }
@@ -78,12 +87,14 @@ class UserService extends Service {
 
   // Updates a user
   updateUser(user: User) {
+    updateToken();
     return axios
       .put(this.path + '/authorized/users/' + user.user_id, user)
       .then(response => response.data);
   }
 
   changePicture(userID:number,picture){
+    updateToken();
     return axios
         .put(this.path + '/authorized/users/change_picture/' + userID, picture)
         .then(response => response.data);
@@ -91,6 +102,7 @@ class UserService extends Service {
 
 
   changePassword(userID:number,newPassword:string, oldPassword:string){
+    updateToken();
     let postData={
       userID:userID,newPassword:newPassword,oldPassword:oldPassword
     };
@@ -101,6 +113,7 @@ class UserService extends Service {
 
   // Deletes a user
   deleteUser(userId: number) {
+    updateToken();
     return axios
       .delete(this.path + '/authorized/users/' + userId)
       .then(response => response.data);

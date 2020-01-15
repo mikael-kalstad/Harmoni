@@ -6,8 +6,14 @@ import TicketBar from '../Components/Event/ticketBar';
 
 describe('Tests for ticketMenu', () => {
   let tickets = [
-    { ticket_id: 1, event_id: 1, price: 20, type: 'Vanlig billett' },
-    { ticket_id: 2, event_id: 1, price: 7000, type: 'Deluxe' }
+    {
+      ticket_id: 1,
+      event_id: 1,
+      price: 20,
+      type: 'Vanlig billett',
+      available: 60
+    },
+    { ticket_id: 2, event_id: 1, price: 7000, type: 'Deluxe', available: 90 }
   ];
   const wrapper = mount(<TicketMenu tickets={tickets} />);
   let ticketBars = wrapper.find(TicketBar);
