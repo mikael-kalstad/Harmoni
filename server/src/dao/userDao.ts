@@ -34,13 +34,12 @@ export default class userDao extends daoParentUser {
 
     // Gets a user by its id
     getUser(userId: number, callback) {
-        super.query("SELECT * FROM user WHERE user_id = ?", [userId], callback);
+        super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE user_id = ?", [userId], callback);
     }
-
 
     // Gets a user by its mail
     getUserByEMail(email: string, callback) {
-        super.query("SELECT * FROM user WHERE email = ?", [email], callback);
+        super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE email = ?", [email], callback);
     }
 
     // Gets all users of a type
@@ -49,8 +48,8 @@ export default class userDao extends daoParentUser {
     }
 
     // Gets the hash of a user
-    getHashOfUser(userId: number, callback) {
-        super.query("SELECT hash, salt FROM user WHERE user_id = ?", [userId], callback)
+    getHashOfUser(email: string, callback) {
+        super.query("SELECT hash, salt FROM user WHERE email = ?", [email], callback)
     }
 
     // Gets the organizer for an event
@@ -93,14 +92,14 @@ export default class userDao extends daoParentUser {
                 [data.name, data.email, data.mobile, data.type, userId], callback);
         });
     }
-    resetPassword(userId: number, data: user, callback) {
+    resetPassword(email: string, data: user, callback) {
         let user;
-        this.getUser(userId, (status, olddata) => {
+        this.getUserByEMail(email, (status, olddata) => {
             user=olddata[0];
             let newHash = data.hash;
             let newSalt = data.salt;
-            super.query("UPDATE user SET  hash = ?, salt = ? WHERE user_id = ?",
-                    [newHash, newSalt, userId], callback);
+            super.query("UPDATE user SET  hash = ?, salt = ? WHERE email = ?",
+                    [newHash, newSalt, email], callback);
         })
     }
     changePassword(userId: number, data, callback) {

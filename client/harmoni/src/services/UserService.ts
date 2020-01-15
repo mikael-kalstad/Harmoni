@@ -66,11 +66,11 @@ class UserService extends Service {
   }
 
   // Fetches the hash of one user
-  getHashOfUser(userId: number) {
+  getHashOfUser(email: string) {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/users/hash/' + userId,
+      url: this.path + '/users/hash/' + email,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")

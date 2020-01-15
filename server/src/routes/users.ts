@@ -36,8 +36,8 @@ router.get("/authorized/users/type/:type", async (request, response) => {
 });
 
 // Get singular hash given id
-router.get("/users/hash/:id", async (request, response) => {
-  dao.getHashOfUser(parseInt(request.params.id), (status, data) => {
+router.get("/users/hash/:email", async (request, response) => {
+  dao.getHashOfUser(request.params.email, (status, data) => {
     status == 500 ? response.status(500) : response.send(sanitizeUser(data));
   });
 });
