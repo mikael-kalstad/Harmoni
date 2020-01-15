@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   grid-template-columns: 1fr;
   @media screen and (max-width: 800px) {
     justify-content: center;
-    margin: auto;
+    margin: auto 30px;
   }
 `;
 
@@ -134,8 +134,7 @@ const ContentText = styled.p`
   color: #535353;
   white-space: pre-wrap;
 `;
-
-const Event = (props: any) => {
+const Event = (props: { match: { params: { id: number } } }) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
@@ -172,14 +171,11 @@ const Event = (props: any) => {
     organizer != null &&
     artists != null
   ) {
-    let eventImage = new Buffer(event[0].picture).toString('base64');
-    console.log(eventTickets);
-
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={'data:image/png;base64,' + eventImage}
+            src={new Buffer(event[0].picture).toString('ascii')}
             alt={event[0].name}
           ></EventImage>
           <DoubleColumnGrid>
@@ -190,7 +186,11 @@ const Event = (props: any) => {
         <InfoGrid>
           <Title>{event[0].name}</Title>
           <OrganizerText>Arrangør: {organizer[0].name}</OrganizerText>
-          <ContentText>{event[0].information}</ContentText>
+          <ContentText>
+            {event[0].information === ''
+              ? 'Arrangementet har ingen beskrivelse eller program'
+              : event[0].information}
+          </ContentText>
         </InfoGrid>
         <ArtistsAndMapGrid>
           <ArtistsGrid>
@@ -198,7 +198,6 @@ const Event = (props: any) => {
           </ArtistsGrid>
           <MapGrid>Kartet går her</MapGrid>
         </ArtistsAndMapGrid>
-
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
         </TicketsGrid>

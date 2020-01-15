@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
 import { FaCheckCircle } from 'react-icons/fa';
 
 import { ticketService } from '../../services/TicketService';
@@ -29,6 +30,11 @@ const TotalSumValueText = styled.label`
 const BuyButtonWrapper = styled.div`
   width: 35%;
   margin: 20px auto;
+`;
+
+const NoTicketsAvailableText = styled.p`
+  margin: 20px auto;
+  font-size: 20px;
 `;
 
 let checkCircleStyle = {
@@ -82,54 +88,64 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
   };
 
   const getTotalTickets = () => {
-    return quantities.reduce((sum, val) => sum + val);
+    return quantities.length > 0
+      ? quantities.reduce((sum, val) => sum + val)
+      : 0;
   };
 
   return (
     <div>
       <h3>Billetter</h3>
-      {props.tickets.map((ticket, index) => (
-        <TicketBar
-          quantities={quantities}
-          ticketIndex={index}
-          type={ticket.type}
-          price={ticket.price}
-          incrementFunction={incrementQuantityOfTicket}
-          unavailable={ticket.available <= 0}
-          key={ticket.type}
-        />
-      ))}
-      {getTotalTickets() > 0 ? (
+      {props.tickets.length > 0 ? (
         <>
-          <TicketSummary
-            tickets={props.tickets}
-            quantities={quantities}
-            totalPrice={totalPrice}
-          />
-          <TotalSumText>
-            Total pris:{' '}
-            <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
-          </TotalSumText>
+          {props.tickets.map((ticket, index) => (
+            <TicketBar
+              quantities={quantities}
+              ticketIndex={index}
+              type={ticket.type}
+              price={ticket.price}
+              incrementFunction={incrementQuantityOfTicket}
+              unavailable={ticket.available <= 0}
+              key={ticket.type}
+            />
+          ))}
+          {getTotalTickets() > 0 ? (
+            <>
+              <TicketSummary
+                tickets={props.tickets}
+                quantities={quantities}
+                totalPrice={totalPrice}
+              />
+              <TotalSumText>
+                Total pris:{' '}
+                <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
+              </TotalSumText>
+            </>
+          ) : (
+            <></>
+          )}
+
+          <BuyButtonWrapper>
+            <Button
+              backgroundColor={getTotalTickets() > 0 ? '#47BD29' : 'grey'}
+              dropShadow={true}
+              onClick={buyTickets}
+              disabled={!(getTotalTickets() > 0)}
+            >
+              Kjøp
+            </Button>
+          </BuyButtonWrapper>
+          {displayDialog && (
+            <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
+              <FaCheckCircle style={checkCircleStyle} />
+              <Button onClick={closeDialog}>Tilbake</Button>
+            </InfoDialog>
+          )}
         </>
       ) : (
-        <></>
-      )}
-
-      <BuyButtonWrapper>
-        <Button
-          backgroundColor={getTotalTickets() > 0 ? '#47BD29' : 'grey'}
-          dropShadow={true}
-          onClick={buyTickets}
-          disabled={!(getTotalTickets() > 0)}
-        >
-          Kjøp
-        </Button>
-      </BuyButtonWrapper>
-      {displayDialog && (
-        <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
-          <FaCheckCircle style={checkCircleStyle} />
-          <Button onClick={closeDialog}>Tilbake</Button>
-        </InfoDialog>
+        <NoTicketsAvailableText>
+          Ingen billetter er tilgjengelig
+        </NoTicketsAvailableText>
       )}
     </div>
   );

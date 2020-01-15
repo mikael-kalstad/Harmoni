@@ -34,13 +34,12 @@ export default class userDao extends daoParentUser {
 
     // Gets a user by its id
     getUser(userId: number, callback) {
-        super.query("SELECT * FROM user WHERE user_id = ?", [userId], callback);
+        super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE user_id = ?", [userId], callback);
     }
-
 
     // Gets a user by its mail
     getUserByEMail(email: string, callback) {
-        super.query("SELECT * FROM user WHERE email = ?", [email], callback);
+        super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE email = ?", [email], callback);
     }
 
     // Gets all users of a type
@@ -49,8 +48,8 @@ export default class userDao extends daoParentUser {
     }
 
     // Gets the hash of a user
-    getHashOfUser(userId: number, callback) {
-        super.query("SELECT hash, salt FROM user WHERE user_id = ?", [userId], callback)
+    getHashOfUser(email: string, callback) {
+        super.query("SELECT hash, salt FROM user WHERE email = ?", [email], callback)
     }
 
     // Gets the organizer for an event
@@ -79,23 +78,33 @@ export default class userDao extends daoParentUser {
         let user;
         this.getUser(userId, (status, olddata) => {
             user = olddata[0];
-            if (typeof data.name == "undefined") {
+            if (typeof data.name == undefined) {
                 data.name = user.name;
             }
-            if (typeof data.email == "undefined") {
+            if (typeof data.email == undefined) {
                 data.email = user.email;
-            } if (typeof data.type == "undefined") {
+            } if (typeof data.type == undefined) {
                 data.type = user.type;
-            } if (typeof data.mobile == "undefined") {
+            } if (typeof data.mobile == undefined) {
                 data.mobile = user.mobile;
             }
             super.query("UPDATE user SET name = ?, email = ?, mobile = ?, type = ? WHERE user_id = ?",
                 [data.name, data.email, data.mobile, data.type, userId], callback);
         });
     }
-    changePassword(userId: number, data, callback) {
+    resetPassword(email: string, data: user, callback) {
         let user;
-        this.getUser(userId, (status, olddata) => {
+        this.getUserByEMail(email, (status, olddata) => {
+            user=olddata[0];
+            let newHash = data.hash;
+            let newSalt = data.salt;
+            super.query("UPDATE user SET  hash = ?, salt = ? WHERE email = ?",
+                    [newHash, newSalt, email], callback);
+        })
+    }
+    changePassword(email: string, data, callback) {
+        let user;
+        this.getHashOfUser(email, (status, olddata) => {
             user = olddata[0];
             let oldHash = user.hash;
             let oldSalt = user.salt;
@@ -104,8 +113,8 @@ export default class userDao extends daoParentUser {
                 let newData = hash(data.newPassword);
                 let newHash = newData.hash;
                 let newSalt = newData.salt;
-                super.query("UPDATE user SET  hash = ?, salt = ? WHERE user_id = ?",
-                    [newHash, newSalt, userId], callback);
+                super.query("UPDATE user SET  hash = ?, salt = ? WHERE email = ?",
+                    [newHash, newSalt, email], callback);
             }
             else {
                 callback.sendStatus(403); //Forbidden
@@ -121,3 +130,4 @@ export default class userDao extends daoParentUser {
         super.query("DELETE FROM user WHERE user_id=?", [userId], callback)
     }
 };
+

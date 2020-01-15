@@ -1,0 +1,78 @@
+import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepButton from "@material-ui/core/StepButton";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: "100%"
+    },
+    button: {
+      margin: theme.spacing(1),
+      marginLeft: 0
+    },
+    backButton: {
+      marginRight: theme.spacing(1)
+    },
+    completed: {
+      display: "inline-block"
+    },
+    instructions: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    }
+  })
+);
+
+interface IProps {
+  steps: Array<string>;
+  activeStep: number;
+  completed: Set<number>;
+  skipped: Set<number>;
+  handleStep: Function;
+  loading: boolean;
+}
+
+const FormStepper = (props: IProps) => {
+  const classes = useStyles({});
+
+  const isStepSkipped = (step: number) => {
+    return props.skipped.has(step);
+  };
+
+  const isStepComplete = (step: number) => {
+    return props.completed.has(step);
+  };
+
+  return (
+    <Stepper
+      className={classes.root}
+      alternativeLabel
+      nonLinear
+      activeStep={props.activeStep}
+    >
+      {props.steps.map((label, index) => {
+        const stepProps: { completed?: boolean } = {};
+        const buttonProps: { optional?: React.ReactNode } = {};
+        if (isStepSkipped(index)) {
+          stepProps.completed = false;
+        }
+        return (
+          <Step key={label} {...stepProps} disabled={props.loading}>
+            <StepButton
+              onClick={props.handleStep(index)}
+              completed={isStepComplete(index)}
+              {...buttonProps}
+            >
+              {label}
+            </StepButton>
+          </Step>
+        );
+      })}
+    </Stepper>
+  );
+};
+
+export default FormStepper;

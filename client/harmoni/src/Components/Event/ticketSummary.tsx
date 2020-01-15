@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface ITicket {
@@ -47,7 +47,7 @@ const TicketSummary = (props: TicketSummaryProps) => {
       <SummaryGrid>
         {props.tickets.map((ticket: ITicket, i: number) =>
           props.quantities[i] > 0 ? (
-            <GridRow>
+            <GridRow key={ticket.type}>
               <TicketNameText>{ticket.type}</TicketNameText>
               <TicketQuantityText>x{props.quantities[i]}</TicketQuantityText>
               <TicketPriceText>

@@ -168,7 +168,7 @@ const Login = (props: any) => {
           <TextField
             style={inputStyle}
             variant="outlined"
-            label="Email eller tlf*"
+            label="Email*"
             error={(submit && emailInput === "") || warningText !== ""}
             helperText={submit && emailInput === "" ? "Email er påkrevd" : ""}
             onChange={e => setEmailInput(e.target.value)}
@@ -202,22 +202,22 @@ const Login = (props: any) => {
           </BtnWrapper>
 
           <LinkWrapper>
-          <BrowserRouter>
-            <StyledLink
-              style={{ justifySelf: "start" }}
-              to="/glemt-passord"
-              onClick={() => props.toggle()}
-            >
-              Glemt passsord?
-            </StyledLink>
+            <BrowserRouter>
+              <StyledLink
+                style={{ justifySelf: "start" }}
+                to="/glemt-passord"
+                onClick={() => props.toggle()}
+              >
+                Glemt passord?
+              </StyledLink>
 
-            <StyledLink
-              style={{ justifySelf: "end" }}
-              to="/registrer"
-              onClick={() => props.toggle()}
-            >
-              Registrer deg
-            </StyledLink>
+              <StyledLink
+                style={{ justifySelf: "end" }}
+                to="/registrer"
+                onClick={() => props.toggle()}
+              >
+                Registrer deg
+              </StyledLink>
             </BrowserRouter>
           </LinkWrapper>
         </Wrapper>

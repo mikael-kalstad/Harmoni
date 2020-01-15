@@ -95,7 +95,7 @@ test("Get users by type, volunteer", done => {
 })
 
 test("Get hash of user", done => {
-    dao.getHashOfUser(1, (status, data) => {
+    dao.getHashOfUser("test@testesen.com", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
         expect(data[0].hash).toBe("dfghjklfghj");
