@@ -200,7 +200,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
           </ArtistsGrid>
           <MapGrid>Kartet går her</MapGrid>
         </ArtistsAndMapGrid>
-
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
         </TicketsGrid>
