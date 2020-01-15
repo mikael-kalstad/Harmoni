@@ -2,9 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import ArtistsList from "../../Event/artistsList";
 
-const Wrapper = styled.div`
-  
-`;
+const Wrapper = styled.div``;
 
 const ImageGrid = styled.div`
   justify-items: center;
@@ -85,52 +83,46 @@ const ContentText = styled.p`
 `;
 
 interface IEvent {
-    img : any;
-    location : string;
-    fromDate : string;
-    toDate : string;
-    name : string;
-    program : string;
-    artists : [];
+  name: string;
+  img: any;
+  location: string;
+  fromDate: string;
+  toDate: string;
+  program: string;
+  artists: any[];
 }
 
 const AddEventSummary = (props: IEvent) => {
-
-    return (
-        <Wrapper>
-            <ImageGrid>
-                <EventImage
-                    src={props.img}
-                    alt='hei'
-                />
-                <DoubleColumnGrid>
-                    <AddressText>{props.location}</AddressText>
-                    <DateText>{props.fromDate}</DateText>
-                </DoubleColumnGrid>
-            </ImageGrid>
-            <InfoGrid>
-                <Title>{props.name}</Title>
-                <OrganizerText>Arrangør: DU!</OrganizerText>
-                {props.program ?
-                    (<ContentText>{props.program}</ContentText>
-                    ) : (
-                        <ContentText>'Du har ikke lagt inn et program'</ContentText>
-                    )
-                }
-            </InfoGrid>
-            <ArtistsAndMapGrid>
-                <ArtistsGrid>
-                    {props.artists ?
-                        (<ArtistsList artists={props.artists}/>
-                        ) : (
-                            <p>Du har ikke lagt til noen artister</p>
-                        )
-                    }
-                    <ArtistsList artists={props.artists}/>
-                </ArtistsGrid>
-            </ArtistsAndMapGrid>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <ImageGrid>
+        <EventImage src={props.img} alt="hei" />
+        <DoubleColumnGrid>
+          <AddressText>{props.location}</AddressText>
+          <DateText>{props.fromDate}</DateText>
+        </DoubleColumnGrid>
+      </ImageGrid>
+      <InfoGrid>
+        <Title>{props.name}</Title>
+        <OrganizerText>Arrangør: DU!</OrganizerText>
+        {props.program ? (
+          <ContentText>{props.program}</ContentText>
+        ) : (
+          <ContentText>'Du har ikke lagt inn et program'</ContentText>
+        )}
+      </InfoGrid>
+      <ArtistsAndMapGrid>
+        <ArtistsGrid>
+          {props.artists ? (
+            <ArtistsList artists={props.artists} />
+          ) : (
+            <p>Du har ikke lagt til noen artister</p>
+          )}
+          <ArtistsList artists={props.artists} />
+        </ArtistsGrid>
+      </ArtistsAndMapGrid>
+    </Wrapper>
+  );
 };
 
 export default AddEventSummary;

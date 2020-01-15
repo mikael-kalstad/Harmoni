@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import ArtistForm from "./EventForms/artistForm";
-import BasicInfoForm from "./EventForms/basicInfoForm";
 import styled from "styled-components";
-import TicketForm from "./EventForms/ticketForm";
-import ProgramForm from "./EventForms/programForm";
 import { Button } from "@material-ui/core";
 import FormStepper from "./formStepper";
+
+// Form components
+import ArtistForm from "./EventForms/artistForm";
+import BasicInfoForm from "./EventForms/basicInfoForm";
+import TicketForm from "./EventForms/ticketForm";
+import ProgramForm from "./EventForms/programForm";
+import EventPage from "../Pages/eventPage";
 
 const Container = styled.div`
   margin: 100px 0;
@@ -68,7 +71,6 @@ const AddEvent = () => {
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
   const ticketProps = { listOfTickets, setListOfTickets };
-
   const programProps = { programText, setProgramText };
 
   function getStepContent(step: number) {
@@ -81,6 +83,18 @@ const AddEvent = () => {
         return <TicketForm {...ticketProps} />;
       case 3:
         return <ProgramForm {...programProps} />;
+      case 4:
+        return (
+          <EventPage
+            name={infoData.name}
+            img={infoData.imgData}
+            location={infoData.location}
+            fromDate={infoData.dateFrom}
+            toDate={infoData.dateTo}
+            program={programText}
+            artists={listOfArtists}
+          />
+        );
     }
   }
 
