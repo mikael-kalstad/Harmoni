@@ -222,8 +222,8 @@ const AddEvent = (props: { userData: any }) => {
     console.log("res add event", res);
 
     if (res) {
-        setLoading(false);
-        setUploaded(true);
+      setLoading(false);
+      setUploaded(true);
     }
   };
 
@@ -253,9 +253,8 @@ const AddEvent = (props: { userData: any }) => {
             </div>
           ) : (
             <div>
-              {uploaded ? (
-                <Success />
-              ) : loading ? (
+              {uploaded && <Success />}
+              {loading ? (
                 <LoadingWrapper>
                   <CircularProgress size={30} />
                   <LoadingText>Vennligst vent</LoadingText>
