@@ -66,8 +66,7 @@ const AddEvent = () => {
   const [listOfArtists, setListOfArtists] = useState([]);
 
   // 3. Tickets
-  const [ticketCategory, setTicketCategory] = useState("");
-  const [price, setPrice] = useState("");
+  const [listOfTickets, setListOfTickets] = useState([]);
 
   // 4. Program
   const [programText, setProgramText] = useState("");
@@ -90,7 +89,8 @@ const AddEvent = () => {
   };
 
   const artistProps = { listOfArtists, setListOfArtists };
-  const ticketProps = { ticketCategory, setTicketCategory, price, setPrice };
+  const ticketProps = { listOfTickets, setListOfTickets };
+
   const programProps = { programText, setProgramText };
 
   function getStepContent(step: number) {
