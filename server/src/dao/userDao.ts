@@ -78,14 +78,14 @@ export default class userDao extends daoParentUser {
         let user;
         this.getUser(userId, (status, olddata) => {
             user = olddata[0];
-            if (typeof data.name == "undefined") {
+            if (typeof data.name == undefined) {
                 data.name = user.name;
             }
-            if (typeof data.email == "undefined") {
+            if (typeof data.email == undefined) {
                 data.email = user.email;
-            } if (typeof data.type == "undefined") {
+            } if (typeof data.type == undefined) {
                 data.type = user.type;
-            } if (typeof data.mobile == "undefined") {
+            } if (typeof data.mobile == undefined) {
                 data.mobile = user.mobile;
             }
             super.query("UPDATE user SET name = ?, email = ?, mobile = ?, type = ? WHERE user_id = ?",
@@ -102,9 +102,9 @@ export default class userDao extends daoParentUser {
                     [newHash, newSalt, email], callback);
         })
     }
-    changePassword(userId: number, data, callback) {
+    changePassword(email: string, data, callback) {
         let user;
-        this.getUser(userId, (status, olddata) => {
+        this.getHashOfUser(email, (status, olddata) => {
             user = olddata[0];
             let oldHash = user.hash;
             let oldSalt = user.salt;
@@ -113,8 +113,8 @@ export default class userDao extends daoParentUser {
                 let newData = hash(data.newPassword);
                 let newHash = newData.hash;
                 let newSalt = newData.salt;
-                super.query("UPDATE user SET  hash = ?, salt = ? WHERE user_id = ?",
-                    [newHash, newSalt, userId], callback);
+                super.query("UPDATE user SET  hash = ?, salt = ? WHERE email = ?",
+                    [newHash, newSalt, email], callback);
             }
             else {
                 callback.sendStatus(403); //Forbidden
@@ -130,3 +130,4 @@ export default class userDao extends daoParentUser {
         super.query("DELETE FROM user WHERE user_id=?", [userId], callback)
     }
 };
+

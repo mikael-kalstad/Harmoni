@@ -10,6 +10,7 @@ import BasicInfoForm from "./EventForms/basicInfoForm";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
 import Summary from "./EventForms/summary";
+import Success from "./success";
 
 // Services
 import { eventService } from "../../services/EventService";
@@ -50,10 +51,17 @@ const LoadingWrapper = styled.div`
   align-items: center;
   justify-items: center;
   grid-gap: 20px;
+  margin: 60px 0;
 `;
 
 const LoadingText = styled.p`
   font-size: 24px;
+`;
+
+const WarningText = styled.p`
+  color: #d45951;
+  font-size: 18px;
+  font-weight: 400;
 `;
 
 const AddEvent = (props: { userData: any }) => {
@@ -61,7 +69,9 @@ const AddEvent = (props: { userData: any }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [warningText, setWarningText] = useState("");
+  const [uploaded, setUploaded] = useState<boolean>(false);
   const steps = [
     "Info",
     "Artister",
@@ -194,9 +204,10 @@ const AddEvent = (props: { userData: any }) => {
     let newEvent: Event = {
       eventId: -1,
       name: infoData.name,
-      organizer: props.userData.user_id,
-      address: infoData.location,
-      fromDate: infoData.dateFrom,
+      //organizer: props.userData.user_id,
+      organizer: 1,
+      address: infoData.location.toString(),
+      fromDate: infoData.dateFrom.toString(),
       toDate: infoData.dateTo,
       capacity: 0,
       status: "Kommende",
@@ -204,8 +215,18 @@ const AddEvent = (props: { userData: any }) => {
       category: infoData.category,
       picture: infoData.imgData
     };
+
     setLoading(true);
     let res = await eventService.addEvent(newEvent);
+    console.log("res add event", res);
+
+    if (res) {
+      setLoading(false);
+      setUploaded(true);
+    } else {
+      setLoading(false);
+      setWarningText("Det skjedde noe feil. Prøv igjen");
+    }
   };
 
   const handleReset = () => {
@@ -222,6 +243,7 @@ const AddEvent = (props: { userData: any }) => {
         skipped={skipped}
         completed={completed}
         handleStep={handleStep}
+        loading={loading}
       />
 
       <Wrapper>
@@ -233,37 +255,48 @@ const AddEvent = (props: { userData: any }) => {
             </div>
           ) : (
             <div>
-              <div>{getStepContent(activeStep)}</div>
-              <LinkWrapper>
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Tilbake
-                </Button>
+              {uploaded && <Success />}
+              {loading ? (
+                <LoadingWrapper>
+                  <CircularProgress size={30} />
+                  <LoadingText>Vennligst vent</LoadingText>
+                </LoadingWrapper>
+              ) : (
+                <>
+                  <div>{getStepContent(activeStep)}</div>
 
-                {completedSteps() === totalSteps() || activeStep === 4 ? (
-                  <Button
-                    disabled={completedSteps() !== totalSteps() - 1}
-                    color="primary"
-                    onClick={submit}
-                  >
-                    Legg til arrangement
-                  </Button>
-                ) : (
-                  <Button color="primary" onClick={handleNext}>
-                    Neste
-                  </Button>
-                )}
-              </LinkWrapper>
+                  <LinkWrapper>
+                    <Button
+                      disabled={activeStep === 0 || loading}
+                      onClick={handleBack}
+                    >
+                      Tilbake
+                    </Button>
+
+                    {completedSteps() === totalSteps() || activeStep === 4 ? (
+                      <Button
+                        disabled={
+                          completedSteps() !== totalSteps() - 1 || loading
+                        }
+                        color="primary"
+                        onClick={submit}
+                      >
+                        Legg til arrangement
+                      </Button>
+                    ) : (
+                      <Button color="primary" onClick={handleNext}>
+                        Neste
+                      </Button>
+                    )}
+                  </LinkWrapper>
+                </>
+              )}
             </div>
           )}
+
+          {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
-
-      {loading && (
-        <LoadingWrapper>
-          <CircularProgress size={30} />
-          <LoadingText>Vennligst vent</LoadingText>
-        </LoadingWrapper>
-      )}
     </Container>
   );
 };

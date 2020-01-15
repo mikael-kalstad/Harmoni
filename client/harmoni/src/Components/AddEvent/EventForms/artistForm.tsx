@@ -79,8 +79,8 @@ const ArtistForm = (props: any) => {
       <>
         <Title>Artister</Title>
         <Text>
-          Du kan legge til artister senere ved å redigere arrangementet i min
-          side.
+          Du kan legge til og endre artister senere ved å redigere arrangementet
+          i min side.
         </Text>
         <UnderTitle>Legg til artister:</UnderTitle>
         <Typeahead

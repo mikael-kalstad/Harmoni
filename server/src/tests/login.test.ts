@@ -118,8 +118,8 @@ test("Check if password is case sensitive", done => {
 
 
 test("Test for change of password using CORRECT old password", done => {
-    let pass = {oldPassword: "Passord", newPassword: "nyttPassord"};
-    dao.changePassword(5, pass, (status, data) => {
+    let pass = {oldPassword: "passord", newPassword: "nyttPassord"};
+    dao.changePassword("test@login.com", pass, (status, data) => {
         expect(status).toBe(200);
         done();
     })    

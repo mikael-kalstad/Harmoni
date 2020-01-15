@@ -76,8 +76,8 @@ router.put("/authorized/users/:id", async (request, response) => {
     status == 500 ? response.status(500) : response.send(sanitizeUser(data));
   });
 });
-router.put("/authorized/users/change_password/:id", async (request, response) => {
-  dao.changePassword(parseInt(request.params.id), request.body, (status, data) => {
+router.put("/authorized/users/change_password/:email", async (request, response) => {
+  dao.changePassword(request.params.email, request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
