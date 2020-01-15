@@ -16,6 +16,7 @@ interface IUser {
 
 interface ArtistsListProps {
   artists: IUser[];
+  hideTitle?: boolean;
 }
 interface IWrapper {
   empty: boolean;
@@ -25,7 +26,7 @@ const Wrapper = styled.div<IWrapper>`
   border: ${props => (props.empty ? 'dashed 3px #bbbbbb' : 'none')};
   height: 100%;
   border-radius: 10px;
-  padding: 10px;
+  /* padding: 10px; */
   ${props => (props.empty ? 'display: grid' : '')}
   ${props =>
     props.empty ? 'grid-template-rows: 5fr 3fr' : ''}
@@ -77,13 +78,14 @@ const FaIconStyle = {
 /* Component for displaying a list of artists */
 /* Used in eventPage */
 const ArtistsList = (props: ArtistsListProps) => {
-  console.log(props.artists);
   if (props.artists.length > 0) {
     return (
       <Wrapper empty={props.artists.length == 0}>
-        <TitleText empty={props.artists.length == 0}>
-          Personer som skal opptre på dette arrangementet:
-        </TitleText>
+        {!props.hideTitle && (
+          <TitleText empty={props.artists.length == 0}>
+            Personer som skal opptre på dette arrangementet:
+          </TitleText>
+        )}
         <ListGroup>
           {props.artists.map(artist => {
             return (

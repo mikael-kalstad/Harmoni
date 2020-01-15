@@ -7,23 +7,17 @@ const Wrapper = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   justify-items: center;
-`;
-
-const ImgWrapper = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #f0f0f0;
-`;
-
-const ArtistImage = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
+  padding: 10px;
 `;
 
 const Name = styled.p`
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 0 15px;
+  justify-self: start;
+`;
+
+const Text = styled.p`
   font-size: 15px;
   margin: 0 0 0 15px;
   justify-self: start;
@@ -31,25 +25,27 @@ const Name = styled.p`
 
 const DelBtn = styled.img`
   cursor: pointer;
-  height: 30%;
+  height: 12px;
 `;
 
 interface IProps {
   ticket: any;
-  remove: Function;
+  remove?: Function;
 }
 
 const TicketCard = (props: IProps) => (
   <ListGroup.Item>
     <Wrapper>
       <Name>{props.ticket.type}</Name>
-      <Name>Pris: {props.ticket.price}</Name>
-      <Name>Antall: {props.ticket.available}</Name>
+      <Text>{props.ticket.price}kr</Text>
+      <Text>{props.ticket.available} stk</Text>
 
-      <DelBtn
-        src="/icons/cross.svg"
-        onClick={() => props.remove(props.ticket)}
-      />
+      {props.remove && (
+        <DelBtn
+          src="/icons/cross.svg"
+          onClick={() => props.remove(props.ticket)}
+        />
+      )}
     </Wrapper>
   </ListGroup.Item>
 );

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Service, {updateToken} from './Service';
-import LoginService from "./loginService";
+import Service, { updateToken } from './Service';
+import LoginService from './loginService';
 
 interface Event {
   eventId: number;
@@ -13,7 +13,7 @@ interface Event {
   status: string;
 }
 
-class EventService extends Service{
+class EventService extends Service {
   getEventById(eventId: number) {
     updateToken();
     return axios({
