@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service from './Service';
+import Service, {updateToken} from './Service';
 
 interface Attachment {
   attachmentId: number;
@@ -11,60 +11,115 @@ interface Attachment {
 class AttachmentService extends Service {
   // Fetches all attachments for an event by its id
   getAttachmentsForEvent(eventId: number) {
-    return axios
-      .get<Attachment[]>(this.path + '/attachments/event/' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/attachments/event/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+   
+  
 
   // Fetches all attachments for a user by its id
   getAttachmentsForUser(userId: number) {
-    return axios
-      .get<Attachment[]>(this.path + '/attachments/user/' + userId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/attachments/user/' + userId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+
 
   // Fetches all attachments for a user associated with an event
   getAttachmentsForUserForEvent(userId: number, eventId: number) {
-    return axios
-      .get<Attachment>(
-        this.path + '/attachments/user/' + userId + '&' + eventId
-      )
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/attachments/user/' + userId + '&' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+  
 
   // Adds an attachment
   addAttachment(attachment: Attachment) {
-    return axios
-      .post(this.path + '/attachments/', attachment)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'post',
+      url: this.path + '/authorized/attachments/',
+      data: attachment,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+  
 
   // Updates an attachment
   updateAttachment(attachment: Attachment) {
-    return axios
-      .put(this.path + '/attachments/' + attachment.attachmentId, attachment)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'put',
+      url: this.path + '/authorized/attachments/' + attachment.attachmentId,
+      data: attachment,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 
   // Deletes an attachment
   deleteAttachment(attachmentId: number) {
-    return axios
-      .delete(this.path + '/attachments/' + attachmentId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/attachments/' + attachmentId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 
   // Add user to attachment in attachment_user table in DB
   addUserForAttachment(attachmentId: number, userId: number) {
-    return axios
-      .post(this.path + '/attachment_user/' + attachmentId + '&' + userId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'post',
+      url: this.path + '/authorized/attachment_user/' + attachmentId + '&' + userId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+
   // Delete user to attachment in attachment_user table in DB
   deleteAttachmentforUser(attachmentId: number, userId: number) {
-    return axios
-      .post(this.path + '/attachment_user/' + attachmentId + '&' + userId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/attachment_user/' + attachmentId + '&' + userId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+
 }
 
 export let attachmentService = new AttachmentService();

@@ -95,10 +95,12 @@ test("Get users by type, volunteer", done => {
 })
 
 test("Get hash of user", done => {
-    dao.getHashOfUser(1, (status, data) => {
+    dao.getHashOfUser("hans@hansen.com", (status, data) => {
+        let user = data[0];
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data[0].hash).toBe("dfghjklfghj");
+        expect(user.hash).toBe("dfghjklfghj");
+        expect(user.salt).toBe("fghjkfghjkh")
         done();
     })
 })
@@ -138,7 +140,7 @@ test("Add user", done => {
         hash: "wgwrgwdgfqe",
         salt: "efnbvwwrtuj",
         type: "volunteer",
-        picture: "DEFAULT"
+        picture: new Buffer("")
     }
 
     dao.addUser(user, (status, data) => {
@@ -167,14 +169,14 @@ test("Update user", done => {
         hash: "wgwrgwdgfqe",
         salt: "efnbvwwrtuj",
         type: "volunteer",
-        picture: "DEFAULT"
+        picture: new Buffer("")
     }
     // Actual change
     dao.updateUser(5, updatedUser, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
-
+        done();
         // No change
         dao.updateUser(5, updatedUser, (status, data) => {
             expect(status).toBe(200);

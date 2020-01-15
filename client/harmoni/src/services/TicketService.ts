@@ -1,38 +1,98 @@
-import axios from 'axios';
-import Service from './Service';
+import axios from "axios";
+import Service, { updateToken } from "./Service";
 
 interface Ticket {
-  ticketId: number;
-  eventId: number;
+  ticket_id: number;
+  event_id: number;
   price: number;
   type: string;
+  available: number;
 }
 
 class TicketService extends Service {
   getAllTickets() {
-    return axios
-      .get<Ticket[]>(this.path + '/tickets/')
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/tickets/",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
 
   getAllTicketsByEventId(eventId: number) {
-    return axios
-      .get<Ticket[]>(this.path + '/tickets/event/' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/tickets/event/" + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
 
-  addTickets() {
-    return axios.post(this.path + '/tickets/').then(response => response.data);
+  addTickets(ticket: Ticket) {
+    updateToken();
+    return axios({
+      method: "post",
+      url: this.path + "/authorized/tickets/",
+      data: ticket,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
+
+  decreaseAvailableOfTicket(ticketId: number, value: number) {
+    updateToken();
+    return axios({
+      method: "put",
+      url:
+        this.path + "/authorized/tickets/available/" + ticketId + "&" + value,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
+
   deleteTicket(ticketId: number) {
-    return axios
-      .delete(this.path + '/tickets/' + ticketId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: "delete",
+      url: this.path + "/authorized/tickets/" + ticketId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
   deleteTicketsByEventId(eventId: number) {
-    return axios
-      .delete(this.path + '/tickets/event/' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: "delete",
+      url: this.path + "/authorized/tickets/event/" + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
 }
 

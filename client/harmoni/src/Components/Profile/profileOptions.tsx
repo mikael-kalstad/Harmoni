@@ -1,63 +1,48 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { LinkContainer } from "react-router-bootstrap";
+import Dropdown from "react-bootstrap/Dropdown";
 
 const Container = styled.div`
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    background: #F0F0F0;
-    padding: 10px;
-    height: 400px;
-    overflow: hidden;
-    :hover {
-        filter: brightness(98%);
-    }
-    
-`;  
-
-const TextWrapper = styled.div`
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 50px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  /* display: grid; */
+  /* grid-template-rows: 1fr 1fr 1fr 1fr; */
+  /* background: #F0F0F0; */
+  padding: 10px;
+  /* height: 400px; */
+  /* overflow: hidden; */
+  :hover {
+    filter: brightness(98%);
+  }
 `;
 
+const TextWrapper = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 50px;
+`;
 
 const Text = styled.p`
-    margin: 0;
-    font-style: italic;
-    font-size: 30px;
-    align-self: end;
-    color: #868686;
-    
+  margin: 0;
+  font-style: italic;
+  font-size: 30px;
+  align-self: end;
+  color: #868686;
 `;
 
 const UnderText = styled.p`
-    font-weight: 500;
-    font-size: 50px;
-    font-size: 2vmax;
-    width: 300px;
-    
-    
+  font-weight: 500;
+  font-size: 50px;
+  font-size: 2vmax;
+  width: 300px;
 `;
-
-
-const StyledLink = styled(props => <Link {...props} />)`
-    :visited {
-        color: black;
-    }
-
-    :hover {
-        color: black;
-        text-decoration: none;
-    }
-`;
-
-
 
 const ProfileButton = styled.button`
-    
     background-color: #B0BEC5;
     color: black;
     font-size: 16px;
@@ -76,46 +61,37 @@ const ProfileButton = styled.button`
         text-decoration: none;
     }
     
-`
-
-const ProfileLink = styled(props => <Link {...props} />)`
-    display: grid;
-    grid-template-rows: 1fr;
-    text-decoration: none;
-    :hover {
-        text-decoration: none;
-    }
 `;
 
+const ProfileOptions = () => (
+  <Container>
+    <Dropdown alignRight>
+      <Dropdown.Toggle variant="info" id="dropdown-basic">
+        <img src="/icons/settings.svg" />
+      </Dropdown.Toggle>
 
-
-
-const ProfileOptions = (props: {img: string, name: string}) => (
-    <Container>
-        
-        <ProfileLink to='/newevent'>
-            <ProfileButton>
-                Opprett arrangement
-            </ProfileButton>
-        </ProfileLink>
-        <ProfileLink to='/password'>
-            <ProfileButton>
-                Endre passord
-            </ProfileButton>
-        </ProfileLink>
-        <ProfileLink to='/register'>
-            <ProfileButton>
-                Endre profil
-            </ProfileButton>
-        </ProfileLink>
-        <ProfileLink to='/'>
-            <ProfileButton>
-                Endre noe annet nyttig
-            </ProfileButton>
-        </ProfileLink>
-        
-    </Container> 
-
+      <Dropdown.Menu style={{ position: "absolute" }}>
+        <LinkContainer to="/profile/change">
+          <Dropdown.Item>Endre info</Dropdown.Item>
+        </LinkContainer>
+        <LinkContainer to="/profile/password">
+          <Dropdown.Item>Endre passord</Dropdown.Item>
+        </LinkContainer>
+      </Dropdown.Menu>
+    </Dropdown>
+    {/* <ProfileLink to="/newEvent">
+      <ProfileButton>Opprett arrangement</ProfileButton>
+    </ProfileLink>
+    <ProfileLink to="/profile/password">
+      <ProfileButton>Endre passord</ProfileButton>
+    </ProfileLink>
+    <ProfileLink to="/profile/change">
+      <ProfileButton>Endre profil</ProfileButton>
+    </ProfileLink> */}
+    {/* <ProfileLink to="/">
+      <ProfileButton>Endre noe annet nyttig</ProfileButton>
+    </ProfileLink> */}
+  </Container>
 );
 
 export default ProfileOptions;

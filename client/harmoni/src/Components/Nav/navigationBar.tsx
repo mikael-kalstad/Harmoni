@@ -7,21 +7,31 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import OutlineButton from '../Button/outlineButton';
 import LoginBtn from '../Button/loginBtn';
 import SmallProfileNav from '../Profile/smallProfileNav';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const StyledLink = styled(props => <Link {...props} />)`
   color: #7f7f7f;
   text-decoration: none;
-  // line-height: 96px;
 
   :visited {
     color: #7f7f7f;
   }
 
-    :hover {
-        text-decoration: none;
-    }
-    margin: 0;
-    margin-right: 20px;
+  :hover {
+    text-decoration: none;
+  }
+  margin: 0;
+  margin-right: 20px;
+`;
+
+const Icon = styled.img`
+  height: 25px;
+  margin-right: 20px;
+  margin: 30px 20px 30px 0;
+`;
+
+const LinkWrapper = styled.div`
+  margin: 10px 0;
 `;
 
 const NavigationBar = (props: any) => (
@@ -47,33 +57,63 @@ const NavigationBar = (props: any) => (
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
-        <StyledLink to="/events/Konsert">Konsert</StyledLink>
-        <StyledLink to="/events/Teater">Teater</StyledLink>
-        <StyledLink to="/events/Standup">Standup</StyledLink>
+        <LinkWrapper>
+          <LinkContainer to="/events/konsert">
+            <Nav.Link>Konsert</Nav.Link>
+          </LinkContainer>
+        </LinkWrapper>
 
-        <NavDropdown title="Annet" id="basic-nav-dropdown">
-          <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-        </NavDropdown>
+        <LinkWrapper>
+          <LinkContainer to="/events/teater">
+            <Nav.Link>Teater</Nav.Link>
+          </LinkContainer>
+        </LinkWrapper>
+
+        <LinkWrapper>
+          <LinkContainer to="/events/standup">
+            <Nav.Link>Standup</Nav.Link>
+          </LinkContainer>
+        </LinkWrapper>
+
+        <LinkWrapper>
+          <NavDropdown title="Annet" id="basic-nav-dropdown">
+            <LinkContainer to="/events/festival">
+              <NavDropdown.Item>Festival</NavDropdown.Item>
+            </LinkContainer>
+
+            <LinkContainer to="/events/show">
+              <NavDropdown.Item>Show</NavDropdown.Item>
+            </LinkContainer>
+            <NavDropdown.Divider />
+            <LinkContainer to="/events/annet">
+              <NavDropdown.Item>Annet</NavDropdown.Item>
+            </LinkContainer>
+          </NavDropdown>
+        </LinkWrapper>
       </Nav>
 
-          {props.userData  
-            ? (<>
-                <SmallProfileNav picture={props.userData.picture} name={props.userData[0].name}/>
-                {/* TODO: ADD LOG OUT FUNCTIONALITY */}
-                <OutlineButton onClick={() => props.logOut()}>Logg ut</OutlineButton>
-              </>)
-            : (<>
-                <StyledLink to='/registrer'>
-                  <OutlineButton>Registrer</OutlineButton></StyledLink>
-                <LoginBtn logIn={props.logIn} />
-              </>)
-          }
-        </Navbar.Collapse>
-    </Navbar>
+      <StyledLink to="/search">
+        <Icon src="/icons/search.svg" />
+      </StyledLink>
+
+      {props.userData ? (
+        <>
+          <SmallProfileNav
+            picture={props.userData.picture}
+            name={props.userData.name}
+          />
+          <OutlineButton onClick={() => props.logOut()} to="/">
+            Logg ut
+          </OutlineButton>
+        </>
+      ) : (
+        <>
+          <OutlineButton to="/registrer">Registrer</OutlineButton>
+          <LoginBtn logIn={props.logIn} />
+        </>
+      )}
+    </Navbar.Collapse>
+  </Navbar>
 );
 
 const handleIconClick = (path: any) => {

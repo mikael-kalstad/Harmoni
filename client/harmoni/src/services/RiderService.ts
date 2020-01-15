@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service from './Service';
+import Service,{updateToken} from './Service';
 
 interface Rider {
   riderId: number;
@@ -8,45 +8,104 @@ interface Rider {
 
 export default class RiderService extends Service {
   getAllRiders() {
-    return axios.get(this.path + '/riders/').then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/riders/',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
+
   getRider(riderId: number) {
-    return axios
-      .get(this.path + '/riders/' + riderId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/riders/' + riderId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   getRiderByEventId(eventId: number) {
-    return axios
-      .get(this.path + '/riders/riderlist/' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url:this.path + '/authorized/riders/riderlist/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   getRiderByUserIdEvent(eventId: number, userId: number) {
-    return axios
-      .get(this.path + '/riders/riderlist/' + userId + '&' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/riders/riderlist/' + userId + '&' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   addRider(rider: Rider) {
-    return axios.post(this.path + '/riders/').then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'post',
+      url: this.path + '/authorized/riders/',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   updateRider(rider: Rider) {
-    return axios
-      .put(this.path + '/riders/' + rider.riderId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'put',
+      url: this.path + '/authorized/riders/' + rider.riderId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   deleteRider(riderId: number) {
-    return axios
-      .delete(this.path + '/riders/' + riderId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/riders/' + riderId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   addRiderList(eventId: number, userId: number) {
-    return axios
-      .post(this.path + '/riders/riderlist/' + userId + '&' + eventId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/riders/riderlist/' + userId + '&' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
   deleteRiderList(riderListId: number) {
-    return axios
-      .delete(this.path + '/riders/riderlist/' + riderListId)
-      .then(response => response.data);
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/riders/riderlist/' + riderListId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>response.data).catch(error => console.log(error));
   }
 }
 
