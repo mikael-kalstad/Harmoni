@@ -43,14 +43,9 @@ const Authenticate = (props: IProps) => {
     } else if (res && res.status === 401) {
       setDeniedAccess(true);
       return;
-    } else if (!props.userData) {
-      setDeniedAccess(true);
-    } else {
+    } else if (res && props.userData) {
       setAuth(true);
     }
-
-    // else if(props.userData)
-    //     setUserData(await userService.getUserById(props.userData[0]['user_id']));
   };
 
   // Connection error
