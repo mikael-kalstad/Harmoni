@@ -1,6 +1,7 @@
 import axios from 'axios';
+import Service from './Service';
 
-export default class PasswordService {
+export default class PasswordService extends Service{
     requestPasswordReset(email:string){
         const headers = {
             'Content-Type': 'application/json; charset=utf-8'
@@ -8,7 +9,8 @@ export default class PasswordService {
         var postData = {
             email: email
         };
-        return axios.post("http://localhost:15016/api/v0/reset/",postData,{
+        
+        return axios.post(this.path + '/reset/',postData,{
             headers: headers
         })
             .then(response =>{
@@ -20,12 +22,10 @@ export default class PasswordService {
           var postData = {
             password: password
         };
-        //Litt usikkert om denne URL'en fungerer
-        let url = "localhost:15016/api/v0" + window.location.pathname;
-        console.log(url);
-        return axios.post(url, postData,{  
+        return axios.post(this.path + window.location.pathname, postData, {  
             headers:{
                 'Content-Type': 'application/json; charset=utf-8',
+                "harmoni-token": localStorage.getItem("harmoni-token")
             }
         })
             .then(response =>{

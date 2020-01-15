@@ -93,7 +93,6 @@ router.get("/reset/reset_password/:token",(req,res)=>{
 })
 
 router.post("/reset/reset_password/:token",(req,res)=>{
-    res.setHeader('Access-Control-Allow-Origin', '*');
     var token = req.params.token;
    // var token = req.headers["password-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
