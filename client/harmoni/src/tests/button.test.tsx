@@ -29,6 +29,7 @@ describe("Tests for button without children", () => {
         expect(onClick).not.toHaveBeenCalled();
         wrapper.find('button').simulate('click');
         expect(onClick).toHaveBeenCalled();
+        expect(disabled).toBeTruthy();
     })
 })
 
@@ -60,5 +61,6 @@ describe("Tests for button with children", () => {
         expect(onClick).not.toHaveBeenCalled();
         wrapper.find('button').find('button').at(0).simulate('click');
         expect(onClick).toHaveBeenCalled();
+        expect(disabled).toBeTruthy();
     })
 })

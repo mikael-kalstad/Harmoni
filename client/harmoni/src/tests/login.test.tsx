@@ -5,6 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { configure } from 'enzyme';
 import Login from '../Components/login'
 import App from '../App'
+import { Wrapper } from '@material-ui/pickers/wrappers/Wrapper';
 
  /*describe("<Login /> with empty props", () => {
     test("Login renders", () => {
@@ -18,10 +19,12 @@ import App from '../App'
 })
 
 describe("<Login />", () => {
+
+    const wrapper = mount(<Login/>);
+
     test("Login renders", done => {
-        const login = shallow(<Login/>);
-        //console.log("HER ER VI: " + login.find('Wrapper').length);
-        expect(login.find('Exit src=').props.toEqual({
+        wrapper.find('div').at(1).find('div').at(0)
+        expect(wrapper.find('Exit src=').props.toEqual({
             src: '/icons/cross.svg',
             onClick
         }
