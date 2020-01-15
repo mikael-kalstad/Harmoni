@@ -157,14 +157,14 @@ class UserService extends Service {
   }
 
 
-  changePassword(userID:number,newPassword:string, oldPassword:string){
+  changePassword(email:string,newPassword:string, oldPassword:string){
     let postData={
-      userID:userID,newPassword:newPassword,oldPassword:oldPassword
+      email:email,newPassword:newPassword,oldPassword:oldPassword
     };
     updateToken();
     return axios({
       method: 'put',
-      url: this.path+'/authorized/users/change_password/'+userID,
+      url: this.path+'/authorized/users/change_password/'+email,
       data:postData,
       headers: {
         "Content-Type": "application/json; charset=utf-8",

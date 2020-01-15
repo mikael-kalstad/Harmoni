@@ -59,7 +59,6 @@ router.post("/", (req, res) => {
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.headers["harmoni-token"];
-  console.log("token in check: ",token);
   if(token!==undefined){
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {

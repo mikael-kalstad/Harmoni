@@ -36,7 +36,8 @@ const App: React.FC = () => {
   };
 
   const logOut = () => {
-    localStorage.removeItem('x-access-token');
+    //console.log("Log out is called");
+    localStorage.removeItem("harmoni-token");
     setUserData(undefined);
   };
 
