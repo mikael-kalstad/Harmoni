@@ -52,11 +52,6 @@ beforeAll(done => {
 afterAll(() => {
     conPool.end();
 })
-//Create user with a password
-//Salt the password
-//Check if user can log in with correct password
-//Check if user can log in with wrong password
-//Check change password in userDao
 
 test("Add user with password", done => {
     let password = "Passord"
@@ -81,7 +76,7 @@ test("Add user with password", done => {
 
 test("Check login for user with WRONG password", done => {
     let wrongPass = "blabla"
-    dao.getUserByEMail("test@login.com", (status, data) =>{
+    dao.getHashOfUser("test@login.com", (status, data) =>{
         let user = data[0];
         let boolean = compareHash(user.hash, wrongPass, user.salt)
         expect(status).toBe(200);
@@ -93,7 +88,7 @@ test("Check login for user with WRONG password", done => {
 
 test("Check login for user with CORRECT password", done => {
     let correctPass = "Passord"
-    dao.getUserByEMail("test@login.com", (status, data) =>{
+    dao.getHashOfUser("test@login.com", (status, data) =>{
         let user = data[0];
         let boolean = compareHash(user.hash, correctPass, user.salt)
         expect(status).toBe(200);
@@ -118,7 +113,7 @@ test("Check if password is case sensitive", done => {
 
 
 test("Test for change of password using CORRECT old password", done => {
-    let pass = {oldPassword: "passord", newPassword: "nyttPassord"};
+    let pass = {oldPassword: "Passord", newPassword: "nyttPassord"};
     dao.changePassword("test@login.com", pass, (status, data) => {
         expect(status).toBe(200);
         done();
