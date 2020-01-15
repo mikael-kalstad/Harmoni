@@ -50,10 +50,17 @@ const LoadingWrapper = styled.div`
   align-items: center;
   justify-items: center;
   grid-gap: 20px;
+  margin: 60px 0;
 `;
 
 const LoadingText = styled.p`
   font-size: 24px;
+`;
+
+const WarningText = styled.p`
+  color: #d45951;
+  font-size: 18px;
+  font-weight: 400;
 `;
 
 const AddEvent = (props: { userData: any }) => {
@@ -62,6 +69,7 @@ const AddEvent = (props: { userData: any }) => {
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
   const [loading, setLoading] = useState(false);
+  const [warningText, setWarningText] = useState("");
   const steps = [
     "Info",
     "Artister",
@@ -206,7 +214,9 @@ const AddEvent = (props: { userData: any }) => {
       picture: infoData.imgData
     };
     setLoading(true);
+    setWarningText("Det skjedde noe feil. Spør bård på tlf: 38721421");
     let res = await eventService.addEvent(newEvent);
+    console.log("res add event", res);
   };
 
   const handleReset = () => {
@@ -223,6 +233,7 @@ const AddEvent = (props: { userData: any }) => {
         skipped={skipped}
         completed={completed}
         handleStep={handleStep}
+        loading={loading}
       />
 
       <Wrapper>
@@ -234,37 +245,47 @@ const AddEvent = (props: { userData: any }) => {
             </div>
           ) : (
             <div>
-              <div>{getStepContent(activeStep)}</div>
-              <LinkWrapper>
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Tilbake
-                </Button>
+              {loading ? (
+                <LoadingWrapper>
+                  <CircularProgress size={30} />
+                  <LoadingText>Vennligst vent</LoadingText>
+                </LoadingWrapper>
+              ) : (
+                <>
+                  <div>{getStepContent(activeStep)}</div>
 
-                {completedSteps() === totalSteps() || activeStep === 4 ? (
-                  <Button
-                    disabled={completedSteps() !== totalSteps() - 1}
-                    color="primary"
-                    onClick={submit}
-                  >
-                    Legg til arrangement
-                  </Button>
-                ) : (
-                  <Button color="primary" onClick={handleNext}>
-                    Neste
-                  </Button>
-                )}
-              </LinkWrapper>
+                  <LinkWrapper>
+                    <Button
+                      disabled={activeStep === 0 || loading}
+                      onClick={handleBack}
+                    >
+                      Tilbake
+                    </Button>
+
+                    {completedSteps() === totalSteps() || activeStep === 4 ? (
+                      <Button
+                        disabled={
+                          completedSteps() !== totalSteps() - 1 || loading
+                        }
+                        color="primary"
+                        onClick={submit}
+                      >
+                        Legg til arrangement
+                      </Button>
+                    ) : (
+                      <Button color="primary" onClick={handleNext}>
+                        Neste
+                      </Button>
+                    )}
+                  </LinkWrapper>
+                </>
+              )}
             </div>
           )}
+
+          {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
-
-      {loading && (
-        <LoadingWrapper>
-          <CircularProgress size={30} />
-          <LoadingText>Vennligst vent</LoadingText>
-        </LoadingWrapper>
-      )}
     </Container>
   );
 };

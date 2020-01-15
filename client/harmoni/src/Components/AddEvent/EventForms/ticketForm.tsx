@@ -9,7 +9,7 @@ const Title = styled.h2`
   font-size: 48px;
   font-weight: 500;
   text-align: center;
-  bottom-margin: 10px;
+  margin-bottom: 15px;
 `;
 const UnderTitle = styled.h3`
   font-size: 24px;
@@ -19,6 +19,13 @@ const inputStyle = {
   width: "100%",
   marginBottom: "25px"
 };
+
+const Text = styled.p`
+  margin: 45px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #777777;
+`;
 
 interface ITicket {
   ticket_id: number;
@@ -68,6 +75,11 @@ const TicketForm = (props: any) => {
   return (
     <>
       <Title>Billetter</Title>
+      <Text>
+        Du kan legge til og endre billetter senere ved å redigere arrangementet
+        i min side.
+      </Text>
+
       <h5>Billett-type</h5>
       <TextField
         style={inputStyle}
@@ -77,7 +89,7 @@ const TicketForm = (props: any) => {
         onChange={e => handleChange(e.target.value, setType)}
       />
 
-      <h5>Pris</h5>
+      <h5>Pris per billett</h5>
       <TextField
         style={inputStyle}
         variant="outlined"
@@ -87,7 +99,7 @@ const TicketForm = (props: any) => {
         onChange={e => handleChange(e.target.value, setPrice)}
       />
 
-      <h5>Antall tilgjengelige</h5>
+      <h5>Total antall</h5>
       <TextField
         style={inputStyle}
         variant="outlined"
