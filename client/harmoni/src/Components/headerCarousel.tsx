@@ -77,7 +77,7 @@ const HeaderCarousel = (props: any) => {
     // Remove lazy loading cards
     items = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < Math.min(props.data.length, 3); i++) {
       let a = props.data[i];
       items.push(
         <Carousel.Item key={a.event_id}>
