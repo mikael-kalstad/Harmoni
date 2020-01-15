@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service, {updateToken} from './Service';
+import Service, { updateToken } from './Service';
 
 interface Ticket {
   ticket_id: number;
@@ -32,9 +32,14 @@ class TicketService extends Service {
   }
 
   decreaseAvailableOfTicket(ticketId: number, value: number) {
+    const headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'harmoni-token': localStorage.getItem('harmoni-token')
+    };
     return axios
       .put(
-        this.path + '/authorized/tickets/available/' + ticketId + '&' + value
+        this.path + '/authorized/tickets/available/' + ticketId + '&' + value,
+        { headers: headers }
       )
       .then(response => response.data);
   }
