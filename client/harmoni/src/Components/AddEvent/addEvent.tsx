@@ -194,7 +194,8 @@ const AddEvent = (props: { userData: any }) => {
     let newEvent: Event = {
       eventId: -1,
       name: infoData.name,
-      organizer: props.userData.user_id,
+      //organizer: props.userData.user_id,
+      organizer: 1,
       address: infoData.location,
       fromDate: infoData.dateFrom,
       toDate: infoData.dateTo,
