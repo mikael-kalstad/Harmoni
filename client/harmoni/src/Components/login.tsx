@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Redirect, Link, BrowserRouter } from "react-router-dom";
+import { Redirect, Link, BrowserRouter, useHistory } from "react-router-dom";
 import Button from "./Button/button";
 import { loginService } from "../services/loginService";
 import TextField from "@material-ui/core/TextField";
@@ -98,6 +98,8 @@ const Login = (props: any) => {
 
   // Used to display error on empty input when submitting
   const [submit, setSubmit] = useState(false);
+
+  const history = useHistory();
 
   // Check inputs and try to log in with the given username and password
   const login = async (username: string, password: string) => {
@@ -206,7 +208,7 @@ const Login = (props: any) => {
               <StyledLink
                 style={{ justifySelf: "start" }}
                 to="/glemt-passord"
-                onClick={() => props.toggle()}
+                onClick={() => {props.toggle(); history.push("/glemt-passord")}}
               >
                 Glemt passord?
               </StyledLink>
@@ -214,7 +216,7 @@ const Login = (props: any) => {
               <StyledLink
                 style={{ justifySelf: "end" }}
                 to="/registrer"
-                onClick={() => props.toggle()}
+                onClick={() => {props.toggle(); history.push("/registrer")}}
               >
                 Registrer deg
               </StyledLink>

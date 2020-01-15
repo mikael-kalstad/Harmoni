@@ -97,6 +97,8 @@ const App: React.FC = () => {
             component={ResetPassword}
           />
 
+          <Route path="/search/" component={SearchEvents} />
+
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
           <Route component={PageNotFound} />
         </Switch>
