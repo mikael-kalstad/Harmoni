@@ -15,141 +15,153 @@ interface Event {
 
 class EventService extends Service {
   getEventById(eventId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/' + eventId, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 
   getAllEvents() {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/', { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+    
 
   getEventsByLocation(location: string) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/address/' + location, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/address/' + location,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+  
 
   getEventsByStatus(status: string) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/status/' + status, { headers: headers })
-      .then(respnse => respnse.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/status/' + status,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+  
   // Gets events to an organizer by id
   getEventsByOrganizer(userId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/organizer/' + userId, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/organizer/' + userId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 
   addEvent(event: Event) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .post(this.path + '/authorized/events/', event, { headers: headers })
-      .then(response => response.data);
-  }
-
-  addUserToEvent(userId: number, eventId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
-    updateToken();
-    return axios
-      .post(
-        this.path + '/authorized/events/user_event/' + userId + '/' + eventId,
-        { headers: headers }
-      )
-      .then(response => response.data);
-  }
-
-  removeUserFromEvent(userId: number, eventId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
-    updateToken();
-    return axios
-      .delete(
-        this.path + 'authorized/events/user_event/' + userId + '/' + eventId,
-        { headers: headers }
-      )
-      .then(response => response.data);
+    return axios({
+      method: 'post',
+      url: this.path + '/authorized/events/',
+      data: event,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 
   updateEvent(event: Event) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .put(this.path + '/authorized/events/' + event.eventId, event, {
-        headers: headers
-      })
-      .then(response => response.data);
+    return axios({
+      method: 'put',
+      url: this.path + '/authorized/events/' + event.eventId,
+      data: event,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+  
   getEventsByUser(userId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/user/' + userId, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/user/' + userId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
+
   getEventsByCategory(category: string) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
     updateToken();
-    return axios
-      .get(this.path + '/events/category/' + category, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'get',
+      url: this.path + '/events/category/' + category,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
-  // Gets events by eventId
-  deleteEventById(eventId: number) {
-    const headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'harmoni-token': localStorage.getItem('harmoni-token')
-    };
+
+  addUserToEvent(userId: number, eventId: number) {
     updateToken();
-    return axios
-      .delete(this.path + '/authorized/events/' + eventId, { headers: headers })
-      .then(response => response.data);
+    return axios({
+      method: 'post',
+      url: this.path + '/authorized/events/user_event/' + userId + '/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
+  }
+
+  removeUserFromEvent(userId: number, eventId: number) {
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + 'authorized/events/user_event/' + userId + '/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
+  }
+   
+  // Delete events by eventId
+  deleteEventById(eventId: number) {
+    updateToken();
+    return axios({
+      method: 'delete',
+      url: this.path + '/authorized/events/' + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response =>  response.data).catch(error => console.log(error));
   }
 }
 

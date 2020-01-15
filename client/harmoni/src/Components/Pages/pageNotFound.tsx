@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import OutlineButton from "../Button/outlineButton";
+import React from 'react';
+import styled from 'styled-components';
+import OutlineButton from '../Button/outlineButton';
 
 const Container = styled.div`
   height: 80vh;
@@ -47,7 +47,7 @@ const PageNotFound = () => (
       </Text>
 
       <OutlineButton width="170px" height="60px" to="/" solid={true}>
-        Gå tilbake
+        Gå til forsiden
       </OutlineButton>
     </Wrapper>
   </Container>

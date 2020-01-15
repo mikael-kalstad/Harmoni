@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Redirect, Link } from "react-router-dom";
-import Button from "./Button/button";
-import { loginService } from "../services/loginService";
-import TextField from "@material-ui/core/TextField";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Redirect, Link } from 'react-router-dom';
+import Button from './Button/button';
+import { loginService } from '../services/loginService';
+import TextField from '@material-ui/core/TextField';
 
 const Overlay = styled.div`
   position: fixed;
@@ -84,15 +84,15 @@ const LinkWrapper = styled.div`
 
 // Material UI input styling
 const inputStyle = {
-  width: "100%",
-  marginTop: "25px"
+  width: '100%',
+  marginTop: '25px'
 };
 
 // Login popup dialog component
 const Login = (props: any) => {
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [warningText, setWarningText] = useState("");
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [warningText, setWarningText] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -105,8 +105,8 @@ const Login = (props: any) => {
     setSubmit(true);
 
     // Check if inputs are empty
-    if (username.trim() === "" || password.trim() === "") {
-      setWarningText("Ett eller flere felter er tom");
+    if (username.trim() === '' || password.trim() === '') {
+      setWarningText('Ett eller flere felter er tom');
       return;
     }
 
@@ -115,17 +115,17 @@ const Login = (props: any) => {
 
     // Try to log user in
     let res = await loginService.login(username, password);
-    console.log("res in LOGIN", res);
+    console.log('res in LOGIN', res);
 
     // Network or other errors
     if (res && res instanceof Error) {
-      setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
+      setWarningText('Noe feil skjedde, sjekk internett tilkoblingen');
       setLoading(false);
     }
 
     // Email/tlf or password is wrong (not authenticated)
     else if (res && res.status === 204) {
-      setWarningText("Email eller passord er feil, prøv igjen");
+      setWarningText('Email eller passord er feil, prøv igjen');
       setLoading(false);
     }
 
@@ -142,11 +142,11 @@ const Login = (props: any) => {
   // Check if enter key is clicked
   const checkForEnterKey = (e: { key: string } | undefined) => {
     // Try to Log in if enter key is pressed down
-    if (e !== undefined && e.key === "Enter") login(emailInput, passwordInput);
+    if (e !== undefined && e.key === 'Enter') login(emailInput, passwordInput);
   };
 
   // Close dialog if overlay is clicked
-  let overlay = document.getElementById("overlay");
+  let overlay = document.getElementById('overlay');
   if (overlay !== null) overlay.onclick = () => props.toggle();
 
   // If username and passwords matches
@@ -168,9 +168,9 @@ const Login = (props: any) => {
           <TextField
             style={inputStyle}
             variant="outlined"
-            label="Email eller tlf*"
-            error={(submit && emailInput === "") || warningText !== ""}
-            helperText={submit && emailInput === "" ? "Email er påkrevd" : ""}
+            label="Email*"
+            error={(submit && emailInput === '') || warningText !== ''}
+            helperText={submit && emailInput === '' ? 'Email er påkrevd' : ''}
             onChange={e => setEmailInput(e.target.value)}
             onKeyDown={e => checkForEnterKey(e)}
           />
@@ -181,13 +181,13 @@ const Login = (props: any) => {
             label="Passord*"
             type="password"
             helperText={
-              submit && passwordInput === ""
-                ? "Passord er påkrevd"
-                : warningText !== ""
+              submit && passwordInput === ''
+                ? 'Passord er påkrevd'
+                : warningText !== ''
                 ? warningText
-                : ""
+                : ''
             }
-            error={(submit && passwordInput === "") || warningText !== ""}
+            error={(submit && passwordInput === '') || warningText !== ''}
             onChange={e => setPasswordInput(e.target.value)}
             onKeyDown={e => checkForEnterKey(e)}
           />
@@ -203,15 +203,15 @@ const Login = (props: any) => {
 
           <LinkWrapper>
             <StyledLink
-              style={{ justifySelf: "start" }}
+              style={{ justifySelf: 'start' }}
               to="/glemt-passord"
               onClick={() => props.toggle()}
             >
-              Glemt passsord?
+              Glemt passord?
             </StyledLink>
 
             <StyledLink
-              style={{ justifySelf: "end" }}
+              style={{ justifySelf: 'end' }}
               to="/registrer"
               onClick={() => props.toggle()}
             >

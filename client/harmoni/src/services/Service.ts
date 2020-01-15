@@ -11,10 +11,13 @@ export function updateToken() {
     };
     return axios
         .post("http://localhost:15016/api/v0/updatetoken", {
-            headers: headers
+            "Content-Type": "application/json; charset=utf-8",
+            "harmoni-token": localStorage.getItem("harmoni-token")
         })
         .then(response => {
-            localStorage.setItem("harmoni-token", response.data.jwt);
+            if(response.data.jwt!==undefined){
+                localStorage.setItem("harmoni-token", response.data.jwt);
+            }
         })
         .catch(error => error);
 };
