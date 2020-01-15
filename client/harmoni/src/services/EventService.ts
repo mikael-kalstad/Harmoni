@@ -94,6 +94,20 @@ class EventService extends Service {
       .then(response => response.data);
   }
 
+  removeUserFromEvent(userId: number, eventId: number) {
+    const headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'harmoni-token': localStorage.getItem('harmoni-token')
+    };
+    updateToken();
+    return axios
+      .delete(
+        this.path + 'authorized/events/user_event/' + userId + '/' + eventId,
+        { headers: headers }
+      )
+      .then(response => response.data);
+  }
+
   updateEvent(event: Event) {
     const headers = {
       'Content-Type': 'application/json; charset=utf-8',

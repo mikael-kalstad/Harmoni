@@ -64,6 +64,19 @@ router.post(
   }
 );
 
+router.delete(
+  '/authorized/events/user_event/:userId/:eventId',
+  async (request, response) => {
+    dao.removeUserFromEvent(
+      parseInt(request.params.userId),
+      parseInt(request.params.eventId),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
+);
+
 // Update singular event by id
 router.put('/authorized/events/:id', async (request, response) => {
   dao.updateEvent(parseInt(request.params.id), request.body, (status, data) => {

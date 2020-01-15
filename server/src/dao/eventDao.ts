@@ -130,6 +130,14 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  removeUserFromEvent(userId: number, eventId: number, callback) {
+    super.query(
+      'DELETE FROM user_event WHERE user_id=? AND event_id=?',
+      [userId, eventId],
+      callback
+    );
+  }
+
   updateEvent(eventId: number, data: event, callback) {
     super.query(
       'UPDATE event SET name = ?, organizer = ?, address = ?, from_date = ?, to_date = ?, capacity = ?, status = ?, information = ?, category = ?, picture = ? WHERE event_id = ?',
