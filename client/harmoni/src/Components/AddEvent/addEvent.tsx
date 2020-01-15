@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
 import FormStepper from "./formStepper";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // Form components
 import ArtistForm from "./EventForms/artistForm";
 import BasicInfoForm from "./EventForms/basicInfoForm";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
-import EventPage from "../Pages/eventPage";
+import Summary from "./EventForms/summary";
 
 const Container = styled.div`
   margin: 100px 0;
@@ -23,6 +24,17 @@ const LinkWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 40px;
+`;
+
+const LoadingWrapper = styled.div`
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  grid-gap: 20px;
+`;
+
+const LoadingText = styled.p`
+  font-size: 24px;
 `;
 
 const AddEvent = () => {
@@ -85,14 +97,16 @@ const AddEvent = () => {
         return <ProgramForm {...programProps} />;
       case 4:
         return (
-          <EventPage
+          <Summary
             name={infoData.name}
             img={infoData.imgData}
             location={infoData.location}
             fromDate={infoData.dateFrom}
             toDate={infoData.dateTo}
+            category={infoData.category}
             program={programText}
             artists={listOfArtists}
+            tickets={listOfTickets}
           />
         );
     }
@@ -207,6 +221,13 @@ const AddEvent = () => {
           )}
         </div>
       </Wrapper>
+
+      {/* {loading && 
+       <LoadingWrapper>
+       <CircularProgress size={30} />
+       <LoadingText>Vennligst vent</LoadingText>
+     </LoadingWrapper>
+     } */}
     </Container>
   );
 };
