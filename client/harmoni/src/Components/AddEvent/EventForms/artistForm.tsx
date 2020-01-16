@@ -87,7 +87,6 @@ const ArtistForm = (props: any) => {
           labelKey={artistName => `${artistName.user.name}`}
           options={userData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
-          // onPaginate={() => console.log("clicked on name!")}
           placeholder="Søk etter artister..."
           selected={props.userData}
         />

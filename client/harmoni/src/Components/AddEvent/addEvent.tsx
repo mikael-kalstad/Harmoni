@@ -165,7 +165,6 @@ const AddEvent = (props: { userData: any }) => {
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
-      console.log(infoData);
       setInfoSubmit(true);
       if (isInfoDataEmpty()) return;
     }

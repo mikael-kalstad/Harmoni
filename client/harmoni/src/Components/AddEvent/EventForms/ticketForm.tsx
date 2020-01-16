@@ -60,7 +60,6 @@ const TicketForm = (props: any) => {
       s.price = price;
       s.available = available;
       props.setListOfTickets(array => [...array, s]);
-      console.log("listTickets", props.listOfTickets);
     }
   };
 

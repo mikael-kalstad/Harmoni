@@ -68,7 +68,7 @@ const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
   };
 
   // console.log("File", file);
-  console.log("imgLink", imgLink);
+  // console.log("imgLink", imgLink);
 
   return (
     <>

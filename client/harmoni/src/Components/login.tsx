@@ -117,7 +117,6 @@ const Login = (props: any) => {
 
     // Try to log user in
     let res = await loginService.login(username, password);
-    console.log("res in LOGIN", res);
 
     // Network or other errors
     if (res && res instanceof Error) {
@@ -208,7 +207,10 @@ const Login = (props: any) => {
               <StyledLink
                 style={{ justifySelf: "start" }}
                 to="/glemt-passord"
-                onClick={() => {props.toggle(); history.push("/glemt-passord")}}
+                onClick={() => {
+                  props.toggle();
+                  history.push("/glemt-passord");
+                }}
               >
                 Glemt passord?
               </StyledLink>
@@ -216,7 +218,10 @@ const Login = (props: any) => {
               <StyledLink
                 style={{ justifySelf: "end" }}
                 to="/registrer"
-                onClick={() => {props.toggle(); history.push("/registrer")}}
+                onClick={() => {
+                  props.toggle();
+                  history.push("/registrer");
+                }}
               >
                 Registrer deg
               </StyledLink>
