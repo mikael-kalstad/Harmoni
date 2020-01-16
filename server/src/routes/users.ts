@@ -34,7 +34,6 @@ router.get("/users/email/:email", async (request, response) => {
       response.status(200);
       response.send(sanitizeUser(data))
     }else{
-      response.sendStatus(404);
       response.json({ error: "brukeren finnes ikke" });
     }
   });
