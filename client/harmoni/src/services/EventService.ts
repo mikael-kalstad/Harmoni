@@ -148,7 +148,7 @@ class EventService extends Service {
     return axios({
       method: "post",
       url:
-        this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
+        this.path + "/authorized/events/user_event/" + userId +"/"+ eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -185,6 +185,19 @@ class EventService extends Service {
     })
       .then(response => response.data)
       .catch(error => console.log(error));
+  }
+  getUsersOfEventByType(eventId: number,type:string) {
+    updateToken();
+    return axios({
+      method: "delete",
+      url: this.path + "/events/user/" + eventId+"/"+type,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+        .then(response => response.data)
+        .catch(error => console.log(error));
   }
 }
 
