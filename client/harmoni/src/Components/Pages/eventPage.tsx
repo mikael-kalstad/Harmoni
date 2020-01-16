@@ -9,6 +9,7 @@ import { userService } from '../../services/UserService';
 
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
+import MapContainer from '../Event/Map';
 
 export interface IEvent {
   event_id: number;
@@ -214,7 +215,9 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <ArtistsGrid>
             <ArtistsList artists={artists} />
           </ArtistsGrid>
-          <MapGrid>Kartet går her</MapGrid>
+          <MapGrid>
+            <MapContainer />
+          </MapGrid>
         </ArtistsAndMapGrid>
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
