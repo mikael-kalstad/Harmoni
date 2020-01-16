@@ -21,7 +21,7 @@ import Button from "../Components/Button/button";
     })
 })*/
 
-describe("<Login /> without props", () => {
+/* describe("<Login /> without props", () => {
 
     const wrapper = mount(<Login/>);
 
@@ -31,7 +31,7 @@ describe("<Login /> without props", () => {
         done();
     })
 
-    /*test("Login button works", done => {
+    test("Login button works", done => {
         const loginModule = require('../Components/login');
         loginModule.login = jest.fn();
         expect(loginModule.login).not.toHaveBeenCalled();
@@ -40,8 +40,8 @@ describe("<Login /> without props", () => {
         //console.log("SUBMIT: ", wrapper.props().submit);
         expect(loginModule.login).toHaveBeenCalled();
         done();
-    })*/
-})
+    })
+}) */
  
 
  test("One equals One", done => {

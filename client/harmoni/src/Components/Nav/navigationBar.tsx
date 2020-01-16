@@ -58,13 +58,13 @@ const NavigationBar = (props: any) => (
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
         <LinkWrapper>
-          <LinkContainer to="/events/konsert">
+          <LinkContainer to="/events/concert">
             <Nav.Link>Konsert</Nav.Link>
           </LinkContainer>
         </LinkWrapper>
 
         <LinkWrapper>
-          <LinkContainer to="/events/teater">
+          <LinkContainer to="/events/theatre">
             <Nav.Link>Teater</Nav.Link>
           </LinkContainer>
         </LinkWrapper>
@@ -85,7 +85,7 @@ const NavigationBar = (props: any) => (
               <NavDropdown.Item>Show</NavDropdown.Item>
             </LinkContainer>
             <NavDropdown.Divider />
-            <LinkContainer to="/events/annet">
+            <LinkContainer to="/events/other">
               <NavDropdown.Item>Annet</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown>
