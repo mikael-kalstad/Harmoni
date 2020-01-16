@@ -29,7 +29,14 @@ router.get('/name/:name', async (request, response) => {
 // Get singular user given email
 router.get("/users/email/:email", async (request, response) => {
   dao.getUserByEMail(request.params.email, (status, data) => {
-    status == 500 ? response.status(500) : response.send(sanitizeUser(data));
+    let user=data[0];
+    if (typeof user != "undefined") {
+      response.status(200);
+      response.send(sanitizeUser(data))
+    }else{
+      response.sendStatus(404);
+      response.json({ error: "brukeren finnes ikke" });
+    }
   });
 });
 

@@ -137,6 +137,11 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
+  getUsersOfEventByType(eventId:number,type:string, callback){
+      super.query('SELECT DISTINCT user_event.user_id FROM user_event, user where user.type=? AND user_event.event_id=?',
+          [type,eventId],
+          callback);
+  }
 
   updateEvent(eventId: number, data: event, callback) {
     super.query(

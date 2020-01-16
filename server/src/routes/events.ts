@@ -103,5 +103,10 @@ router.get('/events/user/:category', async (request, response) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+router.get('/events/user/:event_id/:type', async (request, response) => {
+  dao.getUsersOfEventByType(parseInt(request.params.event_id),request.params.type, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
 
 module.exports = router;

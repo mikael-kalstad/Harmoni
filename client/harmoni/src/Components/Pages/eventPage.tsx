@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
+import { ListGroup } from 'react-bootstrap';
 
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
@@ -116,14 +117,13 @@ const DoubleColumnGrid = styled.div`
   align-content: center;
 `;
 
-const DateText = styled.p`
-  color: grey;
-  justify-self: end;
+const BoldSpan = styled.span`
+  font-weight: bold;
 `;
 
-const AddressText = styled.p`
-  color: grey;
-`;
+const DateText = styled.p``;
+
+const AddressText = styled.p``;
 
 const OrganizerText = styled.p``;
 
@@ -171,6 +171,8 @@ const Event = (props: { match: { params: { id: number } } }) => {
     organizer != null &&
     artists != null
   ) {
+    let dateFrom = event[0].from_date.split(' ');
+    let dateTo = event[0].to_date.split(' ');
     return (
       <Wrapper>
         <ImageGrid>
@@ -178,14 +180,30 @@ const Event = (props: { match: { params: { id: number } } }) => {
             src={new Buffer(event[0].picture).toString('ascii')}
             alt={event[0].name}
           ></EventImage>
-          <DoubleColumnGrid>
-            <AddressText>{event[0].address}</AddressText>
-            <DateText>{event[0].from_date}</DateText>
-          </DoubleColumnGrid>
         </ImageGrid>
         <InfoGrid>
           <Title>{event[0].name}</Title>
-          <OrganizerText>Arrangør: {organizer[0].name}</OrganizerText>
+          <OrganizerText>
+            <BoldSpan>Arrangør: </BoldSpan>
+            {organizer[0].name}
+          </OrganizerText>
+          <DateText>
+            <BoldSpan>Tid: </BoldSpan>
+            {dateFrom[0] === dateTo[0]
+              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
+              : 'Fra: ' +
+                dateFrom[0] +
+                ' kl. ' +
+                dateFrom[1] +
+                ' til ' +
+                dateTo[0] +
+                ' kl. ' +
+                dateTo[1]}
+          </DateText>
+          <AddressText>
+            <BoldSpan>Sted: </BoldSpan>
+            {event[0].address}
+          </AddressText>
           <ContentText>
             {event[0].information === ''
               ? 'Arrangementet har ingen beskrivelse eller program'
