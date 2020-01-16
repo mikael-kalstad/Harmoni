@@ -206,6 +206,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           <ImgUpload
             setImgData={setImgData}
             picture={
+              props.userData &&
               props.userData.picture &&
               new Buffer(props.userData.picture).toString("ascii")
             }
