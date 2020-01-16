@@ -62,7 +62,6 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      {console.log('user data', userData)}
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
           <Route exact path="/" component={FrontPage} />
