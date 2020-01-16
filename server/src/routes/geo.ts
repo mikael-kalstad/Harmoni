@@ -3,17 +3,17 @@ const NodeGeoCoder = require('node-geocoder');
 const router = express.Router();
 
 let options = {
-  provider: 'google',
+  provider: 'locationiq',
   httpAdapter: 'https',
-  apiKey: process.env.api_key
+  apiKey: process.env.api_key,
+  formatter: null
 };
 
 let geo = NodeGeoCoder(options);
 
 router.get('/geo/', async (request, response) => {
-  geo.geocode('29 champs elysée paris', (status, data) => {
-    console.log(data);
-
+  var address = request.headers['address'];
+  geo.geocode(address, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
