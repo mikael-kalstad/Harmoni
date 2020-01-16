@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS event (
 information TEXT NOT NULL,
 category VARCHAR(45) NOT NULL,
 picture LONGBLOB NOT NULL,
+
   PRIMARY KEY (event_id),
 	FOREIGN KEY (organizer)
 	REFERENCES user (user_id)
