@@ -4,15 +4,16 @@ const router = express.Router();
 
 let options = {
   provider: 'google',
-  httpAdapter: 'http',
-  apiKey: process.env.api_key,
-  formatter: null
+  httpAdapter: 'https',
+  apiKey: process.env.api_key
 };
 
 let geo = NodeGeoCoder(options);
 
-router.get('/geo/:address', async (request, response) => {
-  geo.geocode(request.params.address, (status, data) => {
+router.get('/geo/', async (request, response) => {
+  geo.geocode('29 champs elysée paris', (status, data) => {
+    console.log(data);
+
     status == 500 ? response.status(500) : response.send(data);
   });
 });
