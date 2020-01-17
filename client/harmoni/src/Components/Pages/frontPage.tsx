@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HeaderCarousel from "../headerCarousel";
-import ArrangementGrid from "../arrangementGrid";
+import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
 
 const FrontPage = () => {
@@ -18,7 +18,7 @@ const FrontPage = () => {
   return (
     <>
       <HeaderCarousel data={eventData} />
-      <ArrangementGrid data={eventData} title="Populære arrangementer" />
+      <EventGrid data={eventData} title="Populære arrangementer" />
     </>
   );
 };
