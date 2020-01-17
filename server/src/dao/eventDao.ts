@@ -178,4 +178,7 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
+  changeStatus(eventId:number,status:string,callback){
+      super.query('UPDATE event SET status=? WHERE event_id=?',[status,eventId],callback);
+  }
 }
