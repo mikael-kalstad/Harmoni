@@ -6,9 +6,11 @@ import { ListGroup } from 'react-bootstrap';
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
 import { userService } from '../../services/UserService';
+import { geoService } from '../../services/GeoService';
 
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
+import MapContainer from '../Event/map';
 
 export interface IEvent {
   event_id: number;
@@ -58,18 +60,19 @@ const ImageGrid = styled.div`
   @media screen and (max-width: 800px) {
     margin: auto;
     margin-top: 10px;
-    width: 70%;
+    width: 90%;
   }
 `;
 
 const InfoGrid = styled.div`
-  margin: 0 20px;
+  margin: 0 40px;
 `;
 
 const ArtistsAndMapGrid = styled.div`
   display: grid;
-  margin: 20px 20px;
+  margin: 20px 40px;
   grid-gap: 30px;
+  min-height: 450px;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
 
@@ -83,6 +86,7 @@ const ArtistsGrid = styled.div`
   justify-self: start;
   border-radius: 10px;
   height: 100%;
+
   @media screen and (max-width: 800px) {
     justify-self: center;
   }
@@ -90,8 +94,9 @@ const ArtistsGrid = styled.div`
 
 const MapGrid = styled.div`
   border: solid;
-  width: 350px;
-  height: 350px;
+  min-height: 300px;
+  width: 100%;
+  height: 100%;
 `;
 
 const TicketsGrid = styled.div`
@@ -139,6 +144,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+  const [coords, setCoords] = useState();
 
   useEffect(() => {
     fetchEvent();
@@ -148,7 +154,10 @@ const Event = (props: { match: { params: { id: number } } }) => {
   }, []);
 
   const fetchEvent = async () => {
-    setEvent(await eventService.getEventById(props.match.params.id));
+    eventService.getEventById(props.match.params.id).then(data => {
+      setEvent(data);
+      fetchCoords(data[0].address);
+    });
   };
 
   const fetchTickets = async () => {
@@ -165,14 +174,24 @@ const Event = (props: { match: { params: { id: number } } }) => {
     setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
   };
 
+  const fetchCoords = async (address: string) => {
+    geoService.getLatAndLndOfAddress(address).then(data => {
+      console.log(data);
+
+      setCoords({ lat: data[0], lng: data[1] });
+    });
+  };
+
   if (
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null
+    artists != null &&
+    coords != null
   ) {
     let dateFrom = event[0].from_date.split(' ');
     let dateTo = event[0].to_date.split(' ');
+
     return (
       <Wrapper>
         <ImageGrid>
@@ -214,7 +233,9 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <ArtistsGrid>
             <ArtistsList artists={artists} />
           </ArtistsGrid>
-          <MapGrid>Kartet går her</MapGrid>
+          <MapGrid>
+            <MapContainer coords={coords} />
+          </MapGrid>
         </ArtistsAndMapGrid>
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
