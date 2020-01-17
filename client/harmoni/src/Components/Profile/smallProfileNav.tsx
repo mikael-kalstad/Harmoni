@@ -1,11 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: 80px auto;
-  padding: 10px;
+  padding: 5px;
+  margin-left: 10px;
   background: #f0f0f0;
   width: fit-content;
 
@@ -69,7 +70,7 @@ const SmallProfileNav = (props: { picture: any; name: string }) => (
     <Container>
       <Wrapper>
         {props.picture && (
-          <Img src={new Buffer(props.picture, "base64").toString("ascii")} />
+          <Img src={new Buffer(props.picture, 'base64').toString('ascii')} />
         )}
       </Wrapper>
 

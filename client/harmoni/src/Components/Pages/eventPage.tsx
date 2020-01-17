@@ -60,7 +60,7 @@ const ImageGrid = styled.div`
   @media screen and (max-width: 800px) {
     margin: auto;
     margin-top: 10px;
-    width: 70%;
+    width: 90%;
   }
 `;
 
@@ -71,7 +71,8 @@ const InfoGrid = styled.div`
 const ArtistsAndMapGrid = styled.div`
   display: grid;
   margin: 20px 40px;
-  grid-gap: 10px;
+  grid-gap: 30px;
+  min-height: 450px;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
 
@@ -93,6 +94,7 @@ const ArtistsGrid = styled.div`
 
 const MapGrid = styled.div`
   border: solid;
+  min-height: 300px;
   width: 100%;
   height: 100%;
 `;

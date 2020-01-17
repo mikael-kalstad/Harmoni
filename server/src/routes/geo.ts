@@ -15,8 +15,6 @@ let geo = NodeGeoCoder(options);
 router.get('/geo/', (request, response) => {
   var address = request.headers['address'];
   GetLatLngByAddress(address).then(data => {
-    console.log(data);
-
     response.send(data);
   });
 });
