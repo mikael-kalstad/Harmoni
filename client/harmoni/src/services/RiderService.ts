@@ -49,6 +49,10 @@ export default class RiderService extends Service {
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
+  getRiderByEventIdUserId(eventId: number, userId:number) {
+    updateToken();
+    return this.getRiderByEventId(eventId);
+  }
   getRiderByUserIdEvent(eventId: number, userId: number) {
     updateToken();
     return axios({

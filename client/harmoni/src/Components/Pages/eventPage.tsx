@@ -4,6 +4,7 @@ import Skeleton from 'react-loading-skeleton';
 import { ListGroup } from 'react-bootstrap';
 
 import { eventService } from '../../services/EventService';
+import { riderService } from '../../services/RiderService';
 import { ticketService } from '../../services/TicketService';
 import { userService } from '../../services/UserService';
 import { geoService } from '../../services/GeoService';
@@ -11,6 +12,7 @@ import { geoService } from '../../services/GeoService';
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
 import MapContainer from '../Event/map';
+import RiderService from "../../services/RiderService";
 
 export interface IEvent {
   event_id: number;
@@ -148,6 +150,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
 
   useEffect(() => {
     fetchEvent();
+    fetchRiders();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
@@ -172,6 +175,9 @@ const Event = (props: { match: { params: { id: number } } }) => {
 
   const fetchOrganizer = async () => {
     setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
+  };
+  const fetchRiders = async () => {
+    setOrganizer(await riderService.getRiderByEventId(props.match.params.id));
   };
 
   const fetchCoords = async (address: string) => {
