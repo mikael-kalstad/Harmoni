@@ -17,16 +17,26 @@ router.get("/search/events/:require", async (request, response) => {
     });
 })
 // Get events by lowest price to tickets
-router.get('/search/events/billigste', async (request, response) => {
+router.get('/search/events/cheapest', async (request, response) => {
     dao.sortCheapestEvents( (status, data) => {
-        status == 500 ? response.status(500) : response.send(data);
+        if(status==500){
+            response.status(500);
+            console.log("Something is wrong");
+        }else{
+            response.send(data);
+        }
     });
 });
 
 // Get events by highest price to tickets
-router.get('/search/events/dyreste', async (request, response) => {
+router.get('/search/events/mostExpensive', async (request, response) => {
     dao.sortExpensiveEvents( (status, data) => {
-        status == 500 ? response.status(500) : response.send(data);
+        if(status==500){
+            response.status(500);
+            console.log("Something is wrong");
+        }else{
+            response.send(data);
+        }
     });
 });
 

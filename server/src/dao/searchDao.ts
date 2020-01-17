@@ -62,16 +62,16 @@ export default class searchDao extends daoParentEvent {
     }
     // Sort events by tickets' lowest price
     sortCheapestEvents(callback) {
-        var sql = 'SELECT event.* from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price ASC;';
-        super.query( sql,
+    var sql = 'SELECT DISTINCT * from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price ASC;';
+        super.query( sql,[],
             callback
         );
     }
 
     // Sort events by tickets' lowest price
     sortExpensiveEvents(callback) {
-        var sql = 'SELECT event.* from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price desc;';
-        super.query( sql,
+        var sql = 'SELECT DISTINCT * from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price desc;';
+        super.query( sql,[],
             callback
         );
     }
