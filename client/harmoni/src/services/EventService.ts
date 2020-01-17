@@ -199,6 +199,22 @@ class EventService extends Service {
         .then(response => response.data)
         .catch(error => console.log(error));
   }
+
+  //User have to be logged in to use this function
+  changeStatusOfEvent(eventId: number,newStatus:string){
+    updateToken();
+    return axios({
+      method: "put",
+      url: this.path + "/authorized/events/"+eventId+"/"+newStatus,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+        .then(response => response.data)
+        .catch(error => console.log(error));
+  }
+  
 }
 
 export let eventService = new EventService();

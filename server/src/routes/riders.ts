@@ -15,8 +15,8 @@ router.post("/authorized/riders", async (request, response) => {
 })
 
 // Add rider list
-router.post("/authorized/riders/riderlist/:user_id&:event_id", async (request, response) => {
-    dao.addRiderList(request.body,(status, data) => {
+router.post("/authorized/riders/riderlist/:event_id", async (request, response) => {
+    dao.addRiderList(request.body.eventId,request.body.userId,request.body.riderId, request.body.text, request.body.quantity ,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })

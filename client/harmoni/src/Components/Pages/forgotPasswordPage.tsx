@@ -58,56 +58,61 @@ const ForgotPassword = (props: any) => {
       return;
     }
 
-    setLoading(true);
-    let res = await userService.getUserByEMail(email);
-    console.log("res in forgotPassword", res);
+        setLoading(true);
+        let res = await userService.getUserByEMail(email);
 
-    if (res && res.status === 404) {
-      setWarningText("Email er ikke registrert");
-      console.log("Ikke res");
-    } else {
-      setLoading(false);
-      passwordService.requestPasswordReset(emailInput);
-      setRedirect(true);
-    }
-  };
-  // Check if enter key is clicked
-  const checkForEnterKey = (e: { key: string } | undefined) => {
-    // Try to reset password if enter key is pressed down
-    if (e !== undefined && e.key === "Enter") forgotPassword(emailInput);
-  };
+        if(res.error){
+            setWarningText("Email er ikke registrert");
+            setLoading(false);
+        }
+        else {
+            setLoading(false);
+            passwordService.requestPasswordReset(emailInput);
+            setRedirect(true);
+        }
+    };
+    // Check if enter key is clicked
+    const checkForEnterKey = (e: { key: string } | undefined) => {
+        // Try to reset password if enter key is pressed down
+        if (e !== undefined && e.key === "Enter") forgotPassword(emailInput);
+    };
 
   if (redirect) {
     return <Redirect to="/" />;
   }
 
-  return (
-    <>
-      <Title>Glemt passord</Title>
-      <Container>
-        <Text>
-          {" "}
-          Vennligst skriv inn e-postaddressen din. Du vil få en e-post med link
-          til å lage en ny passord
-        </Text>
-        <TextField
-          style={inputStyle}
-          variant="outlined"
-          label="eksampel@eks.no"
-          type="email"
-          error={(submit && emailInput === "") || warningText !== ""}
-          helperText={submit && emailInput === "" ? "Email er påkrevd" : ""}
-          onChange={e => setEmailInput(e.target.value)}
-          onKeyDown={e => checkForEnterKey(e)}
-        />
-        <BtnWrapper>
-          <Button onClick={() => forgotPassword(emailInput)}>
-            Reset passord
-          </Button>
-        </BtnWrapper>
-      </Container>
-    </>
-  );
+
+    return (
+        <>
+            <Title>Glemt passord</Title>
+            <Container>
+                <Text> Vennligst skriv inn e-postaddressen din.
+                    Du vil få en e-post med link til å lage en ny passord</Text>
+                <TextField
+                    style={inputStyle}
+                    variant="outlined"
+                    label="eksampel@eks.no"
+                    type="email"
+                    error={(submit && emailInput === "") || warningText !== ""}
+                    helperText={submit && emailInput === "" ? "Email er påkrevd" : warningText !== ""
+                        ? warningText
+                        : ""}
+                    onChange={e => setEmailInput(e.target.value)}
+                    onKeyDown={e => checkForEnterKey(e)}
+                />
+                <BtnWrapper>
+                    <Button
+                        onClick={() => forgotPassword(emailInput)}
+                    >
+                        Reset passord
+                    </Button>
+                </BtnWrapper>
+            </Container>
+        </>
+
+
+    )
 };
 
 export default ForgotPassword;
+

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Button from "../Button/button";
 import {passwordService} from "../../services/PasswordService";
+import {Redirect} from "react-router-dom";
 
 const Container = styled.div`
   margin: 60px auto 0 auto;
@@ -38,9 +39,10 @@ const ResetPassword = (props: any) => {
     // Password is to short or input is empty
     const [passwordWarning, setPasswordWarning] = useState("");
     // Used to display error on empty input when submitting
+    const [redirect, setRedirect] = useState(false);
     const [submit, setSubmit] = useState(false);
     const [passwordInput, setPasswordInput] = useState("");
-    const [confirmPasswrod,setConfirmPasswrod] = useState("");
+    const [confirmPassword,setConfirmPassword] = useState("");
     const [warningText, setWarningText] = useState("");
 
     // Check inputs and try to reset password given email
@@ -53,12 +55,21 @@ const ResetPassword = (props: any) => {
             setPasswordWarning("Ett eller flere felter er tom");
             return;
         }
+        else if(password===confirmedPassword){
+            passwordService.newPassword(passwordInput);
+            setRedirect(true);
+        }else{
+            setWarningText("Passordene må være like");
+        }
 
     };
+    if (redirect) {
+        return <Redirect to="/profile" />;
+    }
     // Check if enter key is clicked
     const checkForEnterKey = (e: { key: string } | undefined) => {
         // Try to reset password if enter key is pressed down
-        if (e !== undefined && e.key === "Enter") resetPassword(passwordInput,confirmPasswrod);
+        if (e !== undefined && e.key === "Enter") resetPassword(passwordInput,confirmPassword);
     };
     return (
         <>
@@ -81,13 +92,15 @@ const ResetPassword = (props: any) => {
                     label="Skriv inn det nye passordet igjen"
                     type="password"
                     error={(submit && passwordInput === "") || warningText !== ""}
-                    helperText={submit && passwordInput === "" ? "E-postadressen er påkrevd" : ""}
-                    onChange={e => setPasswordInput(e.target.value)}
+                    helperText={submit && passwordInput === "" ? "confirmed passord er påkrevd" : warningText !== ""
+                        ? warningText
+                        : ""}
+                    onChange={e => setConfirmPassword(e.target.value)}
                     onKeyDown={e => checkForEnterKey(e)}
                 />
                 <BtnWrapper>
                     <Button
-                        onClick={() => passwordService.newPassword(passwordInput)}
+                        onClick={() => resetPassword(passwordInput,confirmPassword)}
                     >
                         Reset passord
                     </Button>
