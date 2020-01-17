@@ -137,7 +137,13 @@ const ArrangementCard = (props: any) => {
   );
 
   if (props.id) {
-    return <StyledLink to={"/event/" + props.id}>{card}</StyledLink>;
+    return (
+      <StyledLink
+        to={"/event/" + (props.eventInProfile ? "details/" : "") + props.id}
+      >
+        {card}
+      </StyledLink>
+    );
   }
 
   return card;

@@ -9,7 +9,7 @@ import ArtistForm from "./EventForms/artistForm";
 import BasicInfoForm from "./EventForms/basicInfoForm";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
-import Summary from "./EventForms/summary";
+import Summary from "./summary";
 import Success from "./success";
 
 // Services
@@ -287,7 +287,7 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
           <div>
             {uploaded && (
               <>
-                <Success />
+                <Success title="Arrangement lagt til" />
                 <Button onClick={handleReset}>Nytt arrangement</Button>
               </>
             )}
