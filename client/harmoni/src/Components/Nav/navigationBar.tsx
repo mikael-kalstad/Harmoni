@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import OutlineButton from '../Button/outlineButton';
-import LoginBtn from '../Button/loginBtn';
-import SmallProfileNav from '../Profile/smallProfileNav';
-import { LinkContainer } from 'react-router-bootstrap';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import OutlineButton from "../Button/outlineButton";
+import LoginBtn from "../Button/loginBtn";
+import SmallProfileNav from "../Profile/smallProfileNav";
+import { LinkContainer } from "react-router-bootstrap";
 
 const StyledLink = styled(props => <Link {...props} />)`
   color: #7f7f7f;
@@ -39,18 +39,18 @@ const NavigationBar = (props: any) => (
     bg="white"
     expand="lg"
     sticky="top"
-    style={{ boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)', padding: '0px' }}
+    style={{ boxShadow: "0px 1px 8px rgba(0, 0, 0, 0.25)", padding: "0px" }}
   >
     <Navbar.Brand>
       <Link to="/">
         <img
           src="/icons/icon.svg"
-          width="40"
-          height="40"
+          width="60"
+          height="60"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
-          style={{ margin: '8px 15px' }}
-          onClick={() => handleIconClick('/')}
+          style={{ margin: "0px 1px -10px 15px", padding: "0px" }}
+          onClick={() => handleIconClick("/")}
         />
       </Link>
     </Navbar.Brand>
@@ -119,7 +119,7 @@ const NavigationBar = (props: any) => (
 const handleIconClick = (path: any) => {
   //Smooth scroll to top if already on the home page
   if (window.location.pathname === path)
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   else window.scrollTo(0, 0);
 };
 
