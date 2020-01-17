@@ -28,7 +28,7 @@ export default class userDao extends daoParentUser {
 
   // Gets all users
   getAllUsers(callback) {
-    super.query("SELECT * FROM user", [], callback);
+    super.query("SELECT user_id, name, email, mobile, type, picture FROM user", [], callback);
   }
 
   // Gets a user by its id
@@ -48,8 +48,23 @@ export default class userDao extends daoParentUser {
     );
   }
 
+  getUserByEMail(email: string, callback) {
+    super.query(
+      "SELECT user_id, name, email FROM user WHERE email = ?",
+      [email],
+      callback
+    );
+  }
+/*
   // Gets a user by its mail
   getUserByEMail(email: string, callback) {
+    super.query(
+      "SELECT user_id, name, email FROM user WHERE email = ?",
+      [email],
+      callback
+    );
+  } */
+  getUserAllInfoByEMail(email: string, callback){
     super.query(
       "SELECT user_id, name, email, mobile, type, picture FROM user WHERE email = ?",
       [email],
@@ -59,7 +74,7 @@ export default class userDao extends daoParentUser {
 
   // Gets all users of a type
   getUsersOfType(type: string, callback) {
-    super.query("SELECT * FROM user WHERE type = ?", [type], callback);
+    super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE type = ?", [type], callback);
   }
 
   // Gets the hash of a user
@@ -74,7 +89,7 @@ export default class userDao extends daoParentUser {
   // Gets the organizer for an event
   getOrganizerForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.* FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
+      "SELECT user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
       [eventId],
       callback
     );
@@ -83,7 +98,7 @@ export default class userDao extends daoParentUser {
   // Gets all artists for an event
   getArtistsForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.* FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
+      "SELECT user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
       [eventId],
       callback
     );
@@ -92,7 +107,7 @@ export default class userDao extends daoParentUser {
   // Gets all volunteers for an event
   getVolunteersForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.* FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
+      "SELECT user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
       [eventId],
       callback
     );
@@ -144,7 +159,7 @@ export default class userDao extends daoParentUser {
   }
   resetPassword(email: string, data: user, callback) {
     let user;
-    this.getUserByEMail(email, (status, olddata) => {
+    this.getHashOfUser(email, (status, olddata) => {
       user = olddata[0];
       let newHash = data.hash;
       let newSalt = data.salt;

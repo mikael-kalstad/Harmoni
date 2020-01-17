@@ -189,7 +189,7 @@ class EventService extends Service {
   getUsersOfEventByType(eventId: number,type:string) {
     updateToken();
     return axios({
-      method: "delete",
+      method: "get",
       url: this.path + "/events/user/" + eventId+"/"+type,
       headers: {
         "Content-Type": "application/json; charset=utf-8",

@@ -71,7 +71,7 @@ const ForgotPassword = (props: any) => {
     }
 
         setLoading(true);
-        let res = await userService.getUserByEMail(email);
+        let res = await userService.getUserAllInfoByEMail(email);
 
         if(res){
           setLoading(false);
