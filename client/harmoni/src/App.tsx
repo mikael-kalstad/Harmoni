@@ -15,6 +15,7 @@ import Event from "./Components/Pages/eventPage";
 import PageNotFound from "./Components/Pages/pageNotFound";
 import Layout from "./Components/layout";
 import AddEvent from "./Components/AddEvent/addEvent";
+import EditEvent from "./Components/Pages/editEvent";
 import SearchEvents from "./Components/Pages/searchPage";
 
 // Authentication component
@@ -72,10 +73,16 @@ const App: React.FC = () => {
           />
           <Route exact path="/events/:type" component={Events} />
           <Route exact path="/event/:id" component={Event} />
-          <Route
+          <RouteWithAuth
             exact
             path="/newEvent"
             render={props => <AddEvent userData={userData} />}
+          />
+
+          <RouteWithAuth
+            exact
+            path="/newEvent/:id"
+            render={props => <EditEvent {...props} userData={userData} />}
           />
 
           {/* ROUTES WITH AUTHENTICATION */}

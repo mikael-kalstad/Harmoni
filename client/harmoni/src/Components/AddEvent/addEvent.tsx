@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import FormStepper from './formStepper';
@@ -61,10 +61,10 @@ const LoadingText = styled.p`
 const WarningText = styled.p`
   color: #d45951;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 400;s
 `;
 
-const AddEvent = (props: { userData: any }) => {
+const AddEvent = (props: { userData: any; eventData?: any }) => {
   //   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
@@ -114,6 +114,32 @@ const AddEvent = (props: { userData: any }) => {
   const artistProps = { listOfArtists, setListOfArtists };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
+
+  useEffect(() => {
+    if (props.eventData) {
+      console.log('eventdata', props.eventData);
+      setInfoData({
+        name: props.eventData[0].name,
+        imgData: props.eventData[0].picture,
+        category: props.eventData[0].category,
+        location: props.eventData[0].address,
+        dateFrom: props.eventData[0].from_date,
+        dateTo: props.eventData[0].to_date
+      });
+
+      setTicketsAndArtists();
+      setProgramText(props.eventData[0].information);
+    }
+  }, [props.eventData]);
+
+  const setTicketsAndArtists = async () => {
+    setListOfArtists(
+      await userService.getArtistsForEvent(props.eventData.event_id)
+    );
+    setListOfTickets(
+      await ticketService.getAllTicketsByEventId(props.eventData.event_id)
+    );
+  };
 
   function getStepContent(step: number) {
     switch (step) {

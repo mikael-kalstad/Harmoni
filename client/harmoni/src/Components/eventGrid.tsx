@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ArrangementCard from "./arrangementCard";
+import EventCard from "./eventCard";
 
 const Container = styled.div`
   width: 80%;
@@ -10,9 +10,23 @@ const Container = styled.div`
 
 const Grid = styled.div`
   max-width: 100vw;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 350px);
-  grid-gap: 30px 50px;
+  /* grid-template-columns: repeat(auto-fill, 350px); */
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 50px 70px;
+
+  @media screen and (max-width: 1700px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (max-width: 750px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Title = styled.h2`
@@ -26,17 +40,17 @@ const Title = styled.h2`
 `;
 
 const InfoText = styled.h3`
-  margin-top: 140px;
-  font-size: 38px;
+  font-size: 27px;
+  margin-top: 30px;
   font-weight: 400;
-  color: #8a8a8a;
+  color: #a7a7a7;
 `;
 
 const arrangementGrid = (props: any) => {
   let cards: JSX.Element[] = [];
 
   for (let i = 0; i < 8; i++) {
-    cards.push(<ArrangementCard key={i} />);
+    cards.push(<EventCard key={i} />);
   }
 
   if (props.data) {
@@ -55,12 +69,16 @@ const arrangementGrid = (props: any) => {
 
     props.data.forEach((a: any) => {
       cards.push(
-        <ArrangementCard
+        <EventCard
           id={a.event_id}
           key={a.event_id}
+          status={a.status}
           category={a.category}
           title={a.name}
           picture={a.picture}
+          fromDate={a.from_date}
+          toDate={a.to_date}
+          eventInProfile={props.eventInProfile}
         />
       );
     });
@@ -73,9 +91,7 @@ const arrangementGrid = (props: any) => {
       <Grid>{cards}</Grid>
 
       {/* If there are no events */}
-      {cards.length === 0 && (
-        <InfoText>Det finnes ingen arrangementer i denne kategorien</InfoText>
-      )}
+      {cards.length === 0 && <InfoText>{props.emptyText}</InfoText>}
     </Container>
   );
 };

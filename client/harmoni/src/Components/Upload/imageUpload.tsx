@@ -4,7 +4,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Wrapper = styled.div`
   display: grid;
-  /* grid-template-columns: 40% auto; */
   align-items: center;
 `;
 
