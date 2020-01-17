@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
 import { ListGroup } from 'react-bootstrap';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
@@ -10,7 +11,7 @@ import { geoService } from '../../services/GeoService';
 
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
-import MapContainer from '../Event/map';
+import Map from '../Event/map';
 
 export interface IEvent {
   event_id: number;
@@ -93,10 +94,13 @@ const ArtistsGrid = styled.div`
 `;
 
 const MapGrid = styled.div`
+  display: grid;
   border: solid;
   min-height: 300px;
   width: 100%;
   height: 100%;
+  margin: 0;
+  align-items: center;
 `;
 
 const TicketsGrid = styled.div`
@@ -186,8 +190,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null &&
-    coords != null
+    artists != null
   ) {
     let dateFrom = event[0].from_date.split(' ');
     let dateTo = event[0].to_date.split(' ');
@@ -233,9 +236,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <ArtistsGrid>
             <ArtistsList artists={artists} />
           </ArtistsGrid>
-          <MapGrid>
-            <MapContainer coords={coords} />
-          </MapGrid>
+          <MapGrid>{coords && <Map coords={coords} zoom={14} />}</MapGrid>
         </ArtistsAndMapGrid>
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />

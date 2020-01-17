@@ -8,7 +8,8 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import ImageUpload from '../../Upload/imageUpload';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import Map from '../../Event/map';
 
 import { geoService } from '../../../services/GeoService';
 
@@ -44,6 +45,11 @@ const WarningText = styled.p`
   color: #d55951;
 `;
 
+const MapWrapper = styled.div`
+  width: 100%;
+  height: 200px;
+`;
+
 interface IProps {
   infoSubmit: boolean;
   infoData: any;
@@ -54,9 +60,10 @@ interface IProps {
 const BasicInfoForm = (props: IProps) => {
   const types_translated = ['Konsert', 'Festival', 'Teater', 'Standup'];
   const types = ['concert', 'festival', 'theatre', 'standup'];
-  const [coords, setCoords] = useState([1, 1]);
+  const [coords, setCoords] = useState([-1000, -1000]);
   const [fetchingCoords, setFetchingCoords] = useState(false);
 
+  let initialCoords = [-1000, -1000];
   let menuItems: JSX.Element[] = [];
 
   // Add menu items to dropdown list
@@ -76,7 +83,7 @@ const BasicInfoForm = (props: IProps) => {
         setFetchingCoords(false);
       });
     } else {
-      setCoords([1, 1]);
+      setCoords(initialCoords);
     }
   };
 
@@ -133,7 +140,7 @@ const BasicInfoForm = (props: IProps) => {
       <UnderTitle>Lokasjon*</UnderTitle>
       <TextField
         style={
-          coords.length > 0 && coords[0] != 1 && !fetchingCoords
+          coords.length > 0 && coords[0] != -1000 && !fetchingCoords
             ? inputStyleLocationFound
             : inputStyle
         }
@@ -158,6 +165,11 @@ const BasicInfoForm = (props: IProps) => {
         }}
         onBlur={e => fetchCoords(e.target.value)}
       />
+      {coords.length > 0 && coords[1] != -1000 && (
+        <MapWrapper>
+          <Map coords={{ lat: coords[0], lng: coords[1] }} zoom={12} />
+        </MapWrapper>
+      )}
 
       <UnderTitle>Dato og tid*</UnderTitle>
       <MiniTitle>Fra</MiniTitle>
