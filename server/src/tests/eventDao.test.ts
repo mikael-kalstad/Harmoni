@@ -89,7 +89,7 @@ test("Get events by address", done => {
 })
 
 test("Get events by status", done => {
-    dao.getEventsByStatus(3, (status, data) => {
+    dao.getEventsByStatus(0, (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(2);
         done();
@@ -114,7 +114,7 @@ test("Add new event", done => {
         from_date: "2020-01-07 15:00:00",
         to_date: "2020-01-07 20:00:00",
         capacity: 10,
-        status: 3,
+        status: 0,
         information: "Veldig bra konsert",
         category: "concert",
         picture: "x'12B"
@@ -137,7 +137,7 @@ test("Update event", done => {
         from_date: "2020-01-07 15:00:00",
         to_date: "2020-01-07 20:00:00",
         capacity: 100,
-        status: 3,
+        status: 0,
         information: "Veldig bra konsert",
         category: "concert",
         picture: "x'12B"

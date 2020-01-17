@@ -73,7 +73,7 @@ test("search for events given organizer NR2 ", done => {
     dao.searchForEvents("Roy narvestad", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data[0].status).toBe(3);
+        expect(data[0].status).toBe(0);
         done();
     })
 })
