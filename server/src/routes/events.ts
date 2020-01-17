@@ -104,4 +104,5 @@ router.get('/events/user/:category', async (request, response) => {
   });
 });
 
+
 module.exports = router;

@@ -98,7 +98,8 @@ const App: React.FC = () => {
           />
 
           <Route path="/search/" component={SearchEvents} />
-
+          <Route path="/search/events/billigste" component={SearchEvents} />
+          <Route path="/search/events/dyreste" component={SearchEvents} />
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
           <Route component={PageNotFound} />
         </Switch>

@@ -4,7 +4,17 @@ import Service from "./Service";
 
 class SearchService extends Service{
     searchForEvents(require: string) {
-        return axios.get(this.path + '/search/events/'+require)
+        if( require){
+            return axios.get(this.path + '/search/events/'+require)
+                .then(response => response.data);
+        }
+    }
+    sortAfterLowPrice() {
+        return axios.get(this.path + '/search/events/billigste')
+            .then(response => response.data);
+    }
+    sortAfterHighPrice() {
+        return axios.get(this.path + '/search/events/dyreste')
             .then(response => response.data);
     }
 }

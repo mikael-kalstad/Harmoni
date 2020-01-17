@@ -32,9 +32,10 @@ export default class searchDao extends daoParentEvent {
     }
     // Search for an events
     searchForEvents(input: string, callback) {
-        var sql1 = 'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
+        var sql1 =
+            'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
 
-        var sql2 = "SELECT DISTINCT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? ORDER BY event_id DESC;";
+        var sql2 = "SELECT DISTINCT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? and user.type='artist' ORDER BY event_id DESC;";
 
         let events: event[] = [];
         super.query(sql1,
@@ -58,5 +59,20 @@ export default class searchDao extends daoParentEvent {
                 );
                 }
             })
+    }
+    // Sort events by tickets' lowest price
+    sortCheapestEvents(callback) {
+        var sql = 'SELECT event.* from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price ASC;';
+        super.query( sql,
+            callback
+        );
+    }
+
+    // Sort events by tickets' lowest price
+    sortExpensiveEvents(callback) {
+        var sql = 'SELECT event.* from event, ticket WHERE event.event_id = ticket.event_id ORDER by ticket.price desc;';
+        super.query( sql,
+            callback
+        );
     }
 }

@@ -16,5 +16,18 @@ router.get("/search/events/:require", async (request, response) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
+// Get events by lowest price to tickets
+router.get('/search/events/billigste', async (request, response) => {
+    dao.sortCheapestEvents( (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+    });
+});
+
+// Get events by highest price to tickets
+router.get('/search/events/dyreste', async (request, response) => {
+    dao.sortExpensiveEvents( (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+    });
+});
 
 module.exports = router;
