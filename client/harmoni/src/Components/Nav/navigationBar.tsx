@@ -27,11 +27,11 @@ const StyledLink = styled(props => <Link {...props} />)`
 const Icon = styled.img`
   height: 25px;
   margin-right: 20px;
-  margin: 30px 20px 30px 0;
+  margin: 15px;
 `;
 
 const LinkWrapper = styled.div`
-  margin: 10px 0;
+  margin: 10px;
 `;
 
 const NavigationBar = (props: any) => (
@@ -39,17 +39,17 @@ const NavigationBar = (props: any) => (
     bg="white"
     expand="lg"
     sticky="top"
-    style={{ boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)' }}
+    style={{ boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)', padding: '0px' }}
   >
     <Navbar.Brand>
       <Link to="/">
         <img
           src="/icons/icon.svg"
-          width="30"
-          height="30"
+          width="40"
+          height="40"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
-          style={{ margin: '25px' }}
+          style={{ margin: '8px 15px' }}
           onClick={() => handleIconClick('/')}
         />
       </Link>
