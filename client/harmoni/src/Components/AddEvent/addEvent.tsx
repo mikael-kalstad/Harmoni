@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Button } from "@material-ui/core";
-import FormStepper from "./formStepper";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Button } from '@material-ui/core';
+import FormStepper from './formStepper';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Form components
-import ArtistForm from "./EventForms/artistForm";
-import BasicInfoForm from "./EventForms/basicInfoForm";
-import TicketForm from "./EventForms/ticketForm";
-import ProgramForm from "./EventForms/programForm";
-import Summary from "./EventForms/summary";
-import Success from "./success";
+import ArtistForm from './EventForms/artistForm';
+import BasicInfoForm from './EventForms/basicInfoForm';
+import TicketForm from './EventForms/ticketForm';
+import ProgramForm from './EventForms/programForm';
+import Summary from './EventForms/summary';
+import Success from './success';
 
 // Services
-import { eventService } from "../../services/EventService";
-import { ticketService } from "../../services/TicketService";
-import { userService } from "../../services/UserService";
+import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
+import { userService } from '../../services/UserService';
 
 interface Event {
   eventId: number;
@@ -70,32 +70,32 @@ const AddEvent = (props: { userData: any }) => {
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
   const [loading, setLoading] = useState<boolean>(false);
-  const [warningText, setWarningText] = useState("");
+  const [warningText, setWarningText] = useState('');
   const [uploaded, setUploaded] = useState<boolean>(false);
   const steps = [
-    "Info",
-    "Artister",
-    "Billett-typer",
-    "Beskrivelse og program",
-    "Oppsummering"
+    'Info',
+    'Artister',
+    'Billett-typer',
+    'Beskrivelse og program',
+    'Oppsummering'
   ];
 
   // 1. Info
   const [infoSubmit, setInfoSubmit] = useState<boolean>(false);
   const [infoData, setInfoData] = useState({
-    name: "",
-    imgData: "",
-    category: "",
-    location: "",
+    name: '',
+    imgData: '',
+    category: '',
+    location: '',
     dateFrom: null,
     dateTo: null
   });
 
   const isInfoDataEmpty = () => {
     return (
-      infoData.name === "" ||
-      infoData.category === "" ||
-      infoData.location === "" ||
+      infoData.name === '' ||
+      infoData.category === '' ||
+      infoData.location === '' ||
       infoData.dateFrom === null ||
       infoData.dateTo === null
     );
@@ -108,7 +108,7 @@ const AddEvent = (props: { userData: any }) => {
   const [listOfTickets, setListOfTickets] = useState([]);
 
   // 4. Program
-  const [programText, setProgramText] = useState("");
+  const [programText, setProgramText] = useState('');
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
@@ -208,13 +208,13 @@ const AddEvent = (props: { userData: any }) => {
       from_date: infoData.dateFrom
         .toISOString()
         .slice(0, 19)
-        .replace("T", " "),
+        .replace('T', ' '),
       to_date: infoData.dateTo
         .toISOString()
         .slice(0, 19)
-        .replace("T", " "),
+        .replace('T', ' '),
       capacity: 0,
-      status: "Kommende",
+      status: 'Kommende',
       information: programText,
       category: infoData.category,
       picture: infoData.imgData
@@ -223,7 +223,7 @@ const AddEvent = (props: { userData: any }) => {
     setLoading(true);
     eventService.addEvent(newEvent).then(res => {
       listOfTickets.forEach(ticket => {
-        ticket["event_id"] = res.insertId;
+        ticket['event_id'] = res.insertId;
         ticketService.addTickets(ticket);
       });
       listOfArtists.forEach(artist => {
@@ -234,7 +234,7 @@ const AddEvent = (props: { userData: any }) => {
         setUploaded(true);
       } else {
         setLoading(false);
-        setWarningText("Det skjedde noe feil. Prøv igjen");
+        setWarningText('Det skjedde noe feil. Prøv igjen');
       }
     });
   };
@@ -303,7 +303,7 @@ const AddEvent = (props: { userData: any }) => {
               </>
             )}
           </div>
-          {warningText !== "" && <WarningText>{warningText}</WarningText>}
+          {warningText !== '' && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
     </Container>

@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import DateTimePicker from "./dateTimePicker";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import ImageUpload from "../../Upload/imageUpload";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import DateTimePicker from './dateTimePicker';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import ImageUpload from '../../Upload/imageUpload';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { geoService } from '../../../services/GeoService';
 
 const Title = styled.h2`
   font-size: 48px;
@@ -25,9 +28,14 @@ const MiniTitle = styled.h6`
 `;
 
 const inputStyle = {
-  width: "100%",
-  marginBottom: "25px"
+  width: '100%',
+  marginBottom: '25px'
 };
+
+const inputStyleLocationFound = Object.assign({}, inputStyle, {
+  border: '1px #2ecc71 solid',
+  borderRadius: '5px'
+});
 
 const WarningText = styled.p`
   margin: 30px 0;
@@ -44,8 +52,10 @@ interface IProps {
 }
 
 const BasicInfoForm = (props: IProps) => {
-  const types_translated = ["Konsert", "Festival", "Teater", "Standup"];
-  const types = ["concert", "festival", "theatre", "standup"];
+  const types_translated = ['Konsert', 'Festival', 'Teater', 'Standup'];
+  const types = ['concert', 'festival', 'theatre', 'standup'];
+  const [coords, setCoords] = useState([1, 1]);
+  const [fetchingCoords, setFetchingCoords] = useState(false);
 
   let menuItems: JSX.Element[] = [];
 
@@ -58,6 +68,18 @@ const BasicInfoForm = (props: IProps) => {
     );
   }
 
+  const fetchCoords = (address: string) => {
+    if (address.length > 0) {
+      setFetchingCoords(true);
+      geoService.getLatAndLndOfAddress(address).then(data => {
+        setCoords(data);
+        setFetchingCoords(false);
+      });
+    } else {
+      setCoords([1, 1]);
+    }
+  };
+
   return (
     <>
       <Title>Info</Title>
@@ -66,11 +88,11 @@ const BasicInfoForm = (props: IProps) => {
         style={inputStyle}
         variant="outlined"
         placeholder="Navn"
-        error={props.infoSubmit && props.infoData.name === ""}
+        error={props.infoSubmit && props.infoData.name === ''}
         helperText={
-          props.infoSubmit && props.infoData.name === ""
-            ? "Navn er påkrevd"
-            : ""
+          props.infoSubmit && props.infoData.name === ''
+            ? 'Navn er påkrevd'
+            : ''
         }
         value={props.infoData.name}
         onChange={e =>
@@ -88,8 +110,8 @@ const BasicInfoForm = (props: IProps) => {
       <UnderTitle>Kategori*</UnderTitle>
       <FormControl
         variant="outlined"
-        style={{ width: "160px" }}
-        error={props.infoSubmit && props.infoData.category === ""}
+        style={{ width: '160px' }}
+        error={props.infoSubmit && props.infoData.category === ''}
       >
         <InputLabel id="select-filled-label">Kategori*</InputLabel>
         <Select
@@ -103,26 +125,38 @@ const BasicInfoForm = (props: IProps) => {
         >
           {menuItems}
         </Select>
-        {props.infoSubmit && props.infoData.category === "" && (
+        {props.infoSubmit && props.infoData.category === '' && (
           <FormHelperText>Kategori er påkrevd</FormHelperText>
         )}
       </FormControl>
 
       <UnderTitle>Lokasjon*</UnderTitle>
       <TextField
-        style={inputStyle}
+        style={
+          coords.length > 0 && coords[0] != 1 && !fetchingCoords
+            ? inputStyleLocationFound
+            : inputStyle
+        }
         variant="outlined"
         placeholder="Lokasjon"
         value={props.infoData.location}
-        error={props.infoSubmit && props.infoData.location === ""}
+        error={
+          (coords.length == 0 && !fetchingCoords) ||
+          (props.infoSubmit && props.infoData.location === '')
+        }
         helperText={
-          props.infoSubmit && props.infoData.location === ""
-            ? "Lokasjon er påkrevd"
-            : ""
+          props.infoSubmit && props.infoData.location === ''
+            ? 'Lokasjon er påkrevd'
+            : fetchingCoords
+            ? 'Vennligst vent...'
+            : coords.length > 0
+            ? ''
+            : 'Lokasjonen ble ikke funnet'
         }
         onChange={e => {
           props.setInfoData({ ...props.infoData, location: e.target.value });
         }}
+        onBlur={e => fetchCoords(e.target.value)}
       />
 
       <UnderTitle>Dato og tid*</UnderTitle>
@@ -141,8 +175,8 @@ const BasicInfoForm = (props: IProps) => {
         error={props.infoSubmit && props.infoData.dateFrom === null}
         helperText={
           props.infoSubmit && props.infoData.dateFrom === null
-            ? "Dato og tid fra er påkrevd"
-            : ""
+            ? 'Dato og tid fra er påkrevd'
+            : ''
         }
       />
       <MiniTitle>Til</MiniTitle>
@@ -159,8 +193,8 @@ const BasicInfoForm = (props: IProps) => {
         error={props.infoSubmit && props.infoData.dateTo === null}
         helperText={
           props.infoSubmit && props.infoData.dateTo === null
-            ? "Dato og tid til er påkrevd"
-            : ""
+            ? 'Dato og tid til er påkrevd'
+            : ''
         }
       />
       {props.infoSubmit && props.isInfoDataEmpty() && (
