@@ -17,7 +17,7 @@ router.get("/search/events/:require", async (request, response) => {
     });
 })
 // Get events by lowest price to tickets
-router.get('/search/events/cheapest/1', async (request, response) => {
+router.get('/sort/events/cheapest', async (request, response) => {
     dao.sortCheapestEvents( (status, data) => {
         if(status==500){
             response.status(500);
@@ -29,7 +29,7 @@ router.get('/search/events/cheapest/1', async (request, response) => {
 });
 
 // Get events by highest price to tickets
-router.get('/search/events/most_expensive/1', async (request, response) => {
+router.get('/sorts/events/most-expensive', async (request, response) => {
     dao.sortExpensiveEvents( (status, data) => {
         if(status==500){
             response.status(500);

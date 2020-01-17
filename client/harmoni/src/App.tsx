@@ -21,6 +21,8 @@ import SearchEvents from "./Components/Pages/searchPage";
 import Authenticate from './Components/authenticate';
 import ForgotPassword from './Components/Pages/forgotPasswordPage';
 import ResetPassword from './Components/Pages/resetPassword';
+import MinPrice from "./Components/Pages/minPricePage";
+import MaxPrice from "./Components/Pages/maxPrice";
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(undefined);
@@ -98,8 +100,8 @@ const App: React.FC = () => {
           />
 
           <Route path="/search/" component={SearchEvents} />
-          <Route path="/search/events/billigste" component={SearchEvents} />
-          <Route path="/search/events/dyreste" component={SearchEvents} />
+          <Route path="/sort/events/cheapest" component={MinPrice} />
+          <Route path="/sorts/events/most-expensive" component={MaxPrice} />
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
           <Route component={PageNotFound} />
         </Switch>
