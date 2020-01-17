@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS event (
   from_date DATETIME NOT NULL,
   to_date DATETIME NOT NULL,
   capacity INT NOT NULL,
-  status VARCHAR(45) NOT NULL,
+  status INT NOT NULL,
 information TEXT NOT NULL,
 category VARCHAR(45) NOT NULL,
 picture LONGBLOB NOT NULL,
@@ -60,9 +60,7 @@ CREATE TABLE IF NOT EXISTS user_event (
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;
  
- 
-
- 
+  
 CREATE TABLE IF NOT EXISTS rider (
   rider_id INT NOT NULL AUTO_INCREMENT,
   text VARCHAR(45) NOT NULL UNIQUE,

@@ -10,7 +10,7 @@ interface Event {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
 }
 
 class EventService extends Service {
@@ -56,7 +56,7 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
-  getEventsByStatus(status: string) {
+  getEventsByStatus(status: number) {
     updateToken();
     return axios({
       method: "get",
@@ -201,7 +201,7 @@ class EventService extends Service {
   }
 
   //User have to be logged in to use this function
-  changeStatusOfEvent(eventId: number,newStatus:string){
+  changeStatusOfEvent(eventId: number,newStatus: number){
     updateToken();
     return axios({
       method: "put",

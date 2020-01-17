@@ -29,7 +29,7 @@ router.get('/events/address/:address', async (request, response) => {
 
 // Get events by status
 router.get('/events/status/:status', async (request, response) => {
-  dao.getEventsByStatus(request.params.status, (status, data) => {
+  dao.getEventsByStatus(parseInt(request.params.status), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });

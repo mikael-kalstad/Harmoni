@@ -25,7 +25,7 @@ interface Event {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
   information: string;
   category: string;
   picture: string;
@@ -214,7 +214,7 @@ const AddEvent = (props: { userData: any }) => {
         .slice(0, 19)
         .replace("T", " "),
       capacity: 0,
-      status: "Kommende",
+      status: 0,
       information: programText,
       category: infoData.category,
       picture: infoData.imgData
