@@ -70,13 +70,12 @@ CREATE TABLE IF NOT EXISTS rider (
 ENGINE = InnoDB;
  
  
-
- 
 CREATE TABLE IF NOT EXISTS rider_list (
   rider_list_id INT NOT NULL AUTO_INCREMENT,
   user_id INT,
   event_id INT,
   rider_id INT,
+  text VARCHAR(256),
   quantity INT,
     PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
@@ -144,13 +143,3 @@ CREATE TABLE IF NOT EXISTS attachment_user (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE)
 	ENGINE = InnoDB;
-
-
-
- 
- 
- 
-
-
-
-
