@@ -44,8 +44,15 @@ interface IProps {
 }
 
 const BasicInfoForm = (props: IProps) => {
-  const types_translated = ["Konsert", "Festival", "Teater", "Standup"];
-  const types = ["concert", "festival", "theatre", "standup"];
+  const types_translated = [
+    "Konsert",
+    "Festival",
+    "Teater",
+    "Standup",
+    "Show",
+    "Annet"
+  ];
+  const types = ["concert", "festival", "theatre", "standup", "show", "other"];
 
   let menuItems: JSX.Element[] = [];
 
@@ -80,6 +87,10 @@ const BasicInfoForm = (props: IProps) => {
 
       <UnderTitle>Bilde</UnderTitle>
       <ImageUpload
+        picture={
+          props.infoData.imgData &&
+          new Buffer(props.infoData.imgData).toString("ascii")
+        }
         setImgData={data =>
           props.setInfoData({ ...props.infoData, imgData: data })
         }

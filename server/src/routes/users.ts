@@ -38,6 +38,17 @@ router.get("/users/email/:email", async (request, response) => {
     }
   });
 });
+router.get("/users/email/info/:email", async (request, response) => {
+  dao.getUserAllInfoByEMail(request.params.email, (status, data) => {
+    let user=data[0];
+    if (typeof user != "undefined") {
+      response.status(200);
+      response.send(sanitizeUser(data))
+    }else{
+      response.json({ error: "brukeren finnes ikke" });
+    }
+  });
+});
 
 // Get all users given type
 router.get("/authorized/users/type/:type", async (request, response) => {

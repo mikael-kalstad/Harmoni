@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ProfilePageImage from "../Profile/profilePageImage";
 import ProfileOptions from "../Profile/profileOptions";
-import ArrangementGrid from "../arrangementGrid";
+import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
 
 const Wrapper = styled.div`
@@ -68,6 +68,7 @@ const Profile = (props: { userData: any }) => {
   const getEvents = async () => {
     setEvents(await eventService.getEventsByOrganizer(props.userData.user_id));
   };
+  console.log(events);
 
   return (
     <>
@@ -96,7 +97,19 @@ const Profile = (props: { userData: any }) => {
         )}
       </Wrapper>
 
-      <ArrangementGrid data={events} title="Mine arrangementer" />
+      <EventGrid
+        eventInProfile={true}
+        emptyText="Du har ingen kommende arrangementer"
+        data={events && events.filter(e => e.status == 0)}
+        title="Mine arrangementer"
+      />
+
+      <EventGrid
+        eventInProfile={true}
+        emptyText="Du har ingen arkiverte arrangementer"
+        data={events && events.filter(e => e.status == 3)}
+        title="Arkiverte arrangementer"
+      />
     </>
   );
 };

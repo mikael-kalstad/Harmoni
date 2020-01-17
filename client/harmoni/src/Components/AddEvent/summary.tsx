@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import ArtistList from "../../Event/artistsList";
-import TicketCard from "./ticketCard";
+import ArtistList from "../Event/artistsList";
+import TicketCard from "./EventForms/ticketCard";
 import ListGroup from "react-bootstrap/ListGroup";
+import moment from "moment";
 
 const Wrapper = styled.div`
   margin-bottom: 80px;
@@ -49,7 +50,10 @@ const Text = styled.p`
   margin-top: 10px;
 `;
 
-const formatDate = (date: Date) => {
+const formatDate = (date: any) => {
+  if (typeof date === "string")
+    date = moment(date, "DD-MM-YYYY HH:mm").toDate();
+
   let days = [
     "Mandag",
     "Tirsdag",
@@ -95,8 +99,8 @@ interface IProps {
   img: any;
   category: string;
   location: string;
-  fromDate: Date;
-  toDate: Date;
+  fromDate: string | Date;
+  toDate: string | Date;
   program: string;
   artists: any[];
   tickets: any[];
@@ -135,14 +139,14 @@ const Summary = (props: IProps) => (
     )}
 
     <UnderTitle>Artister:</UnderTitle>
-    {props.artists.length === 0 ? (
+    {!props.artists || props.artists.length === 0 ? (
       <Text>Ingen artister er valgt</Text>
     ) : (
       <ArtistList hideTitle={true} artists={props.artists} />
     )}
 
     <UnderTitle>Billetter:</UnderTitle>
-    {props.tickets.length === 0 ? (
+    {!props.tickets || props.tickets.length === 0 ? (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
       <ListGroup>
