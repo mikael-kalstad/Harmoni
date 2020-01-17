@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 const Container = styled.div`
   display: grid;
   grid-template-columns: 80px auto;
-  padding: 10px;
+  padding: 5px;
+  margin-left: 10px;
   background: #f0f0f0;
   width: fit-content;
 

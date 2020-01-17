@@ -9,7 +9,6 @@ export default class PasswordService extends Service{
         var postData = {
             email: email
         };
-        
         return axios.post(this.path + '/reset/',postData,{
             headers: headers
         })

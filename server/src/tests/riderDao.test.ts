@@ -98,15 +98,8 @@ test("Add rider", done => {
 })
 
 test("Add rider list", done => {
-    let riderList : riderList = 
-    {
-        rider_list_id: -1,
-        user_id: 1,
-        event_id: 1,
-        rider_id: 1,
-        quantity: 1
-    }
-    dao.addRiderList(riderList, (status, data) => {
+
+    dao.addRiderList(1,1,1,"",1, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         done();

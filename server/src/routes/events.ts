@@ -29,7 +29,7 @@ router.get('/events/address/:address', async (request, response) => {
 
 // Get events by status
 router.get('/events/status/:status', async (request, response) => {
-  dao.getEventsByStatus(request.params.status, (status, data) => {
+  dao.getEventsByStatus(parseInt(request.params.status), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
@@ -105,6 +105,11 @@ router.get('/events/user/:category', async (request, response) => {
 });
 router.get('/events/user/:event_id/:type', async (request, response) => {
   dao.getUsersOfEventByType(parseInt(request.params.event_id),request.params.type, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+router.put('/events/:event_id/:status', async (request, response) => {
+  dao.changeStatus(parseInt(request.params.event_id) ,request.params.status, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
