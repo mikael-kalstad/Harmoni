@@ -10,11 +10,11 @@ class SearchService extends Service{
         }
     }
     sortAfterLowPrice() {
-        return axios.get(this.path + '/search/events/cheapest')
+        return axios.get(this.path + '/search/events/cheapest/1')
             .then(response => response.data);
     }
     sortAfterHighPrice() {
-        return axios.get(this.path + '/search/events/most_expensive')
+        return axios.get(this.path + '/search/events/most_expensive/1')
             .then(response => response.data);
     }
 }
