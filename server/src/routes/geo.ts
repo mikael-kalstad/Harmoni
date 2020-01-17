@@ -1,6 +1,7 @@
 import express from 'express';
 const NodeGeoCoder = require('node-geocoder');
 const router = express.Router();
+const { GetLatLngByAddress } = require('geocoder-free');
 
 let options = {
   provider: 'locationiq',
@@ -11,10 +12,12 @@ let options = {
 
 let geo = NodeGeoCoder(options);
 
-router.get('/geo/', async (request, response) => {
+router.get('/geo/', (request, response) => {
   var address = request.headers['address'];
-  geo.geocode(address, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
+  GetLatLngByAddress(address).then(data => {
+    console.log(data);
+
+    response.send(data);
   });
 });
 

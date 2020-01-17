@@ -1,29 +1,36 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
-
 import styled from 'styled-components';
+
+import MapMarker from './mapMarker';
 
 const Wrapper = styled.div`
     width: 100%;
     height 100%;
 `;
 
-const MapContainer = (props: any) => {
+interface IMapContainer {
+  coords: { lat: number; lng: number };
+}
+
+const MapContainer = (props: IMapContainer) => {
   let defaultProps = {
-    center: { lat: 59.95, lng: 30.33 },
-    zoom: 11
+    center: props.coords,
+    zoom: 14
   };
   return (
     <Wrapper>
       <GoogleMapReact
         bootstrapURLKeys={{
-          key: 'AIzaSyCRG-wE_wvqR7RAlsPDiqS8aiZ6dmm9Mec',
+          key: 'AIzaSyDVcaM6wQFVRpOwpm2HY8Fnq9mKaro5O5k',
           language: 'no',
           region: 'no'
         }}
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
-      ></GoogleMapReact>
+      >
+        <MapMarker lat={props.coords.lat} lng={props.coords.lng} />
+      </GoogleMapReact>
     </Wrapper>
   );
 };
