@@ -59,16 +59,8 @@ const Name = styled.p`
   }
 `;
 
-const StyledLink = styled(props => <Link {...props} />)`
-  :visited {
-    color: black;
-  }
-
-  :hover {
-    color: black;
-    text-decoration: none;
-  }
-`;
+const types = ["organizer", "artist", "volunteer"];
+const types_translated = ["Arrangør", "Artist/Manager", "Frivillig"];
 
 const ProfilePageImage = (props: any) => (
   <Container>
@@ -83,7 +75,9 @@ const ProfilePageImage = (props: any) => (
     </ImgWrapper>
 
     <TextWrapper>
-      <TypeText>{props.type || <Skeleton />}</TypeText>
+      <TypeText>
+        {types_translated[types.indexOf(props.type)] || <Skeleton />}
+      </TypeText>
       <Name>{props.name || <Skeleton />}</Name>
     </TextWrapper>
   </Container>
