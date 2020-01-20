@@ -64,7 +64,7 @@ const Profile = (props: { userData: any }) => {
   useEffect(() => {
     const getEvents = async () => {
       setEvents(
-        await eventService.getEventsByOrganizer(props.userData.user_id)
+        await eventService.getEventsByUser(props.userData.user_id)
       );
     };
 

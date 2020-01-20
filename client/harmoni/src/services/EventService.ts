@@ -84,6 +84,7 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
+
   addEvent(event: Event) {
     updateToken();
     return axios({
