@@ -2,18 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
-import ProfilePageImage from '../Profile/profilePageImage';
-import ProfileOptions from '../Profile/profileOptions';
-import EventGrid from '../eventGrid';
-import { eventService } from '../../services/EventService';
-=======
 import ProfilePageImage from "../Profile/profilePageImage";
 import ProfileOptions from "../Profile/profileOptions";
 import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
 import EventCalendar from "../eventCalendar";
->>>>>>> c5805f98b5779f294dda0f6a213a2d0e16d6f7a5
 
 const Wrapper = styled.div`
   position: relative;

@@ -21,6 +21,7 @@ router.use(bodyParser.json());
 
 let publicKey;
 let privateKey = (publicKey = "superSecret");
+let resetUrl = 'http://localhost:3000/reset-passord/'
 
 var smtpTransport = nodemailer.createTransport({
     service:  'gmail',
@@ -45,7 +46,7 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 let user;
 
-router.post("/reset",(req,res)=>{
+router.post("/reset-passord",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         let user = data[0];
         if(typeof user != "undefined"){
@@ -61,7 +62,7 @@ router.post("/reset",(req,res)=>{
                 subject: 'Password help has arrived!',
                 context: {
                 name: user.name,
-                url: 'http://localhost:3000/reset/reset_password/' + token
+                url: resetUrl + token
                 }
             }
 
@@ -79,7 +80,7 @@ router.post("/reset",(req,res)=>{
     })
 })
 
-router.get("/reset/reset_password/:token",(req,res)=>{
+router.get("/reset-passord/:token",(req,res)=>{
     var token = req.params.token;
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
@@ -92,7 +93,7 @@ router.get("/reset/reset_password/:token",(req,res)=>{
     })
 })
 
-router.post("/reset/reset_password/:token",(req,res)=>{
+router.post("/reset-passord/:token",(req,res)=>{
     var token = req.params.token;
    // var token = req.headers["password-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
