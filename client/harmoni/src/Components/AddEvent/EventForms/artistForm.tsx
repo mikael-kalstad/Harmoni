@@ -50,7 +50,7 @@ const Text = styled.p`
 
 const ArtistForm = (props: any) => {
   const [userData, setUserData] = useState<IUser[]>();
-
+  let typeahead;
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -63,6 +63,7 @@ const ArtistForm = (props: any) => {
     if (s[0] != null) {
       let checker = props.listOfArtists.includes(s[0].user);
       if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
+      typeahead.clear();
     }
   };
 
@@ -90,6 +91,7 @@ const ArtistForm = (props: any) => {
           onChange={s => addArtist(s)}
           placeholder="Søk etter artister..."
           selected={props.userData}
+          ref={elem => (typeahead = elem)}
         />
 
         {props.listOfArtists && props.listOfArtists.length !== 0 && (
