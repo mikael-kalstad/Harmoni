@@ -8,8 +8,8 @@ import Summary from "../AddEvent/summary";
 import Loading from "../loading";
 import Success from "../AddEvent/success";
 import BackBtn from "../Button/backBtn";
-import OutlineButton from "../Button/outlineButton";
 import ConfirmationDialog from "../confirmationDialog";
+import Button from "../Button/button";
 
 const Container = styled.div`
   width: 80%;
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   margin: auto;
 `;
 
-const Button = styled.button`
+const WarningBtn = styled.button`
   margin-bottom: 40px;
   display: grid;
   align-items: center;
@@ -46,17 +46,11 @@ const Button = styled.button`
   }
 `;
 
-const BtnWrapper = styled.div`
-  margin-top: 80px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-`;
-
 const DangerWrapper = styled.div`
   max-width: 1200px;
   border: 2px solid #f85757;
   border-radius: 10px;
-  margin: 30px auto;
+  margin: 90px auto;
   display: grid;
   justify-items: center;
   align-items: center;
@@ -78,12 +72,6 @@ const Text = styled.p`
   margin-bottom: 50px;
 `;
 
-const Message = styled.p`
-  font-size: 24px;
-  font-weight: 600;
-  color: black;
-`;
-
 const EventDetails = (props: any) => {
   const [eventData, setEventData] = useState();
   const [artists, setArtists] = useState();
@@ -92,6 +80,7 @@ const EventDetails = (props: any) => {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const toggleDialog = () => setShowDialog(!showDialog);
 
@@ -107,29 +96,27 @@ const EventDetails = (props: any) => {
   };
 
   useEffect(() => {
-    fetchEvent();
-  }, []);
+    const fetchEvent = async () => {
+      eventService.getEventById(props.match.params.id).then(res => {
+        setEventData(res[0]);
+        userService
+          .getArtistsForEvent(res[0].event_id)
+          .then(response => setArtists(response));
 
-  const fetchEvent = async () => {
-    eventService.getEventById(props.match.params.id).then(res => {
-      setEventData(res[0]);
-      userService
-        .getArtistsForEvent(res[0].event_id)
-        .then(response => setArtists(response));
-
-      ticketService.getAllTicketsByEventId(res[0].event_id).then(response => {
-        setTickets(response);
+        ticketService.getAllTicketsByEventId(res[0].event_id).then(response => {
+          setTickets(response);
+        });
       });
-    });
-  };
+    };
+
+    fetchEvent();
+  }, [props.match.params.id]);
 
   if (loading) return <Loading />;
 
-  if (eventData && artists && tickets) {
-    console.log("eventData", eventData);
-    console.log("artists", artists);
-    console.log("tickets", tickets);
+  if (edit) return <AddEvent userData={props.userData} eventData={eventData} />;
 
+  if (eventData && artists && tickets) {
     return (
       <Container>
         <BackBtn to="/profile" />
@@ -151,10 +138,7 @@ const EventDetails = (props: any) => {
                 tickets={tickets}
               />
 
-              <BtnWrapper>
-                <OutlineButton>Endre</OutlineButton>
-                <OutlineButton>Arkiver</OutlineButton>
-              </BtnWrapper>
+              <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>
             </Wrapper>
 
             <DangerWrapper>
@@ -162,8 +146,10 @@ const EventDetails = (props: any) => {
               <Text>
                 NB! Hvis man avlyser et arrangement kan det ikke endres
               </Text>
-              {/* <Message>Arrangement avlyst</Message> */}
-              <Button onClick={() => toggleDialog()}>Avlys arrangement</Button>
+
+              <WarningBtn onClick={() => toggleDialog()}>
+                Avlys arrangement
+              </WarningBtn>
             </DangerWrapper>
           </>
         )}

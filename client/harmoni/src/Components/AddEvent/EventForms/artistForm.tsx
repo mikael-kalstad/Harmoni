@@ -84,6 +84,7 @@ const ArtistForm = (props: any) => {
         </Text>
         <UnderTitle>Legg til artister:</UnderTitle>
         <Typeahead
+          id="typeahead"
           labelKey={artistName => `${artistName.user.name}`}
           options={userData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
@@ -95,12 +96,12 @@ const ArtistForm = (props: any) => {
           <UnderTitle>Artistliste:</UnderTitle>
         )}
 
-        <ListGroup>
-          {props.listOfArtists &&
-            props.listOfArtists.map(u => (
+        {props.listOfArtists &&
+          props.listOfArtists.map(u => (
+            <ListGroup key={u.email}>
               <ArtistCard user={u} remove={deleteArtist} />
-            ))}
-        </ListGroup>
+            </ListGroup>
+          ))}
       </>
     );
   }

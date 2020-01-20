@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Skeleton from 'react-loading-skeleton';
-import { ListGroup } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+// import Skeleton from 'react-loading-skeleton';
+// import { ListGroup } from 'react-bootstrap';
 
-import { eventService } from '../../services/EventService';
-import { ticketService } from '../../services/TicketService';
-import { userService } from '../../services/UserService';
-import { geoService } from '../../services/GeoService';
+import { eventService } from "../../services/EventService";
+import { ticketService } from "../../services/TicketService";
+import { userService } from "../../services/UserService";
+import { geoService } from "../../services/GeoService";
 
-import TicketMenu from '../Event/ticketMenu';
-import ArtistsList from '../Event/artistsList';
-import MapContainer from '../Event/map';
+import TicketMenu from "../Event/ticketMenu";
+import ArtistsList from "../Event/artistsList";
+import MapContainer from "../Event/map";
 
 export interface IEvent {
   event_id: number;
@@ -115,12 +115,12 @@ const EventImage = styled.img`
   }
 `;
 
-const DoubleColumnGrid = styled.div`
-  margin: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-content: center;
-`;
+// const DoubleColumnGrid = styled.div`
+//   margin: 0 20px;
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   align-content: center;
+// `;
 
 const BoldSpan = styled.span`
   font-weight: bold;
@@ -147,40 +147,42 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [coords, setCoords] = useState();
 
   useEffect(() => {
+    const fetchEvent = async () => {
+      eventService.getEventById(props.match.params.id).then(data => {
+        setEvent(data);
+        fetchCoords(data[0].address);
+      });
+    };
+
+    const fetchTickets = async () => {
+      setEventTickets(
+        await ticketService.getAllTicketsByEventId(props.match.params.id)
+      );
+    };
+
+    const fetchArtists = async () => {
+      setArtists(await userService.getArtistsForEvent(props.match.params.id));
+    };
+
+    const fetchOrganizer = async () => {
+      setOrganizer(
+        await userService.getOrganizerForEvent(props.match.params.id)
+      );
+    };
+
+    const fetchCoords = async (address: string) => {
+      geoService.getLatAndLndOfAddress(address).then(data => {
+        console.log(data);
+
+        setCoords({ lat: data[0], lng: data[1] });
+      });
+    };
+
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-  }, []);
-
-  const fetchEvent = async () => {
-    eventService.getEventById(props.match.params.id).then(data => {
-      setEvent(data);
-      fetchCoords(data[0].address);
-    });
-  };
-
-  const fetchTickets = async () => {
-    setEventTickets(
-      await ticketService.getAllTicketsByEventId(props.match.params.id)
-    );
-  };
-
-  const fetchArtists = async () => {
-    setArtists(await userService.getArtistsForEvent(props.match.params.id));
-  };
-
-  const fetchOrganizer = async () => {
-    setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
-  };
-
-  const fetchCoords = async (address: string) => {
-    geoService.getLatAndLndOfAddress(address).then(data => {
-      console.log(data);
-
-      setCoords({ lat: data[0], lng: data[1] });
-    });
-  };
+  }, [props.match.params.id]);
 
   if (
     event != null &&
@@ -189,14 +191,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
     artists != null &&
     coords != null
   ) {
-    let dateFrom = event[0].from_date.split(' ');
-    let dateTo = event[0].to_date.split(' ');
+    let dateFrom = event[0].from_date.split(" ");
+    let dateTo = event[0].to_date.split(" ");
 
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString('ascii')}
+            src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
         </ImageGrid>
@@ -209,14 +211,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <DateText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
-              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
-              : 'Fra: ' +
+              ? dateFrom[0] + ", fra kl. " + dateFrom[1] + " til " + dateTo[1]
+              : "Fra: " +
                 dateFrom[0] +
-                ' kl. ' +
+                " kl. " +
                 dateFrom[1] +
-                ' til ' +
+                " til " +
                 dateTo[0] +
-                ' kl. ' +
+                " kl. " +
                 dateTo[1]}
           </DateText>
           <AddressText>
@@ -224,8 +226,8 @@ const Event = (props: { match: { params: { id: number } } }) => {
             {event[0].address}
           </AddressText>
           <ContentText>
-            {event[0].information === ''
-              ? 'Arrangementet har ingen beskrivelse eller program'
+            {event[0].information === ""
+              ? "Arrangementet har ingen beskrivelse eller program"
               : event[0].information}
           </ContentText>
         </InfoGrid>

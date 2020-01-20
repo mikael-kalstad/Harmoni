@@ -82,7 +82,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       setEmailInput(props.userData["email"]);
       setType(props.userData["type"]);
     }
-  }, []);
+  }, [props.userData]);
 
   let menuItems: JSX.Element[] = [];
 

@@ -8,14 +8,14 @@ const SearchEvents = (props: any) => {
   const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
+    // Get events from DB and set state
+    const fetchSearchEvents = async () => {
+      // Async DB call
+      setEventData(await searchService.searchForEvents(userInput));
+    };
+
     fetchSearchEvents();
   }, [userInput]);
-
-  // Get events from DB and set state
-  const fetchSearchEvents = async () => {
-    // Async DB call
-    setEventData(await searchService.searchForEvents(userInput));
-  };
 
   const inputChange = (value: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(value.target.value);
