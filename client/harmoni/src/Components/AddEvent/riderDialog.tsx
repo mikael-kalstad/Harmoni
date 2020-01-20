@@ -30,15 +30,27 @@ const Exit = styled.img`
   cursor: pointer;
 `;
 
-const RiderDialog = (props: { toggleShow: Function }) => (
-  <>
-    <Overlay onClick={() => props.toggleShow()} />
+interface IProps {
+  toggleShow: Function;
+  riderText: string;
+  setRiderData: Function;
+}
 
-    <DialogBox>
-      <Exit src="/icons/cross.svg" />
-      <p>RIDER COMPONENT GOES HERE</p>
-    </DialogBox>
-  </>
-);
+const RiderDialog = (props: IProps) => {
+  const addRider = () => {
+    //setRiderData([...props.riderData, {'riderText': 'TEST', user_id: '1'});
+  };
+  return (
+    <>
+      <Overlay onClick={() => props.toggleShow()} />
+
+      <DialogBox>
+        <Exit src="/icons/cross.svg" />
+
+        <button onClick={() => addRider()}>Legg til rider</button>
+      </DialogBox>
+    </>
+  );
+};
 
 export default RiderDialog;

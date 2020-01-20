@@ -43,6 +43,8 @@ const RiderIcon = styled.img`
 interface IProps {
   user: any;
   remove: Function;
+  riderText: string;
+  setRiderData: Function;
 }
 
 const Artistcard = (props: IProps) => {
@@ -52,7 +54,13 @@ const Artistcard = (props: IProps) => {
 
   return (
     <>
-      {showRider && <RiderDialog toggleShow={toggleShow} />}
+      {showRider && (
+        <RiderDialog
+          riderText={props.riderText}
+          toggleShow={toggleShow}
+          setRiderData={props.setRiderData}
+        />
+      )}
 
       <ListGroup.Item>
         <Wrapper>

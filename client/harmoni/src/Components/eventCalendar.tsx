@@ -1,35 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import React, {useEffect, useState} from "react";
+import {Calendar, momentLocalizer} from 'react-big-calendar';
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import {useHistory} from "react-router-dom";
 import Loading from "./loading";
 
 const localizer = momentLocalizer(moment);
 
 interface DateEvent {
-  start: Date;
-  end: Date;
-  title: string;
-  resource?: any;
+    start: Date;
+    end: Date;
+    title: string;
+    id?: number,
 }
 
 const EventCalendar = (props: any) => {
-  const [events, setEvents] = useState<DateEvent[]>([]);
 
-  useEffect(() => {
-    if (props.data) {
-      let newArr: DateEvent[];
-      newArr = props.data.map(e => {
-        return {
-          start: moment(e.from_date, "DD-MM-YYYY HH:mm").toDate(),
-          end: moment(e.to_date, "DD-MM-YYYY HH:mm").toDate(),
-          title: e.name,
-          resource: e
-        };
-      });
-      setEvents(newArr);
-    }
-  }, [props.data]);
+    const history = useHistory();
+
+    const [events, setEvents] = useState<DateEvent[]>([]);
+
+    useEffect(() => {
+        if (props.data) {
+            let newArr: DateEvent[];
+            newArr = props.data.map(e => {
+                    return {
+                        start: moment(e.from_date, 'DD-MM-YYYY HH:mm').toDate(),
+                        end: moment(e.to_date, 'DD-MM-YYYY HH:mm').toDate(),
+                        title: e.name,
+                        id: e.event_id
+                    }
+                }
+            );
+            setEvents(newArr);
+        }
+    }, [props.data]);
 
   if (props.data) {
     return (
@@ -40,6 +45,8 @@ const EventCalendar = (props: any) => {
         events={events}
         style={{ height: "80vh", maxWidth: "100vh" }}
         views={["month"]}
+        //toolbar={false}
+        onDoubleClickEvent={e => history.push('/event/'+e.id)}
       />
     );
   }
