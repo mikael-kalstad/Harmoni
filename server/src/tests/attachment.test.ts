@@ -58,20 +58,54 @@ test("Get all attachments by eventId", done => {
     })
 })
 
-test("Get all attachments by userId", done => {
-    dao.getAttachmentsForUser(2, (status, data) => {
+test("Get all attachments uploaded by userId", done => {
+    dao.getAttachmentsForUploader(2, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].attachment_id).toBe(2);
         done();
     })
 })
 
-test("Get all attachments by eventId and userID", done => {
-    dao.getAttachmentsForUserForEvent(1,2, (status, data) => {
+test("Get all attachments uploadad userId and eventID", done => {
+    dao.getAttachmentsForUploaderForEvent(1,2, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].attachment_id).toBe(1);
         done();
     })
+})
+//Legger til attachment 2, til bruker 1
+//Attachment 2 er allerede knyttet til event 1 og bruker 2
+test("Add user for attachment", done => {
+    dao.addUserForAttachment(2,1,(status, data) => {
+        expect(status).toBe(200);
+        expect(data.affectedRows).toBe(1);
+        done();
+    })
+})
+//Skal ha to attachments
+test("Get all attachments an user has access to", done => {
+    dao.getAttachmentsForUser(1,(status, data) => {
+        expect(status).toBe(200);
+        expect(data.length).toBe(2);
+        done();
+     })
+})
+//Bruker 1 skal ha tilgang til et arrangement ved event 2
+test("Get all attachments an user has access to for an event", done => {
+    dao.getAttachmentsForUserForEvent(1,2,(status, data) => {
+        expect(status).toBe(200);
+        expect(data.length).toBe(1);
+        done();
+    })
+})
+
+test("Delete attachment for user", done => {
+    dao.deleteAttachmentForUser(2,1,(status, data) => {
+        expect(status).toBe(200);
+        expect(status).toBe(200);
+        expect(data.affectedRows).toBe(1);
+        done();
+     })
 })
 
 test("Add attachment", done => {

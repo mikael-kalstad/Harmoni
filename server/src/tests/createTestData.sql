@@ -30,11 +30,3 @@ INSERT INTO user_event VALUES(3,1);
 INSERT INTO user_event VALUES(4,1);
  
 INSERT INTO rider_list VALUES(DEFAULT, 3, 1, 1, DEFAULT, 5);
- 
-INSERT INTO attachment_user VALUES(1,1);
-INSERT INTO attachment_user VALUES(2,2);
-
- 
- 
-
-

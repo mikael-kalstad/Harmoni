@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
+<<<<<<< HEAD
+import ProfilePageImage from '../Profile/profilePageImage';
+import ProfileOptions from '../Profile/profileOptions';
+import EventGrid from '../eventGrid';
+import { eventService } from '../../services/EventService';
+=======
 import ProfilePageImage from "../Profile/profilePageImage";
 import ProfileOptions from "../Profile/profileOptions";
 import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
+import EventCalendar from "../eventCalendar";
+>>>>>>> c5805f98b5779f294dda0f6a213a2d0e16d6f7a5
 
 const Wrapper = styled.div`
   position: relative;
@@ -63,16 +71,9 @@ const Profile = (props: { userData: any }) => {
 
   useEffect(() => {
     const getEvents = async () => {
-      setEvents(
-        await eventService.getEventsByUser(props.userData.user_id)
-      );
+      setEvents(await eventService.getEventsByUser(props.userData.user_id));
     };
-    const getEventsForOrgenizer = async () => {
-        setEvents(
-            await eventService.getEventsByOrganizer(props.userData.user_id)
-        );
-    };
-    getEventsForOrgenizer();
+
     getEvents();
   }, [props.userData]);
 
@@ -84,14 +85,14 @@ const Profile = (props: { userData: any }) => {
         <ProfilePageImage
           picture={
             props.userData.picture
-              ? new Buffer(props.userData.picture, "base64").toString("ascii")
-              : ""
+              ? new Buffer(props.userData.picture, 'base64').toString('ascii')
+              : ''
           }
           name={props.userData.name}
           type={props.userData.type}
         />
 
-        {props.userData.type === "organizer" ? (
+        {props.userData.type === 'organizer' ? (
           <StyledLink to="/newEvent">
             <AddBtn>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -116,6 +117,7 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
+      <EventCalendar data={events}/>
     </>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
 import { ListGroup } from 'react-bootstrap';
 import TicketCard from './ticketCard';
 import Btn from '../../Button/button';
@@ -105,7 +104,7 @@ const TicketForm = (props: any) => {
         placeholder="Pris for kategori"
         value={price}
         onChange={e =>
-          e.target.value == ''
+          e.target.value === ''
             ? handleChange(e.target.value, setPrice)
             : Number.parseInt(e.target.value) <= 2147483647
             ? handleChange(e.target.value, setPrice)
@@ -121,7 +120,7 @@ const TicketForm = (props: any) => {
         placeholder="Antall tilgjengelige plasser i kategori"
         value={available}
         onChange={e =>
-          e.target.value == ''
+          e.target.value === ''
             ? handleChange(e.target.value, setAvailable)
             : Number.parseInt(e.target.value) <= 2147483647
             ? handleChange(e.target.value, setAvailable)
