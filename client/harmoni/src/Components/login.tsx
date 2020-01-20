@@ -37,17 +37,17 @@ const Wrapper = styled.div`
 const Icon = styled.img`
   padding-top: 30px;
   display: block;
-  margin: 0 auto;
+  margin: 10px auto;
   width: 220px;
 `;
 
-const Title = styled.h2`
+/*const Title = styled.h2`
   text-align: center;
   font-weight: bold;
   font-size: 28px;
   margin-bottom: 30px;
   margin-top: 0;
-`;
+`;*/
 
 const StyledLink = styled(props => <Link {...props} />)`
   margin-top: 20px;
