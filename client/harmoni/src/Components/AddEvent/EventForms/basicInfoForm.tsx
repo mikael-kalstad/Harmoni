@@ -106,11 +106,13 @@ const BasicInfoForm = (props: IProps) => {
         helperText={
           props.infoSubmit && props.infoData.name === ''
             ? 'Navn er påkrevd'
-            : ''
+            : 'Maks 45 karakterer'
         }
         value={props.infoData.name}
         onChange={e =>
-          props.setInfoData({ ...props.infoData, name: e.target.value })
+          e.target.value.length <= 45
+            ? props.setInfoData({ ...props.infoData, name: e.target.value })
+            : null
         }
       />
 
@@ -137,9 +139,14 @@ const BasicInfoForm = (props: IProps) => {
           value={props.infoData.category}
           labelWidth={300}
           style={inputStyle}
-          onChange={(e: any) => {
-            props.setInfoData({ ...props.infoData, category: e.target.value });
-          }}
+          onChange={(e: any) =>
+            e.target.value.length <= 45
+              ? props.setInfoData({
+                  ...props.infoData,
+                  category: e.target.value
+                })
+              : null
+          }
         >
           {menuItems}
         </Select>
@@ -156,7 +163,7 @@ const BasicInfoForm = (props: IProps) => {
             : inputStyle
         }
         variant="outlined"
-        placeholder="Lokasjon"
+        placeholder="Lokasjon (Maks 45 karakterer)"
         value={props.infoData.location}
         error={
           (coords.length == 0 && !fetchingCoords) ||
@@ -171,9 +178,11 @@ const BasicInfoForm = (props: IProps) => {
             ? ''
             : 'Lokasjonen ble ikke funnet'
         }
-        onChange={e => {
-          props.setInfoData({ ...props.infoData, location: e.target.value });
-        }}
+        onChange={e =>
+          e.target.value.length <= 45
+            ? props.setInfoData({ ...props.infoData, location: e.target.value })
+            : null
+        }
         onBlur={e => fetchCoords(e.target.value)}
       />
       {coords.length > 0 && coords[1] != -1000 && (

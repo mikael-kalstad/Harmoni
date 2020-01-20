@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
-import ListGroup from "react-bootstrap/ListGroup";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { userService } from "../../../services/UserService";
-import styled from "styled-components";
-import ArtistCard from "./artistCard";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useState, useEffect } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import ListGroup from 'react-bootstrap/ListGroup';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { userService } from '../../../services/UserService';
+import styled from 'styled-components';
+import ArtistCard from './artistCard';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface IUser {
   user_id: number;
@@ -56,7 +56,7 @@ const ArtistForm = (props: any) => {
   }, []);
 
   const fetchUsers = async () => {
-    setUserData(await userService.getUsersOfType("artist"));
+    setUserData(await userService.getUsersOfType('artist'));
   };
 
   const addArtist = (s: { user: IUser }[]) => {

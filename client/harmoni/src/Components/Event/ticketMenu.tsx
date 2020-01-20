@@ -44,7 +44,7 @@ let checkCircleStyle = {
   marginBottom: 20
 };
 
-const TicketMenu = (props: { tickets: ITicket[] }) => {
+const TicketMenu = (props: { tickets: ITicket[]; canceled: boolean }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantities, setQuantities] = useState(
     new Array(props.tickets.length).fill(0)
@@ -106,6 +106,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
               price={ticket.price}
               incrementFunction={incrementQuantityOfTicket}
               unavailable={ticket.available <= 0}
+              eventCanceled={props.canceled}
               key={ticket.type}
             />
           ))}

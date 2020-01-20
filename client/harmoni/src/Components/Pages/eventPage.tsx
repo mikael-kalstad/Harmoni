@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Skeleton from 'react-loading-skeleton';
-import { ListGroup } from 'react-bootstrap';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { isEventInProgress, hasEventHappened } from '../utils';
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
 import { userService } from '../../services/UserService';
@@ -21,7 +19,7 @@ export interface IEvent {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
   information: string;
   category: string;
   picture: string;
@@ -84,6 +82,8 @@ const ArtistsAndMapGrid = styled.div`
 `;
 
 const ArtistsGrid = styled.div`
+  max-height: 400px;
+  overflow-y: scroll;
   justify-self: start;
   border-radius: 10px;
   height: 100%;
@@ -119,13 +119,6 @@ const EventImage = styled.img`
   }
 `;
 
-const DoubleColumnGrid = styled.div`
-  margin: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-content: center;
-`;
-
 const BoldSpan = styled.span`
   font-weight: bold;
 `;
@@ -138,6 +131,14 @@ const OrganizerText = styled.p``;
 
 const Title = styled.h1``;
 
+interface IStatusSpan {
+  color: string;
+}
+
+const StatusSpan = styled.span<IStatusSpan>`
+  color: ${props => props.color};
+`;
+
 const ContentText = styled.p`
   font-size: 20px;
   color: #535353;
@@ -149,6 +150,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
   const [coords, setCoords] = useState();
+  let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
 
   useEffect(() => {
     fetchEvent();
@@ -180,8 +182,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
 
   const fetchCoords = async (address: string) => {
     geoService.getLatAndLndOfAddress(address).then(data => {
-      console.log(data);
-
       setCoords({ lat: data[0], lng: data[1] });
     });
   };
@@ -194,7 +194,10 @@ const Event = (props: { match: { params: { id: number } } }) => {
   ) {
     let dateFrom = event[0].from_date.split(' ');
     let dateTo = event[0].to_date.split(' ');
+    let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
+    let finished = hasEventHappened(event[0].to_date);
 
+    let status = inProgress ? 'Pågående' : statuses[event[0].status];
     return (
       <Wrapper>
         <ImageGrid>
@@ -204,7 +207,23 @@ const Event = (props: { match: { params: { id: number } } }) => {
           ></EventImage>
         </ImageGrid>
         <InfoGrid>
-          <Title>{event[0].name}</Title>
+          <Title>
+            {event[0].name}{' '}
+            {status === 'Pågående' ? (
+              <>
+                {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
+              </>
+            ) : status == 'Avlyst' || finished ? (
+              <>
+                {' - '}{' '}
+                <StatusSpan color="#c7554f">
+                  {finished ? 'Ferdig' : status}
+                </StatusSpan>
+              </>
+            ) : (
+              <></>
+            )}
+          </Title>
           <OrganizerText>
             <BoldSpan>Arrangør: </BoldSpan>
             {organizer[0].name}
@@ -239,7 +258,12 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <MapGrid>{coords && <Map coords={coords} zoom={14} />}</MapGrid>
         </ArtistsAndMapGrid>
         <TicketsGrid>
-          <TicketMenu tickets={eventTickets} />
+          <TicketMenu
+            tickets={eventTickets}
+            canceled={
+              event[0].status == 2 || hasEventHappened(event[0].to_date)
+            }
+          />
         </TicketsGrid>
       </Wrapper>
     );
