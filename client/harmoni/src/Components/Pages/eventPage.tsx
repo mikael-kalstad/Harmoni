@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-// import Skeleton from 'react-loading-skeleton';
-// import { ListGroup } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-import { eventService } from "../../services/EventService";
-import { ticketService } from "../../services/TicketService";
-import { userService } from "../../services/UserService";
-import { geoService } from "../../services/GeoService";
+import { isEventInProgress, hasEventHappened } from '../utils';
+import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
+import { userService } from '../../services/UserService';
+import { geoService } from '../../services/GeoService';
 
-import TicketMenu from "../Event/ticketMenu";
-import ArtistsList from "../Event/artistsList";
-import MapContainer from "../Event/map";
+import TicketMenu from '../Event/ticketMenu';
+import ArtistsList from '../Event/artistsList';
+import Map from '../Event/map';
 
 export interface IEvent {
   event_id: number;
@@ -20,7 +19,7 @@ export interface IEvent {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
   information: string;
   category: string;
   picture: string;
@@ -83,6 +82,8 @@ const ArtistsAndMapGrid = styled.div`
 `;
 
 const ArtistsGrid = styled.div`
+  max-height: 400px;
+  overflow-y: scroll;
   justify-self: start;
   border-radius: 10px;
   height: 100%;
@@ -93,10 +94,13 @@ const ArtistsGrid = styled.div`
 `;
 
 const MapGrid = styled.div`
+  display: grid;
   border: solid;
   min-height: 300px;
   width: 100%;
   height: 100%;
+  margin: 0;
+  align-items: center;
 `;
 
 const TicketsGrid = styled.div`
@@ -115,13 +119,6 @@ const EventImage = styled.img`
   }
 `;
 
-// const DoubleColumnGrid = styled.div`
-//   margin: 0 20px;
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   align-content: center;
-// `;
-
 const BoldSpan = styled.span`
   font-weight: bold;
 `;
@@ -134,6 +131,14 @@ const OrganizerText = styled.p``;
 
 const Title = styled.h1``;
 
+interface IStatusSpan {
+  color: string;
+}
+
+const StatusSpan = styled.span<IStatusSpan>`
+  color: ${props => props.color};
+`;
+
 const ContentText = styled.p`
   font-size: 20px;
   color: #535353;
@@ -145,6 +150,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
   const [coords, setCoords] = useState();
+  let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -177,6 +183,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
+    //
 
     fetchEvent();
     fetchTickets();
@@ -188,22 +195,40 @@ const Event = (props: { match: { params: { id: number } } }) => {
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null &&
-    coords != null
+    artists != null
   ) {
-    let dateFrom = event[0].from_date.split(" ");
-    let dateTo = event[0].to_date.split(" ");
+    let dateFrom = event[0].from_date.split(' ');
+    let dateTo = event[0].to_date.split(' ');
+    let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
+    let finished = hasEventHappened(event[0].to_date);
 
+    let status = inProgress ? 'Pågående' : statuses[event[0].status];
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString("ascii")}
+            src={new Buffer(event[0].picture).toString('ascii')}
             alt={event[0].name}
           ></EventImage>
         </ImageGrid>
         <InfoGrid>
-          <Title>{event[0].name}</Title>
+          <Title>
+            {event[0].name}{' '}
+            {status === 'Pågående' ? (
+              <>
+                {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
+              </>
+            ) : status == 'Avlyst' || finished ? (
+              <>
+                {' - '}{' '}
+                <StatusSpan color="#c7554f">
+                  {finished ? 'Ferdig' : status}
+                </StatusSpan>
+              </>
+            ) : (
+              <></>
+            )}
+          </Title>
           <OrganizerText>
             <BoldSpan>Arrangør: </BoldSpan>
             {organizer[0].name}
@@ -211,14 +236,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <DateText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
-              ? dateFrom[0] + ", fra kl. " + dateFrom[1] + " til " + dateTo[1]
-              : "Fra: " +
+              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
+              : 'Fra: ' +
                 dateFrom[0] +
-                " kl. " +
+                ' kl. ' +
                 dateFrom[1] +
-                " til " +
+                ' til ' +
                 dateTo[0] +
-                " kl. " +
+                ' kl. ' +
                 dateTo[1]}
           </DateText>
           <AddressText>
@@ -226,8 +251,8 @@ const Event = (props: { match: { params: { id: number } } }) => {
             {event[0].address}
           </AddressText>
           <ContentText>
-            {event[0].information === ""
-              ? "Arrangementet har ingen beskrivelse eller program"
+            {event[0].information === ''
+              ? 'Arrangementet har ingen beskrivelse eller program'
               : event[0].information}
           </ContentText>
         </InfoGrid>
@@ -235,12 +260,15 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <ArtistsGrid>
             <ArtistsList artists={artists} />
           </ArtistsGrid>
-          <MapGrid>
-            <MapContainer coords={coords} />
-          </MapGrid>
+          <MapGrid>{coords && <Map coords={coords} zoom={14} />}</MapGrid>
         </ArtistsAndMapGrid>
         <TicketsGrid>
-          <TicketMenu tickets={eventTickets} />
+          <TicketMenu
+            tickets={eventTickets}
+            canceled={
+              event[0].status == 2 || hasEventHappened(event[0].to_date)
+            }
+          />
         </TicketsGrid>
       </Wrapper>
     );

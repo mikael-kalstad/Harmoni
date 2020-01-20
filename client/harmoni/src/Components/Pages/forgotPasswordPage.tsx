@@ -129,3 +129,4 @@ const ForgotPassword = (props: any) => {
 };
 
 export default ForgotPassword;
+
