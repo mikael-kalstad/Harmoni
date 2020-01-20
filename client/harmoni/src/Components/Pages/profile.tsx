@@ -132,15 +132,11 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
-<<<<<<< HEAD
-      <EventCalendar data={events} />
-=======
 
       <CalenderWrapper>
         <Title>Kalender</Title>
         <EventCalendar data={events} />
       </CalenderWrapper>
->>>>>>> 08808dede104805ef1ef27dd54388eb2dbd2f6ea
     </>
   );
 };
