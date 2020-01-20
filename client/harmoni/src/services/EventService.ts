@@ -157,6 +157,20 @@ class EventService extends Service {
       .then(response => response.data)
       .catch(error => console.log(error));
   }
+  getUserOfEvent(userId:number, eventId:number){
+    updateToken();
+    return axios({
+      method: "get",
+      url:
+          this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+        .then(response => response.data)
+        .catch(error => console.log(error));
+  }
 
   removeUserFromEvent(userId: number, eventId: number) {
     updateToken();
