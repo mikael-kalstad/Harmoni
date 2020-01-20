@@ -17,6 +17,19 @@ interface IUser {
   type: string;
   picture: string;
 }
+interface IRider {
+  riderId: number;
+  text: string;
+}
+interface IRiderList {
+  riderListId: number;
+  userId: number;
+  eventId: number;
+  riderId: number;
+  text: string;
+  quantity;
+  number;
+}
 
 const LoadingWrapper = styled.div`
   display: grid;
@@ -47,7 +60,7 @@ const Text = styled.p`
   font-weight: 400;
   color: #777777;
 `;
-
+var tempId = 1;
 const ArtistForm = (props: any) => {
   const [userData, setUserData] = useState<IUser[]>();
 
@@ -63,6 +76,17 @@ const ArtistForm = (props: any) => {
     if (s[0] != null) {
       let checker = props.listOfArtists.includes(s[0].user);
       if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
+    }
+  };
+
+  const addRider = () => {
+    let r: IRider = {
+      riderId: tempId,
+      text: ""
+    };
+
+    if (r !== null) {
+      tempId = tempId + 1;
     }
   };
 

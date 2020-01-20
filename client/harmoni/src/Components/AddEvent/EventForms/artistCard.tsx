@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
+import { Button } from "@material-ui/core";
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 20% 1fr 10%;
+  grid-template-columns: 20% 1fr 10% 20%;
   align-items: center;
   justify-items: center;
 `;
@@ -39,6 +40,8 @@ interface IProps {
   remove: Function;
 }
 
+const addRider = () => {};
+
 const Artistcard = (props: IProps) => (
   <ListGroup.Item>
     <Wrapper>
@@ -49,6 +52,8 @@ const Artistcard = (props: IProps) => (
       </ImgWrapper>
 
       <Name>{props.user.name}</Name>
+
+      <Button onClick={() => addRider()}>Rider +</Button>
 
       <DelBtn src="/icons/cross.svg" onClick={() => props.remove(props.user)} />
     </Wrapper>
