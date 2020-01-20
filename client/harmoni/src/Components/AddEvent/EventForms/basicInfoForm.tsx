@@ -158,7 +158,7 @@ const BasicInfoForm = (props: IProps) => {
       <UnderTitle>Lokasjon*</UnderTitle>
       <TextField
         style={
-          coords.length > 0 && coords[0] != -1000 && !fetchingCoords
+          coords.length > 0 && coords[0] !== -1000 && !fetchingCoords
             ? inputStyleLocationFound
             : inputStyle
         }
@@ -166,7 +166,7 @@ const BasicInfoForm = (props: IProps) => {
         placeholder="Lokasjon (Maks 45 karakterer)"
         value={props.infoData.location}
         error={
-          (coords.length == 0 && !fetchingCoords) ||
+          (coords.length === 0 && !fetchingCoords) ||
           (props.infoSubmit && props.infoData.location === '')
         }
         helperText={
@@ -185,7 +185,7 @@ const BasicInfoForm = (props: IProps) => {
         }
         onBlur={e => fetchCoords(e.target.value)}
       />
-      {coords.length > 0 && coords[1] != -1000 && (
+      {coords.length > 0 && coords[1] !== -1000 && (
         <MapWrapper>
           <Map coords={{ lat: coords[0], lng: coords[1] }} zoom={12} />
         </MapWrapper>
