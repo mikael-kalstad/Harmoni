@@ -67,7 +67,12 @@ const Profile = (props: { userData: any }) => {
         await eventService.getEventsByUser(props.userData.user_id)
       );
     };
-
+    const getEventsForOrgenizer = async () => {
+        setEvents(
+            await eventService.getEventsByOrganizer(props.userData.user_id)
+        );
+    };
+    getEventsForOrgenizer();
     getEvents();
   }, [props.userData]);
 
