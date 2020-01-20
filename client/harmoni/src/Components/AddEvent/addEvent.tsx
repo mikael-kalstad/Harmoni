@@ -16,6 +16,7 @@ import Success from "./success";
 import { eventService } from "../../services/EventService";
 import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
+import AttachmentForm from "./EventForms/attachmentForm";
 
 interface Event {
   eventId: number;
@@ -77,6 +78,7 @@ const AddEvent = (props: { userData: any }) => {
     "Artister",
     "Billett-typer",
     "Beskrivelse og program",
+    "Vedlegg",
     "Oppsummering"
   ];
 
@@ -110,10 +112,22 @@ const AddEvent = (props: { userData: any }) => {
   // 4. Program
   const [programText, setProgramText] = useState("");
 
+  // 5. Attachments
+  const [listOfAttachments, setListOfAttachments] = useState([]);
+  const [listOfAttachmentsRights, setListOfAttachmentsRights] = useState([]);
+
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
+  const attachmentProps = {
+    listOfAttachments,
+    setListOfAttachments,
+    listOfArtists,
+    setListOfArtists,
+    listOfAttachmentsRights,
+    setListOfAttachmentsRights
+  };
 
   function getStepContent(step: number) {
     switch (step) {
@@ -126,6 +140,8 @@ const AddEvent = (props: { userData: any }) => {
       case 3:
         return <ProgramForm {...programProps} />;
       case 4:
+        return <AttachmentForm {...attachmentProps} />;
+      case 5:
         return (
           <Summary
             name={infoData.name}

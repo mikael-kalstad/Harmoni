@@ -8,6 +8,8 @@ import { userService } from '../../services/UserService';
 
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
+import AttachmentList from '../Event/attachmentList';
+import { attachmentService } from '../../services/AttachmentService';
 
 export interface IEvent {
   event_id: number;
@@ -40,6 +42,16 @@ interface IUser {
   salt: string;
   type: string;
   picture: string;
+}
+
+interface attachment {
+  attachment_id: number;
+  user_id: number;
+  event_id: number;
+  data: string;
+  filename: string;
+  filetype: string;
+  filesize: number;
 }
 
 const Wrapper = styled.div`
@@ -139,12 +151,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+  const [attachments, setAttachments] = useState<attachment[]>([]);
 
   useEffect(() => {
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
+    fetchAttachments();
   }, []);
 
   const fetchEvent = async () => {
@@ -164,6 +178,10 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const fetchOrganizer = async () => {
     setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
   };
+
+  const fetchAttachments = async () => {
+    setAttachments(await attachmentService.getAttachmentsForEvent(props.match.params.id));
+  }
 
   if (
     event != null &&
@@ -198,6 +216,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
           </ArtistsGrid>
           <MapGrid>Kartet går her</MapGrid>
         </ArtistsAndMapGrid>
+        <AttachmentList attachments={attachments}></AttachmentList>
         <TicketsGrid>
           <TicketMenu tickets={eventTickets} />
         </TicketsGrid>

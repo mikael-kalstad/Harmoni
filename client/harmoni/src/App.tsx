@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { loginService } from './services/loginService';
-import { userService } from './services/UserService';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { loginService } from "./services/loginService";
+import { userService } from "./services/UserService";
 
 // Bootstrap styling
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Pages
-import FrontPage from './Components/Pages/frontPage';
-import Register from './Components/Pages/register';
-import Profile from './Components/Pages/profile';
-import Events from './Components/Pages/events';
-import Event from './Components/Pages/eventPage';
-import PageNotFound from './Components/Pages/pageNotFound';
-import Layout from './Components/layout';
-import AddEvent from './Components/AddEvent/addEvent';
+import FrontPage from "./Components/Pages/frontPage";
+import Register from "./Components/Pages/register";
+import Profile from "./Components/Pages/profile";
+import Events from "./Components/Pages/events";
+import Event from "./Components/Pages/eventPage";
+import PageNotFound from "./Components/Pages/pageNotFound";
+import Layout from "./Components/layout";
+import AddEvent from "./Components/AddEvent/addEvent";
 import SearchEvents from "./Components/Pages/searchPage";
 
 // Authentication component
-import Authenticate from './Components/authenticate';
-import ForgotPassword from './Components/Pages/forgotPasswordPage';
-import ResetPassword from './Components/Pages/resetPassword';
+import Authenticate from "./Components/authenticate";
+import ForgotPassword from "./Components/Pages/forgotPasswordPage";
+import ResetPassword from "./Components/Pages/resetPassword";
+import AttachmentForm from "./Components/AddEvent/EventForms/attachmentForm";
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(undefined);
@@ -33,7 +34,7 @@ const App: React.FC = () => {
   const checkToken = async () => {
     let res = await loginService.checkToken();
 
-    if (res) setUserData(res['data']['userData']);
+    if (res) setUserData(res["data"]["userData"]);
   };
 
   const logOut = () => {
@@ -62,9 +63,12 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      {console.log('user data', userData)}
+      {console.log("user data", userData)}
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
+          <Route path="/upload">
+            <AttachmentForm listOfAttachments={[]}></AttachmentForm>
+          </Route>
           <Route exact path="/" component={FrontPage} />
           <Route
             exact

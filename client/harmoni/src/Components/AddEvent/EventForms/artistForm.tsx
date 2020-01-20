@@ -89,7 +89,7 @@ const ArtistForm = (props: any) => {
           onChange={s => addArtist(s)}
           // onPaginate={() => console.log("clicked on name!")}
           placeholder="Søk etter artister..."
-          selected={props.userData}
+          //selected={props.userData}
         />
 
         {props.listOfArtists && props.listOfArtists.length !== 0 && (

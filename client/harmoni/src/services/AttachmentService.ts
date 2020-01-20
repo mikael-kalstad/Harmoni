@@ -2,10 +2,13 @@ import axios from 'axios';
 import Service, {updateToken} from './Service';
 
 interface Attachment {
-  attachmentId: number;
-  userId: number;
-  eventId: number;
-  data: File;
+  attachment_id: number;
+  user_id: number;
+  event_id: number;
+  data: string;
+  filename: string;
+  filetype: string;
+  filesize: number;
 }
 
 class AttachmentService extends Service {
@@ -72,7 +75,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'put',
-      url: this.path + '/authorized/attachments/' + attachment.attachmentId,
+      url: this.path + '/authorized/attachments/' + attachment.attachment_id,
       data: attachment,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
