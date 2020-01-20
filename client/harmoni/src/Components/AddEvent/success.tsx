@@ -18,10 +18,10 @@ const Text = styled.p`
   font-weight: 500;
 `;
 
-const Success = () => (
+const Success = (props: { title: string }) => (
   <Wrapper>
     <Img src="/icons/check.svg" />
-    <Text>Arrangment er lagt til!</Text>
+    <Text>{props.title}</Text>
   </Wrapper>
 );
 

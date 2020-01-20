@@ -42,8 +42,9 @@ router.get("/authorized/riders/riderlist/:event_id", async (request, response) =
     });
 })
 
+
 // Get all riders of user in event 
-router.get("/authorized/riders/riderlist/:user_id&:event_id", async (request, response) => {
+router.get("/authorized/riders/riderlist/:event_id/:user_id", async (request, response) => {
     dao.getRiderByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });

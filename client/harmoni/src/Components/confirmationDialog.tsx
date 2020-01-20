@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const DialogBox = styled.div`
   position: fixed;
@@ -29,7 +29,7 @@ const Title = styled.p`
 const TextWrapper = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #f6f6f6;
+  background-color: #fbfbfb;
   border-bottom: 1px solid #999;
   border-top: 1px solid #999;
 `;
@@ -55,9 +55,9 @@ interface IBtn {
 }
 
 const Btn = styled.button<IBtn>`
-  background: ${props => (props.action ? '#df2e06' : 'white')};
-  border: ${props => (props.action ? 'none' : '1px solid #777')};
-  color: ${props => (props.action ? 'white' : '#777')};
+  background: ${props => (props.action ? "#df2e06" : "white")};
+  border: ${props => (props.action ? "none" : "1px solid #777")};
+  color: ${props => (props.action ? "white" : "#777")};
   border-radius: 5px;
   outline: none;
   padding: 9px 15px;
@@ -65,6 +65,9 @@ const Btn = styled.button<IBtn>`
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
+  display: grid;
+  align-items: center;
+  justify-items: center;
 
   :focus {
     outline: blue;
@@ -110,7 +113,10 @@ const ConfirmationDialog = (props: IProps) => {
             {props.btnSecondaryText}
           </Btn>
 
-          <Btn onClick={() => props.actionClick()} action={true}>
+          <Btn
+            onClick={() => props.actionClick() && props.closeDialog()}
+            action={true}
+          >
             {props.btnActionText}
           </Btn>
         </ButtonWrapper>

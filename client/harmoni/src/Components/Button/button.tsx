@@ -11,7 +11,7 @@
  * - Loading state for example if the button will have an async API call.
  */
 
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import CircularProgress from "@material-ui/core/CircularProgress";
 

@@ -49,17 +49,19 @@ export default class RiderService extends Service {
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
-  getRiderByUserIdEvent(eventId: number, userId: number) {
+
+  getRiderByUserIdEventId(eventId: number, userId: number) {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/riders/riderlist/' + userId + '&' + eventId,
+      url: this.path + '/authorized/riders/riderlist/' + userId + '/' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
+
   addRider(rider: Rider) {
     updateToken();
     return axios({

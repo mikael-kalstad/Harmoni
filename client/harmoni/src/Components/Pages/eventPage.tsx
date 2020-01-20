@@ -153,38 +153,42 @@ const Event = (props: { match: { params: { id: number } } }) => {
   let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
 
   useEffect(() => {
+    const fetchEvent = async () => {
+      eventService.getEventById(props.match.params.id).then(data => {
+        setEvent(data);
+        fetchCoords(data[0].address);
+      });
+    };
+
+    const fetchTickets = async () => {
+      setEventTickets(
+        await ticketService.getAllTicketsByEventId(props.match.params.id)
+      );
+    };
+
+    const fetchArtists = async () => {
+      setArtists(await userService.getArtistsForEvent(props.match.params.id));
+    };
+
+    const fetchOrganizer = async () => {
+      setOrganizer(
+        await userService.getOrganizerForEvent(props.match.params.id)
+      );
+    };
+
+    const fetchCoords = async (address: string) => {
+      geoService.getLatAndLndOfAddress(address).then(data => {
+        console.log(data);
+
+        setCoords({ lat: data[0], lng: data[1] });
+      });
+    };
+
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-  }, []);
-
-  const fetchEvent = async () => {
-    eventService.getEventById(props.match.params.id).then(data => {
-      setEvent(data);
-      fetchCoords(data[0].address);
-    });
-  };
-
-  const fetchTickets = async () => {
-    setEventTickets(
-      await ticketService.getAllTicketsByEventId(props.match.params.id)
-    );
-  };
-
-  const fetchArtists = async () => {
-    setArtists(await userService.getArtistsForEvent(props.match.params.id));
-  };
-
-  const fetchOrganizer = async () => {
-    setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
-  };
-
-  const fetchCoords = async (address: string) => {
-    geoService.getLatAndLndOfAddress(address).then(data => {
-      setCoords({ lat: data[0], lng: data[1] });
-    });
-  };
+  }, [props.match.params.id]);
 
   if (
     event != null &&

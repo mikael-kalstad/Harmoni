@@ -29,24 +29,24 @@ const Authenticate = (props: IProps) => {
   const [connectionError, setConnectionError] = useState(false);
 
   useEffect(() => {
+    const authenticate = async () => {
+      // Check jwt token
+      let res: any;
+      res = await loginService.checkToken();
+
+      if (res instanceof Error) {
+        setConnectionError(true);
+        return;
+      } else if (res && res.status === 401) {
+        setDeniedAccess(true);
+        return;
+      } else if (res && props.userData) {
+        setAuth(true);
+      }
+    };
+
     authenticate();
-  }, []);
-
-  const authenticate = async () => {
-    // Check jwt token
-    let res: any;
-    res = await loginService.checkToken();
-
-    if (res instanceof Error) {
-      setConnectionError(true);
-      return;
-    } else if (res && res.status === 401) {
-      setDeniedAccess(true);
-      return;
-    } else if (res && props.userData) {
-      setAuth(true);
-    }
-  };
+  }, [props.userData]);
 
   // Connection error
   if (connectionError)

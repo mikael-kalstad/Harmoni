@@ -74,7 +74,7 @@ const Wrapper = styled.div`
 `;
 
 interface IOverlayText {
-  onGoing?: boolean;
+  ongoing?: boolean;
 }
 
 const OverlayText = styled.p<IOverlayText>`
@@ -82,7 +82,7 @@ const OverlayText = styled.p<IOverlayText>`
   font-weight: 700;
   text-transform: uppercase;
   color: ${props =>
-    props.onGoing ? 'rgba(87, 190, 61, 0.7);' : 'rgba(213, 89, 81, 0.9)'};
+    props.ongoing ? 'rgba(87, 190, 61, 0.7);' : 'rgba(213, 89, 81, 0.9)'};
 `;
 
 const InfoOverlay = styled.div`
@@ -103,10 +103,10 @@ const ArrangementCard = (props: any) => {
   const card = (
     <Container>
       <Wrapper>
-        {props.status !== undefined && (props.status == 2 || eventInProgress) && (
+        {props.status !== undefined && (props.status === 2 || eventInProgress) && (
           <InfoOverlay>
-            <OverlayText onGoing={eventInProgress}>
-              {eventInProgress ? 'Pågående' : props.status == 2 && 'Avlyst'}
+            <OverlayText ongoing={eventInProgress}>
+              {eventInProgress ? 'Pågående' : props.status === 2 && 'Avlyst'}
             </OverlayText>
           </InfoOverlay>
         )}
@@ -130,7 +130,13 @@ const ArrangementCard = (props: any) => {
   );
 
   if (props.id) {
-    return <StyledLink to={'/event/' + props.id}>{card}</StyledLink>;
+    return (
+      <StyledLink
+        to={'/event/' + (props.eventInProfile ? 'details/' : '') + props.id}
+      >
+        {card}
+      </StyledLink>
+    );
   }
 
   return card;
