@@ -89,7 +89,7 @@ test("Get all info of user by email", done => {
   dao.getUserAllInfoByEMail("jens@jensen.com", (status, data) => {
     expect(status).toBe(200);
     expect(data[0].type).toBe("artist");
-    expect(data[0].hash).toBe("dfghjkfghjkfghjk");
+    expect(data[0].mobile).toBe(1881);
     done();
   });
 });
