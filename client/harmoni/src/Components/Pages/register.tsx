@@ -55,14 +55,11 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
   const [type, setType] = useState("");
   const [imgData, setImgData] = useState("");
   const [warningText, setWarningText] = useState("");
-  const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  const telefonFormat=/^(0047|\+47|47)?[2-9]\d{7}$/;
+  const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const tlfFormat = /^(0047|\+47|47)?[2-9]\d{7}$/;
 
   // User already registered warning for email
   const [emailWarning, setEmailWarning] = useState("");
-
-
-
 
   // Redirect to page if registration is successfull
   const [redirect, setRedirect] = useState(false);
@@ -77,11 +74,15 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
   const types_translated = ["Arrangør", "Artist/Manager", "Frivillig"];
   const types = ["organizer", "artist", "volunteer"];
 
-
   useEffect(() => {
     if (props.userData) {
+      console.log(props.userData);
       // Phone is optional
-      if (props.userData["phone"]) setTlfInput(props.userData[0]["phone"]);
+      if (props.userData["mobile"]) setTlfInput(props.userData["mobile"]);
+
+      // Image is optional
+      if (props.userData["picture"])
+        setImgData(new Buffer(props.userData["picture"]).toString("ascii"));
 
       // All other inputs are required
       setNameInput(props.userData["name"]);
@@ -106,6 +107,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     if (e !== undefined && e.key === "Enter")
       props.userData ? save() : register();
   };
+
   function passwordValidation(thePassword: string) {
     var count = 0;
     count += /[a-z]/.test(thePassword) ? 1 : 0;
@@ -118,46 +120,39 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     } else if (count < 2) return false;
   }
 
-
-  function counter (string) {
-    var count =0;
-    if(string){
-      string.split('').forEach(function() {
-        count ? count++ : count = 1;
+  function counter(string) {
+    var count = 0;
+    if (string) {
+      string.split("").forEach(function() {
+        count ? count++ : (count = 1);
       });
     }
     return count;
   }
 
-  function phoneNumberValidation(theNumber: number) {
-    if (theNumber !== undefined) {
-      if (theNumber.toString().match(telefonFormat)) {
+  function phoneNumberValidation(num: number) {
+    if (num !== undefined) {
+      if (num.toString().match(tlfFormat)) {
         return true;
       } else return false;
     } else {
       return true;
     }
-
   }
 
   // Save changes to user info
   const save = async () => {
-    if (!tlfInput.match(telefonFormat)) {
-    }
     setSubmit(true);
+
     if (
       type.trim() === "" ||
       nameInput.trim() === "" ||
-      emailInput.trim() === "" ||
-      !emailInput.match(mailformat) ||
-      !passwordValidation(passwordInput) ||
-      !tlfInput.match(telefonFormat)
+      (emailInput.trim() !== "" && !emailInput.match(emailFormat)) ||
+      (tlfInput !== undefined && !tlfInput.toString().match(tlfFormat))
     )
       return;
 
     setLoading(true);
-
-
 
     let user = {
       user_id: props.userData.user_id,
@@ -165,10 +160,11 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       type: type,
       email: emailInput,
       mobile: tlfInput,
-      picture: imgData === "" ? undefined : imgData
+      picture: imgData
     };
-
+    console.log(user);
     let res = await userService.updateUser(user);
+    console.log(res);
 
     if (!res || res instanceof Error) {
       setLoading(false);
@@ -178,7 +174,6 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       setLoading(false);
       setRedirect(true);
     }
-
   };
 
   const register = async () => {
@@ -188,15 +183,14 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       type.trim() === "" ||
       nameInput.trim() === "" ||
       emailInput.trim() === "" ||
-      passwordInput.trim() === ""||
-      !emailInput.match(mailformat)||
-      !passwordValidation(passwordInput)||
-      !tlfInput.match(telefonFormat)
+      passwordInput.trim() === "" ||
+      !emailInput.match(emailFormat) ||
+      !passwordValidation(passwordInput) ||
+      !tlfInput.match(tlfFormat)
     )
       return;
 
     setLoading(true);
-
 
     let res = await loginService.registerPerson(
       nameInput,
@@ -287,9 +281,12 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           variant="outlined"
           label="Telefon"
           type="number"
-          value={tlfInput}
-          helperText={submit && !phoneNumberValidation(tlfInput)?"Du har git en ugyldig telefonnummer, eksempel på riktig telefonnummer: 47768462"
-              :"Det er valgfritt å oppgi telefonnummer"}
+          value={tlfInput || null}
+          helperText={
+            submit && !phoneNumberValidation(tlfInput)
+              ? "Du har git en ugyldig telefonnummer, eksempel på riktig telefonnummer: 47768462"
+              : "Det er valgfritt å oppgi telefonnummer"
+          }
           onChange={e => setTlfInput(Number.parseInt(e.target.value))}
           onKeyDown={e => checkForEnterKey(e)}
         />
@@ -303,13 +300,13 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           error={
             (submit && emailInput === "") ||
             emailWarning !== "" ||
-            (submit && !emailInput.match(mailformat)) ||
+            (submit && !emailInput.match(emailFormat)) ||
             (submit && counter(emailInput) > 45)
           }
           helperText={
             submit && emailInput === ""
               ? "Email er påkrevd"
-              : submit && !emailInput.match(mailformat)
+              : submit && !emailInput.match(emailFormat)
               ? "Du har oppgitt en ugyldig mail"
               : emailWarning !== ""
               ? emailWarning
