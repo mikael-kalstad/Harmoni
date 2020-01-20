@@ -2,18 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
 import ProfilePageImage from '../Profile/profilePageImage';
 import ProfileOptions from '../Profile/profileOptions';
 import EventGrid from '../eventGrid';
 import { eventService } from '../../services/EventService';
-=======
-import ProfilePageImage from "../Profile/profilePageImage";
-import ProfileOptions from "../Profile/profileOptions";
-import EventGrid from "../eventGrid";
-import { eventService } from "../../services/EventService";
-import EventCalendar from "../eventCalendar";
->>>>>>> c5805f98b5779f294dda0f6a213a2d0e16d6f7a5
+import EventCalendar from '../eventCalendar';
 
 const Wrapper = styled.div`
   position: relative;
@@ -117,7 +110,7 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
-      <EventCalendar data={events}/>
+      <EventCalendar data={events} />
     </>
   );
 };

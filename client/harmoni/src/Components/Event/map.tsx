@@ -29,7 +29,6 @@ const Map = (props: IMapContainer) => {
     center: props.coords,
     zoom: props.zoom
   };
-  console.log(props.coords);
 
   return (
     <Wrapper>

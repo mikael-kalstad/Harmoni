@@ -83,7 +83,7 @@ const ArtistsList = (props: ArtistsListProps) => {
     <Wrapper empty={props.artists.length === 0}>
       <ListGroup>
         {!props.hideTitle && (
-          <ListGroup.Item key={'title'}>
+          <ListGroup.Item key={-1}>
             <TitleText empty={props.artists.length === 0}>
               Personer som skal opptre på dette arrangementet
             </TitleText>
