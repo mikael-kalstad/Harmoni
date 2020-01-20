@@ -178,8 +178,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        console.log(data);
-
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
@@ -217,7 +215,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
               <>
                 {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
               </>
-            ) : status == 'Avlyst' || finished ? (
+            ) : status === 'Avlyst' || finished ? (
               <>
                 {' - '}{' '}
                 <StatusSpan color="#c7554f">
@@ -265,7 +263,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <TicketMenu
             tickets={eventTickets}
             canceled={
-              event[0].status == 2 || hasEventHappened(event[0].to_date)
+              event[0].status === 2 || hasEventHappened(event[0].to_date)
             }
           />
         </TicketsGrid>

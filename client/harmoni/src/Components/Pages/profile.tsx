@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-import ProfilePageImage from "../Profile/profilePageImage";
-import ProfileOptions from "../Profile/profileOptions";
-import EventGrid from "../eventGrid";
-import { eventService } from "../../services/EventService";
+import ProfilePageImage from '../Profile/profilePageImage';
+import ProfileOptions from '../Profile/profileOptions';
+import EventGrid from '../eventGrid';
+import { eventService } from '../../services/EventService';
 
 const Wrapper = styled.div`
   position: relative;
@@ -63,9 +63,7 @@ const Profile = (props: { userData: any }) => {
 
   useEffect(() => {
     const getEvents = async () => {
-      setEvents(
-        await eventService.getEventsByUser(props.userData.user_id)
-      );
+      setEvents(await eventService.getEventsByUser(props.userData.user_id));
     };
 
     getEvents();
@@ -79,14 +77,14 @@ const Profile = (props: { userData: any }) => {
         <ProfilePageImage
           picture={
             props.userData.picture
-              ? new Buffer(props.userData.picture, "base64").toString("ascii")
-              : ""
+              ? new Buffer(props.userData.picture, 'base64').toString('ascii')
+              : ''
           }
           name={props.userData.name}
           type={props.userData.type}
         />
 
-        {props.userData.type === "organizer" ? (
+        {props.userData.type === 'organizer' ? (
           <StyledLink to="/newEvent">
             <AddBtn>
               <BtnIcon src="/icons/plus-1.svg" />
