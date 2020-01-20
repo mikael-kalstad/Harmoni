@@ -227,6 +227,7 @@ test("Reset password of user", done => {
   dao.resetPassword("hans@hansen.com", resetPasswordUser, (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
+    done();
   });
 });
 
@@ -237,6 +238,7 @@ test("Change password of user", done => {
     (status, data) => {
       expect(status).toBe(200);
       expect(data.affectedRows).toBe(1);
+      done();
     }
   );
 });
@@ -245,6 +247,7 @@ test("Change picture of user", done => {
   dao.changePicture(1, "picturepicturepicturepicture", (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
+    done();
   });
 });
 
