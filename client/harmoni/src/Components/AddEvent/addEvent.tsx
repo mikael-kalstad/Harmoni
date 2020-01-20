@@ -117,6 +117,7 @@ const AddEvent = (props: IProps) => {
 
   // 2. Artists
   const [listOfArtists, setListOfArtists] = useState([]);
+  const [listOfRiders, setListOfRiders] = useState([]);
 
   // 3. Tickets
   const [listOfTickets, setListOfTickets] = useState([]);
@@ -125,7 +126,12 @@ const AddEvent = (props: IProps) => {
   const [programText, setProgramText] = useState("");
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
-  const artistProps = { listOfArtists, setListOfArtists };
+  const artistProps = {
+    listOfArtists,
+    setListOfArtists,
+    listOfRiders,
+    setListOfRiders
+  };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
 

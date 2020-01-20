@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import ListGroup from 'react-bootstrap/ListGroup';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { userService } from '../../../services/UserService';
-import styled from 'styled-components';
-import ArtistCard from './artistCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { useState, useEffect } from "react";
+import { Typeahead } from "react-bootstrap-typeahead";
+import ListGroup from "react-bootstrap/ListGroup";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { userService } from "../../../services/UserService";
+import styled from "styled-components";
+import ArtistCard from "./artistCard";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface IUser {
   user_id: number;
@@ -69,7 +69,7 @@ const ArtistForm = (props: any) => {
   }, []);
 
   const fetchUsers = async () => {
-    setUserData(await userService.getUsersOfType('artist'));
+    setUserData(await userService.getUsersOfType("artist"));
   };
 
   const addArtist = (s: { user: IUser }[]) => {
@@ -77,17 +77,6 @@ const ArtistForm = (props: any) => {
       let checker = props.listOfArtists.includes(s[0].user);
       if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
       typeahead.clear();
-    }
-  };
-
-  const addRider = () => {
-    let r: IRider = {
-      riderId: tempId,
-      text: ""
-    };
-
-    if (r !== null) {
-      tempId = tempId + 1;
     }
   };
 
@@ -125,7 +114,12 @@ const ArtistForm = (props: any) => {
         {props.listOfArtists &&
           props.listOfArtists.map(u => (
             <ListGroup key={u.email}>
-              <ArtistCard user={u} remove={deleteArtist} />
+              <ArtistCard
+                user={u}
+                remove={deleteArtist}
+                riderText={props.listOfRiders}
+                setRiderData={props.setListOfRiders}
+              />
             </ListGroup>
           ))}
       </>
