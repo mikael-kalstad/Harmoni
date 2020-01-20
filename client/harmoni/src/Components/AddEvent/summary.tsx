@@ -150,7 +150,7 @@ const Summary = (props: IProps) => (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
       props.tickets.map(ticket => (
-        <ListGroup key={ticket.type + Math.random()}>
+        <ListGroup key={ticket.ticket_id}>
           <TicketCard ticket={ticket} />
         </ListGroup>
       ))

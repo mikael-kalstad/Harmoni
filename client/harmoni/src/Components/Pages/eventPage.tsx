@@ -95,7 +95,7 @@ const ArtistsGrid = styled.div`
 
 const MapGrid = styled.div`
   display: grid;
-  border: solid;
+  border: 3px solid grey;
   min-height: 300px;
   width: 100%;
   height: 100%;
@@ -123,11 +123,7 @@ const BoldSpan = styled.span`
   font-weight: bold;
 `;
 
-const DateText = styled.p``;
-
-const AddressText = styled.p``;
-
-const OrganizerText = styled.p``;
+const InfoText = styled.p``;
 
 const Title = styled.h1``;
 
@@ -178,8 +174,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        console.log(data);
-
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
@@ -197,6 +191,15 @@ const Event = (props: { match: { params: { id: number } } }) => {
     organizer != null &&
     artists != null
   ) {
+    let categories = {
+      concert: 'Konsert',
+      festival: 'Festival',
+      theatre: 'Teater',
+      standup: 'Standup',
+      show: 'Show',
+      other: 'Annet'
+    };
+
     let dateFrom = event[0].from_date.split(' ');
     let dateTo = event[0].to_date.split(' ');
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
@@ -218,7 +221,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
               <>
                 {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
               </>
-            ) : status == 'Avlyst' || finished ? (
+            ) : status === 'Avlyst' || finished ? (
               <>
                 {' - '}{' '}
                 <StatusSpan color="#c7554f">
@@ -229,11 +232,11 @@ const Event = (props: { match: { params: { id: number } } }) => {
               <></>
             )}
           </Title>
-          <OrganizerText>
+          <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
             {organizer[0].name}
-          </OrganizerText>
-          <DateText>
+          </InfoText>
+          <InfoText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
               ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
@@ -245,11 +248,15 @@ const Event = (props: { match: { params: { id: number } } }) => {
                 dateTo[0] +
                 ' kl. ' +
                 dateTo[1]}
-          </DateText>
-          <AddressText>
+          </InfoText>
+          <InfoText>
             <BoldSpan>Sted: </BoldSpan>
             {event[0].address}
-          </AddressText>
+          </InfoText>
+          <InfoText>
+            <BoldSpan>Kategori: </BoldSpan>
+            {categories[event[0].category]}
+          </InfoText>
           <ContentText>
             {event[0].information === ''
               ? 'Arrangementet har ingen beskrivelse eller program'
@@ -266,7 +273,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <TicketMenu
             tickets={eventTickets}
             canceled={
-              event[0].status == 2 || hasEventHappened(event[0].to_date)
+              event[0].status === 2 || hasEventHappened(event[0].to_date)
             }
           />
         </TicketsGrid>

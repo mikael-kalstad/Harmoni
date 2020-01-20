@@ -1,6 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import NavigationBar from "./Nav/navigationBar";
+import React from 'react';
+import styled from 'styled-components';
+import NavigationBar from './Nav/navigationBar';
+import Footer from './footer';
 
 const Content = styled.div`
   position: relative;
@@ -21,6 +22,7 @@ const Layout = (props: IProps) => (
       logIn={props.logIn}
     />
     <Content>{props.children}</Content>
+    <Footer />
   </>
 );
 
