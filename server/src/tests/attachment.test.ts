@@ -58,7 +58,7 @@ test("Get all attachments by eventId", done => {
     })
 })
 
-test("Get all attachments by userId", done => {
+test("Get all attachments uploaded by userId", done => {
     dao.getAttachmentsForUploader(2, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].attachment_id).toBe(2);
@@ -66,7 +66,7 @@ test("Get all attachments by userId", done => {
     })
 })
 
-test("Get all attachments by eventId and userID", done => {
+test("Get all attachments uploadad userId and eventID", done => {
     dao.getAttachmentsForUploaderForEvent(1,2, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].attachment_id).toBe(1);
