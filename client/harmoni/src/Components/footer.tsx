@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   background-color: #343434;
   color: white;
   display: grid;
   grid-template-columns: 3fr 2fr;
-
+  margin-top: 30px;
   @media screen and (max-width: 600px) {
     grid-template-columns: 1fr;
   }
@@ -60,12 +60,12 @@ const Footer = (props: any) => {
         <ContactTitle>Kontaktinfo: </ContactTitle>
         <ContactText>
           Ved feil, forespørsler eller spørsmål kan teamet kontaktes på mail
-          ved:{' '}
+          ved:{" "}
           <StyledA href="mailto:someone@example.com" target="_top">
             mail@mail.com
           </StyledA>
           <br />
-          Prosjektet finnes på GitLab:{' '}
+          Prosjektet finnes på GitLab:{" "}
           <StyledA href="https://gitlab.stud.idi.ntnu.no/henrikwt/team-8---harmoni">
             Team 8
           </StyledA>

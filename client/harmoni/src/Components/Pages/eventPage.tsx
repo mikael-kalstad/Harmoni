@@ -83,7 +83,7 @@ const ArtistsAndMapGrid = styled.div`
 
 const ArtistsGrid = styled.div`
   max-height: 400px;
-  overflow-y: scroll;
+  overflow-y: auto;
   justify-self: start;
   border-radius: 10px;
   height: 100%;
@@ -104,6 +104,7 @@ const MapGrid = styled.div`
 `;
 
 const TicketsGrid = styled.div`
+  padding-top: 30px;
   width: 70%;
   margin: auto;
 `;
