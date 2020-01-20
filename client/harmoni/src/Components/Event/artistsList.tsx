@@ -83,7 +83,7 @@ const ArtistsList = (props: ArtistsListProps) => {
     <Wrapper empty={props.artists.length === 0}>
       <ListGroup>
         {!props.hideTitle && (
-          <ListGroup.Item key={-1}>
+          <ListGroup.Item key={'title'}>
             <TitleText empty={props.artists.length === 0}>
               Personer som skal opptre på dette arrangementet
             </TitleText>
@@ -91,7 +91,7 @@ const ArtistsList = (props: ArtistsListProps) => {
         )}
         {props.artists.map(artist => {
           return (
-            <ListGroup.Item key={artist.user_id}>
+            <ListGroup.Item key={artist.user_id + Math.random()}>
               <ArtistBar>
                 <ArtistImage
                   src={new Buffer(artist.picture).toString('ascii')}
