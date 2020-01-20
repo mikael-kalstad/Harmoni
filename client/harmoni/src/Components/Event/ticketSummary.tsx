@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 interface ITicket {
   ticket_id: number;
@@ -45,18 +45,17 @@ const TicketSummary = (props: TicketSummaryProps) => {
     <Wrapper>
       Billetter du har valgt:
       <SummaryGrid>
-        {props.tickets.map((ticket: ITicket, i: number) =>
-          props.quantities[i] > 0 ? (
-            <GridRow key={ticket.type}>
-              <TicketNameText>{ticket.type}</TicketNameText>
-              <TicketQuantityText>x{props.quantities[i]}</TicketQuantityText>
-              <TicketPriceText>
-                {ticket.price * props.quantities[i]},-
-              </TicketPriceText>
-            </GridRow>
-          ) : (
-            <></>
-          )
+        {props.tickets.map(
+          (ticket: ITicket, i: number) =>
+            props.quantities[i] > 0 && (
+              <GridRow key={ticket.type + Math.random()}>
+                <TicketNameText>{ticket.type}</TicketNameText>
+                <TicketQuantityText>x{props.quantities[i]}</TicketQuantityText>
+                <TicketPriceText>
+                  {ticket.price * props.quantities[i]},-
+                </TicketPriceText>
+              </GridRow>
+            )
         )}
       </SummaryGrid>
     </Wrapper>

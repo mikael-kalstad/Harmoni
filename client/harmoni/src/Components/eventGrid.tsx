@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import EventCard from "./eventCard";
+import Skeleton from "react-loading-skeleton";
 
 const Container = styled.div`
   width: 80%;
@@ -33,6 +34,8 @@ const Title = styled.h2`
   font-weight: 500;
   font-size: 36px;
   margin: 70px 20px;
+  width: 60%;
+  max-width: 100%;
 
   ::first-letter {
     text-transform: uppercase;
@@ -86,7 +89,7 @@ const arrangementGrid = (props: any) => {
 
   return (
     <Container>
-      <Title>{props.title}</Title>
+      <Title>{!props.data ? <Skeleton /> : props.title}</Title>
 
       <Grid>{cards}</Grid>
 
