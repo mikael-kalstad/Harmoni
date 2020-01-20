@@ -178,12 +178,24 @@ const AddEvent = (props: { userData: any }) => {
     return activeStep === totalSteps() - 1;
   };
 
+  let todayDate = new Date();
+  const compareDates =(date1,date2) =>{
+    let fromDate = new Date(date1);
+    let toDate = new Date(date2);
+    console.log("hei",todayDate,fromDate)
+    return fromDate < toDate ;
+  }
+
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
       console.log(infoData);
       setInfoSubmit(true);
       if (isInfoDataEmpty()) return;
+      if(!compareDates(infoData.dateFrom,infoData.dateTo) ||
+          !(compareDates(todayDate,infoData.dateFrom,)) ||
+          !(compareDates(todayDate,infoData.dateTo,))
+      ) return;
     }
 
     // Set step to completed
