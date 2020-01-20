@@ -183,6 +183,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
+    //
 
     fetchEvent();
     fetchTickets();
