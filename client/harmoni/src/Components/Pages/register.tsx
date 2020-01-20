@@ -130,7 +130,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     return count;
   }
 
-  function phoneNumberValidation(num: number) {
+  function tlfValidation(num: number) {
     if (num !== undefined) {
       if (num.toString().match(tlfFormat)) {
         return true;
@@ -186,7 +186,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       passwordInput.trim() === "" ||
       !emailInput.match(emailFormat) ||
       !passwordValidation(passwordInput) ||
-      !tlfInput.match(tlfFormat)
+      !tlfInput.toString().match(tlfFormat)
     )
       return;
 
@@ -269,7 +269,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
             submit && nameInput === ""
               ? "Navn er påkrevd"
               : submit && counter(nameInput) > 45
-              ? "Navn kann ikke ha flere enn 45 bokstaver"
+              ? "Navn kan ikke ha flere enn 45 bokstaver"
               : ""
           }
           onChange={e => setNameInput(e.target.value)}
@@ -281,9 +281,10 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           variant="outlined"
           label="Telefon"
           type="number"
-          value={tlfInput || null}
+          value={tlfInput}
+          error={submit && tlfInput !== undefined && !tlfValidation(tlfInput)}
           helperText={
-            submit && !phoneNumberValidation(tlfInput)
+            submit && !tlfValidation(tlfInput)
               ? "Du har git en ugyldig telefonnummer, eksempel på riktig telefonnummer: 47768462"
               : "Det er valgfritt å oppgi telefonnummer"
           }

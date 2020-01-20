@@ -380,12 +380,15 @@ const AddEvent = (props: IProps) => {
                     </Button>
 
                     {completedSteps() === totalSteps() ||
-                    activeStep === totalSteps() - 1 ? (
+                    activeStep === totalSteps() - 1 ||
+                    props.eventData ? (
                       <Button
                         disabled={
-                          completedSteps() !== totalSteps() - 1 ||
-                          loading ||
-                          uploaded
+                          props.eventData
+                            ? false
+                            : completedSteps() !== totalSteps() - 1 ||
+                              loading ||
+                              uploaded
                         }
                         color="primary"
                         onClick={submit}
@@ -403,6 +406,8 @@ const AddEvent = (props: IProps) => {
                 )}
               </>
             )}
+
+            {/* {props.eventData && <Btn onClick={submit}>LAGRE ENDRINGER</Btn>} */}
           </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>

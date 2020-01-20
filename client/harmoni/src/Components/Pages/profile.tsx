@@ -53,6 +53,23 @@ const AddBtn = styled.div`
     }
 `;
 
+const CalenderWrapper = styled.div`
+  width: 80%;
+  margin: 30px auto;
+`;
+
+const Title = styled.h2`
+  font-weight: 500;
+  font-size: 36px;
+  margin: 70px 20px;
+  width: 60%;
+  max-width: 100%;
+
+  ::first-letter {
+    text-transform: uppercase;
+  }
+`;
+
 const BtnIcon = styled.img`
   height: 40%;
   filter: invert(100%);
@@ -63,12 +80,17 @@ const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
 
   useEffect(() => {
+    console.log("id", props.userData.user_id);
     const getEvents = async () => {
-      setEvents(await eventService.getEventsByUser(props.userData.user_id));
+      setEvents(
+        await eventService.getEventsByOrganizer(props.userData.user_id)
+      );
     };
 
     getEvents();
   }, [props.userData]);
+
+  console.log(events);
 
   return (
     <>
@@ -110,7 +132,15 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
+<<<<<<< HEAD
       <EventCalendar data={events} />
+=======
+
+      <CalenderWrapper>
+        <Title>Kalender</Title>
+        <EventCalendar data={events} />
+      </CalenderWrapper>
+>>>>>>> 08808dede104805ef1ef27dd54388eb2dbd2f6ea
     </>
   );
 };
