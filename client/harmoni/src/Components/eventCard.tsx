@@ -1,8 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
-import moment from "moment";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+
+import { isEventInProgress } from './utils';
 
 const StyledLink = styled(props => <Link {...props} />)`
   :hover {
@@ -73,7 +74,7 @@ const Wrapper = styled.div`
 `;
 
 interface IOverlayText {
-  onGoing?: boolean;
+  ongoing?: boolean;
 }
 
 const OverlayText = styled.p<IOverlayText>`
@@ -81,7 +82,7 @@ const OverlayText = styled.p<IOverlayText>`
   font-weight: 700;
   text-transform: uppercase;
   color: ${props =>
-    props.onGoing ? "rgba(87, 190, 61, 0.7);" : "rgba(213, 89, 81, 0.9)"};
+    props.ongoing ? 'rgba(87, 190, 61, 0.7);' : 'rgba(213, 89, 81, 0.9)'};
 `;
 
 const InfoOverlay = styled.div`
@@ -96,24 +97,16 @@ const InfoOverlay = styled.div`
   justify-items: center;
 `;
 
-const isEventInProgress = (from: string, to: string) => {
-  let fromDate = moment(from, "DD-MM-YYYY HH:mm");
-  let toDate = moment(to, "DD-MM-YYYY HH:mm");
-  let now = moment();
-
-  return fromDate < now && toDate > now;
-};
-
 const ArrangementCard = (props: any) => {
   let eventInProgress = isEventInProgress(props.fromDate, props.toDate);
 
   const card = (
     <Container>
       <Wrapper>
-        {props.status !== undefined && (props.status == 2 || eventInProgress) && (
+        {props.status !== undefined && (props.status === 2 || eventInProgress) && (
           <InfoOverlay>
-            <OverlayText onGoing={eventInProgress}>
-              {eventInProgress ? "Pågående" : props.status == 2 && "Avlyst"}
+            <OverlayText ongoing={eventInProgress}>
+              {eventInProgress ? 'Pågående' : props.status === 2 && 'Avlyst'}
             </OverlayText>
           </InfoOverlay>
         )}
@@ -122,7 +115,7 @@ const ArrangementCard = (props: any) => {
         {props.picture && <Overlay />}
         {props.picture && props.picture.data.length > 0 && (
           <Img
-            src={new Buffer(props.picture, "base64").toString("ascii")}
+            src={new Buffer(props.picture, 'base64').toString('ascii')}
             alt={props.title}
           />
         )}
@@ -139,7 +132,7 @@ const ArrangementCard = (props: any) => {
   if (props.id) {
     return (
       <StyledLink
-        to={"/event/" + (props.eventInProfile ? "details/" : "") + props.id}
+        to={'/event/' + (props.eventInProfile ? 'details/' : '') + props.id}
       >
         {card}
       </StyledLink>

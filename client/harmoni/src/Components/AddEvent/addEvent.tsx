@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Button } from "@material-ui/core";
-import FormStepper from "./formStepper";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Button } from '@material-ui/core';
+import FormStepper from './formStepper';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import moment from 'moment';
 
 // Form components
-import ArtistForm from "./EventForms/artistForm";
-import BasicInfoForm from "./EventForms/basicInfoForm";
-import TicketForm from "./EventForms/ticketForm";
-import ProgramForm from "./EventForms/programForm";
-import Summary from "./summary";
-import Success from "./success";
+import ArtistForm from './EventForms/artistForm';
+import BasicInfoForm from './EventForms/basicInfoForm';
+import TicketForm from './EventForms/ticketForm';
+import ProgramForm from './EventForms/programForm';
+import Summary from './summary';
+import Success from './success';
 
 // Services
-import { eventService } from "../../services/EventService";
-import { ticketService } from "../../services/TicketService";
-import { userService } from "../../services/UserService";
+import { eventService } from '../../services/EventService';
+import { ticketService } from '../../services/TicketService';
+import { userService } from '../../services/UserService';
 
 interface Event {
   eventId: number;
@@ -70,32 +71,32 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
   const [loading, setLoading] = useState<boolean>(false);
-  const [warningText, setWarningText] = useState("");
+  const [warningText, setWarningText] = useState('');
   const [uploaded, setUploaded] = useState<boolean>(false);
   const steps = [
-    "Info",
-    "Artister",
-    "Billett-typer",
-    "Beskrivelse og program",
-    "Oppsummering"
+    'Info',
+    'Artister',
+    'Billett-typer',
+    'Beskrivelse og program',
+    'Oppsummering'
   ];
 
   // 1. Info
   const [infoSubmit, setInfoSubmit] = useState<boolean>(false);
   const [infoData, setInfoData] = useState({
-    name: "",
-    imgData: "",
-    category: "",
-    location: "",
+    name: '',
+    imgData: '',
+    category: '',
+    location: '',
     dateFrom: null,
     dateTo: null
   });
 
   const isInfoDataEmpty = () => {
     return (
-      infoData.name === "" ||
-      infoData.category === "" ||
-      infoData.location === "" ||
+      infoData.name === '' ||
+      infoData.category === '' ||
+      infoData.location === '' ||
       infoData.dateFrom === null ||
       infoData.dateTo === null
     );
@@ -108,7 +109,7 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
   const [listOfTickets, setListOfTickets] = useState([]);
 
   // 4. Program
-  const [programText, setProgramText] = useState("");
+  const [programText, setProgramText] = useState('');
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = { listOfArtists, setListOfArtists };
@@ -117,29 +118,48 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
 
   useEffect(() => {
     if (props.eventData) {
-      console.log("eventdata", props.eventData);
+      //console.log("eventdata", props.eventData);
+      // Convert date string to Date object
+      const dateFrom: Date = moment(
+        props.eventData.from_date,
+        'DD-MM-YYYY HH:mm'
+      ).toDate();
+      const dateTo: Date = moment(
+        props.eventData.to_date,
+        'DD-MM-YYYY HH:mm'
+      ).toDate();
+
       setInfoData({
-        name: props.eventData[0].name,
-        imgData: props.eventData[0].picture,
-        category: props.eventData[0].category,
-        location: props.eventData[0].address,
-        dateFrom: props.eventData[0].from_date,
-        dateTo: props.eventData[0].to_date
+        name: props.eventData.name,
+        imgData: props.eventData.picture,
+        category: props.eventData.category,
+        location: props.eventData.address,
+        dateFrom: dateFrom,
+        dateTo: dateTo
       });
 
-      setTicketsAndArtists();
-      setProgramText(props.eventData[0].information);
-    }
-  }, [props.eventData]);
+      const setTicketsAndArtists = async () => {
+        setListOfArtists(
+          await userService.getArtistsForEvent(props.eventData.event_id)
+        );
+        setListOfTickets(
+          await ticketService.getAllTicketsByEventId(props.eventData.event_id)
+        );
+      };
 
-  const setTicketsAndArtists = async () => {
-    setListOfArtists(
-      await userService.getArtistsForEvent(props.eventData.event_id)
-    );
-    setListOfTickets(
-      await ticketService.getAllTicketsByEventId(props.eventData.event_id)
-    );
-  };
+      setTicketsAndArtists();
+
+      setProgramText(props.eventData.information);
+
+      // Set all, but last step, to completed
+      const newCompleted = new Set(completed);
+      for (let i = 0; i < steps.length - 1; i++) {
+        newCompleted.add(i);
+      }
+
+      setCompleted(newCompleted);
+    }
+  }, [props.eventData, completed, steps.length]);
 
   function getStepContent(step: number) {
     switch (step) {
@@ -226,6 +246,7 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
   };
 
   const submit = async () => {
+    console.log(infoData);
     let newEvent: Event = {
       eventId: -1,
       name: infoData.name,
@@ -234,11 +255,11 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
       from_date: infoData.dateFrom
         .toISOString()
         .slice(0, 19)
-        .replace("T", " "),
+        .replace('T', ' '),
       to_date: infoData.dateTo
         .toISOString()
         .slice(0, 19)
-        .replace("T", " "),
+        .replace('T', ' '),
       capacity: 0,
       status: 0,
       information: programText,
@@ -247,22 +268,37 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
     };
 
     setLoading(true);
-    eventService.addEvent(newEvent).then(res => {
-      listOfTickets.forEach(ticket => {
-        ticket["event_id"] = res.insertId;
-        ticketService.addTickets(ticket);
+
+    // Event is already made, save changes
+    if (props.eventData) {
+      let res = await eventService.updateEvent(newEvent);
+      console.log('res', res);
+      checkResponse(res);
+
+      // Make new event
+    } else {
+      eventService.addEvent(newEvent).then(res => {
+        listOfTickets.forEach(ticket => {
+          ticket['event_id'] = res.insertId;
+          ticketService.addTickets(ticket);
+        });
+        listOfArtists.forEach(artist => {
+          eventService.addUserToEvent(artist.user_id, res.insertId);
+        });
+
+        checkResponse(res);
       });
-      listOfArtists.forEach(artist => {
-        eventService.addUserToEvent(artist.user_id, res.insertId);
-      });
-      if (res) {
-        setLoading(false);
-        setUploaded(true);
-      } else {
-        setLoading(false);
-        setWarningText("Det skjedde noe feil. Prøv igjen");
-      }
-    });
+    }
+  };
+
+  const checkResponse = (res: any) => {
+    if (res) {
+      setLoading(false);
+      setUploaded(true);
+    } else {
+      setLoading(false);
+      setWarningText('Det skjedde noe feil. Prøv igjen');
+    }
   };
 
   const handleReset = () => {
@@ -303,7 +339,7 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
                 {!uploaded && (
                   <LinkWrapper>
                     <Button
-                      disabled={activeStep === 0 || loading}
+                      disabled={activeStep === 0 || loading || uploaded}
                       onClick={handleBack}
                     >
                       Tilbake
@@ -317,7 +353,9 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
                         color="primary"
                         onClick={submit}
                       >
-                        Legg til arrangement
+                        {props.eventData
+                          ? 'Lagre endringer'
+                          : 'Legg til arrangement'}
                       </Button>
                     ) : (
                       <Button color="primary" onClick={handleNext}>
@@ -329,7 +367,7 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
               </>
             )}
           </div>
-          {warningText !== "" && <WarningText>{warningText}</WarningText>}
+          {warningText !== '' && <WarningText>{warningText}</WarningText>}
         </div>
       </Wrapper>
     </Container>

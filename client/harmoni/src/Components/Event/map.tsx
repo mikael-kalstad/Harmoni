@@ -11,12 +11,13 @@ const Wrapper = styled.div`
 
 interface IMapContainer {
   coords: { lat: number; lng: number };
+  zoom: number;
 }
 
-const MapContainer = (props: IMapContainer) => {
+const Map = (props: IMapContainer) => {
   let defaultProps = {
     center: props.coords,
-    zoom: 14
+    zoom: props.zoom
   };
   return (
     <Wrapper>
@@ -28,6 +29,7 @@ const MapContainer = (props: IMapContainer) => {
         }}
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
+        center={props.coords}
       >
         <MapMarker lat={props.coords.lat} lng={props.coords.lng} />
       </GoogleMapReact>
@@ -35,4 +37,4 @@ const MapContainer = (props: IMapContainer) => {
   );
 };
 
-export default MapContainer;
+export default Map;

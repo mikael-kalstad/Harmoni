@@ -15,7 +15,7 @@ describe('Tests for ticketMenu', () => {
     },
     { ticket_id: 2, event_id: 1, price: 7000, type: 'Deluxe', available: 90 }
   ];
-  const wrapper = mount(<TicketMenu tickets={tickets} />);
+  const wrapper = mount(<TicketMenu tickets={tickets} canceled={false} />);
   let ticketBars = wrapper.find(TicketBar);
 
   test('Has correct props', () => {

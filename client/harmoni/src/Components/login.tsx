@@ -154,7 +154,7 @@ const Login = (props: any) => {
   if (redirect) {
     // Close login popup and overlay
     props.toggle();
-    return <Redirect to="/" />;
+    return <Redirect to="/profile" />;
   }
 
   return (

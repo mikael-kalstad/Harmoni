@@ -6,6 +6,7 @@ import ProfilePageImage from "../Profile/profilePageImage";
 import ProfileOptions from "../Profile/profileOptions";
 import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
+import EventCalendar from "../eventCalendar";
 
 const Wrapper = styled.div`
   position: relative;
@@ -62,13 +63,19 @@ const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
 
   useEffect(() => {
+    const getEvents = async () => {
+      setEvents(
+        await eventService.getEventsByUser(props.userData.user_id)
+      );
+    };
+    const getEventsForOrgenizer = async () => {
+        setEvents(
+            await eventService.getEventsByOrganizer(props.userData.user_id)
+        );
+    };
+    getEventsForOrgenizer();
     getEvents();
-  }, []);
-
-  const getEvents = async () => {
-    setEvents(await eventService.getEventsByOrganizer(props.userData.user_id));
-  };
-  console.log(events);
+  }, [props.userData]);
 
   return (
     <>
@@ -85,7 +92,7 @@ const Profile = (props: { userData: any }) => {
           type={props.userData.type}
         />
 
-        {props.userData.type == "organizer" ? (
+        {props.userData.type === "organizer" ? (
           <StyledLink to="/newEvent">
             <AddBtn>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -100,16 +107,17 @@ const Profile = (props: { userData: any }) => {
       <EventGrid
         eventInProfile={true}
         emptyText="Du har ingen kommende arrangementer"
-        data={events && events.filter(e => e.status == 0)}
+        data={events && events.filter(e => e.status === 0)}
         title="Mine arrangementer"
       />
 
       <EventGrid
         eventInProfile={true}
         emptyText="Du har ingen arkiverte arrangementer"
-        data={events && events.filter(e => e.status == 3)}
+        data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
+      <EventCalendar data={events}/>
     </>
   );
 };

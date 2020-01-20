@@ -1,6 +1,5 @@
 import axios from "axios";
 import Service, { updateToken } from "./Service";
-import LoginService from "./loginService";
 
 interface Event {
   eventId: number;
@@ -85,6 +84,7 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
+
   addEvent(event: Event) {
     updateToken();
     return axios({
@@ -148,7 +148,7 @@ class EventService extends Service {
     return axios({
       method: "post",
       url:
-        this.path + "/authorized/events/user_event/" + userId +"/"+ eventId,
+        this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -156,6 +156,20 @@ class EventService extends Service {
     })
       .then(response => response.data)
       .catch(error => console.log(error));
+  }
+  getUserOfEvent(userId:number, eventId:number){
+    updateToken();
+    return axios({
+      method: "get",
+      url:
+          this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+        .then(response => response.data)
+        .catch(error => console.log(error));
   }
 
   removeUserFromEvent(userId: number, eventId: number) {
@@ -186,35 +200,34 @@ class EventService extends Service {
       .then(response => response.data)
       .catch(error => console.log(error));
   }
-  getUsersOfEventByType(eventId: number,type:string) {
+  getUsersOfEventByType(eventId: number, type: string) {
     updateToken();
     return axios({
-      method: "get",
-      url: this.path + "/events/user/" + eventId+"/"+type,
+      method: "delete",
+      url: this.path + "/events/user/" + eventId + "/" + type,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     })
-        .then(response => response.data)
-        .catch(error => console.log(error));
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
 
   //User have to be logged in to use this function
-  changeStatusOfEvent(eventId: number,newStatus: number){
+  changeStatusOfEvent(eventId: number, newStatus: number) {
     updateToken();
     return axios({
       method: "put",
-      url: this.path + "/authorized/events/"+eventId+"/"+newStatus,
+      url: this.path + "/authorized/events/" + eventId + "/" + newStatus,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     })
-        .then(response => response.data)
-        .catch(error => console.log(error));
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
-  
 }
 
 export let eventService = new EventService();

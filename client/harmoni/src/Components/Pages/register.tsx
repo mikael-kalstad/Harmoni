@@ -11,7 +11,6 @@ import { loginService } from "../../services/loginService";
 import { userService } from "../../services/UserService";
 import { Redirect } from "react-router-dom";
 import ImgUpload from "../Upload/profileImgUpload";
-import {createHash} from "crypto";
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -57,14 +56,13 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
   const [imgData, setImgData] = useState("");
   const [warningText, setWarningText] = useState("");
   const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  const telefonFormat=/^[0-9\+]{1,}[0-9\-]{8}$/;
+  const telefonFormat=/^(0047|\+47|47)?[2-9]\d{7}$/;
 
   // User already registered warning for email
   const [emailWarning, setEmailWarning] = useState("");
 
-  const [passwordWarning, setPasswordWarning] = useState("");
 
-  const [phoneNumberWarning, setphoneNumberWarning] = useState("");
+
 
   // Redirect to page if registration is successfull
   const [redirect, setRedirect] = useState(false);
@@ -90,7 +88,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       setEmailInput(props.userData["email"]);
       setType(props.userData["type"]);
     }
-  }, []);
+  }, [props.userData]);
 
   let menuItems: JSX.Element[] = [];
 
@@ -108,40 +106,51 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     if (e !== undefined && e.key === "Enter")
       props.userData ? save() : register();
   };
-  function passwordValidation(thePassword:string) {
+  function passwordValidation(thePassword: string) {
     var count = 0;
     count += /[a-z]/.test(thePassword) ? 1 : 0;
     count += /[A-Z]/.test(thePassword) ? 1 : 0;
     count += /\d/.test(thePassword) ? 1 : 0;
     count += /[@]/.test(thePassword) ? 1 : 0;
     count += /[0-9]/.test(thePassword) ? 1 : 0;
-    if(count >= 2) {
-      return true
-    }else if(count<2)return false
+    if (count >= 2 && thePassword) {
+      return true;
+    } else if (count < 2) return false;
   }
-  function phoneNumberValidation(theNumber:number) {
-    if(theNumber!==undefined){
-      if(theNumber.toString().match(telefonFormat)) {
+
+
+  function counter (string) {
+    var count =0;
+    if(string){
+      string.split('').forEach(function() {
+        count ? count++ : count = 1;
+      });
+    }
+    return count;
+  }
+
+  function phoneNumberValidation(theNumber: number) {
+    if (theNumber !== undefined) {
+      if (theNumber.toString().match(telefonFormat)) {
         return true;
-      }else return false
-    }else {
-      return true
+      } else return false;
+    } else {
+      return true;
     }
 
   }
 
   // Save changes to user info
   const save = async () => {
-    if(!tlfInput.match(telefonFormat)){
-
+    if (!tlfInput.match(telefonFormat)) {
     }
     setSubmit(true);
     if (
       type.trim() === "" ||
       nameInput.trim() === "" ||
-      emailInput.trim() === ""||
-      !emailInput.match(mailformat)||
-      !passwordValidation(passwordInput)||
+      emailInput.trim() === "" ||
+      !emailInput.match(mailformat) ||
+      !passwordValidation(passwordInput) ||
       !tlfInput.match(telefonFormat)
     )
       return;
@@ -163,7 +172,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
 
     if (!res || res instanceof Error) {
       setLoading(false);
-      setPasswordWarning("Noe feil skjedde, sjekk internett tilkoblingen");
+      setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
     } else {
       props.logIn(emailInput);
       setLoading(false);
@@ -259,8 +268,16 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           variant="outlined"
           label="Navn*"
           value={nameInput}
-          error={submit && nameInput === ""}
-          helperText={submit && nameInput === "" ? "Navn er påkrevd" : ""}
+          error={
+            (submit && nameInput === "") || (submit && counter(nameInput) > 45)
+          }
+          helperText={
+            submit && nameInput === ""
+              ? "Navn er påkrevd"
+              : submit && counter(nameInput) > 45
+              ? "Navn kann ikke ha flere enn 45 bokstaver"
+              : ""
+          }
           onChange={e => setNameInput(e.target.value)}
           onKeyDown={e => checkForEnterKey(e)}
         />
@@ -271,7 +288,8 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           label="Telefon"
           type="number"
           value={tlfInput}
-          helperText={submit && !phoneNumberValidation(tlfInput)?"Du har git en ugyldig telefonnummer" :"Det er valgfritt å oppgi telefonnummer"}
+          helperText={submit && !phoneNumberValidation(tlfInput)?"Du har git en ugyldig telefonnummer, eksempel på riktig telefonnummer: 47768462"
+              :"Det er valgfritt å oppgi telefonnummer"}
           onChange={e => setTlfInput(Number.parseInt(e.target.value))}
           onKeyDown={e => checkForEnterKey(e)}
         />
@@ -282,12 +300,21 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           label="Email*"
           type="email"
           value={emailInput}
-          error={(submit && emailInput === "") || emailWarning !== ""||submit && !emailInput.match(mailformat)}
+          error={
+            (submit && emailInput === "") ||
+            emailWarning !== "" ||
+            (submit && !emailInput.match(mailformat)) ||
+            (submit && counter(emailInput) > 45)
+          }
           helperText={
             submit && emailInput === ""
               ? "Email er påkrevd"
-              :submit&&!emailInput.match(mailformat)? "Du har oppgitt en ugyldig mail" : emailWarning !== ""
+              : submit && !emailInput.match(mailformat)
+              ? "Du har oppgitt en ugyldig mail"
+              : emailWarning !== ""
               ? emailWarning
+              : submit && counter(emailInput) > 45
+              ? "mailen kan ikke ha flere enn 45 bokstaver"
               : ""
           }
           onChange={e => setEmailInput(e.target.value)}
@@ -302,11 +329,19 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
             label={"Passord*"}
             type="password"
             value={passwordInput}
-            error={submit && passwordInput === ""||submit&& !passwordValidation(passwordInput)}
+            error={
+              (submit && passwordInput === "") ||
+              (submit && !passwordValidation(passwordInput)) ||
+              (submit && counter(passwordInput) > 45)
+            }
             helperText={
-              submit && passwordInput === "" ? "Passord er påkrevd" :
-                  submit&& !passwordValidation(passwordInput)? "Passordet må innholde minst en små bokstav og en stor bokstav eller ett tall eller ett tegn"
-              :""
+              submit && passwordInput === ""
+                ? "Passord er påkrevd"
+                : submit && !passwordValidation(passwordInput)
+                ? "Passordet må innholde minst en små bokstav og en stor bokstav eller ett tall eller ett tegn"
+                : submit && counter(passwordInput) > 45
+                ? "passordet kan ikke være flere enn 45 bokstaver"
+                : ""
             }
             onChange={e => setPasswordInput(e.target.value)}
             onKeyDown={e => checkForEnterKey(e)}

@@ -27,6 +27,9 @@ const DateTimePicker = (props: any) => {
           KeyboardButtonProps={{
             'aria-label': 'change date'
           }}
+          invalidDateMessage="Ugyldig format"
+          maxDateMessage="Dato er for langt fram i tid"
+          minDateMessage="Dato er for langt bak i tid"
         />
         <KeyboardTimePicker
           fullWidth
@@ -40,6 +43,8 @@ const DateTimePicker = (props: any) => {
           KeyboardButtonProps={{
             'aria-label': 'change time'
           }}
+          invalidDateMessage="Ugyldig format"
+          ampm={false}
         />
       </MuiPickersUtilsProvider>
     </div>
