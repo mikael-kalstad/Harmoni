@@ -114,7 +114,15 @@ const EventDetails = (props: any) => {
 
   if (loading) return <Loading />;
 
-  if (edit) return <AddEvent userData={props.userData} eventData={eventData} />;
+  if (edit)
+    return (
+      <AddEvent
+        userData={props.userData}
+        eventData={eventData}
+        artistsData={artists}
+        ticketsData={tickets}
+      />
+    );
 
   if (eventData && artists && tickets) {
     return (

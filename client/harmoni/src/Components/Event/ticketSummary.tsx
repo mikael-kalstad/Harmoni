@@ -48,7 +48,7 @@ const TicketSummary = (props: TicketSummaryProps) => {
         {props.tickets.map(
           (ticket: ITicket, i: number) =>
             props.quantities[i] > 0 && (
-              <GridRow key={ticket.type + Math.random()}>
+              <GridRow key={ticket.ticket_id}>
                 <TicketNameText>{ticket.type}</TicketNameText>
                 <TicketQuantityText>x{props.quantities[i]}</TicketQuantityText>
                 <TicketPriceText>

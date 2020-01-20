@@ -14,6 +14,7 @@
 import React from "react";
 import styled from "styled-components";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Link } from "react-router-dom";
 
 interface IProps {
   children: any;
@@ -23,6 +24,7 @@ interface IProps {
   onClick?: Function;
   disabled?: boolean;
   loading?: boolean;
+  to?: string;
 }
 
 interface IStyledButton {
@@ -55,20 +57,34 @@ const StyledButton = styled.button<IStyledButton>`
   }
 `;
 
-const Button = (props: IProps) => (
-  <StyledButton
-    backgroundColor={props.backgroundColor}
-    textColor={props.textColor}
-    dropShadow={props.dropShadow !== undefined}
-    onClick={() => props.onClick !== undefined && props.onClick()}
-    disabled={props.disabled}
-  >
-    {props.loading ? (
-      <CircularProgress color="secondary" size={25} />
-    ) : (
-      props.children
-    )}
-  </StyledButton>
-);
+const StyledLink = styled(props => <Link {...props} />)`
+  text-decoration: none;
+
+  :hover {
+    text-decoration: none;
+  }
+`;
+
+const Button = (props: IProps) => {
+  const btn = (
+    <StyledButton
+      backgroundColor={props.backgroundColor}
+      textColor={props.textColor}
+      dropShadow={props.dropShadow !== undefined}
+      onClick={() => props.onClick !== undefined && props.onClick()}
+      disabled={props.disabled}
+    >
+      {props.loading ? (
+        <CircularProgress color="secondary" size={25} />
+      ) : (
+        props.children
+      )}
+    </StyledButton>
+  );
+
+  if (props.to) return <StyledLink to={props.to}>{btn}</StyledLink>;
+
+  return btn;
+};
 
 export default Button;
