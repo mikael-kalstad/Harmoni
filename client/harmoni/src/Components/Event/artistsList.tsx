@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import ListGroup from "react-bootstrap/ListGroup";
-import { FaRegFrownOpen } from "react-icons/fa";
+import React from 'react';
+import styled from 'styled-components';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { FaRegFrownOpen } from 'react-icons/fa';
 
 interface IUser {
   user_id: number;
@@ -23,13 +23,13 @@ interface IWrapper {
 }
 
 const Wrapper = styled.div<IWrapper>`
-  border: ${props => (props.empty ? "dashed 3px #bbbbbb" : "none")};
+  border: ${props => (props.empty ? 'dashed 3px #bbbbbb' : 'none')};
   height: 100%;
   border-radius: 10px;
   /* padding: 10px; */
-  ${props => (props.empty ? "display: grid" : "")}
+  ${props => (props.empty ? 'display: grid' : '')}
   ${props =>
-    props.empty ? "grid-template-rows: 5fr 3fr" : ""}
+    props.empty ? 'grid-template-rows: 5fr 3fr' : ''}
   align-items: center;
   justify-items: center;
 `;
@@ -41,7 +41,7 @@ interface ITitleText {
 const TitleText = styled.p<ITitleText>`
   font-weight: bold;
   text-align: center;
-  font-size: ${props => (props.empty ? "24px" : "18px")};
+  font-size: ${props => (props.empty ? '24px' : '18px')};
   color: grey;
   margin: 0px 10px;
 `;
@@ -75,15 +75,15 @@ const ArtistNameText = styled.label`
 /* Used in eventPage */
 const ArtistsList = (props: ArtistsListProps) => {
   let FaIconStyle = {
-    fontSize: "15vw",
-    color: "#cccccc",
-    margin: "10px"
+    fontSize: '15vw',
+    color: '#cccccc',
+    margin: '10px'
   };
   return props.artists.length > 0 ? (
     <Wrapper empty={props.artists.length === 0}>
       <ListGroup>
         {!props.hideTitle && (
-          <ListGroup.Item key={"title"}>
+          <ListGroup.Item key={'title'}>
             <TitleText empty={props.artists.length === 0}>
               Personer som skal opptre på dette arrangementet
             </TitleText>
@@ -94,7 +94,7 @@ const ArtistsList = (props: ArtistsListProps) => {
             <ListGroup.Item key={artist.user_id + Math.random()}>
               <ArtistBar>
                 <ArtistImage
-                  src={new Buffer(artist.picture).toString("ascii")}
+                  src={new Buffer(artist.picture).toString('ascii')}
                   alt={artist.name}
                 />
                 <ArtistNameText>{artist.name}</ArtistNameText>
