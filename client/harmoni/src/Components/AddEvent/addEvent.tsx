@@ -65,7 +65,14 @@ const WarningText = styled.p`
   font-weight: 400;s
 `;
 
-const AddEvent = (props: { userData: any; eventData?: any }) => {
+interface IProps {
+  userData: any;
+  eventData?: any;
+  artistsData?: any;
+  ticketsData?: any;
+}
+
+const AddEvent = (props: IProps) => {
   //   const classes = useStyles({});
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
@@ -118,7 +125,6 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
 
   useEffect(() => {
     if (props.eventData) {
-      //console.log("eventdata", props.eventData);
       // Convert date string to Date object
       const dateFrom: Date = moment(
         props.eventData.from_date,
@@ -129,37 +135,46 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
         'DD-MM-YYYY HH:mm'
       ).toDate();
 
+      // Update infoData with data from props.eventData
       setInfoData({
         name: props.eventData.name,
-        imgData: props.eventData.picture,
+        imgData: new Buffer(props.eventData.picture).toString("ascii"),
         category: props.eventData.category,
         location: props.eventData.address,
         dateFrom: dateFrom,
         dateTo: dateTo
       });
 
-      const setTicketsAndArtists = async () => {
+      setProgramText(props.eventData.information);
+
+      // Function for getting artists if it is not defined in props
+      const getArtists = async () => {
         setListOfArtists(
           await userService.getArtistsForEvent(props.eventData.event_id)
         );
+      };
+
+      // Function for getting artists if it is not defined in props
+      const getTickets = async () => {
         setListOfTickets(
           await ticketService.getAllTicketsByEventId(props.eventData.event_id)
         );
       };
 
-      setTicketsAndArtists();
+      // Set artists data
+      if (props.artistsData) setListOfArtists(props.artistsData);
+      else getArtists();
 
-      setProgramText(props.eventData.information);
+      // Set tickets data
+      if (props.ticketsData) setListOfTickets(props.ticketsData);
+      else getTickets();
 
-      // Set all, but last step, to completed
-      const newCompleted = new Set(completed);
-      for (let i = 0; i < steps.length - 1; i++) {
-        newCompleted.add(i);
-      }
-
+      // Set all, but last step in stepper, to completed
+      const newCompleted = new Set<number>();
+      for (let i = 0; i < steps.length - 1; i++) newCompleted.add(i);
       setCompleted(newCompleted);
     }
-  }, [props.eventData, completed, steps.length]);
+  }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
 
   function getStepContent(step: number) {
     switch (step) {
@@ -348,7 +363,9 @@ const AddEvent = (props: { userData: any; eventData?: any }) => {
                     {completedSteps() === totalSteps() || activeStep === 4 ? (
                       <Button
                         disabled={
-                          completedSteps() !== totalSteps() - 1 || loading
+                          completedSteps() !== totalSteps() - 1 ||
+                          loading ||
+                          uploaded
                         }
                         color="primary"
                         onClick={submit}
