@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import Skeleton from 'react-loading-skeleton';
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
 
-import { isEventInProgress } from './utils';
+import { isEventInProgress } from "./utils";
 
 const StyledLink = styled(props => <Link {...props} />)`
   :hover {
@@ -78,20 +78,23 @@ interface IOverlayText {
 }
 
 const OverlayText = styled.p<IOverlayText>`
-  font-size: 40px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   color: ${props =>
-    props.ongoing ? 'rgba(87, 190, 61, 0.7);' : 'rgba(213, 89, 81, 0.9)'};
+    props.ongoing ? "rgba(87, 190, 61, 0.7);" : "rgba(213, 89, 81, 0.9)"};
 `;
 
 const InfoOverlay = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 40%;
+  height: 25px;
   border-radius: 10px;
   transition: all 150ms ease;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  top: 8px;
+  left: 8px;
   display: grid;
   align-items: center;
   justify-items: center;
@@ -106,7 +109,7 @@ const ArrangementCard = (props: any) => {
         {props.status !== undefined && (props.status === 2 || eventInProgress) && (
           <InfoOverlay>
             <OverlayText ongoing={eventInProgress}>
-              {eventInProgress ? 'Pågående' : props.status === 2 && 'Avlyst'}
+              {eventInProgress ? "Pågående" : props.status === 2 && "Avlyst"}
             </OverlayText>
           </InfoOverlay>
         )}
@@ -115,7 +118,7 @@ const ArrangementCard = (props: any) => {
         {props.picture && <Overlay />}
         {props.picture && props.picture.data.length > 0 && (
           <Img
-            src={new Buffer(props.picture, 'base64').toString('ascii')}
+            src={new Buffer(props.picture, "base64").toString("ascii")}
             alt={props.title}
           />
         )}
@@ -132,7 +135,7 @@ const ArrangementCard = (props: any) => {
   if (props.id) {
     return (
       <StyledLink
-        to={'/event/' + (props.eventInProfile ? 'details/' : '') + props.id}
+        to={"/event/" + (props.eventInProfile ? "details/" : "") + props.id}
       >
         {card}
       </StyledLink>
