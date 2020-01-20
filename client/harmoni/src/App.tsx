@@ -43,7 +43,7 @@ const App: React.FC = () => {
   };
 
   const logIn = async (email: string) => {
-    let res = await userService.getUserByEMail(email);
+    let res = await userService.getUserAllInfoByEMail(email);
     setUserData(res[0]);
   };
 

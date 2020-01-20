@@ -56,6 +56,20 @@ class UserService extends Service {
       .catch(error => console.log(error));
   }
 
+  getUserAllInfoByEMail(email: string) {
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/users/email/info/" + email,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
+
   // Fetches all users of one type
   getUsersOfType(type: string) {
     updateToken();

@@ -42,6 +42,7 @@ export default class riderDao extends daoParentRider {
     );
   }
 
+
   addRider(rider: rider, callback) {
     super.query('INSERT INTO rider VALUES(DEFAULT, ?)', [rider.text], callback);
   }
