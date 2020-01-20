@@ -37,7 +37,7 @@ const DelBtn = styled.img`
 
 const RiderIcon = styled.img`
   cursor: pointer;
-  height: 30%;
+  height: 60%;
 `;
 
 interface IProps {
@@ -75,7 +75,7 @@ const Artistcard = (props: IProps) => {
 
           <Name>{props.user.name}</Name>
 
-          <RiderIcon src="/icons/cross.svg" onClick={toggleShow} />
+          <RiderIcon src="/icons/ridericon.svg" onClick={toggleShow} />
 
           <DelBtn
             src="/icons/cross.svg"
