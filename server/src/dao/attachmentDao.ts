@@ -60,7 +60,7 @@ export default class attachmentDao extends daoParentAttachment {
     addUserForAttachment(attachmentId: number, userId: number, callback) {
         super.query("INSERT INTO attachment_user VALUES(?, ?)", [attachmentId, userId], callback);
     }
-    //Deletes the access to a document for an user
+    // Deletes the access to a document for an user
     deleteAttachmentForUser(attachmentId: number, userId: number, callback) {
         super.query("DELETE FROM attachment_user WHERE attachment_id = ? AND user_id = ?", [attachmentId, userId], callback);
     }
@@ -68,6 +68,7 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("UPDATE attachment SET data = ?, filetype = ?, filename = ?, filesize = ? WHERE attachment_id = ?",
             [data.data, data.filetype, data.filename, data.filesize, data.attachment_id], callback);
     }
+    // Deletes attachment given attachmentId
     deleteAttachment(attachmentId: number, callback) {
         super.query("DELETE FROM attachment WHERE attachment_id = ?", [attachmentId], callback);
     }

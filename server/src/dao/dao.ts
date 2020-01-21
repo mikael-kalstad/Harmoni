@@ -1,3 +1,8 @@
+/*
+Dao is an subclass contains method that try to connect to DB,
+instead of writing it in every single query
+and it is required in every class in dao folder
+ */
 module.exports = class Dao{
     pool;
     constructor(pool){
