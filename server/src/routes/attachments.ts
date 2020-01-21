@@ -62,21 +62,21 @@ router.get('/authorized/attachments/:id', async (request, response) => {
 });
 
 // Get all attachments for event given eventId
-router.get('/authorized/attachments/event/:id', async (request, response) => {
+router.get('/authorized/attachments/event/:eventId', async (request, response) => {
   dao.getAttachmentsForEvent(parseInt(request.params.eventId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
 // Get all attachments a user has uploaded given UserId
-router.get('/authorized/attachments/user/:id', async (request, response) => {
+router.get('/authorized/attachments/user/:userId', async (request, response) => {
   dao.getAttachmentsForUploader(parseInt(request.params.userId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
 // Get all attachments a user has uploaded to an event given eventId,userId
-router.get('/authorized/attachments/user/:userId&:eventId', async (request, response) => {
+router.get('/authorized/attachments/user/event/:userId&:eventId', async (request, response) => {
   dao.getAttachmentsForUploaderForEvent(
     parseInt(request.params.userId),
     parseInt(request.params.eventId),
@@ -96,9 +96,9 @@ router.get('/authorized/attachments/user/access/:userId', async (request, respon
 })
 
 //Get all attachments an user has access to for an event
-router.get('/authorized/attachments/user/access/:userId&:eventId', async (request, response) => {
+router.get('/authorized/attachments/user/access/event/:userId&:eventId', async (request, response) => {
   dao.getAttachmentsForUserForEvent(
-    parseInt(request.params.userId), parseInt(request.params.id),  (status, data) => {
+    parseInt(request.params.userId), parseInt(request.params.eventId),  (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     }
   );
@@ -138,7 +138,7 @@ router.delete(
   '/authorized/attachments/attachment_user/:attachmentId&:userId',
   async (request, response) => {
     dao.deleteAttachmentForUser(
-      parseInt(request.params.id),
+      parseInt(request.params.attachmentId),
       parseInt(request.params.userId),
       (status, data) => {
         status == 500 ? response.status(500) : response.send(data);
