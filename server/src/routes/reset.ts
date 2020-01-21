@@ -1,12 +1,9 @@
 import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
-import {compareHash, hash} from "../hashing";
+import { hash} from "../hashing";
 
-var fs = require('fs');
 var path = require('path');
-var async = require('async');
-var crypto = require('crypto');
 var jwt = require("jsonwebtoken");
 var bodyParser = require("body-parser");
 var nodemailer = require('nodemailer');
@@ -44,7 +41,7 @@ var handlebarsOptions = {
 
 smtpTransport.use('compile', hbs(handlebarsOptions)); 
 
-let user;
+
 
 router.post("/reset-passord",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {

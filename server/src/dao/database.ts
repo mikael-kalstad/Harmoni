@@ -1,3 +1,4 @@
+// database-class sets up mySql username, password..
 require('dotenv').config();
 var mysql = require("mysql");
 
