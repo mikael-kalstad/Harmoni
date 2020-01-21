@@ -113,14 +113,14 @@ const ArtistForm = (props: any) => {
 
         {props.listOfArtists &&
           props.listOfArtists.map(u => (
-            <ListGroup key={u.email}>
+            <ListGroup.Item key={u.email}>
               <ArtistCard
                 user={u}
                 remove={deleteArtist}
-                riderText={props.listOfRiders}
+                riderData={props.listOfRiders}
                 setRiderData={props.setListOfRiders}
               />
-            </ListGroup>
+            </ListGroup.Item>
           ))}
       </>
     );
