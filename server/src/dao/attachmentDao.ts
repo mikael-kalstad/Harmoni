@@ -23,7 +23,7 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("SELECT attachment_id, filename, filetype, filesize FROM attachment WHERE event_id = ?", [eventId], callback);
     }
 
-    //Gets all uploaded files for an user
+    //Get all uploaded files for an user
     getAttachmentsForUploader(userId: number, callback) {
         super.query("SELECT attachment_id, filename, filetype, filesize FROM attachment WHERE user_id = ?", [userId], callback);
     }
@@ -71,15 +71,18 @@ export default class attachmentDao extends daoParentAttachment {
     addUserForAttachment(attachmentId: number, userId: number, callback) {
         super.query("INSERT INTO attachment_user VALUES(?, ?)", [attachmentId, userId], callback);
     }
+
     // Deletes the access to a document for an user
     deleteAttachmentForUser(attachmentId: number, userId: number, callback) {
         super.query("DELETE FROM attachment_user WHERE attachment_id = ? AND user_id = ?", [attachmentId, userId], callback);
     }
+
     // Update attachment given an object of type attachment
     updateAttachment(data: attachment, callback) {
         super.query("UPDATE attachment SET data = ?, filetype = ?, filename = ?, filesize = ? WHERE attachment_id = ?",
             [data.data, data.filetype, data.filename, data.filesize, data.attachment_id], callback);
     }
+
     // Deletes attachment given attachmentId
     deleteAttachment(attachmentId: number, callback) {
         super.query("DELETE FROM attachment WHERE attachment_id = ?", [attachmentId], callback);

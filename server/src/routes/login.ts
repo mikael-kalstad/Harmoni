@@ -1,3 +1,5 @@
+// Routes to interact with login.
+
 import express from "express";
 
 import { pool } from "../dao/database";
@@ -10,7 +12,8 @@ var bodyParser = require("body-parser");
 const router = express.Router();
 const dao = new userDao(pool);
 
-router.use(bodyParser.json()); //to transtalte JSON in the body
+// to translate JSON in the body
+router.use(bodyParser.json());
 
 let publicKey;
 const privateKey =(publicKey="This is my super secret key");
@@ -29,7 +32,6 @@ router.post("/", (req, res) => {
         res.json({ jwt: token });
         res.status(200);
       } else {
-        //console.log('email & password NOT ok');
         res.status(204);
         res.json({ error: "Not authorized" });
       }
@@ -40,22 +42,7 @@ router.post("/", (req, res) => {
   });
 });
 
-/*router.post("/token/update", (req, res, next) => {
-  var token = req.headers["harmoni-token"];
-  jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) {
-      next();
-    } else {
-      let token = jwt.sign({ email: decoded.email }, privateKey, {
-        expiresIn: 1800
-      });
 
-      res.json({jwt: token});
-      //console.log("Token ok: " + decoded.email);
-      next();
-    }
-  });
-});*/
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.headers["harmoni-token"];

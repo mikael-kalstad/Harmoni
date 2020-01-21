@@ -9,12 +9,12 @@ export default class PasswordService extends Service{
         var postData = {
             email: email
         };
-        return axios.post(this.path + '/reset/',postData,{
+        return axios.post(this.path + '/reset-passord/',postData,{
             headers: headers
         })
             .then(response =>{
                 return response;
-            } )
+            })
             .catch(error => console.log(error)); 
     }
     newPassword(password: string){
