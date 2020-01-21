@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
-import { isEventInProgress, hasEventHappened } from '../utils';
-import { eventService } from '../../services/EventService';
-import { ticketService } from '../../services/TicketService';
-import { userService } from '../../services/UserService';
-import { geoService } from '../../services/GeoService';
+import { isEventInProgress, hasEventHappened } from "../utils";
+import { eventService } from "../../services/EventService";
+import { ticketService } from "../../services/TicketService";
+import { userService } from "../../services/UserService";
+import { geoService } from "../../services/GeoService";
 
-import TicketMenu from '../Event/ticketMenu';
-import ArtistsList from '../Event/artistsList';
 import AttachmentList from '../Event/attachmentList';
 import { attachmentService } from '../../services/AttachmentService';
-import Map from '../Event/map';
+import TicketMenu from "../Event/ticketMenu";
+import ArtistsList from "../Event/artistsList";
+import Map from "../Event/map";
 
 export interface IEvent {
   event_id: number;
@@ -108,6 +108,7 @@ const ArtistsGrid = styled.div`
 const MapGrid = styled.div`
   display: grid;
   border: 3px solid grey;
+  border-radius: 3px;
   min-height: 300px;
   width: 100%;
   height: 100%;
@@ -160,7 +161,7 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [organizer, setOrganizer] = useState();
 
   const [coords, setCoords] = useState();
-  let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
+  let statuses = ["Kommende", "Arkivert", "Avlyst"];
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -209,40 +210,40 @@ const Event = (props: { match: { params: { id: number } } }) => {
     artists != null
   ) {
     let categories = {
-      concert: 'Konsert',
-      festival: 'Festival',
-      theatre: 'Teater',
-      standup: 'Standup',
-      show: 'Show',
-      other: 'Annet'
+      concert: "Konsert",
+      festival: "Festival",
+      theatre: "Teater",
+      standup: "Standup",
+      show: "Show",
+      other: "Annet"
     };
 
-    let dateFrom = event[0].from_date.split(' ');
-    let dateTo = event[0].to_date.split(' ');
+    let dateFrom = event[0].from_date.split(" ");
+    let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
 
-    let status = inProgress ? 'Pågående' : statuses[event[0].status];
+    let status = inProgress ? "Pågående" : statuses[event[0].status];
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString('ascii')}
+            src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
         </ImageGrid>
         <InfoGrid>
           <Title>
-            {event[0].name}{' '}
-            {status === 'Pågående' ? (
+            {event[0].name}{" "}
+            {status === "Pågående" ? (
               <>
-                {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
+                {" - "} <StatusSpan color="#448b30">{status}</StatusSpan>
               </>
-            ) : status === 'Avlyst' || finished ? (
+            ) : status === "Avlyst" || finished ? (
               <>
-                {' - '}{' '}
+                {" - "}{" "}
                 <StatusSpan color="#c7554f">
-                  {finished ? 'Ferdig' : status}
+                  {finished ? "Ferdig" : status}
                 </StatusSpan>
               </>
             ) : (
@@ -256,14 +257,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
-              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
-              : 'Fra: ' +
+              ? dateFrom[0] + ", fra kl. " + dateFrom[1] + " til " + dateTo[1]
+              : "Fra: " +
                 dateFrom[0] +
-                ' kl. ' +
+                " kl. " +
                 dateFrom[1] +
-                ' til ' +
+                " til " +
                 dateTo[0] +
-                ' kl. ' +
+                " kl. " +
                 dateTo[1]}
           </InfoText>
           <InfoText>
@@ -275,8 +276,8 @@ const Event = (props: { match: { params: { id: number } } }) => {
             {categories[event[0].category]}
           </InfoText>
           <ContentText>
-            {event[0].information === ''
-              ? 'Arrangementet har ingen beskrivelse eller program'
+            {event[0].information === ""
+              ? "Arrangementet har ingen beskrivelse eller program"
               : event[0].information}
           </ContentText>
         </InfoGrid>

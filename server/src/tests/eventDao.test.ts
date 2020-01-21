@@ -85,6 +85,14 @@ test("Get all events with offset 1", done => {
   });
 });
 
+test("Get count of all events not cancelled", done => {
+  dao.getCountOfAllEventsNotCancelledNotFinished((status, data) => {
+    expect(status).toBe(200);
+    expect(data[0].count).toBe(2);
+    done();
+  });
+});
+
 test("Get event by id", done => {
   dao.getEvent(1, (status, data) => {
     expect(status).toBe(200);
@@ -118,6 +126,33 @@ test("Get events by organizer", done => {
     expect(data.length).toBe(1);
     done();
   });
+});
+
+test("Get events by category with offset 0", done => {
+  dao.getEventsByCategoryWithOffset("festival", 0, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(1);
+    done();
+  });
+});
+
+test("Get events by category with offset 1", done => {
+  dao.getEventsByCategoryWithOffset("festival", 1, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(0);
+    done();
+  });
+});
+
+test("Get count of events by category not cancelled", done => {
+  dao.getCountOfEventsByCategoryNotCancelledNotFinished(
+    "konsert",
+    (status, data) => {
+      expect(status).toBe(200);
+      expect(data[0].count).toBe(1);
+      done();
+    }
+  );
 });
 
 test("Add new event", done => {

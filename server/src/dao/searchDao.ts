@@ -1,5 +1,8 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * Search or sort after price
+ */
 const daoParentEvent = require('./dao.ts');
-//import {event} from "./eventDao";
 
 export interface user {
     user_id: number,
@@ -30,7 +33,12 @@ export default class searchDao extends daoParentEvent {
     constructor(pool) {
         super(pool);
     }
-    // Search for an events
+
+    /**
+     * Search for an event given,
+     * @param input from client which can be status,artistName...ect
+     * @param callback
+     */
     searchForEvents(input: string, callback) {
         var sql1 =
             'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';

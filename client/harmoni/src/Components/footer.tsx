@@ -51,6 +51,7 @@ const ContactText = styled(Text)`
 
 const StyledA = styled.a`
   color: lightblue;
+  text-decoration: underline;
 `;
 
 const Footer = (props: any) => {

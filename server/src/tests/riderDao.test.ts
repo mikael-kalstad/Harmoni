@@ -1,4 +1,4 @@
-import riderDao, {rider, riderList} from "../dao/riderDao";
+import riderListDao, {rider, riderList} from "../dao/riderListDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
@@ -38,7 +38,7 @@ let poolConfig = {
 
 var conPool = mysql.createPool(poolConfig);
 
-const dao = new riderDao(conPool);
+const dao = new riderListDao(conPool);
 
 beforeAll(done => {
     run("src/tests/createTestDB.sql", conPool, () => {
@@ -51,7 +51,7 @@ afterAll(() => {
 });
 
 test("Get all riders", done => {
-    dao.getAllRiders((status, data) => {
+    dao.getAllRiderLists((status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(6);
         done();
@@ -59,7 +59,7 @@ test("Get all riders", done => {
 })
 
 test("Get rider by id", done => {
-    dao.getRider(1, (status, data) => {
+    dao.getRiderList(1, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].text).toBe("Julebrus");
         expect(data.length).toBe(1);
@@ -68,7 +68,7 @@ test("Get rider by id", done => {
 })
 
 test("Get rider by event id", done => {
-    dao.getRiderByEventId(1, (status, data) => {
+    dao.getRiderListByEventId(1, (status, data) => {
         expect(status).toBe(200);
         expect(data[0].text).toBe("Julebrus");
         expect(data.length).toBe(1);
@@ -77,7 +77,7 @@ test("Get rider by event id", done => {
 })
 
 test("Get rider by user id in event", done => {
-    dao.getRiderByUserIdInEvent(1, 1, (status, data) => {
+    dao.getRiderListByUserIdInEvent(1, 1, (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(0);
         done();
@@ -111,7 +111,7 @@ test("Update rider", done => {
         rider_id: 6,
         text: "Sørlandschips"
     }
-    dao.updateRider(rider.rider_id, rider, (status, data) => {
+    dao.updateRiderList(rider.rider_id, rider, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         expect(data.changedRows).toBe(1);
@@ -120,7 +120,7 @@ test("Update rider", done => {
 })  
 
 test("Delete rider", done => {
-    dao.deleteRider(6, (status, data) => {
+    dao.deleteRiderListById(6, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
         done();

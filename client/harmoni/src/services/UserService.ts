@@ -172,8 +172,11 @@ class UserService extends Service {
       }
     })
       .then(response => {
-        updateToken();
-        return response;
+        if (response.status == 409) {
+          console.log("User exists from before.");
+        }else{
+          updateToken();
+        } return response;
       })
       .catch(error => console.log(error));
   }

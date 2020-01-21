@@ -24,6 +24,7 @@ interface IProps {
   onClick?: Function;
   disabled?: boolean;
   loading?: boolean;
+  loadingColor?: string;
   to?: string;
 }
 
@@ -41,19 +42,27 @@ const StyledButton = styled.button<IStyledButton>`
   height: 50px;
   width: 100%;
   background: ${props =>
-    props.backgroundColor ? props.backgroundColor : "#2A57AD"};
+    props.disabled
+      ? "#999"
+      : props.backgroundColor
+      ? props.backgroundColor
+      : "#2A57AD"};
   color: ${props => (props.textColor ? props.textColor : "white")};
   box-shadow: ${props =>
-    props.dropShadow ? "0px 4px 4px rgba(0, 0, 0, 0.25)" : "none"};
+    props.disabled
+      ? "none"
+      : props.dropShadow
+      ? "0px 4px 4px rgba(0, 0, 0, 0.25)"
+      : "none"};
   font-size: 16px;
-  cursor: pointer;
+  cursor: ${props => !props.disabled && "pointer"};
 
   :hover {
-    filter: brightness(90%);
+    filter: ${props => !props.disabled && "brightness(90%)"};
   }
 
   :active {
-    filter: brightness(95%);
+    filter: ${props => !props.disabled && "brightness(95%)"};
   }
 `;
 
@@ -72,10 +81,14 @@ const Button = (props: IProps) => {
       textColor={props.textColor}
       dropShadow={props.dropShadow !== undefined}
       onClick={() => props.onClick !== undefined && props.onClick()}
-      disabled={props.disabled}
+      disabled={props.disabled || props.loading}
     >
       {props.loading ? (
-        <CircularProgress color="secondary" size={25} />
+        <CircularProgress
+          color="secondary"
+          size={25}
+          style={{ color: props.loadingColor }}
+        />
       ) : (
         props.children
       )}

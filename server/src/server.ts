@@ -14,7 +14,7 @@ server.use('/api/v0', require('./routes/authentication'));
 
 //Our routes
 server.use('/api/v0', require('./routes/events'));
-server.use('/api/v0', require('./routes/riders'));
+server.use('/api/v0', require('./routes/riderList'));
 server.use('/api/v0', require('./routes/users'));
 server.use('/api/v0', require('./routes/attachments'));
 server.use('/api/v0', require('./routes/tickets'));
@@ -22,6 +22,7 @@ server.use('/api/login', require('./routes/login'));
 server.use('/api/v0', require('./routes/reset'));
 server.use('/api/v0', require('./routes/search'));
 server.use('/api/v0', require('./routes/geo'));
+server.use('/api/v0', require('./routes/sendEmail'));
 
 
 //server.use("api/v0/users", require("./routes/users"));

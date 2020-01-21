@@ -139,12 +139,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return true;
     }
   }
-  function isMailReg(mail:string) {
-    if(userService.getUserByEMail(mail)!= null || userService.getUserByEMail(mail)!= undefined )
-      return true;
-  }
-
-
+ 
   // Save changes to user info
   const save = async () => {
     setSubmit(true);
@@ -158,26 +153,31 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return;
 
     setLoading(true);
-
+    
     let user = {
       user_id: props.userData.user_id,
       name: nameInput,
       type: type,
       email: emailInput,
       mobile: tlfInput,
-      picture: imgData
+      picture: imgData.toString()
     };
+    
     console.log(user);
     let res = await userService.updateUser(user);
     console.log(res);
-
-    if (!res || res instanceof Error) {
+    if ((res && res.status === 409) || !res) {
+      setEmailWarning("Email er allerede registrert");
+      setLoading(false);
+    }
+    // Status code 401 indicates that something went wrong
+    else if ((res && res.status === 401) || res instanceof Error) {
       setLoading(false);
       setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
-    } else {
-      props.logIn(emailInput);
-      setLoading(false);
+    } else if (res) {
+      if (props.logIn !== undefined) props.logIn(emailInput);
       setRedirect(true);
+      setLoading(false);
     }
   };
 
@@ -205,9 +205,10 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       type,
       imgData.toString()
     );
+    console.log(res);
 
     // Status code 409 indicates that the email is already registered
-    if (res && res.status === 409) {
+    if (res && res.status === 409 || res instanceof Error || !res) {
       setEmailWarning("Email er allerede registrert");
       setLoading(false);
     }
@@ -215,6 +216,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     // Status code 401 indicates that something went wrong
     else if ((res && res.status === 401) || res instanceof Error || !res) {
       setLoading(false);
+      setEmailWarning("Email er allerede registrert");
       setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
     } else if (res) {
       if (props.logIn !== undefined) props.logIn(emailInput);

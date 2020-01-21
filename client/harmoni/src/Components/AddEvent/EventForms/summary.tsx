@@ -1,10 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ArtistList from "../Event/artistsList";
-import TicketCard from "./EventForms/ticketCard";
+import ArtistList from "../../Event/artistsList";
+import TicketCard from "./ticketCard";
 import ListGroup from "react-bootstrap/ListGroup";
-import moment from "moment";
-import AttachmentList from "../Event/attachmentList";
 
 const Wrapper = styled.div`
   margin-bottom: 80px;
@@ -51,10 +49,7 @@ const Text = styled.p`
   margin-top: 10px;
 `;
 
-const formatDate = (date: any) => {
-  if (typeof date === "string")
-    date = moment(date, "DD-MM-YYYY HH:mm").toDate();
-
+const formatDate = (date: Date) => {
   let days = [
     "Mandag",
     "Tirsdag",
@@ -100,14 +95,11 @@ interface IProps {
   img: any;
   category: string;
   location: string;
-  fromDate: string | Date;
-  toDate: string | Date;
+  fromDate: Date;
+  toDate: Date;
   program: string;
   artists: any[];
   tickets: any[];
-  attachments;
-  userRights;
-  riders: any[];
 }
 
 const Summary = (props: IProps) => (
@@ -143,37 +135,22 @@ const Summary = (props: IProps) => (
     )}
 
     <UnderTitle>Artister:</UnderTitle>
-    {!props.artists || props.artists.length === 0 ? (
+    {props.artists.length === 0 ? (
       <Text>Ingen artister er valgt</Text>
     ) : (
-      <ArtistList
-        hideTitle={true}
-        artists={props.artists}
-        riderData={props.riders}
-      />
+      <ArtistList hideTitle={true} artists={props.artists} />
     )}
 
     <UnderTitle>Billetter:</UnderTitle>
-    {!props.tickets || props.tickets.length === 0 ? (
+    {props.tickets.length === 0 ? (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
-      props.tickets.map(ticket => (
-        <ListGroup key={ticket.ticket_id}>
+      <ListGroup>
+        {props.tickets.map(ticket => (
           <TicketCard ticket={ticket} />
-        </ListGroup>
-      ))
+        ))}
+      </ListGroup>
     )}
-
-    <UnderTitle>Vedlegg:</UnderTitle>
-    {(!props.attachments || props.attachments.length === 0) ? 
-    (
-      <Text>Ingen vedlegg er lagt til</Text>
-      ) : (
-      <div>
-        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists}></AttachmentList>>
-      </div>
-      )
-    }
   </Wrapper>
 );
 

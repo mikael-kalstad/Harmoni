@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * attachment such get,create update...
+ */
 const daoParentAttachment = require("./dao");
 
 export interface attachment {
@@ -19,7 +23,7 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("SELECT attachment_id, filename, filetype, filesize FROM attachment WHERE event_id = ?", [eventId], callback);
     }
 
-    //Gets all uploaded files for an user
+    //Get all uploaded files for an user
     getAttachmentsForUploader(userId: number, callback) {
         super.query("SELECT attachment_id, filename, filetype, filesize FROM attachment WHERE user_id = ?", [userId], callback);
     }
@@ -47,6 +51,7 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("SELECT user_id FROM attachment_user WHERE attachment_id= ?", [attachment_id], callback);
     }
 
+    // Creates attachment and insert userId, attachmentID to attachment_user
     addAttachmentForUserForEvent(data: any, callback) {
         const afterInsertEvent = (status, rows) => {
             if (status == 500) {
@@ -62,18 +67,29 @@ export default class attachmentDao extends daoParentAttachment {
             [data.body.event_id, data.body.user_id, data.attachment.data, data.attachment.filetype,
             data.attachment.filename, data.attachment.filesize], afterInsertEvent);
     }
-    
+
+    /**Create row in attachment-user that used
+     * to know who has access rights to an specific attachment
+     * @param attachmentId
+     * @param userId
+     * @param callback
+     */
     addUserForAttachment(attachmentId: number, userId: number, callback) {
         super.query("INSERT INTO attachment_user VALUES(?, ?)", [attachmentId, userId], callback);
     }
-    //Deletes the access to a document for an user
+
+    // Deletes the access to a document for an user
     deleteAttachmentForUser(attachmentId: number, userId: number, callback) {
         super.query("DELETE FROM attachment_user WHERE attachment_id = ? AND user_id = ?", [attachmentId, userId], callback);
     }
+
+    // Update attachment given an object of type attachment
     updateAttachment(data: attachment, callback) {
         super.query("UPDATE attachment SET data = ?, filetype = ?, filename = ?, filesize = ? WHERE attachment_id = ?",
             [data.data, data.filetype, data.filename, data.filesize, data.attachment_id], callback);
     }
+
+    // Deletes attachment given attachmentId
     deleteAttachment(attachmentId: number, callback) {
         super.query("DELETE FROM attachment WHERE attachment_id = ?", [attachmentId], callback);
     }

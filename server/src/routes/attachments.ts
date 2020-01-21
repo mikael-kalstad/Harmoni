@@ -1,3 +1,5 @@
+// Routes to interact with attachmentDao.
+
 import express from 'express';
 import attachmentDao from '../dao/attachmentDao';
 import { pool } from '../dao/database';
@@ -20,9 +22,6 @@ function checkIfAccessRights(user_id: number, attachment_id: number): Promise<bo
     })
   })
 }
-
-
-// Routes to interact with attachments.
 
 // Create attachment
 router.post('/authorized/attachments/', upload.single("file"), async (request, response) => {
@@ -71,14 +70,14 @@ router.get('/authorized/attachments/:id', async (request, response) => {
 });
 
 // Get all attachments for event given eventId
-router.get('/authorized/attachments/event/:id', async (request, response) => {
+router.get('/authorized/attachments/event/:eventId', async (request, response) => {
   dao.getAttachmentsForEvent(parseInt(request.params.eventId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
 // Get all attachments a user has uploaded given UserId
-router.get('/authorized/attachments/user/:id', async (request, response) => {
+router.get('/authorized/attachments/user/:userId', async (request, response) => {
   dao.getAttachmentsForUploader(parseInt(request.params.userId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
@@ -147,7 +146,7 @@ router.delete(
   '/authorized/attachments/attachment_user/:attachmentId&:userId',
   async (request, response) => {
     dao.deleteAttachmentForUser(
-      parseInt(request.params.id),
+      parseInt(request.params.attachmentId),
       parseInt(request.params.userId),
       (status, data) => {
         status == 500 ? response.status(500) : response.send(data);
