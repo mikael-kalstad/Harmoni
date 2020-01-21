@@ -2,6 +2,7 @@ import axios from "axios";
 import Service, { updateToken } from "./Service";
 
 interface RiderList {
+  rider_list_id;
   userId: number;
   eventId: number;
   text: string;
@@ -63,11 +64,11 @@ export default class RiderService extends Service {
       .catch(error => console.log(error));
   }
 
-  updateRiderList(eventId: number, userId: number, rider: RiderList) {
+  updateRiderList(rider: RiderList) {
     updateToken();
     return axios({
       method: "put",
-      url: this.path + "/authorized/riders/riderlist/" + userId + "/" + eventId,
+      url: this.path + "/authorized/riders/riderlist/" + rider.rider_list_id,
       data: rider,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
