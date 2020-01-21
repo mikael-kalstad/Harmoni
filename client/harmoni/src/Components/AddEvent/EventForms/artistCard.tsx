@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ListGroup from "react-bootstrap/ListGroup";
-import RiderDialog from "../riderDialog";
+import InputDialog from "../inputDialog";
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 20% 1fr 10% 10%;
+  grid-template-columns: 20% 1fr 12% 12%;
   align-items: center;
   justify-items: center;
 `;
@@ -37,14 +36,14 @@ const DelBtn = styled.img`
 
 const RiderIcon = styled.img`
   cursor: pointer;
-  height: 60%;
+  height: 40%;
 `;
 
 interface IProps {
   user: any;
-  remove: Function;
-  riderText: string;
-  setRiderData: Function;
+  remove?: Function;
+  riderData?: any;
+  setRiderData?: Function;
 }
 
 const Artistcard = (props: IProps) => {
@@ -52,37 +51,69 @@ const Artistcard = (props: IProps) => {
 
   const toggleShow = () => setShowRider(!showRider);
 
+  const addRider = text => {
+    if (text === "") return;
+
+    toggleShow();
+
+    props.setRiderData([
+      ...props.riderData,
+      { riderData: text, user_id: props.user.user_id }
+    ]);
+  };
+
+  // Find riderdata with user id
+  const findRiderWithId = (id: number) => {
+    let data = props.riderData.find(
+      data => data.user_id === props.user.user_id
+    );
+
+    if (data === undefined || data.length > 1 || data.length === 0)
+      return undefined;
+
+    let riderData = data["riderData"];
+
+    if (riderData !== undefined) return riderData;
+  };
+
   return (
     <>
       {showRider && (
-        <RiderDialog
-          riderText={props.riderText}
+        <InputDialog
           toggleShow={toggleShow}
-          setRiderData={props.setRiderData}
+          onClick={addRider}
+          title="Rider Info"
+          btnText="LEGG TIL"
+          inputValue={findRiderWithId(props.user.user_id)}
+          placeholder='- Lokalt øl, laktosefri pizza
+          - Konjakk, dram, akkevitt, hjemmebrent
+          - Besøk av mor, venn, kjendis
+          - Utstyr: gitar, ukelele, gitar band til PS4"'
         />
       )}
 
-      <ListGroup.Item>
-        <Wrapper>
-          <ImgWrapper>
-            {props.user.picture.data &&
-              props.user.picture.data.length !== 0 && (
-                <ArtistImage
-                  src={new Buffer(props.user.picture).toString("ASCII")}
-                />
-              )}
-          </ImgWrapper>
+      <Wrapper>
+        <ImgWrapper>
+          {props.user.picture.data && props.user.picture.data.length !== 0 && (
+            <ArtistImage
+              src={new Buffer(props.user.picture).toString("ASCII")}
+            />
+          )}
+        </ImgWrapper>
 
-          <Name>{props.user.name}</Name>
+        <Name>{props.user.name}</Name>
 
+        {props.riderData && (
           <RiderIcon src="/icons/ridericon.svg" onClick={toggleShow} />
+        )}
 
+        {props.remove && (
           <DelBtn
             src="/icons/cross.svg"
             onClick={() => props.remove(props.user)}
           />
-        </Wrapper>
-      </ListGroup.Item>
+        )}
+      </Wrapper>
     </>
   );
 };
