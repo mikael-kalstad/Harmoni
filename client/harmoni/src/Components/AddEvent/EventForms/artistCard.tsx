@@ -27,6 +27,9 @@ const Name = styled.p`
   font-size: 20px;
   margin: 0 0 0 15px;
   justify-self: start;
+  font-family: Arial;
+  font-weight: bold;
+  color: #434343;
 `;
 
 const DelBtn = styled.img`

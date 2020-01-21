@@ -55,7 +55,7 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
-  getCountOfAllEvents() {
+  getCountOfAllEventsNotCancelledNotFinished() {
     updateToken();
     return axios({
       method: "get",
@@ -126,7 +126,7 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
-  getCountOfEventsByCategory(category: string) {
+  getCountOfEventsByCategoryNotCancelledNotFinished(category: string) {
     updateToken();
     return axios({
       method: "get",

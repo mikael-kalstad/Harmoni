@@ -62,7 +62,7 @@ router.get("/events/offset/:offset", async (request, response) => {
 });
 
 router.get("/events/count/all", async (request, response) => {
-  dao.getCountOfAllEvents((status, data) => {
+  dao.getCountOfAllEventsNotCancelledNotFinished((status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
@@ -146,9 +146,12 @@ router.get(
 );
 
 router.get("/events/count/category/:category", async (request, response) => {
-  dao.getCountOfEventsByCategory(request.params.category, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
-  });
+  dao.getCountOfEventsByCategoryNotCancelledNotFinished(
+    request.params.category,
+    (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
 });
 
 router.get("/events/user/:event_id/:type", async (request, response) => {

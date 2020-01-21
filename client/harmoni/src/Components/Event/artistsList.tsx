@@ -59,30 +59,6 @@ const ArtistBar = styled.div<IArtistsBar>`
   align-items: center;
 `;
 
-const ArtistImage = styled.img`
-  width: 55px;
-  height: 55px;
-  border-radius: 1000px;
-  object-fit: content;
-  margin: 0;
-  margin-right: 10px;
-  box-shadow: 0px 3px 2px 0px #bababa;
-`;
-
-const ArtistNameText = styled.label`
-  font-family: Arial;
-  font-size: 20px;
-  margin: 0;
-  justify-self: start;
-  font-weight: bold;
-  color: #434343;
-`;
-
-const RiderIcon = styled.img`
-  height: 30%;
-  cursor: pointer;
-`;
-
 /* Component for displaying a list of artists */
 /* Used in eventPage */
 const ArtistsList = (props: IProps) => {

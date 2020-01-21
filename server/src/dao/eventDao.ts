@@ -41,14 +41,18 @@ export default class eventDao extends daoParentEvent {
         "status, information, category, picture, " +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        "FROM event ORDER BY from_date DESC LIMIT 20 OFFSET ?",
+        "FROM event WHERE status != 2 AND event.to_date > NOW() ORDER BY event.from_date ASC LIMIT 20 OFFSET ?",
       [offset],
       callback
     );
   }
 
-  getCountOfAllEvents(callback) {
-    super.query("SELECT COUNT(*) as 'count' FROM event", [], callback);
+  getCountOfAllEventsNotCancelledNotFinished(callback) {
+    super.query(
+      "SELECT COUNT(*) as 'count' FROM event WHERE status != 2 AND to_date > NOW()",
+      [],
+      callback
+    );
   }
 
   getEvent(eventId: number, callback) {
@@ -129,15 +133,18 @@ export default class eventDao extends daoParentEvent {
         "status, information, category, picture, " +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        "FROM event WHERE category = ? ORDER BY from_date DESC LIMIT 20 OFFSET ?",
+        "FROM event WHERE category = ? AND status != 2 AND event.to_date > NOW() ORDER BY event.from_date ASC LIMIT 20 OFFSET ?",
       [category, offset],
       callback
     );
   }
 
-  getCountOfEventsByCategory(category: string, callback) {
+  getCountOfEventsByCategoryNotCancelledNotFinished(
+    category: string,
+    callback
+  ) {
     super.query(
-      "SELECT COUNT(*) as 'count' FROM event WHERE category = ?",
+      "SELECT COUNT(*) as 'count' FROM event WHERE category = ? AND status != 2 AND to_date > NOW()",
       [category],
       callback
     );
