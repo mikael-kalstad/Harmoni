@@ -63,11 +63,11 @@ export default class RiderService extends Service {
       .catch(error => console.log(error));
   }
 
-  updateRiderList(rider: RiderList) {
+  updateRiderList(eventId: number, userId: number, rider: RiderList) {
     updateToken();
     return axios({
       method: "put",
-      url: this.path + "/authorized/riders/",
+      url: this.path + "/authorized/riders/riderlist/" + userId + "/" + eventId,
       data: rider,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
