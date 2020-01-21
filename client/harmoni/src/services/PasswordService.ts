@@ -23,18 +23,12 @@ export default class PasswordService extends Service {
       password: password
     };
     return axios
-      .post(
-        this.path +
-          "/reset/reset_password/" +
-          localStorage.getItem("harmoni-token"),
-        postData,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "harmoni-token": localStorage.getItem("harmoni-token")
-          }
+      .post(this.path + window.location.pathname, postData, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "harmoni-token": localStorage.getItem("harmoni-token")
         }
-      )
+      })
       .then(response => {
         return response;
       })
