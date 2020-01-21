@@ -51,6 +51,16 @@ router.get("/events/", async (request, response) => {
   });
 });
 
+// Get all with offset
+router.get("/events/offset/:offset", async (request, response) => {
+  dao.getAllEventsWithOffset(
+    parseInt(request.params.offset),
+    (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
+});
+
 router.post(
   "/authorized/events/user_event/:userId/:eventId",
   async (request, response) => {
@@ -64,12 +74,16 @@ router.post(
   }
 );
 router.get(
-    "/authorized/events/user_event/:userId/:eventId",
-    async (request, response) => {
-        dao.getUserEvent(parseInt( request.params.userId), parseInt(request.params.eventId),(status,data)=>{
-            status == 500 ? response.status(500) : response.send(data);
-        })
-    }
+  "/authorized/events/user_event/:userId/:eventId",
+  async (request, response) => {
+    dao.getUserEvent(
+      parseInt(request.params.userId),
+      parseInt(request.params.eventId),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
 );
 router.delete(
   "/authorized/events/user_event/:userId/:eventId",
