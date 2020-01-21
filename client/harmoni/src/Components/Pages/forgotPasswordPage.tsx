@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Button from "../Button/button";
-import {userService} from "../../services/UserService";
-import {passwordService} from "../../services/PasswordService";
+import { userService } from "../../services/UserService";
+import { passwordService } from "../../services/PasswordService";
+import InfoDialog from "../infoDialog";
+import { FaCheckCircle } from "react-icons/fa";
 
 const Container = styled.div`
   margin: 60px auto 0 auto;
@@ -29,73 +31,101 @@ const Text = styled.p`
 const BtnWrapper = styled.div`
   margin-top: 65px;
 `;
+
 // Material UI input styling
 const inputStyle = {
-    width: "100%",
-    marginTop: "25px"
+  width: "100%",
+  marginTop: "25px"
+};
+
+let checkCircleStyle = {
+  fontSize: 120,
+  color: "#82c91e",
+  marginTop: 50,
+  marginBottom: 20,
+  marginLeft: 80
 };
 
 const ForgotPassword = (props: any) => {
-    // EMail not registered warning
-    const [emailWarning, setEmailWarning] = useState("");
-    // Used to display error on empty input when submitting
-    const [submit, setSubmit] = useState(false);
-    const [emailInput, setEmailInput] = useState("");
-    const [warningText, setWarningText] = useState("");
-    const [loading, setLoading] = useState(false);
+  // Used to display error on empty input when submitting
+  const [submit, setSubmit] = useState(false);
 
-    // Check inputs and try to reset password given email
-    const forgotPasswrod = async (email: string) => {
-        // User tries to submit/login, will activate error checks in inputs
-        setSubmit(true);
+  const [emailInput, setEmailInput] = useState("");
+  const [warningText, setWarningText] = useState("");
+  const [displayDialog, setDisplayDialog] = useState(false);
 
-        // Check if input is empty
-        if (email.trim() === "" ) {
-            setEmailWarning("Input felt er tomt");
-            return;
-        }
-        let res = await userService.getUserByEMail(email);
-        console.log("res in forgotPassword", res);
+  // Check inputs and try to reset password given email
+  const forgotPassword = async (email: string) => {
+    // User tries to submit/login, will activate error checks in inputs
+    setSubmit(true);
 
-        if(!res)
-            setEmailWarning("Email er ikke registrert")
+    // Check if input is empty
+    if (email.trim() === "") {
+      setWarningText("Input felt er tomt");
+      return;
+    }
 
-    };
-    // Check if enter key is clicked
-    const checkForEnterKey = (e: { key: string } | undefined) => {
-        // Try to reset password if enter key is pressed down
-        if (e !== undefined && e.key === "Enter") forgotPasswrod(emailInput);
-    };
+    let res = await userService.getUserByEMail(email);
 
+    if (res) {
+      setDisplayDialog(true);
+      passwordService.requestPasswordReset(emailInput);
+    }
+  };
 
-    return (
-        <>
-            <Title>Glemt passord</Title>
-            <Container>
-                <Text> Vennligst skriv inn e-postaddressen din.
-                    Du vil få en e-post med link til å lage en ny passord</Text>
-                <TextField
-                    style={inputStyle}
-                    variant="outlined"
-                    label="eksampel@eks.no"
-                    type="email"
-                    error={(submit && emailInput === "") || warningText !== ""}
-                    helperText={submit && emailInput === "" ? "E-postadressen er påkrevd" : ""}
-                    onChange={e => setEmailInput(e.target.value)}
-                    onKeyDown={e => checkForEnterKey(e)}
-                />
-                <BtnWrapper>
-                    <Button
-                        onClick={() => passwordService.requestPasswordReset(emailInput)}
-                    >
-                        Reset passord
-                    </Button>
-                </BtnWrapper>
-            </Container>
-        </>
+  const closeDialog = () => {
+    setDisplayDialog(false);
+  };
 
+  // Check if enter key is clicked
+  const checkForEnterKey = (e: { key: string } | undefined) => {
+    // Try to reset password if enter key is pressed down
+    if (e !== undefined && e.key === "Enter") forgotPassword(emailInput);
+  };
 
-    )
+  return (
+    <>
+      <Title>Glemt passord</Title>
+      <Container>
+        <Text>
+          {" "}
+          Vennligst skriv inn e-postaddressen din. Du vil få en e-post med link
+          til å lage en ny passord
+        </Text>
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="eksampel@eks.no"
+          type="email"
+          error={(submit && emailInput === "") || warningText !== ""}
+          helperText={
+            submit && emailInput === ""
+              ? "Email er påkrevd"
+              : warningText !== ""
+              ? warningText
+              : ""
+          }
+          onChange={e => setEmailInput(e.target.value)}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
+        <BtnWrapper>
+          <Button onClick={() => forgotPassword(emailInput)}>
+            Reset passord
+          </Button>
+        </BtnWrapper>
+        {displayDialog && (
+          <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
+            <FaCheckCircle style={checkCircleStyle} />
+            <Text>
+              Dersom du oppga en gyldig e-postadresse vil du ha blitt sendt en
+              epost!
+            </Text>
+            <Button onClick={closeDialog}>Tilbake</Button>
+          </InfoDialog>
+        )}
+      </Container>
+    </>
+  );
 };
 
 export default ForgotPassword;

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
+import RiderDialog from "../riderDialog";
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 20% 1fr 10%;
+  grid-template-columns: 20% 1fr 10% 10%;
   align-items: center;
   justify-items: center;
 `;
@@ -34,25 +35,56 @@ const DelBtn = styled.img`
   height: 30%;
 `;
 
+const RiderIcon = styled.img`
+  cursor: pointer;
+  height: 60%;
+`;
+
 interface IProps {
   user: any;
   remove: Function;
+  riderText: string;
+  setRiderData: Function;
 }
 
-const Artistcard = (props: IProps) => (
-  <ListGroup.Item>
-    <Wrapper>
-      <ImgWrapper>
-        {props.user.picture.data && props.user.picture.data.length !== 0 && (
-          <ArtistImage src={new Buffer(props.user.picture).toString("ASCII")} />
-        )}
-      </ImgWrapper>
+const Artistcard = (props: IProps) => {
+  const [showRider, setShowRider] = useState(false);
 
-      <Name>{props.user.name}</Name>
+  const toggleShow = () => setShowRider(!showRider);
 
-      <DelBtn src="/icons/cross.svg" onClick={() => props.remove(props.user)} />
-    </Wrapper>
-  </ListGroup.Item>
-);
+  return (
+    <>
+      {showRider && (
+        <RiderDialog
+          riderText={props.riderText}
+          toggleShow={toggleShow}
+          setRiderData={props.setRiderData}
+        />
+      )}
+
+      <ListGroup.Item>
+        <Wrapper>
+          <ImgWrapper>
+            {props.user.picture.data &&
+              props.user.picture.data.length !== 0 && (
+                <ArtistImage
+                  src={new Buffer(props.user.picture).toString("ASCII")}
+                />
+              )}
+          </ImgWrapper>
+
+          <Name>{props.user.name}</Name>
+
+          <RiderIcon src="/icons/ridericon.svg" onClick={toggleShow} />
+
+          <DelBtn
+            src="/icons/cross.svg"
+            onClick={() => props.remove(props.user)}
+          />
+        </Wrapper>
+      </ListGroup.Item>
+    </>
+  );
+};
 
 export default Artistcard;

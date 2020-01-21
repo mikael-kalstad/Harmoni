@@ -12,7 +12,7 @@ const dao = new attachmentDao(pool);
 function checkIfAccessRights(user_id: number, attachment_id: number): Promise<boolean> {
 
   return new Promise((resolve, reject) => {
-    dao.getAttachmentsForUser(user_id, (status, data: any[]) => {
+    dao.getAttachmentsForUploader(user_id, (status, data: any[]) => {
       if (status == 500)
         resolve(false);
       else
@@ -55,30 +55,55 @@ router.post(
   }
 );
 
+//Get attachment given its id
+router.get('/authorized/attachments/:id', async (request, response) => {
+  dao.getAttachmentById(parseInt(request.params.id), (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+
 // Get all attachments for event given eventId
 router.get('/authorized/attachments/event/:id', async (request, response) => {
-  dao.getAttachmentsForEvent(parseInt(request.params.id), (status, data) => {
+  dao.getAttachmentsForEvent(parseInt(request.params.eventId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
-// Get all attachments for user given userId
+// Get all attachments a user has uploaded given UserId
 router.get('/authorized/attachments/user/:id', async (request, response) => {
-  dao.getAttachmentsForUser(parseInt(request.params.id), (status, data) => {
+  dao.getAttachmentsForUploader(parseInt(request.params.userId), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
-// Get all attachments for user given eventId,userId
+// Get all attachments a user has uploaded to an event given eventId,userId
 router.get('/authorized/attachments/user/:userId&:eventId', async (request, response) => {
-  dao.getAttachmentsForUserForEvent(
-    parseInt(request.params.id),
-    parseInt(request.params.id),
+  dao.getAttachmentsForUploaderForEvent(
+    parseInt(request.params.userId),
+    parseInt(request.params.eventId),
     (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     }
   );
 });
+
+//Get all attachments an user has access to 
+router.get('/authorized/attachments/user/access/:userId', async (request, response) => {
+  dao.getAttachmentsForUser(
+    parseInt(request.params.userId),  (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
+})
+
+//Get all attachments an user has access to for an event
+router.get('/authorized/attachments/user/access/:userId&:eventId', async (request, response) => {
+  dao.getAttachmentsForUserForEvent(
+    parseInt(request.params.userId), parseInt(request.params.id),  (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
+})
 
 //Get attachment by id (***for downloading the file***)
 router.get('/authorized/attachments/download/:id', async (request, response) => {
@@ -115,7 +140,7 @@ router.delete(
   async (request, response) => {
     dao.deleteAttachmentForUser(
       parseInt(request.params.id),
-      parseInt(request.params.id),
+      parseInt(request.params.userId),
       (status, data) => {
         status == 500 ? response.status(500) : response.send(data);
       }

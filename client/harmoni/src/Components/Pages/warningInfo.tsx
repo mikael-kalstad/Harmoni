@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import OutlineButton from "../Button/outlineButton";
-import LoginBtn from "../Button/loginBtn";
 
 const Container = styled.div`
   height: 80vh;
@@ -30,7 +28,6 @@ const Title = styled.h2`
   font-size: 72px;
   font-weight: 900;
   margin-bottom: 20px;
-  /* color: #d45951; */
 `;
 
 const UnderTitle = styled.h3`

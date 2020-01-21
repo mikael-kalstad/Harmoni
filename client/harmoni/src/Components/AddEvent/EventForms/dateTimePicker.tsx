@@ -1,11 +1,11 @@
-import "date-fns";
-import React from "react";
-import DateFnsUtils from "@date-io/date-fns";
+import 'date-fns';
+import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker
-} from "@material-ui/pickers";
+} from '@material-ui/pickers';
 
 const DateTimePicker = (props: any) => {
   const handleDateChange = (date: Date | null) => {
@@ -25,8 +25,11 @@ const DateTimePicker = (props: any) => {
           onChange={handleDateChange}
           error={props.error}
           KeyboardButtonProps={{
-            "aria-label": "change date"
+            'aria-label': 'change date'
           }}
+          invalidDateMessage="Ugyldig format"
+          maxDateMessage="Dato er for langt fram i tid"
+          minDateMessage="Dato er for langt bak i tid"
         />
         <KeyboardTimePicker
           fullWidth
@@ -38,8 +41,10 @@ const DateTimePicker = (props: any) => {
           error={props.error}
           helperText={props.helperText}
           KeyboardButtonProps={{
-            "aria-label": "change time"
+            'aria-label': 'change time'
           }}
+          invalidDateMessage="Ugyldig format"
+          ampm={false}
         />
       </MuiPickersUtilsProvider>
     </div>

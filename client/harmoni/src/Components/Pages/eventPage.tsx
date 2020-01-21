@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Skeleton from 'react-loading-skeleton';
 
+import { isEventInProgress, hasEventHappened } from '../utils';
 import { eventService } from '../../services/EventService';
 import { ticketService } from '../../services/TicketService';
 import { userService } from '../../services/UserService';
+import { geoService } from '../../services/GeoService';
 
 import TicketMenu from '../Event/ticketMenu';
 import ArtistsList from '../Event/artistsList';
 import AttachmentList from '../Event/attachmentList';
 import { attachmentService } from '../../services/AttachmentService';
+import Map from '../Event/map';
 
 export interface IEvent {
   event_id: number;
@@ -19,7 +21,7 @@ export interface IEvent {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
   information: string;
   category: string;
   picture: string;
@@ -69,18 +71,19 @@ const ImageGrid = styled.div`
   @media screen and (max-width: 800px) {
     margin: auto;
     margin-top: 10px;
-    width: 70%;
+    width: 90%;
   }
 `;
 
 const InfoGrid = styled.div`
-  margin: 0 20px;
+  margin: 0 40px;
 `;
 
 const ArtistsAndMapGrid = styled.div`
   display: grid;
-  margin: 20px 20px;
+  margin: 20px 40px;
   grid-gap: 30px;
+  min-height: 450px;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
 
@@ -91,21 +94,29 @@ const ArtistsAndMapGrid = styled.div`
 `;
 
 const ArtistsGrid = styled.div`
+  max-height: 400px;
+  overflow-y: auto;
   justify-self: start;
   border-radius: 10px;
   height: 100%;
+
   @media screen and (max-width: 800px) {
     justify-self: center;
   }
 `;
 
 const MapGrid = styled.div`
-  border: solid;
-  width: 350px;
-  height: 350px;
+  display: grid;
+  border: 3px solid grey;
+  min-height: 300px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  align-items: center;
 `;
 
 const TicketsGrid = styled.div`
+  padding-top: 30px;
   width: 70%;
   margin: auto;
 `;
@@ -121,25 +132,21 @@ const EventImage = styled.img`
   }
 `;
 
-const DoubleColumnGrid = styled.div`
-  margin: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-content: center;
+const BoldSpan = styled.span`
+  font-weight: bold;
 `;
 
-const DateText = styled.p`
-  color: grey;
-  justify-self: end;
-`;
-
-const AddressText = styled.p`
-  color: grey;
-`;
-
-const OrganizerText = styled.p``;
+const InfoText = styled.p``;
 
 const Title = styled.h1``;
+
+interface IStatusSpan {
+  color: string;
+}
+
+const StatusSpan = styled.span<IStatusSpan>`
+  color: ${props => props.color};
+`;
 
 const ContentText = styled.p`
   font-size: 20px;
@@ -153,35 +160,52 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [organizer, setOrganizer] = useState();
   const [attachments, setAttachments] = useState<attachment[]>([]);
 
+  const [coords, setCoords] = useState();
+  let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
+
   useEffect(() => {
+    const fetchEvent = async () => {
+      eventService.getEventById(props.match.params.id).then(data => {
+        setEvent(data);
+        fetchCoords(data[0].address);
+      });
+    };
+
+    const fetchTickets = async () => {
+      setEventTickets(
+        await ticketService.getAllTicketsByEventId(props.match.params.id)
+      );
+    };
+
+    const fetchArtists = async () => {
+      setArtists(await userService.getArtistsForEvent(props.match.params.id));
+    };
+
+    const fetchOrganizer = async () => {
+      setOrganizer(
+        await userService.getOrganizerForEvent(props.match.params.id)
+      );
+    };
+
+    const fetchCoords = async (address: string) => {
+      geoService.getLatAndLndOfAddress(address).then(data => {
+        setCoords({ lat: data[0], lng: data[1] });
+      });
+    };
+
+    const fetchAttachments = async () => {
+      setAttachments(await attachmentService.getAttachmentsForEvent(props.match.params.id));
+    }
+  
+    //
+
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
     fetchAttachments();
-  }, []);
+  }, [props.match.params.id]);
 
-  const fetchEvent = async () => {
-    setEvent(await eventService.getEventById(props.match.params.id));
-  };
-
-  const fetchTickets = async () => {
-    setEventTickets(
-      await ticketService.getAllTicketsByEventId(props.match.params.id)
-    );
-  };
-
-  const fetchArtists = async () => {
-    setArtists(await userService.getArtistsForEvent(props.match.params.id));
-  };
-
-  const fetchOrganizer = async () => {
-    setOrganizer(await userService.getOrganizerForEvent(props.match.params.id));
-  };
-
-  const fetchAttachments = async () => {
-    setAttachments(await attachmentService.getAttachmentsForEvent(props.match.params.id));
-  }
 
   if (
     event != null &&
@@ -189,6 +213,21 @@ const Event = (props: { match: { params: { id: number } } }) => {
     organizer != null &&
     artists != null
   ) {
+    let categories = {
+      concert: 'Konsert',
+      festival: 'Festival',
+      theatre: 'Teater',
+      standup: 'Standup',
+      show: 'Show',
+      other: 'Annet'
+    };
+
+    let dateFrom = event[0].from_date.split(' ');
+    let dateTo = event[0].to_date.split(' ');
+    let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
+    let finished = hasEventHappened(event[0].to_date);
+
+    let status = inProgress ? 'Pågående' : statuses[event[0].status];
     return (
       <Wrapper>
         <ImageGrid>
@@ -196,14 +235,50 @@ const Event = (props: { match: { params: { id: number } } }) => {
             src={new Buffer(event[0].picture).toString('ascii')}
             alt={event[0].name}
           ></EventImage>
-          <DoubleColumnGrid>
-            <AddressText>{event[0].address}</AddressText>
-            <DateText>{event[0].from_date}</DateText>
-          </DoubleColumnGrid>
         </ImageGrid>
         <InfoGrid>
-          <Title>{event[0].name}</Title>
-          <OrganizerText>Arrangør: {organizer[0].name}</OrganizerText>
+          <Title>
+            {event[0].name}{' '}
+            {status === 'Pågående' ? (
+              <>
+                {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
+              </>
+            ) : status === 'Avlyst' || finished ? (
+              <>
+                {' - '}{' '}
+                <StatusSpan color="#c7554f">
+                  {finished ? 'Ferdig' : status}
+                </StatusSpan>
+              </>
+            ) : (
+              <></>
+            )}
+          </Title>
+          <InfoText>
+            <BoldSpan>Arrangør: </BoldSpan>
+            {organizer[0].name}
+          </InfoText>
+          <InfoText>
+            <BoldSpan>Tid: </BoldSpan>
+            {dateFrom[0] === dateTo[0]
+              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
+              : 'Fra: ' +
+                dateFrom[0] +
+                ' kl. ' +
+                dateFrom[1] +
+                ' til ' +
+                dateTo[0] +
+                ' kl. ' +
+                dateTo[1]}
+          </InfoText>
+          <InfoText>
+            <BoldSpan>Sted: </BoldSpan>
+            {event[0].address}
+          </InfoText>
+          <InfoText>
+            <BoldSpan>Kategori: </BoldSpan>
+            {categories[event[0].category]}
+          </InfoText>
           <ContentText>
             {event[0].information === ''
               ? 'Arrangementet har ingen beskrivelse eller program'
@@ -214,11 +289,16 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <ArtistsGrid>
             <ArtistsList artists={artists} />
           </ArtistsGrid>
-          <MapGrid>Kartet går her</MapGrid>
+          <MapGrid>{coords && <Map coords={coords} zoom={14} />}</MapGrid>
         </ArtistsAndMapGrid>
         <AttachmentList attachments={attachments}></AttachmentList>
         <TicketsGrid>
-          <TicketMenu tickets={eventTickets} />
+          <TicketMenu
+            tickets={eventTickets}
+            canceled={
+              event[0].status === 2 || hasEventHappened(event[0].to_date)
+            }
+          />
         </TicketsGrid>
       </Wrapper>
     );

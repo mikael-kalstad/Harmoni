@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import TextField from "@material-ui/core/TextField";
-import { Button } from "@material-ui/core";
-import { ListGroup } from "react-bootstrap";
-import TicketCard from "./ticketCard";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
+import { ListGroup } from 'react-bootstrap';
+import TicketCard from './ticketCard';
+import Btn from '../../Button/button';
 
 const Title = styled.h2`
   font-size: 48px;
@@ -16,8 +16,8 @@ const UnderTitle = styled.h3`
   margin: 50px 0 20px 0;
 `;
 const inputStyle = {
-  width: "100%",
-  marginBottom: "25px"
+  width: '100%',
+  marginBottom: '25px'
 };
 
 const Text = styled.p`
@@ -36,9 +36,9 @@ interface ITicket {
 }
 var tempId = 1;
 const TicketForm = (props: any) => {
-  const [type, setType] = useState("");
-  const [price, setPrice] = useState(0);
-  const [available, setAvailable] = useState(0);
+  const [type, setType] = useState('');
+  const [price, setPrice] = useState();
+  const [available, setAvailable] = useState();
 
   function handleChange(newInt: any, setFunc: Function) {
     if (newInt < 0) setFunc(0);
@@ -50,7 +50,7 @@ const TicketForm = (props: any) => {
       ticket_id: tempId,
       event_id: tempId,
       price: -1,
-      type: "",
+      type: '',
       available: -1
     };
 
@@ -60,8 +60,10 @@ const TicketForm = (props: any) => {
       s.price = price;
       s.available = available;
       props.setListOfTickets(array => [...array, s]);
-      console.log("listTickets", props.listOfTickets);
     }
+    setType('');
+    setPrice('');
+    setAvailable('');
   };
 
   const deleteTicket = ticket => {
@@ -86,7 +88,12 @@ const TicketForm = (props: any) => {
         variant="outlined"
         placeholder="(Sitteplass, ståplass, VIP, etc.)"
         value={type}
-        onChange={e => handleChange(e.target.value, setType)}
+        helperText="Maks 45 karakterer"
+        onChange={e =>
+          e.target.value.length <= 45
+            ? handleChange(e.target.value, setType)
+            : null
+        }
       />
 
       <h5>Pris per billett</h5>
@@ -96,7 +103,13 @@ const TicketForm = (props: any) => {
         type="number"
         placeholder="Pris for kategori"
         value={price}
-        onChange={e => handleChange(e.target.value, setPrice)}
+        onChange={e =>
+          e.target.value === ''
+            ? handleChange(e.target.value, setPrice)
+            : Number.parseInt(e.target.value) <= 2147483647
+            ? handleChange(e.target.value, setPrice)
+            : null
+        }
       />
 
       <h5>Total antall</h5>
@@ -106,10 +119,16 @@ const TicketForm = (props: any) => {
         type="number"
         placeholder="Antall tilgjengelige plasser i kategori"
         value={available}
-        onChange={e => handleChange(e.target.value, setAvailable)}
+        onChange={e =>
+          e.target.value === ''
+            ? handleChange(e.target.value, setAvailable)
+            : Number.parseInt(e.target.value) <= 2147483647
+            ? handleChange(e.target.value, setAvailable)
+            : null
+        }
       />
 
-      <Button onClick={() => addTicket()}>Legg til</Button>
+      <Btn onClick={() => addTicket()}>Legg til</Btn>
 
       {props.listOfTickets && props.listOfTickets.length !== 0 && (
         <UnderTitle>Billettliste:</UnderTitle>

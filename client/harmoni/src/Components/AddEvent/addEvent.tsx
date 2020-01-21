@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
+import Btn from "../Button/button";
 import FormStepper from "./formStepper";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import moment from "moment";
 
 // Form components
 import ArtistForm from "./EventForms/artistForm";
 import BasicInfoForm from "./EventForms/basicInfoForm";
 import TicketForm from "./EventForms/ticketForm";
 import ProgramForm from "./EventForms/programForm";
-import Summary from "./EventForms/summary";
+import Summary from "./summary";
 import Success from "./success";
 
 // Services
@@ -32,6 +34,10 @@ interface Event {
   category: string;
   picture: string;
 }
+
+const BtnWrapper = styled.div`
+  margin: 60px 0;
+`;
 
 const Container = styled.div`
   margin: 100px 0;
@@ -63,11 +69,18 @@ const LoadingText = styled.p`
 const WarningText = styled.p`
   color: #d45951;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 400;s
 `;
 
-const AddEvent = (props: { userData: any }) => {
-  //   const classes = useStyles({});
+interface IProps {
+  userData: any;
+  eventData?: any;
+  artistsData?: any;
+  ticketsData?: any;
+}
+
+const AddEvent = (props: IProps) => {
+  const [eventId, setEventId] = useState();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const [skipped, setSkipped] = useState(new Set<number>());
@@ -86,6 +99,7 @@ const AddEvent = (props: { userData: any }) => {
   // 1. Info
   const [infoSubmit, setInfoSubmit] = useState<boolean>(false);
   const [infoData, setInfoData] = useState({
+    id: null,
     name: "",
     imgData: "",
     category: "",
@@ -106,6 +120,7 @@ const AddEvent = (props: { userData: any }) => {
 
   // 2. Artists
   const [listOfArtists, setListOfArtists] = useState([]);
+  const [listOfRiders, setListOfRiders] = useState([]);
 
   // 3. Tickets
   const [listOfTickets, setListOfTickets] = useState([]);
@@ -118,7 +133,12 @@ const AddEvent = (props: { userData: any }) => {
   const [listOfAttachmentsRights, setListOfAttachmentsRights] = useState([]);
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
-  const artistProps = { listOfArtists, setListOfArtists };
+  const artistProps = {
+    listOfArtists,
+    setListOfArtists,
+    listOfRiders,
+    setListOfRiders
+  };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
   const attachmentProps = {
@@ -129,6 +149,62 @@ const AddEvent = (props: { userData: any }) => {
     listOfAttachmentsRights,
     setListOfAttachmentsRights
   };
+
+  useEffect(() => {
+    if (props.eventData) {
+      // Convert date string to Date object
+      const dateFrom: Date = moment(
+        props.eventData.from_date,
+        "DD-MM-YYYY HH:mm"
+      ).toDate();
+      const dateTo: Date = moment(
+        props.eventData.to_date,
+        "DD-MM-YYYY HH:mm"
+      ).toDate();
+
+      setEventId(props.eventData.event_id);
+
+      // Update infoData with data from props.eventData
+      setInfoData({
+        id: props.eventData.event_id,
+        name: props.eventData.name,
+        imgData: new Buffer(props.eventData.picture).toString("ascii"),
+        category: props.eventData.category,
+        location: props.eventData.address,
+        dateFrom: dateFrom,
+        dateTo: dateTo
+      });
+
+      setProgramText(props.eventData.information);
+
+      // Function for getting artists if it is not defined in props
+      const getArtists = async () => {
+        setListOfArtists(
+          await userService.getArtistsForEvent(props.eventData.event_id)
+        );
+      };
+
+      // Function for getting artists if it is not defined in props
+      const getTickets = async () => {
+        setListOfTickets(
+          await ticketService.getAllTicketsByEventId(props.eventData.event_id)
+        );
+      };
+
+      // Set artists data
+      if (props.artistsData) setListOfArtists(props.artistsData);
+      else getArtists();
+
+      // Set tickets data
+      if (props.ticketsData) setListOfTickets(props.ticketsData);
+      else getTickets();
+
+      // Set all, but last step in stepper, to completed
+      const newCompleted = new Set<number>();
+      for (let i = 0; i < steps.length - 1; i++) newCompleted.add(i);
+      setCompleted(newCompleted);
+    }
+  }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
 
   function getStepContent(step: number) {
     switch (step) {
@@ -182,7 +258,6 @@ const AddEvent = (props: { userData: any }) => {
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
-      console.log(infoData);
       setInfoSubmit(true);
       if (isInfoDataEmpty()) return;
     }
@@ -219,7 +294,7 @@ const AddEvent = (props: { userData: any }) => {
 
   const submit = async () => {
     let newEvent: Event = {
-      eventId: -1,
+      eventId: infoData.id || -1,
       name: infoData.name,
       organizer: props.userData.user_id,
       address: infoData.location,
@@ -241,13 +316,25 @@ const AddEvent = (props: { userData: any }) => {
     console.log(listOfAttachmentsRights)
 
     setLoading(true);
-    eventService.addEvent(newEvent).then(res => {
-      listOfTickets.forEach(ticket => {
-        ticket["event_id"] = res.insertId;
-        ticketService.addTickets(ticket);
-      });
-      listOfArtists.forEach(artist => {
-        eventService.addUserToEvent(artist.user_id, res.insertId);
+
+    // Event is already made, save changes
+    if (props.eventData) {
+      let res = await eventService.updateEvent(newEvent);
+      console.log("res", res);
+      checkResponse(res);
+
+      // Make new event
+    } else {
+      eventService.addEvent(newEvent).then(res => {
+        listOfTickets.forEach(ticket => {
+          ticket["event_id"] = res.insertId;
+          ticketService.addTickets(ticket);
+        });
+        listOfArtists.forEach(artist => {
+          eventService.addUserToEvent(artist.user_id, res.insertId);
+        });
+
+        checkResponse(res);
       });
       listOfAttachments.forEach(attachment => {
         attachment.event_id = res.insertId;
@@ -270,6 +357,17 @@ const AddEvent = (props: { userData: any }) => {
         setWarningText("Det skjedde noe feil. Prøv igjen");
       }
     });
+    }
+  };
+
+  const checkResponse = (res: any) => {
+    if (res) {
+      setLoading(false);
+      setUploaded(true);
+    } else {
+      setLoading(false);
+      setWarningText("Det skjedde noe feil. Prøv igjen");
+    }
   };
 
   const handleReset = () => {
@@ -287,6 +385,7 @@ const AddEvent = (props: { userData: any }) => {
         completed={completed}
         handleStep={handleStep}
         loading={loading}
+        uploaded={uploaded}
       />
 
       <Wrapper>
@@ -294,8 +393,18 @@ const AddEvent = (props: { userData: any }) => {
           <div>
             {uploaded && (
               <>
-                <Success />
-                <Button onClick={handleReset}>Nytt arrangement</Button>
+                <Success
+                  title={
+                    props.eventData
+                      ? "Endringer lagret"
+                      : "Arrangement lagt til"
+                  }
+                />
+                <BtnWrapper>
+                  <Btn onClick={handleReset} to={"/event/" + eventId}>
+                    Gå til arrangement
+                  </Btn>
+                </BtnWrapper>
               </>
             )}
             {loading ? (
@@ -310,21 +419,29 @@ const AddEvent = (props: { userData: any }) => {
                 {!uploaded && (
                   <LinkWrapper>
                     <Button
-                      disabled={activeStep === 0 || loading}
+                      disabled={activeStep === 0 || loading || uploaded}
                       onClick={handleBack}
                     >
                       Tilbake
                     </Button>
 
-                    {completedSteps() === totalSteps() - 1 ? (
+                    {completedSteps() === totalSteps() ||
+                    activeStep === totalSteps() - 1 ||
+                    props.eventData ? (
                       <Button
                         disabled={
-                          completedSteps() !== totalSteps() - 1 || loading
+                          props.eventData
+                            ? false
+                            : completedSteps() !== totalSteps() - 1 ||
+                              loading ||
+                              uploaded
                         }
                         color="primary"
                         onClick={submit}
                       >
-                        Legg til arrangement
+                        {props.eventData
+                          ? "Lagre endringer"
+                          : "Legg til arrangement"}
                       </Button>
                     ) : (
                       <Button color="primary" onClick={handleNext}>
@@ -335,6 +452,8 @@ const AddEvent = (props: { userData: any }) => {
                 )}
               </>
             )}
+
+            {/* {props.eventData && <Btn onClick={submit}>LAGRE ENDRINGER</Btn>} */}
           </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>

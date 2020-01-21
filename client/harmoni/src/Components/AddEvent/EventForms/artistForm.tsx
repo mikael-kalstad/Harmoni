@@ -17,6 +17,19 @@ interface IUser {
   type: string;
   picture: string;
 }
+interface IRider {
+  riderId: number;
+  text: string;
+}
+interface IRiderList {
+  riderListId: number;
+  userId: number;
+  eventId: number;
+  riderId: number;
+  text: string;
+  quantity;
+  number;
+}
 
 const LoadingWrapper = styled.div`
   display: grid;
@@ -47,10 +60,10 @@ const Text = styled.p`
   font-weight: 400;
   color: #777777;
 `;
-
+var tempId = 1;
 const ArtistForm = (props: any) => {
   const [userData, setUserData] = useState<IUser[]>();
-
+  let typeahead;
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -63,6 +76,7 @@ const ArtistForm = (props: any) => {
     if (s[0] != null) {
       let checker = props.listOfArtists.includes(s[0].user);
       if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
+      typeahead.clear();
     }
   };
 
@@ -84,24 +98,30 @@ const ArtistForm = (props: any) => {
         </Text>
         <UnderTitle>Legg til artister:</UnderTitle>
         <Typeahead
+          id="typeahead"
           labelKey={artistName => `${artistName.user.name}`}
           options={userData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
-          // onPaginate={() => console.log("clicked on name!")}
           placeholder="Søk etter artister..."
-          //selected={props.userData}
+          selected={props.userData}
+          ref={elem => (typeahead = elem)}
         />
 
         {props.listOfArtists && props.listOfArtists.length !== 0 && (
           <UnderTitle>Artistliste:</UnderTitle>
         )}
 
-        <ListGroup>
-          {props.listOfArtists &&
-            props.listOfArtists.map(u => (
-              <ArtistCard user={u} remove={deleteArtist} />
-            ))}
-        </ListGroup>
+        {props.listOfArtists &&
+          props.listOfArtists.map(u => (
+            <ListGroup key={u.email}>
+              <ArtistCard
+                user={u}
+                remove={deleteArtist}
+                riderText={props.listOfRiders}
+                setRiderData={props.setListOfRiders}
+              />
+            </ListGroup>
+          ))}
       </>
     );
   }

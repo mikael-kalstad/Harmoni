@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle } from "react-icons/fa";
 
-import { ticketService } from '../../services/TicketService';
+import { ticketService } from "../../services/TicketService";
 
-import TicketBar from './ticketBar';
-import TicketSummary from './ticketSummary';
-import Button from '../Button/button';
-import InfoDialog from '../infoDialog';
+import TicketBar from "./ticketBar";
+import TicketSummary from "./ticketSummary";
+import Button from "../Button/button";
+import InfoDialog from "../infoDialog";
 
 interface ITicket {
   ticket_id: number;
@@ -39,12 +39,12 @@ const NoTicketsAvailableText = styled.p`
 
 let checkCircleStyle = {
   fontSize: 120,
-  color: '#82c91e',
+  color: "#82c91e",
   marginTop: 50,
   marginBottom: 20
 };
 
-const TicketMenu = (props: { tickets: ITicket[] }) => {
+const TicketMenu = (props: { tickets: ITicket[]; canceled: boolean }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantities, setQuantities] = useState(
     new Array(props.tickets.length).fill(0)
@@ -53,22 +53,18 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
 
   const incrementQuantityOfTicket = (index: number, num: number) => {
     setQuantities(
-      quantities.map((val, i) => (i == index ? Math.max(val + num, 0) : val))
+      quantities.map((val, i) => (i === index ? Math.max(val + num, 0) : val))
     );
   };
 
   useEffect(() => {
-    updateTotalPrice();
-  }, quantities);
-
-  const updateTotalPrice = () => {
     setTotalPrice(
       props.tickets.reduce(
         (sum, ticket, i) => sum + ticket.price * quantities[i],
         0
       )
     );
-  };
+  }, [props.tickets, quantities]);
 
   const closeDialog = () => {
     setDisplayDialog(false);
@@ -82,7 +78,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
             ticket.ticket_id,
             quantities[i]
           )
-        : ''
+        : ""
     );
     setQuantities(quantities.map(q => 0));
   };
@@ -106,6 +102,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
               price={ticket.price}
               incrementFunction={incrementQuantityOfTicket}
               unavailable={ticket.available <= 0}
+              eventCanceled={props.canceled}
               key={ticket.type}
             />
           ))}
@@ -117,8 +114,8 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
                 totalPrice={totalPrice}
               />
               <TotalSumText>
-                Total pris:{' '}
-                <TotalSumValueText>{totalPrice + ',-'}</TotalSumValueText>
+                Total pris:{" "}
+                <TotalSumValueText>{totalPrice + ",-"}</TotalSumValueText>
               </TotalSumText>
             </>
           ) : (
@@ -127,7 +124,7 @@ const TicketMenu = (props: { tickets: ITicket[] }) => {
 
           <BuyButtonWrapper>
             <Button
-              backgroundColor={getTotalTickets() > 0 ? '#47BD29' : 'grey'}
+              backgroundColor={getTotalTickets() > 0 ? "#47BD29" : "grey"}
               dropShadow={true}
               onClick={buyTickets}
               disabled={!(getTotalTickets() > 0)}

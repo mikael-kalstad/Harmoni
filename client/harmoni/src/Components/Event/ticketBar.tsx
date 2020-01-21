@@ -51,6 +51,9 @@ const SoldOutText = styled.p`
   margin: 0;
   grid-column: 1 / span 3;
   justify-self: center;
+  @media screen and (max-width: 850px) {
+    font-size: 2.5vw;
+  }
 `;
 
 const FaIconStyle = {
@@ -65,18 +68,21 @@ interface TicketProps {
   price: number;
   incrementFunction: Function;
   unavailable: boolean;
+  eventCanceled: boolean;
 }
 
 const TicketBar = (props: TicketProps) => {
   return (
-    <Bar unavailable={props.unavailable}>
+    <Bar unavailable={props.unavailable || props.eventCanceled}>
       <NameText>{props.type}</NameText>
-      <PriceText unavailable={props.unavailable}>
+      <PriceText unavailable={props.unavailable || props.eventCanceled}>
         {props.price + ',-'}
       </PriceText>
-      {props.unavailable ? (
+      {props.unavailable || props.eventCanceled ? (
         <QuantityGrid>
-          <SoldOutText>Utsolgt</SoldOutText>
+          <SoldOutText>
+            {props.eventCanceled ? 'Utilgjengelig' : 'Utsolgt'}
+          </SoldOutText>
         </QuantityGrid>
       ) : (
         <QuantityGrid>

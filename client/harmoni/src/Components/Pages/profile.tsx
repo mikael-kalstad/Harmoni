@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 
 import ProfilePageImage from '../Profile/profilePageImage';
 import ProfileOptions from '../Profile/profileOptions';
-import ArrangementGrid from '../arrangementGrid';
+import EventGrid from '../eventGrid';
 import { eventService } from '../../services/EventService';
+import EventCalendar from '../eventCalendar';
 
 const Wrapper = styled.div`
   position: relative;
@@ -52,6 +53,23 @@ const AddBtn = styled.div`
     }
 `;
 
+const CalenderWrapper = styled.div`
+  width: 80%;
+  margin: 30px auto;
+`;
+
+const Title = styled.h2`
+  font-weight: 500;
+  font-size: 36px;
+  margin: 70px 20px;
+  width: 60%;
+  max-width: 100%;
+
+  ::first-letter {
+    text-transform: uppercase;
+  }
+`;
+
 const BtnIcon = styled.img`
   height: 40%;
   filter: invert(100%);
@@ -62,25 +80,34 @@ const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
 
   useEffect(() => {
-    getEvents();
-  }, []);
+    console.log('id', props.userData.user_id);
+    const getEvents = async () => {
+      setEvents(
+        await eventService.getEventsByOrganizer(props.userData.user_id)
+      );
+    };
 
-  const getEvents = async () => {
-    setEvents(await eventService.getEventsByOrganizer(props.userData.user_id));
-  };
+    getEvents();
+  }, [props.userData]);
+
+  console.log(events);
 
   return (
     <>
       <Wrapper>
         <ProfileOptions />
+
         <ProfilePageImage
-          picture={new Buffer(props.userData.picture, 'base64').toString(
-            'ascii'
-          )}
+          picture={
+            props.userData.picture
+              ? new Buffer(props.userData.picture, 'base64').toString('ascii')
+              : ''
+          }
           name={props.userData.name}
           type={props.userData.type}
         />
-        {props.userData.type == 'organizer' ? (
+
+        {props.userData.type === 'organizer' ? (
           <StyledLink to="/newEvent">
             <AddBtn>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -92,7 +119,24 @@ const Profile = (props: { userData: any }) => {
         )}
       </Wrapper>
 
-      <ArrangementGrid data={events} title="Mine arrangementer" />
+      <EventGrid
+        eventInProfile={true}
+        emptyText="Du har ingen kommende arrangementer"
+        data={events && events.filter(e => e.status === 0)}
+        title="Mine arrangementer"
+      />
+
+      <EventGrid
+        eventInProfile={true}
+        emptyText="Du har ingen arkiverte arrangementer"
+        data={events && events.filter(e => e.status === 1)}
+        title="Arkiverte arrangementer"
+      />
+
+      <CalenderWrapper>
+        <Title>Kalender</Title>
+        <EventCalendar data={events} />
+      </CalenderWrapper>
     </>
   );
 };

@@ -15,6 +15,7 @@ import Event from "./Components/Pages/eventPage";
 import PageNotFound from "./Components/Pages/pageNotFound";
 import Layout from "./Components/layout";
 import AddEvent from "./Components/AddEvent/addEvent";
+import EventDetails from "./Components/Pages/eventDetails";
 import SearchEvents from "./Components/Pages/searchPage";
 
 // Authentication component
@@ -43,7 +44,7 @@ const App: React.FC = () => {
   };
 
   const logIn = async (email: string) => {
-    let res = await userService.getUserByEMail(email);
+    let res = await userService.getUserAllInfoByEMail(email);
     setUserData(res[0]);
   };
 
@@ -63,7 +64,6 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      {console.log("user data", userData)}
       <Layout userData={userData} logOut={logOut} logIn={logIn}>
         <Switch>
           <Route path="/upload">
@@ -77,17 +77,23 @@ const App: React.FC = () => {
           />
           <Route exact path="/events/:type" component={Events} />
           <Route exact path="/event/:id" component={Event} />
-          <Route
+          <RouteWithAuth
             exact
             path="/newEvent"
-            render={props => <AddEvent userData={userData} />}
+            render={props => <AddEvent {...props} userData={userData} />}
+          />
+
+          <RouteWithAuth
+            exact
+            path="/event/details/:id"
+            render={props => <EventDetails {...props} userData={userData} />}
           />
 
           {/* ROUTES WITH AUTHENTICATION */}
           <RouteWithAuth
             exact
             path="/profile/change"
-            render={props => <Register userData={userData} />}
+            render={props => <Register userData={userData} logIn={logIn} />}
           />
           <RouteWithAuth
             exact

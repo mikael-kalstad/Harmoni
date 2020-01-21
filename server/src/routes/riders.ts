@@ -15,8 +15,8 @@ router.post("/authorized/riders", async (request, response) => {
 })
 
 // Add rider list
-router.post("/authorized/riders/riderlist/:user_id&:event_id", async (request, response) => {
-    dao.addRiderList(request.body,(status, data) => {
+router.post("/authorized/riders/riderlist/:event_id", async (request, response) => {
+    dao.addRiderList(request.body.eventId,request.body.userId,request.body.riderId, request.body.text, request.body.quantity ,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
@@ -42,8 +42,9 @@ router.get("/authorized/riders/riderlist/:event_id", async (request, response) =
     });
 })
 
+
 // Get all riders of user in event 
-router.get("/authorized/riders/riderlist/:user_id&:event_id", async (request, response) => {
+router.get("/authorized/riders/riderlist/:event_id/:user_id", async (request, response) => {
     dao.getRiderByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });

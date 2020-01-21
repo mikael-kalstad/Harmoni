@@ -31,10 +31,11 @@ CREATE TABLE IF NOT EXISTS event (
   from_date DATETIME NOT NULL,
   to_date DATETIME NOT NULL,
   capacity INT NOT NULL,
-  status VARCHAR(45) NOT NULL,
+  status INT NOT NULL,
 information TEXT NOT NULL,
 category VARCHAR(45) NOT NULL,
 picture LONGBLOB NOT NULL,
+
   PRIMARY KEY (event_id),
 	FOREIGN KEY (organizer)
 	REFERENCES user (user_id)
@@ -59,9 +60,7 @@ CREATE TABLE IF NOT EXISTS user_event (
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;
  
- 
-
- 
+  
 CREATE TABLE IF NOT EXISTS rider (
   rider_id INT NOT NULL AUTO_INCREMENT,
   text VARCHAR(45) NOT NULL UNIQUE,
@@ -69,13 +68,12 @@ CREATE TABLE IF NOT EXISTS rider (
 ENGINE = InnoDB;
  
  
-
- 
 CREATE TABLE IF NOT EXISTS rider_list (
   rider_list_id INT NOT NULL AUTO_INCREMENT,
   user_id INT,
   event_id INT,
   rider_id INT,
+  text VARCHAR(256),
   quantity INT,
     PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
@@ -143,13 +141,3 @@ CREATE TABLE IF NOT EXISTS attachment_user (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE)
 	ENGINE = InnoDB;
-
-
-
- 
- 
- 
-
-
-
-

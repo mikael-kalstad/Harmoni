@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 const Container = styled.div`
   display: grid;
   grid-template-columns: 80px auto;
-  padding: 10px;
+  padding: 5px;
+  margin-left: 10px;
   background: #f0f0f0;
   width: fit-content;
 
@@ -68,7 +69,7 @@ const SmallProfileNav = (props: { picture: any; name: string }) => (
   <StyledLink to="/profile">
     <Container>
       <Wrapper>
-        {props.picture && (
+        {props.picture && props.picture.data.length > 0 && (
           <Img src={new Buffer(props.picture, "base64").toString("ascii")} />
         )}
       </Wrapper>

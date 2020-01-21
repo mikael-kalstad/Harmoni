@@ -5,6 +5,14 @@ interface Rider {
   riderId: number;
   text: string;
 }
+interface RiderList {
+  riderListId:number;
+  userId:number;
+  eventId:number;
+  riderId:number;
+  text:string;
+  quantity;number;
+}
 
 export default class RiderService extends Service {
   getAllRiders() {
@@ -41,17 +49,19 @@ export default class RiderService extends Service {
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
-  getRiderByUserIdEvent(eventId: number, userId: number) {
+
+  getRiderByUserIdEventId(eventId: number, userId: number) {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/riders/riderlist/' + userId + '&' + eventId,
+      url: this.path + '/authorized/riders/riderlist/' + userId + '/' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
+
   addRider(rider: Rider) {
     updateToken();
     return axios({
@@ -85,14 +95,17 @@ export default class RiderService extends Service {
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
-  addRiderList(eventId: number, userId: number) {
+  addRiderList(eventId: number, userId: number, riderId:number,text:string, quantity:number) {
     updateToken();
     return axios({
-      method: 'get',
-      url: this.path + '/authorized/riders/riderlist/' + userId + '&' + eventId,
+      method: 'post',
+      url: this.path + '/authorized/riders/riderlist/'+eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
+      },
+      data:{
+        eventId:eventId, userId:userId, riderId:riderId, text:text, quantity:quantity
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }

@@ -68,7 +68,7 @@ router.post("/token", (req, res) => {
         newToken = jwt.sign({ email: decoded.email }, privateKey, {
           expiresIn: 1800
         });
-        dao.getUserByEMail(decoded.email, (status, data) => {
+        dao.getUserAllInfoByEMail(decoded.email, (status, data) => {
           let id = data[0] === undefined ? undefined : data[0];
           res.json({ jwt: newToken, userData: sanitizeUser(data[0]) });
         });
@@ -100,6 +100,7 @@ router.post("/register", (req, res) => {
         }
       });
     } else {
+      res.status(409);
       res.json({ error: "the user exists error code:" + status });
     }
   });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { FaRegFrownOpen } from 'react-icons/fa';
@@ -43,11 +43,12 @@ const TitleText = styled.p<ITitleText>`
   text-align: center;
   font-size: ${props => (props.empty ? '24px' : '18px')};
   color: grey;
+  margin: 0px 10px;
 `;
 
 const ArtistBar = styled.div`
   display: grid;
-  grid-template-columns: 30% auto;
+  grid-template-columns: 40% auto;
   align-items: center;
 `;
 
@@ -70,49 +71,47 @@ const ArtistNameText = styled.label`
   color: #434343;
 `;
 
-const FaIconStyle = {
-  fontSize: '120px',
-  color: 'grey'
-};
-
 /* Component for displaying a list of artists */
 /* Used in eventPage */
 const ArtistsList = (props: ArtistsListProps) => {
-  if (props.artists.length > 0) {
-    return (
-      <Wrapper empty={props.artists.length == 0}>
+  let FaIconStyle = {
+    fontSize: '15vw',
+    color: '#cccccc',
+    margin: '10px'
+  };
+  return props.artists.length > 0 ? (
+    <Wrapper empty={props.artists.length === 0}>
+      <ListGroup>
         {!props.hideTitle && (
-          <TitleText empty={props.artists.length == 0}>
-            Personer som skal opptre på dette arrangementet:
-          </TitleText>
+          <ListGroup.Item key={'title'}>
+            <TitleText empty={props.artists.length === 0}>
+              Personer som skal opptre på dette arrangementet
+            </TitleText>
+          </ListGroup.Item>
         )}
-        <ListGroup>
-          {props.artists.map(artist => {
-            return (
-              <ListGroup.Item key={artist.user_id}>
-                <ArtistBar>
-                  <ArtistImage
-                    src={new Buffer(artist.picture).toString('ascii')}
-                    alt={artist.name}
-                  />
-                  <ArtistNameText>{artist.name}</ArtistNameText>
-                </ArtistBar>
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
-      </Wrapper>
-    );
-  } else {
-    return (
-      <Wrapper empty={props.artists.length == 0}>
-        <FaRegFrownOpen style={FaIconStyle} />
-        <TitleText empty={props.artists.length == 0}>
-          Foreløpig er ingen personer knyttet til dette arrangementet
-        </TitleText>
-      </Wrapper>
-    );
-  }
+        {props.artists.map(artist => {
+          return (
+            <ListGroup.Item key={artist.user_id + Math.random()}>
+              <ArtistBar>
+                <ArtistImage
+                  src={new Buffer(artist.picture).toString('ascii')}
+                  alt={artist.name}
+                />
+                <ArtistNameText>{artist.name}</ArtistNameText>
+              </ArtistBar>
+            </ListGroup.Item>
+          );
+        })}
+      </ListGroup>
+    </Wrapper>
+  ) : (
+    <Wrapper empty={props.artists.length === 0}>
+      <FaRegFrownOpen style={FaIconStyle} />
+      <TitleText empty={props.artists.length === 0}>
+        Foreløpig er ingen personer knyttet til dette arrangementet
+      </TitleText>
+    </Wrapper>
+  );
 };
 
 export default ArtistsList;

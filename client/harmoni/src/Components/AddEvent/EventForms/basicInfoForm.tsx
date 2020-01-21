@@ -9,6 +9,10 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import ImageUpload from "../../Upload/imageUpload";
 
+import Map from "../../Event/map";
+
+import { geoService } from "../../../services/GeoService";
+
 const Title = styled.h2`
   font-size: 48px;
   font-weight: 500;
@@ -29,11 +33,21 @@ const inputStyle = {
   marginBottom: "25px"
 };
 
+const inputStyleLocationFound = Object.assign({}, inputStyle, {
+  border: "1px #2ecc71 solid",
+  borderRadius: "5px"
+});
+
 const WarningText = styled.p`
   margin: 30px 0;
   font-size: 16px;
   font-weight: 400;
   color: #d55951;
+`;
+
+const MapWrapper = styled.div`
+  width: 100%;
+  height: 200px;
 `;
 
 interface IProps {
@@ -44,9 +58,19 @@ interface IProps {
 }
 
 const BasicInfoForm = (props: IProps) => {
-  const types_translated = ["Konsert", "Festival", "Teater", "Standup"];
-  const types = ["concert", "festival", "theatre", "standup"];
+  const [coords, setCoords] = useState([-1000, -1000]);
+  const [fetchingCoords, setFetchingCoords] = useState(false);
+  const types_translated = [
+    "Konsert",
+    "Festival",
+    "Teater",
+    "Standup",
+    "Show",
+    "Annet"
+  ];
+  const types = ["concert", "festival", "theatre", "standup", "show", "other"];
 
+  let initialCoords = [-1000, -1000];
   let menuItems: JSX.Element[] = [];
 
   // Add menu items to dropdown list
@@ -57,6 +81,18 @@ const BasicInfoForm = (props: IProps) => {
       </MenuItem>
     );
   }
+
+  const fetchCoords = (address: string) => {
+    if (address.length > 0) {
+      setFetchingCoords(true);
+      geoService.getLatAndLndOfAddress(address).then(data => {
+        setCoords(data);
+        setFetchingCoords(false);
+      });
+    } else {
+      setCoords(initialCoords);
+    }
+  };
 
   return (
     <>
@@ -70,16 +106,22 @@ const BasicInfoForm = (props: IProps) => {
         helperText={
           props.infoSubmit && props.infoData.name === ""
             ? "Navn er påkrevd"
-            : ""
+            : "Maks 45 karakterer"
         }
         value={props.infoData.name}
         onChange={e =>
-          props.setInfoData({ ...props.infoData, name: e.target.value })
+          e.target.value.length <= 45
+            ? props.setInfoData({ ...props.infoData, name: e.target.value })
+            : null
         }
       />
 
       <UnderTitle>Bilde</UnderTitle>
       <ImageUpload
+        picture={
+          props.infoData.imgData &&
+          new Buffer(props.infoData.imgData).toString("ascii")
+        }
         setImgData={data =>
           props.setInfoData({ ...props.infoData, imgData: data })
         }
@@ -97,9 +139,14 @@ const BasicInfoForm = (props: IProps) => {
           value={props.infoData.category}
           labelWidth={300}
           style={inputStyle}
-          onChange={(e: any) => {
-            props.setInfoData({ ...props.infoData, category: e.target.value });
-          }}
+          onChange={(e: any) =>
+            e.target.value.length <= 45
+              ? props.setInfoData({
+                  ...props.infoData,
+                  category: e.target.value
+                })
+              : null
+          }
         >
           {menuItems}
         </Select>
@@ -110,20 +157,39 @@ const BasicInfoForm = (props: IProps) => {
 
       <UnderTitle>Lokasjon*</UnderTitle>
       <TextField
-        style={inputStyle}
+        style={
+          coords.length > 0 && coords[0] !== -1000 && !fetchingCoords
+            ? inputStyleLocationFound
+            : inputStyle
+        }
         variant="outlined"
-        placeholder="Lokasjon"
+        placeholder="Lokasjon (Maks 45 karakterer)"
         value={props.infoData.location}
-        error={props.infoSubmit && props.infoData.location === ""}
+        error={
+          (coords.length === 0 && !fetchingCoords) ||
+          (props.infoSubmit && props.infoData.location === "")
+        }
         helperText={
           props.infoSubmit && props.infoData.location === ""
             ? "Lokasjon er påkrevd"
-            : ""
+            : fetchingCoords
+            ? "Vennligst vent..."
+            : coords.length > 0
+            ? ""
+            : "Lokasjonen ble ikke funnet"
         }
-        onChange={e => {
-          props.setInfoData({ ...props.infoData, location: e.target.value });
-        }}
+        onChange={e =>
+          e.target.value.length <= 45
+            ? props.setInfoData({ ...props.infoData, location: e.target.value })
+            : null
+        }
+        onBlur={e => fetchCoords(e.target.value)}
       />
+      {coords.length > 0 && coords[1] !== -1000 && (
+        <MapWrapper>
+          <Map coords={{ lat: coords[0], lng: coords[1] }} zoom={12} />
+        </MapWrapper>
+      )}
 
       <UnderTitle>Dato og tid*</UnderTitle>
       <MiniTitle>Fra</MiniTitle>

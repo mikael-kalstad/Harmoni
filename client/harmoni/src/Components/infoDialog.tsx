@@ -1,7 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-
-import { FaTimes } from 'react-icons/fa';
+import React from "react";
+import styled from "styled-components";
 
 const Overlay = styled.div`
   position: fixed;
@@ -34,15 +32,6 @@ const DialogBox = styled.div<IDialogBox>`
   grid-template-rows: 60px auto 70px;
   align-items: center;
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
-`;
-
-const CloseButton = styled.button`
-  justify-self: end;
-  height: 15px;
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  cursor: pointer;
 `;
 
 const Exit = styled.img`
