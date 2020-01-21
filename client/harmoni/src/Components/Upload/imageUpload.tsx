@@ -16,7 +16,11 @@ const Input = styled.input`
   z-index: -1;
 `;
 
-const ImgWrapper = styled.div`
+interface IImgWrapper {
+  error: boolean;
+}
+
+const ImgWrapper = styled.div<IImgWrapper>`
   width: 400px;
   height: 200px;
   background: #f0f0f0;
@@ -25,6 +29,7 @@ const ImgWrapper = styled.div`
   justify-items: center;
   cursor: pointer;
   border-radius: 5px;
+  border: ${props => props.error && "1px solid #d45951"};
 
   :hover {
     filter: brightness(95%);
@@ -94,7 +99,7 @@ const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
           onChange={e => handleChange(e)}
         />
         <label htmlFor="text-button-file">
-          <ImgWrapper>
+          <ImgWrapper error={warning}>
             {imgLink || props.picture ? (
               <ImagePreview src={imgLink || props.picture} />
             ) : loading ? (

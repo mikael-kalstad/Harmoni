@@ -2,7 +2,7 @@ INSERT INTO user VALUES(default, 'Hans Hansen', 'hans@hansen.com', default, 'dfg
  
 INSERT INTO user VALUES(default, 'Roy Narvestad', 'roy@hotmail.com', default, 'qwertyuty', 'cbnmnnm', 'organizer', default);
  
-INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', default, 'dfghjkfghjkfghjk', 'zxcvbnmxcvb', 'artist', default);
+INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', 1881, 'dfghjkfghjkfghjk', 'zxcvbnmxcvb', 'artist', default);
  
 INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 'ajjjajajjjjs', 'uriueriueriei', 'volunteer', default);
  

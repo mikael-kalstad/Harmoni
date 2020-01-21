@@ -117,6 +117,7 @@ const AddEvent = (props: IProps) => {
 
   // 2. Artists
   const [listOfArtists, setListOfArtists] = useState([]);
+  const [listOfRiders, setListOfRiders] = useState([]);
 
   // 3. Tickets
   const [listOfTickets, setListOfTickets] = useState([]);
@@ -125,7 +126,12 @@ const AddEvent = (props: IProps) => {
   const [programText, setProgramText] = useState("");
 
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
-  const artistProps = { listOfArtists, setListOfArtists };
+  const artistProps = {
+    listOfArtists,
+    setListOfArtists,
+    listOfRiders,
+    setListOfRiders
+  };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
 
@@ -380,12 +386,15 @@ const AddEvent = (props: IProps) => {
                     </Button>
 
                     {completedSteps() === totalSteps() ||
-                    activeStep === totalSteps() - 1 ? (
+                    activeStep === totalSteps() - 1 ||
+                    props.eventData ? (
                       <Button
                         disabled={
-                          completedSteps() !== totalSteps() - 1 ||
-                          loading ||
-                          uploaded
+                          props.eventData
+                            ? false
+                            : completedSteps() !== totalSteps() - 1 ||
+                              loading ||
+                              uploaded
                         }
                         color="primary"
                         onClick={submit}
@@ -403,6 +412,8 @@ const AddEvent = (props: IProps) => {
                 )}
               </>
             )}
+
+            {/* {props.eventData && <Btn onClick={submit}>LAGRE ENDRINGER</Btn>} */}
           </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>

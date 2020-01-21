@@ -25,8 +25,20 @@ export default class eventDao extends daoParentEvent {
         'status, information, category, picture, ' +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        'FROM event',
+        'FROM event ORDER BY from_date DESC LIMIT 20',
       [],
+      callback
+    );
+  }
+
+  getAllEventsWithOffset(offset: number, callback) {
+    super.query(
+      'SELECT event_id, organizer, name, address, capacity, ' +
+        'status, information, category, picture, ' +
+        'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
+        'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
+        'FROM event ORDER BY from_date DESC LIMIT 20 OFFSET ?',
+      [offset],
       callback
     );
   }
@@ -97,7 +109,7 @@ export default class eventDao extends daoParentEvent {
         'status, information, category, picture, ' +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        'FROM event WHERE category = ?',
+        'FROM event WHERE category = ? ORDER BY from_date DESC LIMIT 20',
       [category],
       callback
     );
@@ -130,13 +142,13 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
-    getUserEvent(userId: number, eventId: number, callback) {
-        super.query(
-            'SELECT * from user_event WHERE user_id=? AND event_id=?',
-            [userId, eventId],
-            callback
-        );
-    }
+  getUserEvent(userId: number, eventId: number, callback) {
+    super.query(
+      'SELECT * from user_event WHERE user_id=? AND event_id=?',
+      [userId, eventId],
+      callback
+    );
+  }
 
   removeUserFromEvent(userId: number, eventId: number, callback) {
     super.query(
@@ -145,10 +157,12 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
-  getUsersOfEventByType(eventId:number,type:string, callback){
-      super.query('SELECT DISTINCT user_event.user_id FROM user_event, user where user.type=? AND user_event.event_id=?',
-          [type,eventId],
-          callback);
+  getUsersOfEventByType(eventId: number, type: string, callback) {
+    super.query(
+      'SELECT DISTINCT user_event.user_id FROM user_event, user where user.type=? AND user_event.event_id=?',
+      [type, eventId],
+      callback
+    );
   }
 
   updateEvent(eventId: number, data: event, callback) {
@@ -186,7 +200,11 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
-  changeStatus(eventId:number,status:string,callback){
-      super.query('UPDATE event SET status=? WHERE event_id=?',[status,eventId],callback);
+  changeStatus(eventId: number, status: string, callback) {
+    super.query(
+      'UPDATE event SET status=? WHERE event_id=?',
+      [status, eventId],
+      callback
+    );
   }
 }

@@ -51,6 +51,9 @@ const SoldOutText = styled.p`
   margin: 0;
   grid-column: 1 / span 3;
   justify-self: center;
+  @media screen and (max-width: 850px) {
+    font-size: 2.5vw;
+  }
 `;
 
 const FaIconStyle = {

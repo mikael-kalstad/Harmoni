@@ -2,12 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Calendar, momentLocalizer} from 'react-big-calendar';
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-    margin: 10vh;
-    margin-top: 0vh;
-`;
+import {useHistory} from "react-router-dom";
+import Loading from "./loading";
 
 const localizer = momentLocalizer(moment);
 
@@ -15,10 +11,12 @@ interface DateEvent {
     start: Date;
     end: Date;
     title: string;
-    resource?: any,
+    id?: number,
 }
 
 const EventCalendar = (props: any) => {
+
+    const history = useHistory();
 
     const [events, setEvents] = useState<DateEvent[]>([]);
 
@@ -30,7 +28,7 @@ const EventCalendar = (props: any) => {
                         start: moment(e.from_date, 'DD-MM-YYYY HH:mm').toDate(),
                         end: moment(e.to_date, 'DD-MM-YYYY HH:mm').toDate(),
                         title: e.name,
-                        resource: e
+                        id: e.event_id
                     }
                 }
             );
@@ -38,25 +36,28 @@ const EventCalendar = (props: any) => {
         }
     }, [props.data]);
 
-    if (props.data) {
-        return (
-            <Wrapper>
-                <Calendar
-                    localizer={localizer}
-                    defaultDate={new Date()}
-                    defaultView="month"
-                    events={events}
-                    style={{height: "80vh", maxWidth: "100vh"}}
-                    views={['month']}
-                    //toolbar={false}
-                    onDoubleClickEvent={e => console.log(e)}
-                />
-            </Wrapper>
-        );
-    } else {
-        return <></>
+    function handleDoubleClick(e : any) {
+        if(e.id) {
+            history.push('/event/details/'+e.id);
+            window.scrollTo(0, 0);
+        }
     }
 
+  if (props.data) {
+    return (
+      <Calendar
+        localizer={localizer}
+        defaultDate={new Date()}
+        defaultView="month"
+        events={events}
+        style={{ height: "80vh", maxWidth: "100vh" }}
+        views={["month"]}
+        //toolbar={false}
+        onDoubleClickEvent={e => handleDoubleClick(e)}
+      />
+    );
+  }
+  return <Loading />;
 };
 
 export default EventCalendar;

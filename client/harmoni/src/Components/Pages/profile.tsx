@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import ProfilePageImage from "../Profile/profilePageImage";
-import ProfileOptions from "../Profile/profileOptions";
-import EventGrid from "../eventGrid";
-import { eventService } from "../../services/EventService";
-import EventCalendar from "../eventCalendar";
+import ProfilePageImage from '../Profile/profilePageImage';
+import ProfileOptions from '../Profile/profileOptions';
+import EventGrid from '../eventGrid';
+import { eventService } from '../../services/EventService';
+import EventCalendar from '../eventCalendar';
 
 const Wrapper = styled.div`
   position: relative;
@@ -53,6 +53,23 @@ const AddBtn = styled.div`
     }
 `;
 
+const CalenderWrapper = styled.div`
+  width: 80%;
+  margin: 30px auto;
+`;
+
+const Title = styled.h2`
+  font-weight: 500;
+  font-size: 36px;
+  margin: 70px 20px;
+  width: 60%;
+  max-width: 100%;
+
+  ::first-letter {
+    text-transform: uppercase;
+  }
+`;
+
 const BtnIcon = styled.img`
   height: 40%;
   filter: invert(100%);
@@ -63,12 +80,17 @@ const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
 
   useEffect(() => {
+    console.log('id', props.userData.user_id);
     const getEvents = async () => {
-      setEvents(await eventService.getEventsByUser(props.userData.user_id));
+      setEvents(
+        await eventService.getEventsByOrganizer(props.userData.user_id)
+      );
     };
 
     getEvents();
   }, [props.userData]);
+
+  console.log(events);
 
   return (
     <>
@@ -110,7 +132,11 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
-      <EventCalendar data={events}/>
+
+      <CalenderWrapper>
+        <Title>Kalender</Title>
+        <EventCalendar data={events} />
+      </CalenderWrapper>
     </>
   );
 };
