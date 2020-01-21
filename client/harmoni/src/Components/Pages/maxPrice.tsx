@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {searchService} from "../../services/SearchService";
-import ArrangementGrid from "../arrangementGrid";
+import ArrangementGrid from "../eventGrid";
 import {IEvent} from "./eventPage";
 import styled from "styled-components";
 
