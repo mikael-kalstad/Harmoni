@@ -19,9 +19,11 @@ import EventDetails from "./Components/Pages/eventDetails";
 import SearchEvents from "./Components/Pages/searchPage";
 
 // Authentication component
-import Authenticate from "./Components/authenticate";
-import ForgotPassword from "./Components/Pages/forgotPasswordPage";
-import ResetPassword from "./Components/Pages/resetPassword";
+import Authenticate from './Components/authenticate';
+import ForgotPassword from './Components/Pages/forgotPasswordPage';
+import ResetPassword from './Components/Pages/resetPassword';
+import MinPrice from "./Components/Pages/minPricePage";
+import MaxPrice from "./Components/Pages/maxPrice";
 import AttachmentForm from "./Components/AddEvent/EventForms/attachmentForm";
 
 const App: React.FC = () => {
@@ -108,7 +110,8 @@ const App: React.FC = () => {
           />
 
           <Route path="/search/" component={SearchEvents} />
-
+          <Route path="/sort/events/cheapest" component={MinPrice} />
+          <Route path="/sorts/events/most-expensive" component={MaxPrice} />
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
           <Route component={PageNotFound} />
         </Switch>
