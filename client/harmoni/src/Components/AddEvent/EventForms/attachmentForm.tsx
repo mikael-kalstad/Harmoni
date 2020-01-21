@@ -10,6 +10,15 @@ import { attachmentService } from "../../../services/AttachmentService";
 import { isNullOrUndefined } from "util";
 import AttachmentList from "../../Event/attachmentList";
 
+interface IWrapper {
+  empty: boolean;
+}
+
+interface userRight {
+  users: IUser[];
+  attachment: attachment;
+}
+
 interface attachment {
   attachment_id: number;
   user_id: number;
@@ -30,15 +39,31 @@ interface IUser {
   picture: string;
 }
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 40% auto;
+const Wrapper = styled.div<IWrapper>`
+  border: ${props => (props.empty ? "dashed 3px #bbbbbb" : "none")};
+  height: 100%;
+  border-radius: 10px;
+  /* padding: 10px; */
+  ${props => (props.empty ? "display: grid" : "")}
+  ${props =>
+    props.empty ? "grid-template-rows: 5fr 3fr" : ""}
   align-items: center;
+  justify-items: center;
 `;
 
 const DelBtn = styled.img`
   cursor: pointer;
   height: 30%;
+  margin-left: 10px;
+`;
+
+const Input = styled.input`
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 `;
 
 const LoadingWrapper = styled.div`
@@ -71,31 +96,86 @@ const Text = styled.p`
   color: #777777;
 `;
 
+const FilenameText = styled.label`
+  font-family: Arial;
+  font-size: 20px;
+  margin: 0;
+  justify-self: start;
+  font-weight: bold;
+  color: #434343;
+`;
+
+const FileUploadWrapper = styled.div`
+  width: 400px;
+  height: 200px;
+  background: #f0f0f0;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  cursor: pointer;
+  border-radius: 5px;
+
+  :hover {
+    filter: brightness(95%);
+  }
+
+  :active {
+    filter: brightness(98%);
+  }
+`;
+
 const AttachmentForm = (props: any) => {
   const [currAttachment, setCurrAttachment] = useState<attachment>(null);
   const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
   const [fileInputName, setFileInputName] = useState<string>("");
-  const [tempAttachmentRights, setTempAttachmentRights] = useState([]);
+  const [tempAttachmentRights, setTempAttachmentRights] = useState<userRight>({
+    users: [],
+    attachment: null
+  });
 
   const [listOfArtists, setListOfArtists] = useState<IUser[]>([]);
 
   useEffect(() => {
     setListOfArtists(props.listOfArtists);
-    console.log(listOfArtists);
-  }, []);
+  }, [tempAttachmentRights]);
+
+  const removeUserTemp = (attachment, user) => () => {
+    let userRight = {
+      user: user,
+      attachment: attachment
+    };
+    console.log(userRight);
+
+    //Remove the user from the access list
+    let files = tempAttachmentRights.users.filter(e => {
+      console.log(e);
+      return e.user_id != user.user_id;
+    });
+    tempAttachmentRights.users = files;
+    setTempAttachmentRights(tempAttachmentRights);
+  };
+
+  const removeFileTemp = attachment => () => {
+    setTempAttachmentRights({
+      users: [],
+      attachment: null
+    });
+    setCurrAttachment(null);
+    setFileInputName("");
+  };
 
   //Add attachment and all the assosiated user-rights.
   const addAttachment = (file: attachment) => {
     if (!file)
       console.log("File is undefined or null, button should be disabled");
-    let exists = props.listOfAttachments.includes(file);
+    let exists = props.listOfAttachments.some(e => e.filename == file.filename);
     if (!exists) {
       props.setListOfAttachments(array => [...array, file]);
       props.setListOfAttachmentsRights(array => [
         ...array,
         tempAttachmentRights
       ]);
-      setTempAttachmentRights([]);
+      setTempAttachmentRights({ users: [], attachment: null });
       setCurrAttachment(null);
     } else {
       //TODO: Display error
@@ -105,66 +185,70 @@ const AttachmentForm = (props: any) => {
     setFileInputName("");
   };
 
-  //Remove attachment and all assosiated user-rights for the attachment
-  const removeAttachment = file => {
-    if (file != null) {
-      props.setListOfAttachments(
-        props.listOfAttachments.filter(
-          e => e.filename !== file.filename && e.filesize == file.filesize
-        )
-      );
-    }
-  };
-
   const addUser = user => {
     let userRight = {
       user: user,
       attachment: currAttachment
     };
     if (user != null) {
-      let exists = tempAttachmentRights.some(
-        e =>
-          e.user.user_id == userRight.user.user_id &&
-          e.attachment.filename == userRight.attachment.filename
-      );
-      let array = tempAttachmentRights;
-      array.push(userRight);
-      if (!exists) setTempAttachmentRights(array);
+      let exists = tempAttachmentRights.users.some(e => {
+        return e.user_id == userRight.user.user_id;
+      });
+      console.log(exists ? "Exists!" : "Doesn't exist!");
+      if (!exists) {
+        let array = {
+          users: [],
+          attachment: null
+        };
+        array.users = tempAttachmentRights.users.map(e => e);
+        array.users.push(user);
+        array.attachment = currAttachment;
+        setTempAttachmentRights(array);
+      }
     }
   };
 
-  const removeUser = (attachment, user) => {
+  const removeUser = (attachment, user) => () => {
     let userRight = {
       user: user,
       attachment: attachment
     };
+    console.log(userRight);
 
     let indexOfFile;
     //Find the correct file
-    let files = props.listOfAttachmentsRights.map((e, i) => {
-        console.log(e);
-      return e.filter(
-        e => {
-            console.log(e);
-            return e.attachment.filename === userRight.attachment.filename
-        }
-      );
+    console.log(props.listOfAttachmentsRights);
+    let files = props.listOfAttachmentsRights.filter(e => {
+      console.log(e);
+      return e.attachment.filename === userRight.attachment.filename;
     });
 
     //Remove the user from the access list
-    files = files.filter(e => {
-        console.log(e);
-        return e.user_id != user.user_id
+    files[0].users = files[0].users.filter(e => {
+      console.log(e);
+      return e.user_id != user.user_id;
     });
     props.listOfAttachmentsRights[indexOfFile] = files;
     props.setListOfAttachmentsRights(array => [...array]);
   };
 
+  const removeFile = attachment => () => {
+    console.log("Removeing file: ", attachment);
+    let attachments = props.listOfAttachments;
+    attachments = attachments.filter(e => e.filename !== attachment.filename);
+    props.setListOfAttachments(attachments);
+    let attachmentRights = props.listOfAttachmentsRights;
+    attachmentRights = attachmentRights.filter(
+      e => e.attachment.filename !== attachment.filename
+    );
+    props.setListOfAttachmentsRights(attachmentRights);
+  };
+
   const getUsersforAttachment = attachment_filename => {
-    return props.listOfAttachmentsRights.filter(e => {
+    return props.listOfAttachmentsRights.find(e => {
       console.log(e);
       console.log(attachment_filename);
-      return attachment_filename == e[0].attachment.filename;
+      return attachment_filename == e.attachment.filename;
     });
   };
 
@@ -193,6 +277,10 @@ const AttachmentForm = (props: any) => {
       };
       console.log("The attachment: ", att);
       setCurrAttachment(att);
+      let tempRights = tempAttachmentRights;
+      tempRights.attachment = att;
+      setTempAttachmentRights(tempRights);
+      setFileInputName(filename);
     };
     reader.readAsBinaryString(e.target.files[0]);
     setReadyToUpload(true);
@@ -207,20 +295,20 @@ const AttachmentForm = (props: any) => {
       </Text>
       <UnderTitle>Legg til vedlegg:</UnderTitle>
       {/* Input type file, ListGroup with ArtistCards? */}
-      <Wrapper>
-        <input
-          style={{
-            borderRadius: "50px",
-            borderStyle: "solid",
-            margin: "10px"
-          }}
+      <Wrapper empty={false}>
+        <Input
           accept="*/*"
           id="attachment-upload"
           type="file"
           formEncType="multipart/form-data"
-          value={fileInputName}
           onChange={e => handleChange(e)}
+          name="file"
         />
+        <label htmlFor="attachment-upload">
+          <FileUploadWrapper>
+            <Text>{fileInputName ? fileInputName : "Velg fil"}</Text>
+          </FileUploadWrapper>
+        </label>
         <Title>Lesetilgang:</Title>
         <UnderTitle>Legg til brukere som skal ha tilgang</UnderTitle>
         {readyToUpload ? (
@@ -235,51 +323,85 @@ const AttachmentForm = (props: any) => {
               placeholder="Søk etter brukere..."
               emptyLabel="Du må legge til artister i steg 2."
             />
-            {tempAttachmentRights.map(e => {
-              /*               console.log(e);
-              console.log(e.user);
-              console.log(e.user.name);
-              console.log(props.listOfAttachmentsRights); */
-              return <Text key={e.user.user_id}>{e.user.name}</Text>;
-            })}
+            {currAttachment ? (
+              <ListGroup>
+                {[currAttachment].map(e => {
+                  console.log(e);
+                  let rights = tempAttachmentRights;
+                  console.log(rights);
+                  let RightsJSX = rights.users.map(data => {
+                    console.log(data);
+                    return (
+                      <>
+                        <ArtistCard
+                          user={data}
+                          remove={removeUserTemp(e, data)}
+                        />
+                      </>
+                    );
+                  });
+                  return (
+                    <div key={e.filename}>
+                      <div>
+                        <img
+                          width="55px"
+                          height="55px"
+                          src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
+                        />
+                        <FilenameText>{e.filename}</FilenameText>
+                        <DelBtn
+                          src="/icons/cross.svg"
+                          onClick={removeFileTemp(e)}
+                        />
+                      </div>
+                      <div>{RightsJSX}</div>
+                    </div>
+                  );
+                })}
+              </ListGroup>
+            ) : null}
           </>
         ) : null}
 
         <input
           type="submit"
-          value="Legg til"
+          value="Legg til vedlegg"
           disabled={!readyToUpload}
-          onClick={e => addAttachment(currAttachment)}
+          onClick={() => addAttachment(currAttachment)}
         />
       </Wrapper>
-      <UnderTitle>Vedleggsliste:</UnderTitle>
-      <ListGroup>
-        {props.listOfAttachments.map(e => {
-          let users = getUsersforAttachment(e.filename);
-          console.log(e);
-          let RightsJSX = users.map(data => {
-            console.log(data);
-            return data.map(e => {
-                console.log(e)
+      <Wrapper empty={props.listOfAttachments.length == 0}>
+        <UnderTitle>Vedleggsliste:</UnderTitle>
+        <ListGroup>
+          {props.listOfAttachments.map(e => {
+            let rights = getUsersforAttachment(e.filename);
+            console.log(e);
+            console.log(rights);
+            let RightsJSX = rights.users.map(data => {
+              console.log(data);
               return (
                 <>
-                  <Text>{e.user.name}</Text>
-                  <DelBtn
-                    src="/icons/cross.svg"
-                    onClick={() => removeUser(e, e.user)}
-                  />
+                  <ArtistCard user={data} remove={removeUser(e, data)} />
                 </>
               );
             });
-          });
-          return (
-            <div>
-              <Text>{e.filename}</Text>
-              <div>{RightsJSX}</div>
-            </div>
-          );
-        })}
-      </ListGroup>
+            return (
+              <div key={e.filename}>
+                <div>
+                  <img
+                    width="55px"
+                    height="55px"
+                    src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
+                  />
+                  <FilenameText>{e.filename}</FilenameText>
+                  <DelBtn src="/icons/cross.svg" onClick={removeFile(e)} />
+                </div>
+                <div>{RightsJSX}</div>
+              </div>
+            );
+          })}
+        </ListGroup>
+      </Wrapper>
     </>
   );
 };

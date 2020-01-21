@@ -40,6 +40,8 @@ export default class attachmentDao extends daoParentAttachment {
                 super.query('INSERT INTO attachment_user VALUES(?, ?)', [rows.insertId, data.body.user_id], () => { callback(status, rows) })
             }
         }
+        console.log(data);
+        data.body = JSON.parse(data.body);
         super.query("INSERT INTO attachment VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)",
             [data.body.event_id, data.body.user_id, data.attachment.data, data.attachment.filetype,
             data.attachment.filename, data.attachment.filesize], afterInsertEvent);

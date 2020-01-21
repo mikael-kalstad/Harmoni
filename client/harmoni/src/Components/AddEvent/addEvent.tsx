@@ -17,6 +17,7 @@ import { eventService } from "../../services/EventService";
 import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
 import AttachmentForm from "./EventForms/attachmentForm";
+import { attachmentService } from "../../services/AttachmentService";
 
 interface Event {
   eventId: number;
@@ -26,7 +27,7 @@ interface Event {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
   information: string;
   category: string;
   picture: string;
@@ -231,11 +232,13 @@ const AddEvent = (props: { userData: any }) => {
         .slice(0, 19)
         .replace("T", " "),
       capacity: 0,
-      status: "Kommende",
+      status: 0,
       information: programText,
       category: infoData.category,
       picture: infoData.imgData
     };
+
+    console.log(listOfAttachmentsRights)
 
     setLoading(true);
     eventService.addEvent(newEvent).then(res => {
@@ -245,6 +248,19 @@ const AddEvent = (props: { userData: any }) => {
       });
       listOfArtists.forEach(artist => {
         eventService.addUserToEvent(artist.user_id, res.insertId);
+      });
+      listOfAttachments.forEach(attachment => {
+        attachment.event_id = res.insertId;
+        attachment.user_id = props.userData.user_id;
+        attachmentService.addAttachment(attachment).then(response => {
+          listOfAttachmentsRights
+            .filter(e => e.attachment.filename == attachment.filename)
+            .forEach(e =>
+              e.users.forEach(e =>
+                attachmentService.addUserForAttachment(response.insertId, e.user_id)
+              )
+            );
+        });
       });
       if (res) {
         setLoading(false);
@@ -300,7 +316,7 @@ const AddEvent = (props: { userData: any }) => {
                       Tilbake
                     </Button>
 
-                    {completedSteps() === totalSteps() || activeStep === 4 ? (
+                    {completedSteps() === totalSteps() - 1 ? (
                       <Button
                         disabled={
                           completedSteps() !== totalSteps() - 1 || loading

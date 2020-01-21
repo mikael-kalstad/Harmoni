@@ -25,7 +25,7 @@ function checkIfAccessRights(user_id: number, attachment_id: number): Promise<bo
 // Routes to interact with attachments.
 
 // Create attachment
-router.post('/authorized/attachments/', upload.single("attachment"), async (request, response) => {
+router.post('/authorized/attachments/', upload.single("file"), async (request, response) => {
   var attachment =
   {
     data: request.file.buffer,
@@ -34,7 +34,8 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
     filetype: request.file.mimetype,
   }
   console.log("File: ", request.file)
-  dao.addAttachmentForUserForEvent({ body: request.body, attachment: attachment },
+  console.log(request.body)
+  dao.addAttachmentForUserForEvent({ body: request.body.data, attachment: attachment },
     (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     });
@@ -42,7 +43,7 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
 
 // Add user to attachment in attachment_user table i DB
 router.post(
-  '/authorized/attachments/attachment_user/:attachmentId/:userId',
+  '/authorized/attachments/attachment_user/:attachmentId&:userId',
   async (request, response) => {
     console.log("HERE!")
     checkIfAccessRights(parseInt(request.params.userId), parseInt(request.params.attachmentId)).then(valid => {

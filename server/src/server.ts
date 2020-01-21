@@ -7,7 +7,7 @@ const body_parser = require('body-parser');
 
 import { hash, compareHash } from './hashing'
 
-server.use(body_parser.json());
+server.use(body_parser.json({limit:"50mb"}));
 server.use(cors());
 
 server.use("/api/v0", require('./routes/authentication'));

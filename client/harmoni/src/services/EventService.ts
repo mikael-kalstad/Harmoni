@@ -10,7 +10,7 @@ interface Event {
   from_date: string;
   to_date: string;
   capacity: number;
-  status: string;
+  status: number;
 }
 
 class EventService extends Service {
