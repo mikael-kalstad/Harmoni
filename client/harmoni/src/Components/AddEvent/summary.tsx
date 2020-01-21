@@ -104,6 +104,7 @@ interface IProps {
   program: string;
   artists: any[];
   tickets: any[];
+  riders: any[];
 }
 
 const Summary = (props: IProps) => (
@@ -142,7 +143,11 @@ const Summary = (props: IProps) => (
     {!props.artists || props.artists.length === 0 ? (
       <Text>Ingen artister er valgt</Text>
     ) : (
-      <ArtistList hideTitle={true} artists={props.artists} />
+      <ArtistList
+        hideTitle={true}
+        artists={props.artists}
+        riderData={props.riders}
+      />
     )}
 
     <UnderTitle>Billetter:</UnderTitle>

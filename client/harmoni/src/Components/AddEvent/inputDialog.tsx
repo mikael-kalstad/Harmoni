@@ -56,6 +56,7 @@ interface IProps {
   inputValue?: string;
   btnText: string;
   placeholder: string;
+  disabled?: boolean;
 }
 
 // MATERIAL UI input style
@@ -94,9 +95,12 @@ const InputDialog = (props: IProps) => {
           }
           value={input || props.inputValue}
           onChange={e => setInput(e.target.value)}
+          disabled={props.disabled}
         />
 
-        <Button onClick={() => props.onClick(input)}>{props.btnText}</Button>
+        <Button disabled={props.disabled} onClick={() => props.onClick(input)}>
+          {props.btnText}
+        </Button>
       </DialogBox>
     </>
   );

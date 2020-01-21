@@ -1,3 +1,5 @@
+// Routes to interact with attachmentDao.
+
 import express from 'express';
 import attachmentDao from '../dao/attachmentDao';
 import { pool } from '../dao/database';
@@ -20,9 +22,6 @@ function checkIfAccessRights(user_id: number, attachment_id: number): Promise<bo
     })
   })
 }
-
-
-// Routes to interact with attachments.
 
 // Create attachment
 router.post('/authorized/attachments/', upload.single("attachment"), async (request, response) => {

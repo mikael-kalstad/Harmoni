@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do
+ * with User such get,create update...
+ */
 const daoParentUser = require("./dao");
 import { compareHash, hash } from "../hashing";
 //const User = require("./User.ts");
@@ -35,7 +39,7 @@ export default class userDao extends daoParentUser {
     );
   }
 
-  // Gets a user by its id
+  // Gets specific user given userId
   getUser(userId: number, callback) {
     super.query(
       "SELECT user_id, name, email, mobile, type, picture FROM user WHERE user_id = ?",
@@ -43,6 +47,7 @@ export default class userDao extends daoParentUser {
       callback
     );
   }
+
   // Gets a user by its name
   getUserByName(artistName: string, callback) {
     super.query(
@@ -59,16 +64,9 @@ export default class userDao extends daoParentUser {
       callback
     );
   }
-  /*
-  // Gets a user by its mail
-  getUserByEMail(email: string, callback) {
-    super.query(
-      "SELECT user_id, name, email FROM user WHERE email = ?",
-      [email],
-      callback
-    );
-  } */
-  getUserAllInfoByEMail(email: string, callback) {
+
+  // Gets specific user given email
+  getUserAllInfoByEMail(email: string, callback){
     super.query(
       "SELECT user_id, name, email, mobile, type, picture FROM user WHERE email = ?",
       [email],
@@ -97,7 +95,7 @@ export default class userDao extends daoParentUser {
   // Gets the organizer for an event
   getOrganizerForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
+      "SELECT user.user_id, user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
       [eventId],
       callback
     );
@@ -106,7 +104,7 @@ export default class userDao extends daoParentUser {
   // Gets all artists for an event
   getArtistsForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name, user.picture, user.email FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
+      "SELECT user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
       [eventId],
       callback
     );
@@ -165,6 +163,8 @@ export default class userDao extends daoParentUser {
       );
     });
   }
+
+  // Reset password for a user given email, used in forgotPassword
   resetPassword(email: string, data: user, callback) {
     let user;
     this.getHashOfUser(email, (status, olddata) => {
@@ -178,6 +178,8 @@ export default class userDao extends daoParentUser {
       );
     });
   }
+
+  // Change password for user given its email, used in edit profile
   changePassword(email: string, data, callback) {
     let user;
     this.getHashOfUser(email, (status, olddata) => {
@@ -199,6 +201,8 @@ export default class userDao extends daoParentUser {
       }
     });
   }
+
+  // Changes profile pic for a user given its id
   changePicture(userId: number, data, callback) {
     super.query(
       "UPDATE user SET  picture = ? WHERE user_id = ?",

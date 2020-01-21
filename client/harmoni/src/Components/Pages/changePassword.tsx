@@ -35,7 +35,7 @@ const inputStyle = {
   marginTop: "25px"
 };
 
-const ResetPassword = (props: any) => {
+const ChangePassword = (props: { userData?: any; logIn?: Function }) => {
   // Password is to short or input is empty
   const [passwordWarning, setPasswordWarning] = useState("");
   // Used to display error on empty input when submitting
@@ -72,13 +72,29 @@ const ResetPassword = (props: any) => {
   };
   return (
     <>
-      <Title>Reset passord</Title>
+      <Title>Endre passord</Title>
       <Container>
         <Text> Du kan registrere nytt passord her for å logge inn på</Text>
+        <p>Gammelt passord:</p>
         <TextField
           style={inputStyle}
           variant="outlined"
-          label="Skriv inn ditt nytt passord her"
+          label="Skriv inn ditt gamle passord her"
+          type="password"
+          error={(submit && passwordInput === "") || warningText !== ""}
+          helperText={
+            submit && passwordInput === "" ? "Passord er påkrevd" : ""
+          }
+          onChange={e => setPasswordInput(e.target.value)}
+          onKeyDown={e => checkForEnterKey(e)}
+        />
+        <br></br>
+        <br></br>
+        <p>Nytt passord:</p>
+        <TextField
+          style={inputStyle}
+          variant="outlined"
+          label="Skriv inn nytt passord her"
           type="password"
           error={(submit && passwordInput === "") || warningText !== ""}
           helperText={
@@ -107,12 +123,15 @@ const ResetPassword = (props: any) => {
 
         <BtnWrapper>
           <Button onClick={() => resetPassword(passwordInput, confirmPassword)}>
-            Reset passord
+            Endre passord
           </Button>
+        </BtnWrapper>
+        <BtnWrapper>
+          <Button onClick={() => setRedirect(true)}>Avbryt</Button>
         </BtnWrapper>
       </Container>
     </>
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;

@@ -18,6 +18,7 @@ import Success from "./success";
 import { eventService } from "../../services/EventService";
 import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
+import { riderService } from "../../services/RiderService";
 
 interface Event {
   eventId: number;
@@ -31,6 +32,12 @@ interface Event {
   information: string;
   category: string;
   picture: string;
+}
+
+interface Rider {
+  userId: number;
+  eventId: number;
+  text: string;
 }
 
 const BtnWrapper = styled.div`
@@ -75,6 +82,7 @@ interface IProps {
   eventData?: any;
   artistsData?: any;
   ticketsData?: any;
+  riderData?: any;
 }
 
 const AddEvent = (props: IProps) => {
@@ -162,27 +170,14 @@ const AddEvent = (props: IProps) => {
 
       setProgramText(props.eventData.information);
 
-      // Function for getting artists if it is not defined in props
-      const getArtists = async () => {
-        setListOfArtists(
-          await userService.getArtistsForEvent(props.eventData.event_id)
-        );
-      };
-
-      // Function for getting artists if it is not defined in props
-      const getTickets = async () => {
-        setListOfTickets(
-          await ticketService.getAllTicketsByEventId(props.eventData.event_id)
-        );
-      };
-
       // Set artists data
       if (props.artistsData) setListOfArtists(props.artistsData);
-      else getArtists();
 
       // Set tickets data
       if (props.ticketsData) setListOfTickets(props.ticketsData);
-      else getTickets();
+
+      // Set rider data
+      if (props.riderData) setListOfRiders(props.riderData);
 
       // Set all, but last step in stepper, to completed
       const newCompleted = new Set<number>();
@@ -213,6 +208,7 @@ const AddEvent = (props: IProps) => {
             program={programText}
             artists={listOfArtists}
             tickets={listOfTickets}
+            riders={listOfRiders}
           />
         );
     }
@@ -300,9 +296,10 @@ const AddEvent = (props: IProps) => {
 
     // Event is already made, save changes
     if (props.eventData) {
-      let res = await eventService.updateEvent(newEvent);
-      console.log("res", res);
-      checkResponse(res);
+      eventService.updateEvent(newEvent).then(res => {
+        updateRiders();
+        checkResponse(res);
+      });
 
       // Make new event
     } else {
@@ -315,9 +312,37 @@ const AddEvent = (props: IProps) => {
           eventService.addUserToEvent(artist.user_id, res.insertId);
         });
 
+        addRiders(res.insertId);
+        setEventId(res["insertId"]);
+
         checkResponse(res);
       });
     }
+  };
+
+  const updateRiders = async () => {
+    // Add all riders
+    listOfArtists.forEach(a => {
+      let text = listOfRiders.find(data => data.user_id === a.user_id)["text"];
+
+      let rider: Rider = {
+        eventId: eventId,
+        userId: a.user_id,
+        text: text
+      };
+
+      // riderService.updateRiderList(rider);
+    });
+  };
+
+  const addRiders = async (event_id: number) => {
+    console.log(listOfArtists);
+    // Add all riders
+    listOfArtists.forEach(a => {
+      let text = listOfRiders.find(data => data.user_id === a.user_id)["text"];
+
+      riderService.addRiderList(event_id, a.user_id, text);
+    });
   };
 
   const checkResponse = (res: any) => {
