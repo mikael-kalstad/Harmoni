@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { eventService } from "../../services/EventService";
 import { userService } from "../../services/UserService";
 import { ticketService } from "../../services/TicketService";
+import { riderService } from "../../services/RiderService";
 import AddEvent from "../AddEvent/addEvent";
 import styled from "styled-components";
 import Summary from "../AddEvent/summary";
@@ -10,6 +11,7 @@ import Success from "../AddEvent/success";
 import BackBtn from "../Button/backBtn";
 import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
+import WarningInfo from "../Pages/warningInfo";
 
 const Container = styled.div`
   width: 80%;
@@ -73,14 +75,20 @@ const Text = styled.p`
 `;
 
 const EventDetails = (props: any) => {
+  // Data states
   const [eventData, setEventData] = useState();
   const [artists, setArtists] = useState();
   const [tickets, setTickets] = useState();
+  const [riders, setRiders] = useState();
 
-  const [showDialog, setShowDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [finished, setFinished] = useState(false);
-  const [edit, setEdit] = useState(false);
+  // Boolean check states
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [finished, setFinished] = useState<boolean>(false);
+  const [access, setAccess] = useState<boolean>(false);
+  const [deniedAccess, setDeniedAccess] = useState<boolean>(false);
+  const [readOnly, setReadOnly] = useState<boolean>(true);
+  const [edit, setEdit] = useState<boolean>(false);
 
   const toggleDialog = () => setShowDialog(!showDialog);
 
@@ -96,6 +104,44 @@ const EventDetails = (props: any) => {
   };
 
   useEffect(() => {
+    const isUserArtistOfEvent = async () => {
+      // Check if user is artist of event
+      let res = await userService.getArtistsForEvent(props.match.params.id);
+
+      if (!res || res[0] === undefined) return false;
+
+      let checker = false;
+
+      res.forEach(u => {
+        if (u.user_id === props.userData.user_id) checker = true;
+      });
+
+      return checker;
+    };
+
+    const isUserOrganizerOfEvent = async () => {
+      // Check if user is organizer of event
+      let res = await userService.getOrganizerForEvent(props.match.params.id);
+
+      if (!res || res[0] === undefined) return false;
+      return props.userData.user_id === res[0].user_id;
+    };
+
+    const validateUser = async () => {
+      // console.log(await isUserOrganizerOfEvent());
+      let organizer = await isUserOrganizerOfEvent();
+      let artist = await isUserArtistOfEvent();
+
+      if (organizer) {
+        setAccess(true);
+        setReadOnly(false);
+      } else if (artist) {
+        setAccess(true);
+      } else if (!organizer || !artist) {
+        setDeniedAccess(true);
+      }
+    };
+
     const fetchEvent = async () => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
@@ -106,13 +152,28 @@ const EventDetails = (props: any) => {
         ticketService.getAllTicketsByEventId(res[0].event_id).then(response => {
           setTickets(response);
         });
+
+        riderService
+          .getRiderByEventId(res[0].event_id)
+          .then(response => setRiders(response));
       });
     };
 
-    fetchEvent();
-  }, [props.match.params.id]);
+    // Check if user should have access
+    if (props.userData) validateUser();
 
-  if (loading) return <Loading />;
+    // Only fetch event details if user is allowed access
+    if (access) fetchEvent();
+  }, [props.match.params.id, props.userData, access]);
+
+  if (deniedAccess)
+    return (
+      <WarningInfo
+        title="Ingen tilgang"
+        underTitle="Denne kontoen har ikke tilgang"
+        text=" Du har ikke tilgang til denne siden. Kontoen du er logget inn med har ingen adgang til denne siden. Vennligst bruk en annen konto som er tilknyttet dette arrangementet og prøv igjen."
+      />
+    );
 
   if (edit)
     return (
@@ -121,6 +182,7 @@ const EventDetails = (props: any) => {
         eventData={eventData}
         artistsData={artists}
         ticketsData={tickets}
+        riderData={riders}
       />
     );
 
@@ -144,21 +206,25 @@ const EventDetails = (props: any) => {
                 program={eventData.programText}
                 artists={artists}
                 tickets={tickets}
+                riders={riders}
               />
-
-              <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>
+              {!readOnly && (
+                <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>
+              )}
             </Wrapper>
 
-            <DangerWrapper>
-              <UnderTitle>Danger Zone</UnderTitle>
-              <Text>
-                NB! Hvis man avlyser et arrangement kan det ikke endres
-              </Text>
+            {!readOnly && (
+              <DangerWrapper>
+                <UnderTitle>Danger Zone</UnderTitle>
+                <Text>
+                  NB! Hvis man avlyser et arrangement kan det ikke endres
+                </Text>
 
-              <WarningBtn onClick={() => toggleDialog()}>
-                Avlys arrangement
-              </WarningBtn>
-            </DangerWrapper>
+                <WarningBtn onClick={() => toggleDialog()}>
+                  Avlys arrangement
+                </WarningBtn>
+              </DangerWrapper>
+            )}
           </>
         )}
 

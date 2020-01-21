@@ -97,7 +97,7 @@ export default class userDao extends daoParentUser {
   // Gets the organizer for an event
   getOrganizerForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
+      "SELECT user.user_id, user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
       [eventId],
       callback
     );

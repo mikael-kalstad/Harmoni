@@ -16,7 +16,7 @@ export default class LoginService {
         headers: headers
       })
       .then(response => {
-        if(response.data.jwt!==undefined){
+        if (response.data.jwt !== undefined) {
           localStorage.setItem("harmoni-token", response.data.jwt);
         }
         return response;
@@ -26,19 +26,20 @@ export default class LoginService {
 
   checkToken() {
     return axios({
-      method: 'post',
+      method: "post",
       url: "http://localhost:15016/api/login/token",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response => {
-      if(response.data.jwt!==undefined){
-        localStorage.setItem("harmoni-token", response.data.jwt);
-      }
-      return response;
     })
-        .catch(error => console.log(error));
+      .then(response => {
+        if (response.data.jwt !== undefined) {
+          localStorage.setItem("harmoni-token", response.data.jwt);
+        }
+        return response;
+      })
+      .catch(error => error.response);
   }
 
   registerPerson(
@@ -69,11 +70,10 @@ export default class LoginService {
       .then(response => {
         if (response.status === 409) {
           console.log("User exists from before.");
-        } else
-          if(response.data.jwt!==undefined){
-            localStorage.setItem("harmoni-token", response.data.jwt)
-          }
-          return response;
+        } else if (response.data.jwt !== undefined) {
+          localStorage.setItem("harmoni-token", response.data.jwt);
+        }
+        return response;
       })
       .catch(error => error.response);
   }

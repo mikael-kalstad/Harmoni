@@ -78,11 +78,6 @@ const ArtistNameText = styled.label`
   color: #434343;
 `;
 
-const RiderIcon = styled.img`
-  height: 30%;
-  cursor: pointer;
-`;
-
 /* Component for displaying a list of artists */
 /* Used in eventPage */
 const ArtistsList = (props: IProps) => {
@@ -91,8 +86,7 @@ const ArtistsList = (props: IProps) => {
     color: "#cccccc",
     margin: "10px"
   };
-  console.log(props.artists);
-  console.log(props.riderData);
+
   return props.artists.length > 0 ? (
     <Wrapper empty={props.artists.length === 0}>
       <ListGroup>
@@ -106,13 +100,7 @@ const ArtistsList = (props: IProps) => {
         {props.artists.map((artist, index) => {
           return (
             <ListGroup.Item key={artist.user_id + index}>
-              <ArtistCard
-                user={artist}
-                riderData={
-                  props.riderData !== undefined &&
-                  props.riderData.find(data => data.user_id === artist.user_id)
-                }
-              />
+              <ArtistCard user={artist} riderData={props.riderData} />
             </ListGroup.Item>
           );
         })}
