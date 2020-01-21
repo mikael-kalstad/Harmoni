@@ -139,6 +139,11 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return true;
     }
   }
+  function isMailReg(mail:string) {
+    if(userService.getUserByEMail(mail)!= null || userService.getUserByEMail(mail)!= undefined )
+      return true;
+  }
+
 
   // Save changes to user info
   const save = async () => {
@@ -186,7 +191,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       passwordInput.trim() === "" ||
       !emailInput.match(emailFormat) ||
       !passwordValidation(passwordInput) ||
-      !tlfInput.toString().match(tlfFormat)
+        (tlfInput !==undefined && !tlfInput.toString().match(tlfFormat))
     )
       return;
 

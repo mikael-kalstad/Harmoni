@@ -100,6 +100,7 @@ router.post("/register", (req, res) => {
         }
       });
     } else {
+      res.status(409);
       res.json({ error: "the user exists error code:" + status });
     }
   });
