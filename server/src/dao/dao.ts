@@ -1,7 +1,7 @@
-/*
-Dao is an subclass contains method that try to connect to DB,
-instead of writing it in every single query
-and it is required in every class in dao folder
+/**
+ * Dao is superclass that sets up a connection pool,
+ * and it's used to get a connection from the connection pool
+ * instead of writing the same method in every single query
  */
 module.exports = class Dao{
     pool;

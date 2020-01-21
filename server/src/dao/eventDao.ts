@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * event such get,create update...
+ */
 const daoParentEvent = require('./dao');
 
 export interface event {
@@ -30,7 +34,7 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
-
+  // Gets the last 20 uploaded events using Offset to load 20 more if more clicked
   getAllEventsWithOffset(offset: number, callback) {
     super.query(
       'SELECT event_id, organizer, name, address, capacity, ' +

@@ -1,21 +1,16 @@
 import axios from 'axios';
 import Service,{updateToken} from './Service';
 
-interface Rider {
-  riderId: number;
-  text: string;
-}
+
 interface RiderList {
   riderListId:number;
   userId:number;
   eventId:number;
-  riderId:number;
   text:string;
-  quantity;number;
 }
 
 export default class RiderService extends Service {
-  getAllRiders() {
+  getAllRiderLists() {
     updateToken();
     return axios({
       method: 'get',
@@ -62,40 +57,19 @@ export default class RiderService extends Service {
     }).then(response =>response.data).catch(error => console.log(error));
   }
 
-  addRider(rider: Rider) {
-    updateToken();
-    return axios({
-      method: 'post',
-      url: this.path + '/authorized/riders/',
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "harmoni-token": localStorage.getItem("harmoni-token")
-      }
-    }).then(response =>response.data).catch(error => console.log(error));
-  }
-  updateRider(rider: Rider) {
+  updateRider(rider: RiderList) {
     updateToken();
     return axios({
       method: 'put',
-      url: this.path + '/authorized/riders/' + rider.riderId,
+      url: this.path + '/authorized/riders/' + rider.riderListId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
-  deleteRider(riderId: number) {
-    updateToken();
-    return axios({
-      method: 'delete',
-      url: this.path + '/authorized/riders/' + riderId,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "harmoni-token": localStorage.getItem("harmoni-token")
-      }
-    }).then(response =>response.data).catch(error => console.log(error));
-  }
-  addRiderList(eventId: number, userId: number, riderId:number,text:string, quantity:number) {
+
+  addRiderList(eventId: number, userId: number, riderId:number,text:string) {
     updateToken();
     return axios({
       method: 'post',
@@ -105,7 +79,7 @@ export default class RiderService extends Service {
         "harmoni-token": localStorage.getItem("harmoni-token")
       },
       data:{
-        eventId:eventId, userId:userId, riderId:riderId, text:text, quantity:quantity
+        eventId:eventId, userId:userId, riderId:riderId, text:text
       }
     }).then(response =>response.data).catch(error => console.log(error));
   }
