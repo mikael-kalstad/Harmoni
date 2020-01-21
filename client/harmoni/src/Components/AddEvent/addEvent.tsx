@@ -314,7 +314,7 @@ const AddEvent = (props: IProps) => {
         listOfArtists.forEach(artist => {
           eventService.addUserToEvent(artist.user_id, res.insertId);
         });
-
+        setEventId(res.insertId);
         checkResponse(res);
       });
     }
