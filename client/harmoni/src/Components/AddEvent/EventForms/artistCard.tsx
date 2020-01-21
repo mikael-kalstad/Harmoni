@@ -43,8 +43,8 @@ const RiderIcon = styled.img`
 interface IProps {
   user: any;
   remove: Function;
-  riderText: string;
-  setRiderData: Function;
+  riderText?: string;
+  setRiderData?: Function;
 }
 
 const Artistcard = (props: IProps) => {
