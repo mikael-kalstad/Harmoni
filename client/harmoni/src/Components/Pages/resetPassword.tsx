@@ -35,7 +35,7 @@ const inputStyle = {
   marginTop: "25px"
 };
 
-const ResetPassword = (props: any) => {
+const ResetPassword = (props: { userData?: any; logIn?: Function }) => {
   // Password is to short or input is empty
   const [passwordWarning, setPasswordWarning] = useState("");
   // Used to display error on empty input when submitting
@@ -62,7 +62,7 @@ const ResetPassword = (props: any) => {
     }
   };
   if (redirect) {
-    return <Redirect to="/" />;
+    return <Redirect to="/profile" />;
   }
   // Check if enter key is clicked
   const checkForEnterKey = (e: { key: string } | undefined) => {

@@ -93,6 +93,13 @@ const App: React.FC = () => {
           />
           <RouteWithAuth
             exact
+            path="/profile/password"
+            render={props => (
+              <ResetPassword userData={userData} logIn={logIn} />
+            )}
+          />
+          <RouteWithAuth
+            exact
             path="/profile"
             render={props => <Profile userData={userData} />}
           />
