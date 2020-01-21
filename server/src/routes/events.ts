@@ -1,5 +1,3 @@
-// Routes to interact with eventDao.
-
 import express from "express";
 import eventDao from "../dao/eventDao";
 import { pool } from "../dao/database";
@@ -63,7 +61,12 @@ router.get("/events/offset/:offset", async (request, response) => {
   );
 });
 
-// Add user to specific event given eventId,userId
+router.get("/events/count/all", async (request, response) => {
+  dao.getCountOfAllEvents((status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+
 router.post(
   "/authorized/events/user_event/:userId/:eventId",
   async (request, response) => {
@@ -133,7 +136,25 @@ router.get("/events/user/:category", async (request, response) => {
   });
 });
 
-// Get events by type
+router.get(
+  "/events/category/offset/:category/:offset",
+  async (request, response) => {
+    dao.getEventsByCategoryWithOffset(
+      request.params.category,
+      parseInt(request.params.offset),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
+);
+
+router.get("/events/count/category/:category", async (request, response) => {
+  dao.getCountOfEventsByCategory(request.params.category, (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+
 router.get("/events/user/:event_id/:type", async (request, response) => {
   dao.getUsersOfEventByType(
     parseInt(request.params.event_id),

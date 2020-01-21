@@ -2,7 +2,7 @@
  * The attachmentDao-class is used to do everything has to do with
  * event such get,create update...
  */
-const daoParentEvent = require('./dao');
+const daoParentEvent = require("./dao");
 
 export interface event {
   event_id: number;
@@ -48,7 +48,10 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
-  // Get singular event given eventID
+  getCountOfAllEvents(callback) {
+    super.query("SELECT COUNT(*) as 'count' FROM event", [], callback);
+  }
+
   getEvent(eventId: number, callback) {
     super.query(
       'SELECT event_id, organizer, name, address, capacity, ' +
@@ -107,7 +110,27 @@ export default class eventDao extends daoParentEvent {
         'status, information, category, picture, ' +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        'FROM event WHERE category = ? ORDER BY from_date DESC LIMIT 20',
+        "FROM event WHERE category = ?",
+      [category],
+      callback
+    );
+  }
+
+  getEventsByCategoryWithOffset(category: string, offset: number, callback) {
+    super.query(
+      "SELECT event_id, organizer, name, address, capacity, " +
+        "status, information, category, picture, " +
+        'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
+        'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
+        "FROM event WHERE category = ? ORDER BY from_date DESC LIMIT 20 OFFSET ?",
+      [category, offset],
+      callback
+    );
+  }
+
+  getCountOfEventsByCategory(category: string, callback) {
+    super.query(
+      "SELECT COUNT(*) as 'count' FROM event WHERE category = ?",
       [category],
       callback
     );
@@ -116,7 +139,7 @@ export default class eventDao extends daoParentEvent {
   // Create event
   addEvent(event: event, callback) {
     super.query(
-      'INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      "INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         event.organizer,
         event.name,
@@ -136,7 +159,7 @@ export default class eventDao extends daoParentEvent {
   // Used to connect users to specific event
   addUserToEvent(userId: number, eventId: number, callback) {
     super.query(
-      'INSERT INTO user_event VALUES(?, ?)',
+      "INSERT INTO user_event VALUES(?, ?)",
       [userId, eventId],
       callback
     );
@@ -145,7 +168,7 @@ export default class eventDao extends daoParentEvent {
 
   getUserEvent(userId: number, eventId: number, callback) {
     super.query(
-      'SELECT * from user_event WHERE user_id=? AND event_id=?',
+      "SELECT * from user_event WHERE user_id=? AND event_id=?",
       [userId, eventId],
       callback
     );
@@ -154,7 +177,7 @@ export default class eventDao extends daoParentEvent {
   // Delete user from event
   deleteUserFromEvent(userId: number, eventId: number, callback) {
     super.query(
-      'DELETE FROM user_event WHERE user_id=? AND event_id=?',
+      "DELETE FROM user_event WHERE user_id=? AND event_id=?",
       [userId, eventId],
       callback
     );
@@ -171,7 +194,7 @@ export default class eventDao extends daoParentEvent {
 
   updateEvent(eventId: number, data: event, callback) {
     super.query(
-      'UPDATE event SET name = ?, organizer = ?, address = ?, from_date = ?, to_date = ?, capacity = ?, status = ?, information = ?, category = ?, picture = ? WHERE event_id = ?',
+      "UPDATE event SET name = ?, organizer = ?, address = ?, from_date = ?, to_date = ?, capacity = ?, status = ?, information = ?, category = ?, picture = ? WHERE event_id = ?",
       [
         data.name,
         data.organizer,
@@ -189,7 +212,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
   deleteEvent(eventId: number, callback) {
-    super.query('DELETE FROM event WHERE event_id = ?', [eventId], callback);
+    super.query("DELETE FROM event WHERE event_id = ?", [eventId], callback);
   }
 
   // Gets all events of specific user given userId
@@ -209,7 +232,7 @@ export default class eventDao extends daoParentEvent {
   // Changes status of singular event given eventId, used to archive/cancel event
   changeStatus(eventId: number, status: string, callback) {
     super.query(
-      'UPDATE event SET status=? WHERE event_id=?',
+      "UPDATE event SET status=? WHERE event_id=?",
       [status, eventId],
       callback
     );

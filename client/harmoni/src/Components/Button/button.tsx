@@ -24,6 +24,7 @@ interface IProps {
   onClick?: Function;
   disabled?: boolean;
   loading?: boolean;
+  loadingColor?: string;
   to?: string;
 }
 
@@ -72,10 +73,14 @@ const Button = (props: IProps) => {
       textColor={props.textColor}
       dropShadow={props.dropShadow !== undefined}
       onClick={() => props.onClick !== undefined && props.onClick()}
-      disabled={props.disabled}
+      disabled={props.disabled || props.loading}
     >
       {props.loading ? (
-        <CircularProgress color="secondary" size={25} />
+        <CircularProgress
+          color="secondary"
+          size={25}
+          style={{ color: props.loadingColor }}
+        />
       ) : (
         props.children
       )}

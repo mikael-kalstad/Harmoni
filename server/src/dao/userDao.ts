@@ -4,6 +4,7 @@
  */
 const daoParentUser = require("./dao");
 import { compareHash, hash } from "../hashing";
+//const User = require("./User.ts");
 
 export interface user {
   user_id: number;
@@ -31,7 +32,11 @@ export default class userDao extends daoParentUser {
 
   // Gets all users
   getAllUsers(callback) {
-    super.query("SELECT user_id, name, email, mobile, type, picture FROM user", [], callback);
+    super.query(
+      "SELECT user_id, name, email, mobile, type, picture FROM user",
+      [],
+      callback
+    );
   }
 
   // Gets specific user given userId
@@ -71,7 +76,11 @@ export default class userDao extends daoParentUser {
 
   // Gets all users of a type
   getUsersOfType(type: string, callback) {
-    super.query("SELECT user_id, name, email, mobile, type, picture FROM user WHERE type = ?", [type], callback);
+    super.query(
+      "SELECT user_id, name, email, mobile, type, picture FROM user WHERE type = ?",
+      [type],
+      callback
+    );
   }
 
   // Gets the hash of a user
