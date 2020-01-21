@@ -14,7 +14,7 @@ export default class PasswordService extends Service{
         })
             .then(response =>{
                 return response;
-            } )
+            })
             .catch(error => console.log(error)); 
     }
     newPassword(password: string){

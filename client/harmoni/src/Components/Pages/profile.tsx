@@ -70,6 +70,7 @@ const BtnIcon = styled.img`
 const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
 
+
   useEffect(() => {
     const getEvents = async () => {
       setEvents(
