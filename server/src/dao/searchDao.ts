@@ -35,7 +35,7 @@ export default class searchDao extends daoParentEvent {
         var sql1 =
             'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
 
-        var sql2 = "SELECT DISTINCT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? and user.type='artist' ORDER BY event_id DESC;";
+        var sql2 = "SELECT DISTINCT * FROM user_event, user,event WHERE user_event.user_id = user.user_id AND user.name LIKE ? and user.type='artist' ORDER BY event.event_id DESC;";
 
         let events: event[] = [];
         super.query(sql1,

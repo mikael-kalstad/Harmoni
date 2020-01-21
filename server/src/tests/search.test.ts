@@ -61,9 +61,9 @@ test("search for events given input as an address", done => {
 })
 
 test("search for events given organizer ", done => {
-    dao.searchForEvents("hans hansen", (status, data) => {
+    dao.searchForEvents("jens jensen", (status, data) => {
         expect(status).toBe(200);
-        expect(data.length).toBe(1);
+        expect(data.length).toBe(2);
         expect(data[0].address).toBe("Elgseter Gate 1");
         done();
     })
@@ -71,9 +71,9 @@ test("search for events given organizer ", done => {
 
 test("search for events given organizer NR2 ", done => {
     dao.searchForEvents("Roy narvestad", (status, data) => {
+        console.log("Forventer Roy narvestad: ", data);
         expect(status).toBe(200);
-        expect(data.length).toBe(1);
-        expect(data[0].status).toBe(0);
+        expect(data.length).toBe(0);
         done();
     })
 })
