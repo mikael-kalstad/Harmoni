@@ -42,7 +42,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/attachments/user/' + userId + '&' + eventId,
+      url: this.path + '/authorized/attachments/user/event/' + userId + '&' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -68,7 +68,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/attachments/user/access/' + userId + '&' + eventId,
+      url: this.path + '/authorized/attachments/user/access/event/' + userId + '&' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
