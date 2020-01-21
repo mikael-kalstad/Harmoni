@@ -331,7 +331,7 @@ const AddEvent = (props: IProps) => {
         text: text
       };
 
-      riderService.updateRider(rider);
+      // riderService.updateRiderList(rider);
     });
   };
 

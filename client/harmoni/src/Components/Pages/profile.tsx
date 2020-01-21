@@ -14,18 +14,7 @@ const Wrapper = styled.div`
   margin: 100px auto;
 `;
 
-const StyledLink = styled(props => <Link {...props} />)`
-  :visited {
-    color: black;
-  }
-
-  :hover {
-    color: black;
-    text-decoration: none;
-  }
-`;
-
-const AddBtn = styled.div`
+const AddBtn = styled(props => <Link {...props} />)`
     display: grid;
     grid-template-columns: 30% 1fr;
     justify-items: start;
@@ -43,10 +32,12 @@ const AddBtn = styled.div`
     cursor: pointer;
     border-radius: 50px;
     text-align: center;
-    outline: none;   
+    outline: none;
     
     :hover {
         filter: brightness(95%);
+        text-decoration: none;
+        color: white;
     }
     :active {
         box-shadow: none;
@@ -105,12 +96,10 @@ const Profile = (props: { userData: any }) => {
         />
 
         {props.userData.type === "organizer" ? (
-          <StyledLink to="/newEvent">
-            <AddBtn>
-              <BtnIcon src="/icons/plus-1.svg" />
-              Nytt arrangement
-            </AddBtn>
-          </StyledLink>
+          <AddBtn to="/newEvent">
+            <BtnIcon src="/icons/plus-1.svg" />
+            Nytt arrangement
+          </AddBtn>
         ) : (
           <></>
         )}

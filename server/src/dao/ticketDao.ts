@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * Ticket such get,create update...
+ */
 const daoParentTicket = require('./dao');
 
 export interface ticket {
@@ -17,6 +21,7 @@ export default class ticketDao extends daoParentTicket {
     super.query('SELECT * FROM ticket', [], callback);
   }
 
+  // Gets all tickets of specific event
   getTicketsByEventId(eventId: number, callback) {
     super.query('SELECT * FROM ticket WHERE event_id = ?', [eventId], callback);
   }
@@ -29,6 +34,7 @@ export default class ticketDao extends daoParentTicket {
     );
   }
 
+  // Used to decrease available if buyTicket button clicked
   decreaseAvailableOfTicket(ticketId: number, value: number, callback) {
     super.query(
       'UPDATE ticket SET available = available - ? WHERE ticket_id = ?',
@@ -37,10 +43,12 @@ export default class ticketDao extends daoParentTicket {
     );
   }
 
+  // Deletes specific ticket given ticketId
   deleteTicket(ticketId: number, callback) {
     super.query('DELETE FROM ticket WHERE ticket_id = ?', [ticketId], callback);
   }
 
+  // Deletes all tickets of specific event given eventId
   deleteAllTicketsForEvent(eventId: number, callback) {
     super.query('DELETE FROM ticket WHERE event_id = ?', [eventId], callback);
   }

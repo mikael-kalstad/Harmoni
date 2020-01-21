@@ -51,7 +51,6 @@ const EventCalendar = (props: any) => {
         events={events}
         style={{ height: "80vh", maxWidth: "100vh" }}
         views={["month", "agenda"]}
-        //toolbar={false}
         onSelectEvent={e => handleSelectEvent(e)}
       />
     );

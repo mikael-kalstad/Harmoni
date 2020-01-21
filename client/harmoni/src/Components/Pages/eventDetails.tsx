@@ -12,6 +12,7 @@ import BackBtn from "../Button/backBtn";
 import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
 import WarningInfo from "../Pages/warningInfo";
+import EmailService, { emailService } from "../../services/EmailService";
 
 const Container = styled.div`
   width: 80%;
@@ -78,6 +79,7 @@ const EventDetails = (props: any) => {
   // Data states
   const [eventData, setEventData] = useState();
   const [artists, setArtists] = useState();
+  const [volunteers, setVolunteers] = useState();
   const [tickets, setTickets] = useState();
   const [riders, setRiders] = useState();
 
@@ -96,8 +98,37 @@ const EventDetails = (props: any) => {
     setLoading(true);
 
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
-
     if (res) {
+      if (artists) {
+        console.log("Artists: ", artists);
+        artists.map(artist => {
+          emailService.sendEmail(
+            artist.email,
+            "Hei, Vi informerer deg at arrangementet: " +
+              eventData.name +
+              " er avlyst. \n" +
+              "Du får denne mailen fordi arrangøren har avlyst arrangementer.",
+            eventData.name + " er avlyst"
+          );
+        });
+      }
+      if (volunteers) {
+        setVolunteers(
+          eventService.getUsersOfEventByType(eventData.event_id, "volunteer")
+        );
+        console.log("Vol: ", volunteers);
+        volunteers.forEach(volunteer => {
+          emailService.sendEmail(
+            volunteer.email,
+            "Hei, Vi informerer deg at arrangementet: " +
+              eventData.name +
+              " er avlyst. \n" +
+              "Du får denne mailen fordi arrangøren har avlyst arrangementer.",
+            eventData.name + " er avlyst"
+          );
+        });
+      }
+
       setLoading(false);
       setFinished(true);
     }

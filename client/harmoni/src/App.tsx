@@ -99,7 +99,7 @@ const App: React.FC = () => {
           <Route exact path="/glemt-passord" component={ForgotPassword} />
           <Route
             exact
-            path="/reset/reset_password/:token"
+            path="/reset-passord/:token"
             component={ResetPassword}
           />
 
