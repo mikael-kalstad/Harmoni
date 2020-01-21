@@ -230,6 +230,8 @@ const AddEvent = (props: IProps) => {
             program={programText}
             artists={listOfArtists}
             tickets={listOfTickets}
+            attachments={listOfAttachments}
+            userRights={listOfAttachmentsRights}
           />
         );
     }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { Typeahead } from "react-bootstrap-typeahead";
+import Artistcard from "../AddEvent/EventForms/artistCard";
 
 interface IWrapper {
   empty: boolean;
@@ -84,14 +85,15 @@ const Text = styled.p`
   color: #777777;
 `;
 
-const AttachmentList = props => {
+const AttachmentList = (props: any) => {
   console.log(props.attachments);
+  console.log("Artists: ", props.artists); console.log("Attachments: ", props.attachments); console.log("userRights: ", props.userRights)
   return (
-    <Wrapper empty={props.attachments.length == 0}>
+    <Wrapper empty={!props.attachments || props.attachments.length == 0}>
       <ListGroup>
         {props.attachments.map((attachment, i) => {
           return (
-            <ListGroup.Item key={i}>
+            <ListGroup.Item key={attachment.attachment_id}>
               <img
                 width="55px"
                 height="55px"
@@ -99,9 +101,18 @@ const AttachmentList = props => {
               />
               <FilenameText>{attachment.filename}</FilenameText>
               {/* Manage which users should have access to this attachment.*/}
-              <Wrapper empty={props.userRights.length == 0}>
-                <Title>Lesetilgang:</Title>
-                <UnderTitle>Legg til brukere som skal ha tilgang</UnderTitle>
+              <Wrapper
+                empty={!props.userRights || props.userRights.length == 0}
+              >
+                <UnderTitle>Lesetilgang:</UnderTitle>
+                {
+                props.artists.filter(artist => props.userRights.some(right => {console.log(right.user_id); return artist.user_id === right.user_id})).map(e => {
+                  return (
+                    <div key={e.user_id}>
+                      <Artistcard user={e} />
+                    </div>
+                  );
+                })}
               </Wrapper>
             </ListGroup.Item>
           );

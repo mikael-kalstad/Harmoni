@@ -45,12 +45,24 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/attachments/user/' + userId + '&' + eventId,
+      url: this.path + '/authorized/attachments/user/event/' + userId + '&' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     }).then(response =>  response.data).catch(error => console.log(error));
+  }
+
+  getAttachmentRights(attachment_id: number) {
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/attachments/attachment_user/' + attachment_id,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response => response.data).catch(error => console.log(error));
   }
   
   //Fetches all attachments a user has access to
@@ -58,7 +70,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/attachments/user/access' + userId,
+      url: this.path + '/authorized/attachments/user/access/' + userId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -71,7 +83,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
-      url: this.path + '/authorized/attachments/user/access' + userId + '&' + eventId,
+      url: this.path + '/authorized/attachments/user/access/event/' + userId + '&' + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")

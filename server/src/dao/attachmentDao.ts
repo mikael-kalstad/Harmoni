@@ -43,6 +43,10 @@ export default class attachmentDao extends daoParentAttachment {
         super.query("SELECT DISTINCT attachment.attachment_id, filename FROM attachment LEFT JOIN attachment_user ON attachment.attachment_id = attachment_user.attachment_id WHERE (attachment_user.user_id = ? OR attachment.user_id = ?) AND attachment.event_id = ?", [userId, userId, eventId], callback);
     }
 
+    getAttachmentRights(attachment_id: number, callback){
+        super.query("SELECT user_id FROM attachment_user WHERE attachment_id= ?", [attachment_id], callback);
+    }
+
     addAttachmentForUserForEvent(data: any, callback) {
         const afterInsertEvent = (status, rows) => {
             if (status == 500) {

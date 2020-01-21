@@ -158,7 +158,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
-  const [attachments, setAttachments] = useState<attachment[]>([]);
 
   const [coords, setCoords] = useState();
   let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
@@ -193,9 +192,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
       });
     };
 
-    const fetchAttachments = async () => {
-      setAttachments(await attachmentService.getAttachmentsForEvent(props.match.params.id));
-    }
   
     //
 
@@ -203,7 +199,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-    fetchAttachments();
   }, [props.match.params.id]);
 
 
@@ -291,7 +286,6 @@ const Event = (props: { match: { params: { id: number } } }) => {
           </ArtistsGrid>
           <MapGrid>{coords && <Map coords={coords} zoom={14} />}</MapGrid>
         </ArtistsAndMapGrid>
-        <AttachmentList attachments={attachments}></AttachmentList>
         <TicketsGrid>
           <TicketMenu
             tickets={eventTickets}

@@ -10,6 +10,7 @@ import Success from "../AddEvent/success";
 import BackBtn from "../Button/backBtn";
 import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
+import { attachmentService } from "../../services/AttachmentService";
 
 const Container = styled.div`
   width: 80%;
@@ -74,6 +75,8 @@ const Text = styled.p`
 
 const EventDetails = (props: any) => {
   const [eventData, setEventData] = useState();
+  const [attachments, setAttachments] = useState([]);
+  const [attachmentsRights, setAttachmentsRights] = useState([]);
   const [artists, setArtists] = useState();
   const [tickets, setTickets] = useState();
 
@@ -100,17 +103,38 @@ const EventDetails = (props: any) => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
         userService
-          .getArtistsForEvent(res[0].event_id)
+          .getArtistsForEvent(props.match.params.id)
           .then(response => setArtists(response));
 
-        ticketService.getAllTicketsByEventId(res[0].event_id).then(response => {
-          setTickets(response);
-        });
+        ticketService
+          .getAllTicketsByEventId(props.match.params.id)
+          .then(response => {
+            setTickets(response);
+          });
+        attachmentService
+          .getAttachmentsForUserForEvent(
+            props.userData.user_id,
+            props.match.params.id
+          )
+          .then(response => setAttachments(response));
       });
     };
 
     fetchEvent();
   }, [props.match.params.id]);
+
+  useEffect(()=> {
+    console.log("Attachments before rights fetch: ", attachments);
+    attachments.forEach(e => {
+      console.log(e);
+      attachmentService
+        .getAttachmentRights(e.attachment_id)
+        .then(response => {
+          setAttachmentsRights(response);
+          console.log(response);
+        });
+    });
+  }, [attachments])
 
   if (loading) return <Loading />;
 
@@ -144,6 +168,8 @@ const EventDetails = (props: any) => {
                 program={eventData.programText}
                 artists={artists}
                 tickets={tickets}
+                attachments={attachments}
+                userRights={attachmentsRights}
               />
 
               <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>

@@ -42,7 +42,7 @@ const RiderIcon = styled.img`
 
 interface IProps {
   user: any;
-  remove: Function;
+  remove?: Function;
   riderText?: string;
   setRiderData?: Function;
 }
