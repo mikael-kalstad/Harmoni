@@ -8,9 +8,9 @@ INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 
  
 
  
-INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12', '2020-01-07 15:00:00', 'NOW() + INTERVAL 1 DAY', 1000, '0', 'Norges største festival – løp og kjøp!', 'festival', 'x’23BC');
+INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12', '2020-01-07 15:00:00', 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 1000, '0', 'Norges største festival – løp og kjøp!', 'festival', 'x’23BC');
  
-INSERT INTO event VALUES(DEFAULT, 1, 'Astrid S konsert', 'Elgseter Gate 1', '2020-01-18 21:00:00', 'NOW() + INTERVAL 1 DAY', 300, '0', 'Detta må du få med deg', 'konsert', 'x’12D');
+INSERT INTO event VALUES(DEFAULT, 1, 'Astrid S konsert', 'Elgseter Gate 1', '2020-01-18 21:00:00', 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 300, '0', 'Detta må du få med deg', 'konsert', 'x’12D');
  
 INSERT INTO ticket VALUES(default, 1, 600, 'ståplass', 20);
 INSERT INTO ticket VALUES(default, 2, 500, 'sitteplass', 75);
