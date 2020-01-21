@@ -36,6 +36,13 @@ const EventCalendar = (props: any) => {
         }
     }, [props.data]);
 
+    function handleDoubleClick(e : any) {
+        if(e.id) {
+            history.push('/event/details/'+e.id);
+            window.scrollTo(0, 0);
+        }
+    }
+
   if (props.data) {
     return (
       <Calendar
@@ -46,7 +53,7 @@ const EventCalendar = (props: any) => {
         style={{ height: "80vh", maxWidth: "100vh" }}
         views={["month"]}
         //toolbar={false}
-        onDoubleClickEvent={e => history.push('/event/'+e.id)}
+        onDoubleClickEvent={e => handleDoubleClick(e)}
       />
     );
   }
