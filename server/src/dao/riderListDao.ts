@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * RiderList such get,create update...
+ */
 const daoParentRider = require('./dao');
 
 export interface riderList {
@@ -21,6 +25,7 @@ export default class riderListDao extends daoParentRider {
     super.query('SELECT * FROM rider_list WHERE rider_id = ?', [riderListId], callback);
   }
 
+  // Gets all riderLists of specific event
   getRiderListByEventId(eventId: number, callback) {
     super.query(
       'SELECT * FROM rider_list WHERE rider_id IN (SELECT rider_id FROM rider_list WHERE event_id = ?)',
@@ -29,6 +34,7 @@ export default class riderListDao extends daoParentRider {
     );
   }
 
+  // Gets riderList given eventId,userId
   getRiderListByUserIdInEvent(eventId: number, userId: number, callback) {
     super.query(
       'SELECT * FROM rider_list WHERE rider_id IN (SELECT rider_id FROM rider_list WHERE (event_id = ? AND user_id = ?))',
@@ -37,6 +43,7 @@ export default class riderListDao extends daoParentRider {
     );
   }
 
+  // Create riderList..
   addRiderList(eventId:number,userId:number, text:string,  callback) {
     super.query(
       'INSERT INTO rider_list VALUES(DEFAULT, ?, ?,?)',
@@ -49,14 +56,20 @@ export default class riderListDao extends daoParentRider {
     );
   }
 
-  updateRiderList(riderList_id: number, text: string, callback) {
+  // Update riderList given its id and the incoming text
+  updateRiderList(riderList_id: number, rider: riderList, callback) {
     super.query(
-      'UPDATE rider_list SET text = ? WHERE riderList_id = ?',
-      [text, riderList_id],
+      'UPDATE rider_list SET user_id = ?, event_id = ?,  text = ? WHERE riderList_id = ?',
+      [
+          rider.user_id,
+          rider.event_id,
+          riderList_id
+      ],
       callback
     );
   }
 
+  // Delete riderList given its id
   deleteRiderListById(riderList_id: number, callback) {
     super.query('DELETE FROM rider_list WHERE rider_list_id = ?', [riderList_id], callback);
   }
