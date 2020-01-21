@@ -313,7 +313,7 @@ const AddEvent = (props: IProps) => {
       picture: infoData.imgData
     };
 
-    console.log(listOfAttachmentsRights)
+    console.log(listOfAttachmentsRights);
 
     setLoading(true);
 
@@ -333,30 +333,24 @@ const AddEvent = (props: IProps) => {
         listOfArtists.forEach(artist => {
           eventService.addUserToEvent(artist.user_id, res.insertId);
         });
-
+        listOfAttachments.forEach(attachment => {
+          attachment.event_id = res.insertId;
+          attachment.user_id = props.userData.user_id;
+          attachmentService.addAttachment(attachment).then(response => {
+            listOfAttachmentsRights
+              .filter(e => e.attachment.filename == attachment.filename)
+              .forEach(e =>
+                e.users.forEach(e =>
+                  attachmentService.addUserForAttachment(
+                    response.insertId,
+                    e.user_id
+                  )
+                )
+              );
+          });
+        });
         checkResponse(res);
       });
-      listOfAttachments.forEach(attachment => {
-        attachment.event_id = res.insertId;
-        attachment.user_id = props.userData.user_id;
-        attachmentService.addAttachment(attachment).then(response => {
-          listOfAttachmentsRights
-            .filter(e => e.attachment.filename == attachment.filename)
-            .forEach(e =>
-              e.users.forEach(e =>
-                attachmentService.addUserForAttachment(response.insertId, e.user_id)
-              )
-            );
-        });
-      });
-      if (res) {
-        setLoading(false);
-        setUploaded(true);
-      } else {
-        setLoading(false);
-        setWarningText("Det skjedde noe feil. Prøv igjen");
-      }
-    });
     }
   };
 
