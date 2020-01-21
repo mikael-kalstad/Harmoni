@@ -32,7 +32,9 @@ const Events = (props: any) => {
   useEffect(() => {
     const fetchCount = () => {
       eventService
-        .getCountOfEventsByCategory(props.match.params.type)
+        .getCountOfEventsByCategoryNotCancelledNotFinished(
+          props.match.params.type
+        )
         .then(data => {
           setTotalEventsCount(data[0].count);
         });
@@ -69,7 +71,7 @@ const Events = (props: any) => {
   }, [offset]);
 
   const allDataFetched = () => {
-    return offset + 20 > totalEventsCount;
+    return offset + 20 >= totalEventsCount;
   };
 
   const increaseOffset = () => {
@@ -77,8 +79,6 @@ const Events = (props: any) => {
   };
 
   // Render grid of all matching arrangements
-  console.log(offset, totalEventsCount);
-
   return (
     <Wrapper>
       <EventGrid

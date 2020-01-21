@@ -1,11 +1,11 @@
+// Routes to interact with riderLists.
+
 import express from 'express';
 import riderDAO from '../dao/riderListDao';
 import { pool } from '../dao/database'
 
 const router = express.Router();
 const dao = new riderDAO(pool);
-
-// Routes to interact with riderLists.
 
 // Add rider list
 router.post("/authorized/riders/riderlist/:event_id", async (request, response) => {
@@ -35,7 +35,6 @@ router.get("/authorized/riders/riderlist/:event_id", async (request, response) =
     });
 })
 
-
 // Get all riders of user in event 
 router.get("/authorized/riders/riderlist/:event_id/:user_id", async (request, response) => {
     dao.getRiderListByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
@@ -44,8 +43,8 @@ router.get("/authorized/riders/riderlist/:event_id/:user_id", async (request, re
 })
 
 // Update singular rider given id
-router.put("/authorized/riders/:id", async (request, response) => {
-    dao.updateRiderList(parseInt(request.params.id), request.body,(status, data) => {
+router.put("/authorized/riders/riderlist/:event_id/:user_id", async (request, response) => {
+    dao.updateRiderList(parseInt(request.params.event_id), parseInt(request.params.user_id),(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })

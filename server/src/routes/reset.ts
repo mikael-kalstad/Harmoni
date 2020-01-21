@@ -1,3 +1,5 @@
+// Routes to interact with resetPassword.
+
 import express from 'express';
 import { pool } from '../dao/database'
 import userDao from "../dao/userDao";
@@ -41,9 +43,7 @@ var handlebarsOptions = {
 
 smtpTransport.use('compile', hbs(handlebarsOptions)); 
 
-
-
-router.post("/reset-passord",(req,res)=>{
+router.post("/reset",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         let user = data[0];
         if(typeof user != "undefined"){

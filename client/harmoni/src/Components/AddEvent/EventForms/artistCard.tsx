@@ -27,6 +27,9 @@ const Name = styled.p`
   font-size: 20px;
   margin: 0 0 0 15px;
   justify-self: start;
+  font-family: Arial;
+  font-weight: bold;
+  color: #434343;
 `;
 
 const DelBtn = styled.img`
@@ -56,14 +59,28 @@ const Artistcard = (props: IProps) => {
 
     toggleShow();
 
+    // Check if rider is already created
+    let data = findRiderWithId(props.user.user_id);
+    if (data !== undefined) {
+      let newData = props.riderData;
+      newData.forEach(data => {
+        if (data.user_id === props.user.user_id) data["text"] = text;
+      });
+
+      props.setRiderData([...newData]);
+      return;
+    }
+
     props.setRiderData([
       ...props.riderData,
-      { riderData: text, user_id: props.user.user_id }
+      { text: text, user_id: props.user.user_id }
     ]);
   };
 
   // Find riderdata with user id
   const findRiderWithId = (id: number) => {
+    if (!props.riderData) return undefined;
+
     let data = props.riderData.find(
       data => data.user_id === props.user.user_id
     );
@@ -71,7 +88,7 @@ const Artistcard = (props: IProps) => {
     if (data === undefined || data.length > 1 || data.length === 0)
       return undefined;
 
-    let riderData = data["riderData"];
+    let riderData = data["text"];
 
     if (riderData !== undefined) return riderData;
   };
@@ -89,6 +106,7 @@ const Artistcard = (props: IProps) => {
           - Konjakk, dram, akkevitt, hjemmebrent
           - Besøk av mor, venn, kjendis
           - Utstyr: gitar, ukelele, gitar band til PS4"'
+          disabled={props.setRiderData === undefined}
         />
       )}
 

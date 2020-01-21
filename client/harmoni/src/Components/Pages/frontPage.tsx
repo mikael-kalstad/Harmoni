@@ -24,6 +24,7 @@ const FrontPage = () => {
 
   useEffect(() => {
     fetchData();
+    console.log("Heii");
   }, [offset]);
 
   const fetchData = () => {
@@ -32,23 +33,34 @@ const FrontPage = () => {
       let currData;
       eventData ? (currData = eventData.map(i => i)) : (currData = []);
       setEventData(currData.concat(data));
+      /*setEventData(
+        Array.from(
+          new Set(currData.concat(data).map(e => JSON.stringify(e)))
+        ).map((e: string) => JSON.parse(e))
+      );*/
       setFetchingData(false);
     });
   };
 
   const fetchCount = () => {
-    eventService.getCountOfAllEvents().then(data => {
+    eventService.getCountOfAllEventsNotCancelledNotFinished().then(data => {
       setTotalEventsCount(data[0].count);
     });
   };
 
   const allDataFetched = () => {
-    return offset + 20 > totalEventsCount;
+    return offset + 20 >= totalEventsCount;
   };
 
   const increaseOffset = () => {
     setOffset(offset + 20);
   };
+  console.log(
+    "Alldatafetched: " + allDataFetched(),
+    "offset: " + offset,
+    "totalcount: " + totalEventsCount
+  );
+  console.log(eventData);
 
   return (
     <>
