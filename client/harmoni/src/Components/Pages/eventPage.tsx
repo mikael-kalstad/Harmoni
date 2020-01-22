@@ -325,8 +325,7 @@ const Event = (props: any) => {
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null &&
-    props.userData != null
+    artists != null 
   ) {
     let categories = {
       concert: "Konsert",
@@ -350,9 +349,7 @@ const Event = (props: any) => {
             src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
-          <InfoText>{event[0].address}</InfoText>
-          <InfoText>{event[0].from_date}</InfoText>
-          {(props.userData.type == "volunteer" && status == "Kommende" && showVolunteerButton) ?  (
+          {(props.userData && props.userData.type == "volunteer" && status == "Kommende" && showVolunteerButton) ?  (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
               Meld deg på arrangement
