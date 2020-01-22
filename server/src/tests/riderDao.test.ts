@@ -4,7 +4,6 @@ var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-    console.log("runsqlfile: reading file " + filename);
     let sql = fs.readFileSync(filename, "utf8");
     pool.getConnection((err, connection) => {
         if (err) {
