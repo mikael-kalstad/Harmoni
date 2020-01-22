@@ -22,7 +22,7 @@ export default class riderListDao extends daoParentRider {
 
   getRiderList(riderListId: number, callback) {
     super.query(
-      "SELECT * FROM rider_list WHERE rider_id = ?",
+      "SELECT * FROM rider_list WHERE rider_list_id = ?",
       [riderListId],
       callback
     );

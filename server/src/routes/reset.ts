@@ -41,7 +41,7 @@ var handlebarsOptions = {
     extName: '.handlebars'
 };
 
-smtpTransport.use('compile', hbs(handlebarsOptions)); 
+smtpTransport.use("compile", hbs(handlebarsOptions));
 
 router.post("/reset",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {

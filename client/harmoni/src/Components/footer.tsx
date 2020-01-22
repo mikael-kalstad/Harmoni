@@ -74,7 +74,7 @@ const Footer = (props: any) => {
       </InfoItem>
 
       <LogoItem>
-        <Icon src="/icons/footericon.svg" />
+        <Icon alt="Harmoni tekst-logo" src="/icons/footericon.svg" />
         <InfoText>Utviklet av Team 8</InfoText>
       </LogoItem>
     </Wrapper>
