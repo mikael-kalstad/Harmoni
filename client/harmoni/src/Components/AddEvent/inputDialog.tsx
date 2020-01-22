@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "../Button/button";
 import TextField from "@material-ui/core/TextField";
@@ -70,6 +70,10 @@ const InputDialog = (props: IProps) => {
   const [submit, setSubmit] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
 
+  useEffect(() => {
+    if (props.inputValue) setInput(props.inputValue);
+  }, [props.inputValue]);
+
   return (
     <>
       <Overlay onClick={() => props.toggleShow()} />
@@ -91,11 +95,11 @@ const InputDialog = (props: IProps) => {
               shrink: true
             }}
             rows="8"
-            error={submit && (input.trim() === "" && )}
+            error={submit && input.trim() === ""}
             helperText={
               submit && input.trim() === "" && "Tekstfeltet kan ikke være tomt"
             }
-            value={input || props.inputValue}
+            value={input}
             onChange={e => setInput(e.target.value)}
           />
         )}
