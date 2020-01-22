@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
-import { isEventInProgress, hasEventHappened } from '../utils';
-import { eventService } from '../../services/EventService';
-import { ticketService } from '../../services/TicketService';
-import { userService } from '../../services/UserService';
-import { geoService } from '../../services/GeoService';
+import { isEventInProgress, hasEventHappened } from "../utils";
+import { eventService } from "../../services/EventService";
+import { ticketService } from "../../services/TicketService";
+import { userService } from "../../services/UserService";
+import { geoService } from "../../services/GeoService";
 
-import TicketMenu from '../Event/ticketMenu';
-import ArtistsList from '../Event/artistsList';
-import Map from '../Event/map';
+import TicketMenu from "../Event/ticketMenu";
+import ArtistsList from "../Event/artistsList";
+import Map from "../Event/map";
+import Skeleton from "react-loading-skeleton";
+import { useParams } from "react-router-dom";
+import Button from "../Button/button";
+import TextField from "@material-ui/core/TextField";
 
 export interface IEvent {
   event_id: number;
@@ -144,36 +148,78 @@ const ContentText = styled.p`
   color: #535353;
   white-space: pre-wrap;
 `;
-const Event = (props: { match: { params: { id: number } } }) => {
+
+const AddBtn = styled.div`
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    justify-items: start;
+    align-items: center;
+    width: 220px;
+    height: 60px;
+    background-color: #73CF5C;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border none;
+    margin: 0;
+    margin-top: 0;
+    cursor: pointer;
+    border-radius: 50px;
+    text-align: center;
+    outline: none;
+    right: 0;
+    position: absolute;
+    
+    :hover {
+        filter: brightness(95%);
+    }
+    :active {
+        box-shadow: none;
+    }
+`;
+
+const BtnIcon = styled.img`
+  height: 40%;
+  filter: invert(100%);
+  justify-self: center;
+`;
+
+const Event = (props: any) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
   const [coords, setCoords] = useState();
-  let statuses = ['Kommende', 'Arkivert', 'Avlyst'];
+  let statuses = ["Kommende", "Arkivert", "Avlyst"];
+  const params = useParams<{ id }>();
+  const [displayDialog, setDisplayDialog] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
-      eventService.getEventById(props.match.params.id).then(data => {
+      eventService.getEventById(parseInt(params.id)).then(data => {
         setEvent(data);
         fetchCoords(data[0].address);
       });
+      console.log("Event: ", event)
     };
 
     const fetchTickets = async () => {
       setEventTickets(
-        await ticketService.getAllTicketsByEventId(props.match.params.id)
+        await ticketService.getAllTicketsByEventId(parseInt(params.id))
       );
+      console.log("Tickets: ", eventTickets);
+
     };
 
     const fetchArtists = async () => {
-      setArtists(await userService.getArtistsForEvent(props.match.params.id));
+      setArtists(await userService.getArtistsForEvent(parseInt(params.id)));
+      console.log("Artists: ", artists)
     };
 
     const fetchOrganizer = async () => {
-      setOrganizer(
-        await userService.getOrganizerForEvent(props.match.params.id)
-      );
+      setOrganizer(await userService.getOrganizerForEvent(parseInt(params.id)));
+      console.log("Organizer: ", organizer)
     };
 
     const fetchCoords = async (address: string) => {
@@ -183,12 +229,25 @@ const Event = (props: { match: { params: { id: number } } }) => {
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
-
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-  }, [props.match.params.id]);
+    console.log("params.id ", params.id)
+  }, [parseInt(params.id)]);
+  //
+
+  const addVolunteer = async () => {
+    console.log("Ble trykka på");
+    await eventService.addUserToEvent(
+      props.userData.user_id,
+      parseInt(params.id)
+    );
+  };
+
+  const closeDialog = () => {
+    setDisplayDialog(false);
+  };
 
   if (
     event != null &&
@@ -196,32 +255,42 @@ const Event = (props: { match: { params: { id: number } } }) => {
     organizer != null &&
     artists != null
   ) {
-    let dateFrom = event[0].from_date.split(' ');
-    let dateTo = event[0].to_date.split(' ');
+    let dateFrom = event[0].from_date.split(" ");
+    let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
 
-    let status = inProgress ? 'Pågående' : statuses[event[0].status];
+    let status = inProgress ? "Pågående" : statuses[event[0].status];
     return (
       <Wrapper>
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString('ascii')}
+            src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
+          <AddressText>{event[0].address}</AddressText>
+          <DateText>{event[0].from_date}</DateText>
+          {props.userData.type == "volunteer" ? (
+            <AddBtn onClick={addVolunteer}>
+              <BtnIcon src="/icons/plus-1.svg" />
+              Meld deg på arrangement
+            </AddBtn>
+          ) : (
+            <></>
+          )}
         </ImageGrid>
         <InfoGrid>
           <Title>
-            {event[0].name}{' '}
-            {status === 'Pågående' ? (
+            {event[0].name}{" "}
+            {status === "Pågående" ? (
               <>
-                {' - '} <StatusSpan color="#448b30">{status}</StatusSpan>
+                {" - "} <StatusSpan color="#448b30">{status}</StatusSpan>
               </>
-            ) : status == 'Avlyst' || finished ? (
+            ) : status == "Avlyst" || finished ? (
               <>
-                {' - '}{' '}
+                {" - "}{" "}
                 <StatusSpan color="#c7554f">
-                  {finished ? 'Ferdig' : status}
+                  {finished ? "Ferdig" : status}
                 </StatusSpan>
               </>
             ) : (
@@ -235,14 +304,14 @@ const Event = (props: { match: { params: { id: number } } }) => {
           <DateText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
-              ? dateFrom[0] + ', fra kl. ' + dateFrom[1] + ' til ' + dateTo[1]
-              : 'Fra: ' +
+              ? dateFrom[0] + ", fra kl. " + dateFrom[1] + " til " + dateTo[1]
+              : "Fra: " +
                 dateFrom[0] +
-                ' kl. ' +
+                " kl. " +
                 dateFrom[1] +
-                ' til ' +
+                " til " +
                 dateTo[0] +
-                ' kl. ' +
+                " kl. " +
                 dateTo[1]}
           </DateText>
           <AddressText>
@@ -250,8 +319,8 @@ const Event = (props: { match: { params: { id: number } } }) => {
             {event[0].address}
           </AddressText>
           <ContentText>
-            {event[0].information === ''
-              ? 'Arrangementet har ingen beskrivelse eller program'
+            {event[0].information === ""
+              ? "Arrangementet har ingen beskrivelse eller program"
               : event[0].information}
           </ContentText>
         </InfoGrid>
@@ -275,5 +344,22 @@ const Event = (props: { match: { params: { id: number } } }) => {
     return <></>;
   }
 };
+/*
+{displayDialog && (
+  <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
+    <FaCheckCircle style={checkCircleStyle} />
+    <Text>Du har nå blitt meldt på arrangementet</Text>
+    <Button onClick={closeDialog}>Tilbake</Button>
+  </InfoDialog>
+)}
+
+{displayDialog && (
+  <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
+    <FaCheckCircle style={checkCircleStyle} />
+    <Text>Beklager, noe gikk galt</Text>
+    <Button onClick={closeDialog}>Tilbake</Button>
+  </InfoDialog>
+)}
+*/
 
 export default Event;
