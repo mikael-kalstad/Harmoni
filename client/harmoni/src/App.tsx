@@ -27,7 +27,7 @@ import MaxPrice from "./Components/Pages/maxPrice";
 import AttachmentForm from "./Components/AddEvent/EventForms/attachmentForm";
 
 const App: React.FC = () => {
-  const [userData, setUserData] = useState(undefined);
+  const [userData, setUserData] = useState(null);
 
   // Get data when component mounts
   useEffect(() => {

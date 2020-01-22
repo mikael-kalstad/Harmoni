@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
 import "react-bootstrap-typeahead/css/Typeahead.css";
@@ -87,37 +87,63 @@ const Text = styled.p`
 
 const AttachmentList = (props: any) => {
   console.log(props.attachments);
-  console.log("Artists: ", props.artists); console.log("Attachments: ", props.attachments); console.log("userRights: ", props.userRights)
-  return (
-    <Wrapper empty={!props.attachments || props.attachments.length == 0}>
-      <ListGroup>
-        {props.attachments.map((attachment, i) => {
-          return (
-            <ListGroup.Item key={attachment.attachment_id}>
-              <img
-                width="55px"
-                height="55px"
-                src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
-              />
-              <FilenameText>{attachment.filename}</FilenameText>
-              {/* Manage which users should have access to this attachment.*/}
-              <Wrapper
-                empty={!props.userRights || props.userRights.length == 0}
-              >
-                <UnderTitle>Lesetilgang:</UnderTitle>
-                {
-                props.artists.filter(artist => props.userRights.some(right => {console.log(right.user_id); return artist.user_id === right.user_id})).map(e => {
+  console.log("Artists: ", props.artists);
+  console.log("Attachments: ", props.attachments);
+  console.log("userRights: ", props.userRights);
+
+  useEffect(() => {
+    console.log("useEffect called in attachmentList")
+  }, [props])
+
+  const jsx = (
+    <ListGroup>
+      {props.attachments.map((attachment, i) => {
+        let rights = props.userRights.find(
+          right => {
+            console.log(right)
+            console.log(attachment);
+            return right.attachment.attachment_id == attachment.attachment_id
+          }
+        );
+        console.log(props.userRights)
+        console.log(rights)
+        if(rights === undefined)
+          return null;
+
+        const children = (
+          <Wrapper empty={!props.userRights || props.userRights.length == 0}>
+            <UnderTitle>Lesetilgang:</UnderTitle>
+            {
+            (rights.users !== null || rights.users !== undefined)
+              ? rights.users.map(e => {
                   return (
                     <div key={e.user_id}>
                       <Artistcard user={e} />
                     </div>
                   );
-                })}
-              </Wrapper>
-            </ListGroup.Item>
-          );
-        })}
-      </ListGroup>
+                })
+              : null}
+          </Wrapper>
+        );
+        return (
+          <ListGroup.Item key={attachment.attachment_id}>
+            <img
+              width="55px"
+              height="55px"
+              src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
+            />
+            <FilenameText>{attachment.filename}</FilenameText>
+            {children}
+          </ListGroup.Item>
+        );
+      })}
+    </ListGroup>
+  );
+  return (
+    <Wrapper
+      empty={!props.attachments || props.attachments.length == 0}
+    >
+      {jsx}
     </Wrapper>
   );
 };

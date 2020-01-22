@@ -181,19 +181,41 @@ const EventDetails = (props: any) => {
         setEventData(res[0]);
         userService
           .getArtistsForEvent(props.match.params.id)
-          .then(response => setArtists(response));
+          .then(artistResponse => {
+            setArtists(artistResponse);
+            attachmentService
+              .getAttachmentsForUserForEvent(
+                props.userData.user_id,
+                props.match.params.id
+              )
+              .then(attachmentResponse => {
+                setAttachments(attachmentResponse);
+                attachmentResponse.forEach(attachment => {
+                  console.log(attachment);
+                  attachmentService
+                    .getAttachmentRights(attachment.attachment_id)
+                    .then(rightsResponse => {
+                      console.log(artistResponse);
+                      console.log(rightsResponse)
+                      let newRight = {
+                        attachment: attachment,
+                        users: artistResponse.filter(artist =>
+                          rightsResponse.some(right => right.user_id == artist.user_id)
+                        )
+                      };
+                      console.log(newRight)
+                      setAttachmentsRights(array => [...array, newRight]);
+                    });
+                });
+              });
+          });
 
         ticketService
           .getAllTicketsByEventId(props.match.params.id)
           .then(response => {
             setTickets(response);
           });
-        attachmentService
-          .getAttachmentsForUserForEvent(
-            props.userData.user_id,
-            props.match.params.id
-          )
-          .then(response => setAttachments(response));
+
         riderService
           .getRiderByEventId(res[0].event_id)
           .then(response => setRiders(response));
@@ -206,16 +228,7 @@ const EventDetails = (props: any) => {
     // Only fetch event details if user is allowed access
     if (access) fetchEvent();
   }, [props.match.params.id, props.userData, access]);
-  useEffect(() => {
-    console.log("Attachments before rights fetch: ", attachments);
-    attachments.forEach(e => {
-      console.log(e);
-      attachmentService.getAttachmentRights(e.attachment_id).then(response => {
-        setAttachmentsRights(response);
-        console.log(response);
-      });
-    });
-  }, [attachments]);
+
   if (deniedAccess)
     return (
       <WarningInfo
