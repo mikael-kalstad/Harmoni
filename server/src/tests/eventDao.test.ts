@@ -177,6 +177,41 @@ test("Add new event", done => {
   });
 });
 
+test("Add user to new event", done => {
+  dao.addUserToEvent(3, 3, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.affectedRows).toBe(1);
+    done();
+  });
+});
+
+test("Get all events for user", done => {
+  dao.getEventsOfUser(3, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(2);
+    expect(data.map(e => e.event_id)).toContain(1);
+    expect(data.map(e => e.event_id)).toContain(3);
+    done();
+  });
+});
+
+test("Get users by type in event", done => {
+  dao.getUsersOfEventByType(3, "artist", (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(1);
+    expect(data.map(e => e.user_id)).toContain(3);
+    done();
+  });
+});
+
+test("Delete user from event", done => {
+  dao.deleteUserFromEvent(3, 3, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.affectedRows).toBe(1);
+    done();
+  });
+});
+
 test("Update event", done => {
   let event = {
     event_id: 3,
@@ -211,15 +246,6 @@ test("Delete an event", done => {
   dao.deleteEvent(3, (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
-    done();
-  });
-});
-
-test("Get all events for user", done => {
-  dao.getEventsOfUser(3, (status, data) => {
-    expect(status).toBe(200);
-    expect(data.length).toBe(1);
-    expect(data[0].event_id).toBe(1);
     done();
   });
 });

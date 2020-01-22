@@ -118,7 +118,7 @@ test("Update rider", done => {
     rider_list_id: 2,
     user_id: 5,
     event_id: 2,
-    text: "780 shampoo bottles please"
+    text: "We want julebrus"
   };
   dao.updateRiderList(
     updatedRiderList.rider_list_id,
