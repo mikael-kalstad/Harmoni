@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
   background-color: #343434;
@@ -61,10 +62,7 @@ const Footer = (props: any) => {
         <ContactTitle>Kontaktinfo: </ContactTitle>
         <ContactText>
           Ved feil, forespørsler eller spørsmål kan teamet kontaktes på mail
-          ved:{" "}
-          <StyledA href="mailto:someone@example.com" target="_top">
-            mail@mail.com
-          </StyledA>
+          ved: <Link to="/feedback">Her</Link>
           <br />
           Prosjektet finnes på GitLab:{" "}
           <StyledA href="https://gitlab.stud.idi.ntnu.no/henrikwt/team-8---harmoni">

@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import React from "react";
+import styled from "styled-components";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 interface IBar {
   unavailable: boolean;
 }
 const Bar = styled.div<IBar>`
-  background-color: ${props => (props.unavailable ? '#f3f3f3' : '#ffffff')};
+  background-color: ${props => (props.unavailable ? "#f3f3f3" : "#ffffff")};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin: 18px 0;
@@ -31,7 +31,7 @@ interface IPriceText {
 }
 const PriceText = styled.p<IPriceText>`
   font-weight: bold;
-  color: ${props => (props.unavailable ? 'grey' : '#47bd29')};
+  color: ${props => (props.unavailable ? "grey" : "#47bd29")};
   margin: 0;
 `;
 
@@ -57,8 +57,8 @@ const SoldOutText = styled.p`
 `;
 
 const FaIconStyle = {
-  color: '#434343',
-  fontSize: '130%'
+  color: "#434343",
+  fontSize: "130%"
 };
 
 interface TicketProps {
@@ -71,17 +71,19 @@ interface TicketProps {
   eventCanceled: boolean;
 }
 
+// Bar showing information about a ticket
+// Includes buttons for adding tickets to checkout cart
 const TicketBar = (props: TicketProps) => {
   return (
     <Bar unavailable={props.unavailable || props.eventCanceled}>
       <NameText>{props.type}</NameText>
       <PriceText unavailable={props.unavailable || props.eventCanceled}>
-        {props.price + ',-'}
+        {props.price + ",-"}
       </PriceText>
       {props.unavailable || props.eventCanceled ? (
         <QuantityGrid>
           <SoldOutText>
-            {props.eventCanceled ? 'Utilgjengelig' : 'Utsolgt'}
+            {props.eventCanceled ? "Utilgjengelig" : "Utsolgt"}
           </SoldOutText>
         </QuantityGrid>
       ) : (

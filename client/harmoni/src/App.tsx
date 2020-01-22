@@ -17,6 +17,7 @@ import Layout from "./Components/layout";
 import AddEvent from "./Components/AddEvent/addEvent";
 import EventDetails from "./Components/Pages/eventDetails";
 import SearchEvents from "./Components/Pages/searchPage";
+import FeedbackPage from "./Components/Pages/feedbackPage";
 
 // Authentication component
 import Authenticate from "./Components/authenticate";
@@ -108,6 +109,10 @@ const App: React.FC = () => {
           <Route exact path="/reset-passord/:token" component={ResetPassword} />
 
           <Route path="/search/" component={SearchEvents} />
+          <Route
+            path="/feedback/"
+            render={props => <FeedbackPage userData={userData} />}
+          />
 
           {/* 404 PAGE NOT FOUND (if not other routes match) */}
           <Route component={PageNotFound} />
