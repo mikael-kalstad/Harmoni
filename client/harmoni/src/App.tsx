@@ -79,8 +79,10 @@ const App: React.FC = () => {
             render={props => <Register {...props} logIn={logIn} />}
           />
           <Route exact path="/events/:type" component={Events} />
-          <Route exact path="/event/:id" component={Event} />
-          <RouteWithAuth
+          <Route exact path="/event/:id">
+            <Event userData = {userData}></Event>
+          </Route>
+          <Route
             exact
             path="/newEvent"
             render={props => <AddEvent {...props} userData={userData} />}
