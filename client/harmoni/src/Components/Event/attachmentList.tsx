@@ -4,6 +4,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { Typeahead } from "react-bootstrap-typeahead";
 import Artistcard from "../AddEvent/EventForms/artistCard";
+import { FaFileDownload } from "react-icons/fa";
+import { attachmentService } from "../../services/AttachmentService";
 
 interface IWrapper {
   empty: boolean;
@@ -85,6 +87,13 @@ const Text = styled.p`
   color: #777777;
 `;
 
+const AttachmentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 80% 20%;
+  align-items: center;
+  justify-items: center;
+`;
+
 const AttachmentList = (props: any) => {
   console.log(props.attachments);
   console.log("Artists: ", props.artists);
@@ -92,57 +101,79 @@ const AttachmentList = (props: any) => {
   console.log("userRights: ", props.userRights);
 
   useEffect(() => {
-    console.log("useEffect called in attachmentList")
-  }, [props])
+    console.log("useEffect called in attachmentList");
+  }, [props]);
+
+  const downloadAttachment = attachment => () => {
+    console.log("HELLO");
+    attachmentService
+      .downloadAttachment(attachment.attachment_id)
+      .then(data => {
+        console.log(data);
+        const url = window.URL.createObjectURL(new Blob([data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", attachment.filename);
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
 
   const jsx = (
     <ListGroup>
       {props.attachments.map((attachment, i) => {
-        let rights = props.userRights.find(
-          right => {
-            console.log(right)
-            console.log(attachment);
-            return right.attachment.attachment_id == attachment.attachment_id
-          }
-        );
-        console.log(props.userRights)
-        console.log(rights)
-        if(rights === undefined)
+        let rights = props.userRights.find(right => {
+          console.log(right);
+          console.log(attachment);
+          return right.attachment.attachment_id == attachment.attachment_id;
+        });
+        console.log(props.userRights);
+        console.log(rights);
+        if (rights === undefined || rights === [] || rights === null)
           return null;
 
         const children = (
           <Wrapper empty={!props.userRights || props.userRights.length == 0}>
             <UnderTitle>Lesetilgang:</UnderTitle>
-            {
-            (rights.users !== null || rights.users !== undefined)
-              ? rights.users.map(e => {
-                  return (
-                    <div key={e.user_id}>
-                      <Artistcard user={e} />
-                    </div>
-                  );
-                })
-              : null}
+            {rights.users !== null && rights.users !== undefined ? (
+              rights.users.map(e => {
+                return (
+                  <div key={e.user_id}>
+                    <Artistcard user={e} />
+                  </div>
+                );
+              })
+            ) : (
+              <Text>Feil ved henting av lesetilganger</Text>
+            )}
           </Wrapper>
         );
         return (
-          <ListGroup.Item key={attachment.attachment_id}>
-            <img
+          <AttachmentWrapper>
+            <ListGroup.Item key={attachment.attachment_id}>
+              {/*             <img
               width="55px"
               height="55px"
               src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
-            />
-            <FilenameText>{attachment.filename}</FilenameText>
-            {children}
-          </ListGroup.Item>
+            /> */}
+              <FilenameText>{attachment.filename}</FilenameText>
+              {props.showOnly ? (
+                <FaFileDownload
+                  style={{cursor: "pointer"}}
+                  title="Last ned vedlegg."
+                  size="4em"
+                  onClick={downloadAttachment(attachment)}
+                />
+              ) : null}
+              {children}
+            </ListGroup.Item>
+          </AttachmentWrapper>
         );
       })}
     </ListGroup>
   );
   return (
-    <Wrapper
-      empty={!props.attachments || props.attachments.length == 0}
-    >
+    <Wrapper empty={!props.attachments || props.attachments.length == 0}>
       {jsx}
     </Wrapper>
   );

@@ -85,6 +85,8 @@ interface IProps {
   artistsData?: any;
   ticketsData?: any;
   riderData?: any;
+  attachmentsData?: any;
+  attachmentsRights?: any;
 }
 
 const AddEvent = (props: IProps) => {
@@ -194,6 +196,13 @@ const AddEvent = (props: IProps) => {
       // Set rider data
       if (props.riderData) setListOfRiders(props.riderData);
 
+      // Set attachments data
+      if (props.attachmentsData) setListOfAttachments(props.attachmentsData);
+
+      // Set attachments rights
+      if (props.attachmentsRights)
+        setListOfAttachmentsRights(props.attachmentsRights);
+
       // Set all, but last step in stepper, to completed
       const newCompleted = new Set<number>();
       for (let i = 0; i < steps.length - 1; i++) newCompleted.add(i);
@@ -254,22 +263,24 @@ const AddEvent = (props: IProps) => {
   };
 
   let todayDate = new Date();
-  const compareDates =(date1,date2) =>{
+  const compareDates = (date1, date2) => {
     let fromDate = new Date(date1);
     let toDate = new Date(date2);
-    console.log("hei",todayDate,fromDate)
-    return fromDate < toDate ;
-  }
+    console.log("hei", todayDate, fromDate);
+    return fromDate < toDate;
+  };
 
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
       setInfoSubmit(true);
       if (isInfoDataEmpty()) return;
-      if(!compareDates(infoData.dateFrom,infoData.dateTo) ||
-          !(compareDates(todayDate,infoData.dateFrom,)) ||
-          !(compareDates(todayDate,infoData.dateTo,))
-      ) return;
+      if (
+        !compareDates(infoData.dateFrom, infoData.dateTo) ||
+        !compareDates(todayDate, infoData.dateFrom) ||
+        !compareDates(todayDate, infoData.dateTo)
+      )
+        return;
     }
 
     // Set step to completed
@@ -330,7 +341,8 @@ const AddEvent = (props: IProps) => {
     // Event is already made, save changes
     if (props.eventData) {
       eventService.updateEvent(newEvent).then(res => {
-        updateRiders();
+        //updateRiders();
+        updateAttachments();
         checkResponse(res);
       });
 
@@ -382,6 +394,84 @@ const AddEvent = (props: IProps) => {
 
       // riderService.updateRiderList(rider);
     });
+  };
+
+  const updateAttachments = async () => {
+    attachmentService
+      .getAttachmentsForEvent(eventId)
+      .then(attachmentResponse => {
+        console.log(attachmentResponse);
+        console.log(listOfAttachments);
+        const removedAttachments = attachmentResponse.filter(
+          attachment =>
+            !listOfAttachments.some(
+              e => e.attachment_id == attachment.attachment_id
+            )
+        );
+        console.log(removedAttachments);
+        if (removedAttachments) {
+          removedAttachments.forEach(removedAttachment => {
+            attachmentService.deleteAttachment(removedAttachment.attachment_id);
+          });
+        }
+        const remainingAttachments = attachmentResponse.filter(
+          attachment =>
+            !removedAttachments.some(
+              removedAttachment =>
+                removedAttachment.attachment_id == attachment.attachment_id
+            )
+        );
+        console.log(remainingAttachments);
+        remainingAttachments.forEach(attachment => {
+          attachmentService
+            .getAttachmentRights(attachment.attachment_id)
+            .then(attachmentRightsResponse => {
+              console.log(attachmentRightsResponse);
+              console.log(listOfAttachmentsRights);
+              const attachmentRights = listOfAttachmentsRights.find(
+                e => e.attachment.attachment_id == attachment.attachment_id
+              );
+              console.log(attachmentRights);
+              const removedRights = attachmentRightsResponse.filter(user => {
+                let shouldRemove = !attachmentRights.users.some(e => {
+                  return (
+                    user.user_id == props.userData.user_id ||
+                    user.user_id == e.user_id
+                  );
+                });
+                console.log(shouldRemove);
+                return shouldRemove;
+              });
+              console.log(removedRights);
+              removedRights.forEach(removedRight => {
+                console.log(removedRight);
+                attachmentService.deleteAttachmentforUser(
+                  attachment.attachment_id,
+                  removedRight.user_id
+                );
+              });
+            });
+        });
+
+        const newAttachments = listOfAttachmentsRights.filter(
+          e => e.attachment.attachment_id == -1
+        );
+        console.log(newAttachments);
+        newAttachments.forEach(attachment => {
+          attachment.attachment.event_id = eventId;
+          attachment.attachment.user_id = props.userData.user_id;
+          attachmentService
+            .addAttachment(attachment.attachment)
+            .then(response => {
+              attachment.users.forEach(e =>
+                attachmentService.addUserForAttachment(
+                  response.insertId,
+                  e.user_id
+                )
+              );
+            });
+        });
+      });
   };
 
   const addRiders = async (event_id: number) => {

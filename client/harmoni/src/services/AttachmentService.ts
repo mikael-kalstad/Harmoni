@@ -152,6 +152,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
+      responseType: "blob",
       url: this.path + '/authorized/attachments/download/' + attachmentId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",

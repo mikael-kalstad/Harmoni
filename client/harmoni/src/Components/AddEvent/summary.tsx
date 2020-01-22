@@ -108,6 +108,7 @@ interface IProps {
   attachments;
   userRights;
   riders: any[];
+  showOnly?: any;
 }
 
 const Summary = (props: IProps) => (
@@ -170,7 +171,7 @@ const Summary = (props: IProps) => (
       <Text>Ingen vedlegg er lagt til</Text>
       ) : (
       <div>
-        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists}></AttachmentList>
+        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists} showOnly={props.showOnly}></AttachmentList>
       </div>
       )
     }

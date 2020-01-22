@@ -246,6 +246,8 @@ const EventDetails = (props: any) => {
         artistsData={artists}
         ticketsData={tickets}
         riderData={riders}
+        attachmentsData={attachments}
+        attachmentsRights={attachmentsRights}
       />
     );
 
@@ -272,6 +274,7 @@ const EventDetails = (props: any) => {
                 attachments={attachments}
                 userRights={attachmentsRights}
                 riders={riders}
+                showOnly={true}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>
