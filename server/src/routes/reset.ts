@@ -41,17 +41,15 @@ var handlebarsOptions = {
     extName: '.handlebars'
 };
 
-smtpTransport.use('compile', hbs(handlebarsOptions)); 
+smtpTransport.use("compile", hbs(handlebarsOptions));
 
 router.post("/reset",(req,res)=>{
     dao.getUserByEMail(req.body.email, (status,data) => {
         let user = data[0];
         if(typeof user != "undefined"){
-            console.log("Fant bruker");
             let token = jwt.sign({ email: req.body.email }, privateKey, {
                 expiresIn: 86400
             });
-            console.log("Lagde token: "+token);
             var emailinfo = {
                 to: user.email,
                 from: email,
@@ -71,8 +69,6 @@ router.post("/reset",(req,res)=>{
                 }
             });
 
-        }else{
-              console.log("Brukernavnet finnes ikke");
         }
     })
 })
@@ -81,7 +77,6 @@ router.get("/reset-passord/:token",(req,res)=>{
     var token = req.params.token;
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
-            console.log("Token Not ok");
             res.status(401);
             res.json({ error: "Not authorized" });
         } else{
@@ -95,17 +90,14 @@ router.post("/reset-passord/:token",(req,res)=>{
    // var token = req.headers["password-token"];
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
-            console.log("Token Not ok");
             res.status(401);
             res.json({ error: "Not authorized" });
         } else{
             dao.getHashOfUser(decoded.email,(status,data)=>{
                 let user = data[0];
                 let pass=hash(req.body.password);
-                console.log(req.body.password);
                 user.hash= pass.hash;
                 user.salt= pass.salt;
-                console.log(user);
                 dao.resetPassword(decoded.email, user, (status, data) => {
                 })
                 res.json({message: "Endret passord"})

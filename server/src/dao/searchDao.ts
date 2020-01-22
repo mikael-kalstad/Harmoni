@@ -40,9 +40,10 @@ export default class searchDao extends daoParentEvent {
      * @param callback
      */
     searchForEvents(input: string, callback) {
-        var sql1 = 'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
+        var sql1 =
+            'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
 
-        var sql2 = "SELECT DISTINCT * FROM event, user WHERE event.organizer = user.user_id AND user.name LIKE ? ORDER BY event_id DESC;";
+        var sql2 = "SELECT DISTINCT * FROM user_event, user,event WHERE user_event.user_id = user.user_id AND user.name LIKE ? and user.type='artist' ORDER BY event.event_id DESC;";
 
         let events: event[] = [];
         super.query(sql1,
@@ -66,5 +67,22 @@ export default class searchDao extends daoParentEvent {
                 );
                 }
             })
+    }
+    // Sort events by tickets' lowest price
+    sortCheapestEvents(callback) {
+    var sql = 'SELECT MIN(ticket.price) as min_price, ticket.event_id,' +
+        ' event.* FROM ticket, event WHERE event.event_id = ticket.event_id GROUP BY ticket.event_id ORDER BY min_price ASC';
+        super.query( sql,[],
+            callback
+        );
+    }
+
+    // Sort events by tickets' lowest price
+    sortExpensiveEvents(callback) {
+        var sql = 'SELECT MAX(ticket.price) as max_price, ticket.event_id,' +
+            ' event.* FROM ticket, event WHERE event.event_id = ticket.event_id GROUP BY ticket.event_id ORDER BY max_price DESC';
+        super.query( sql,[],
+            callback
+        );
     }
 }

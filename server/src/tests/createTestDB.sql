@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS rider_list (
   rider_list_id INT NOT NULL AUTO_INCREMENT,
   user_id INT,
   event_id INT,
-  text VARCHAR(256),
+  text TEXT,
     PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS attachment (
   event_id INT NOT NULL,
   user_id INT,
   data LONGBLOB NOT NULL,
-  filetype VARCHAR(50) NOT NULL,
-  filename VARCHAR(50) NOT NULL,
+  filetype VARCHAR(512) NOT NULL,
+  filename VARCHAR(512) NOT NULL,
   filesize INT NOT NULL,
   PRIMARY KEY (attachment_id),
 	FOREIGN KEY (event_id)

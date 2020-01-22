@@ -1,10 +1,11 @@
+// Tests to interact with events.
+
 import eventDao from "../dao/eventDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-  console.log("runsqlfile: reading file " + filename);
   let sql = fs.readFileSync(filename, "utf8");
   pool.getConnection((err, connection) => {
     if (err) {
@@ -85,7 +86,7 @@ test("Get all events with offset 1", done => {
   });
 });
 
-test("Get count of all events not cancelled", done => {
+test("Get count of all events not cancelled and not finished", done => {
   dao.getCountOfAllEventsNotCancelledNotFinished((status, data) => {
     expect(status).toBe(200);
     expect(data[0].count).toBe(2);
@@ -93,6 +94,7 @@ test("Get count of all events not cancelled", done => {
   });
 });
 
+// Expected 1000 capacity for event with eventId = 1
 test("Get event by id", done => {
   dao.getEvent(1, (status, data) => {
     expect(status).toBe(200);
@@ -144,7 +146,7 @@ test("Get events by category with offset 1", done => {
   });
 });
 
-test("Get count of events by category not cancelled", done => {
+test("Get count of events by category not cancelled and not finished", done => {
   dao.getCountOfEventsByCategoryNotCancelledNotFinished(
     "konsert",
     (status, data) => {
@@ -172,6 +174,41 @@ test("Add new event", done => {
   dao.addEvent(event, (status, data) => {
     expect(status).toBe(200);
     expect(data.insertId).toBe(3);
+    expect(data.affectedRows).toBe(1);
+    done();
+  });
+});
+
+test("Add user to new event", done => {
+  dao.addUserToEvent(3, 3, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.affectedRows).toBe(1);
+    done();
+  });
+});
+
+test("Get all events for user", done => {
+  dao.getEventsOfUser(3, (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(2);
+    expect(data.map(e => e.event_id)).toContain(1);
+    expect(data.map(e => e.event_id)).toContain(3);
+    done();
+  });
+});
+
+test("Get users by type in event", done => {
+  dao.getUsersOfEventByType(3, "artist", (status, data) => {
+    expect(status).toBe(200);
+    expect(data.length).toBe(1);
+    expect(data.map(e => e.user_id)).toContain(3);
+    done();
+  });
+});
+
+test("Delete user from event", done => {
+  dao.deleteUserFromEvent(3, 3, (status, data) => {
+    expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
     done();
   });
@@ -211,15 +248,6 @@ test("Delete an event", done => {
   dao.deleteEvent(3, (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
-    done();
-  });
-});
-
-test("Get all events for user", done => {
-  dao.getEventsOfUser(3, (status, data) => {
-    expect(status).toBe(200);
-    expect(data.length).toBe(1);
-    expect(data[0].event_id).toBe(1);
     done();
   });
 });

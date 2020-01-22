@@ -1,11 +1,9 @@
 import userDao from "../dao/userDao";
-import { doesNotReject } from "assert";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-  console.log("runsqlfile: reading file " + filename);
   let sql = fs.readFileSync(filename, "utf8");
   pool.getConnection((err, connection) => {
     if (err) {
@@ -54,7 +52,7 @@ afterAll(() => {
 test("Get all users", done => {
   dao.getAllUsers((status, data) => {
     expect(status).toBe(200);
-    expect(data.length).toBe(4);
+    expect(data.length).toBe(5);
     done();
   });
 });
@@ -97,8 +95,8 @@ test("Get all info of user by email", done => {
 test("Get users by type, artist", done => {
   dao.getUsersOfType("artist", (status, data) => {
     expect(status).toBe(200);
-    expect(data.length).toBe(1);
-    expect(data.filter(user => user.type === "artist").length).toBe(1);
+    expect(data.length).toBe(2);
+    expect(data.filter(user => user.type === "artist").length).toBe(2);
     done();
   });
 });
@@ -163,14 +161,14 @@ test("Add user", done => {
 
   dao.addUser(user, (status, data) => {
     expect(status).toBe(200);
-    expect(data.insertId).toBeGreaterThanOrEqual(5);
+    expect(data.insertId).toBeGreaterThanOrEqual(6);
     expect(data.affectedRows).toBe(1);
     done();
   });
 });
 
 test("Get added user", done => {
-  dao.getUser(5, (status, data) => {
+  dao.getUser(6, (status, data) => {
     expect(status).toBe(200);
     expect(data.length).toBe(1);
     expect(data[0].name).toBe("Test Testesen");
@@ -190,13 +188,13 @@ test("Update user", done => {
     picture: new Buffer("")
   };
   // Actual change
-  dao.updateUser(5, updatedUser, (status, data) => {
+  dao.updateUser(6, updatedUser, (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
     expect(data.changedRows).toBe(1);
     done();
     // No change
-    dao.updateUser(5, updatedUser, (status, data) => {
+    dao.updateUser(6, updatedUser, (status, data) => {
       expect(status).toBe(200);
       expect(data.affectedRows).toBe(1);
       expect(data.changedRows).toBe(0);
@@ -206,7 +204,7 @@ test("Update user", done => {
 });
 
 test("Get updated user", done => {
-  dao.getUser(5, (status, data) => {
+  dao.getUser(6, (status, data) => {
     expect(status).toBe(200);
     expect(data[0].name).toBe("Test NyttTestNavn");
     done();
@@ -231,21 +229,6 @@ test("Reset password of user", done => {
   });
 });
 
-// Commented out because of error 'TypeError: callback.sendStatus is not a function'
-/*
-test("Change password of user", done => {
-  dao.changePassword(
-    "jens@jensen.com",
-    { newPassword: "NewPasswordTest" },
-    (status, data) => {
-      expect(status).toBe(200);
-      expect(data.affectedRows).toBe(1);
-      done();
-    }
-  );
-});
-*/
-
 test("Change picture of user", done => {
   dao.changePicture(1, "picturepicturepicturepicture", (status, data) => {
     expect(status).toBe(200);
@@ -255,7 +238,7 @@ test("Change picture of user", done => {
 });
 
 test("Delete user", done => {
-  dao.deleteUser(5, (status, data) => {
+  dao.deleteUser(6, (status, data) => {
     expect(status).toBe(200);
     expect(data.affectedRows).toBe(1);
     done();

@@ -4,6 +4,7 @@ import ArtistList from "../Event/artistsList";
 import TicketCard from "./EventForms/ticketCard";
 import ListGroup from "react-bootstrap/ListGroup";
 import moment from "moment";
+import AttachmentList from "../Event/attachmentList";
 
 const Wrapper = styled.div`
   margin-bottom: 80px;
@@ -83,11 +84,11 @@ const formatDate = (date: any) => {
     days[date.getDay()] +
     " " +
     (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-    "." +
-    months[date.getMonth()] +
+    ". " +
+    months[date.getMonth()].toLocaleLowerCase() +
     " " +
     date.getFullYear() +
-    " KL: " +
+    " kl: " +
     (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) +
     ":" +
     (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
@@ -104,6 +105,8 @@ interface IProps {
   program: string;
   artists: any[];
   tickets: any[];
+  attachments;
+  userRights;
   riders: any[];
   readOnly?: boolean;
   eventId?: number;
@@ -160,11 +163,25 @@ const Summary = (props: IProps) => (
     {!props.tickets || props.tickets.length === 0 ? (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
-      props.tickets.map(ticket => (
-        <ListGroup key={ticket.ticket_id}>
+      <ListGroup>
+        {props.tickets.map(ticket => (
           <TicketCard ticket={ticket} />
-        </ListGroup>
-      ))
+        ))}
+      </ListGroup>
+    )}
+
+    <UnderTitle>Vedlegg:</UnderTitle>
+    {!props.attachments || props.attachments.length === 0 ? (
+      <Text>Ingen vedlegg er lagt til</Text>
+    ) : (
+      <div>
+        <AttachmentList
+          attachments={props.attachments}
+          userRights={props.userRights}
+          artists={props.artists}
+          showOnly={props.showOnly}
+        ></AttachmentList>
+      </div>
     )}
   </Wrapper>
 );

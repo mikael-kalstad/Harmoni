@@ -1,12 +1,10 @@
 import userDao from "../dao/userDao";
 import {compareHash, hash} from "../hashing";
-import { domainToASCII } from "url";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-    console.log("runsqlfile: reading file " + filename);
     let sql = fs.readFileSync(filename, "utf8");
     pool.getConnection((err, connection) => {
         if (err) {
@@ -119,14 +117,3 @@ test("Test for change of password using CORRECT old password", done => {
         done();
     })    
 }, 3000)
-
-/*
-//Ikke ferdig da jeg ikke klarer å ta i bruk det som står i else-blokken i dao.changePassword
-test("Test for change of password using WRONG old password", done => {
-    let pass = {oldPassword: "feilPassord", newPassword: "nyestePassord"};
-    dao.changePassword(5, pass, (status, data) => {
-       // expect(status).toBe(200);
-        done();
-    })    
-}, 5000)
-*/

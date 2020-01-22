@@ -1,10 +1,10 @@
+// Tests to interact with attachments.
 import attachmentDao from "../dao/attachmentDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-    console.log("runsqlfile: reading file " + filename);
     let sql = fs.readFileSync(filename, "utf8");
     pool.getConnection((err, connection) => {
         if (err) {
@@ -73,8 +73,9 @@ test("Get all attachments uploadad userId and eventID", done => {
         done();
     })
 })
-//Legger til attachment 2, til bruker 1
-//Attachment 2 er allerede knyttet til event 1 og bruker 2
+
+// Add attachment 2 to user 1
+// Attachment 2 is already related to event 1 and user 2
 test("Add user for attachment", done => {
     dao.addUserForAttachment(2,1,(status, data) => {
         expect(status).toBe(200);
@@ -82,7 +83,8 @@ test("Add user for attachment", done => {
         done();
     })
 })
-//Skal ha to attachments
+
+// Excepted to get two attachments
 test("Get all attachments an user has access to", done => {
     dao.getAttachmentsForUser(1,(status, data) => {
         expect(status).toBe(200);
@@ -90,7 +92,8 @@ test("Get all attachments an user has access to", done => {
         done();
      })
 })
-//Bruker 1 skal ha tilgang til et arrangement ved event 2
+
+// User1 has access to one attachment for event2
 test("Get all attachments an user has access to for an event", done => {
     dao.getAttachmentsForUserForEvent(1,2,(status, data) => {
         expect(status).toBe(200);
@@ -109,17 +112,23 @@ test("Delete attachment for user", done => {
 })
 
 test("Add attachment", done => {
-    let input = 
+    let attachment = 
     {
-        attachment_id: 3,
-        event_id: 2,
-        user_id: 2,
         data: "x'23B",
         filename: "testdata.txt",
         filetype: "document/txt",
         filesize: 100
     }
-    dao.addAttachmentForUserForEvent({attachment: input, body: input}, (status, data) => {
+    let body = {
+        event_id: 2,
+        user_id: 2,
+    }
+
+    let data = {
+        body: JSON.stringify(body),
+        attachment: attachment
+    }
+    dao.addAttachmentForUserForEvent(data, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
 
