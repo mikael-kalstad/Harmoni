@@ -7,6 +7,8 @@ import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
 import { geoService } from "../../services/GeoService";
 
+import AttachmentList from '../Event/attachmentList';
+import { attachmentService } from '../../services/AttachmentService';
 import TicketMenu from "../Event/ticketMenu";
 import ArtistsList from "../Event/artistsList";
 import Map from "../Event/map";
@@ -48,6 +50,16 @@ interface IUser {
   salt: string;
   type: string;
   picture: string;
+}
+
+interface attachment {
+  attachment_id: number;
+  user_id: number;
+  event_id: number;
+  data: string;
+  filename: string;
+  filetype: string;
+  filesize: number;
 }
 
 const Wrapper = styled.div`
@@ -216,6 +228,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+
   const [coords, setCoords] = useState();
   let statuses = ["Kommende", "Arkivert", "Avlyst"];
   const params = useParams<{ id }>();
@@ -257,6 +270,10 @@ const Event = (props: any) => {
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
+
+  
+    //
+
     fetchEvent();
     fetchTickets();
     fetchArtists();
@@ -302,6 +319,7 @@ const Event = (props: any) => {
   }
 
   
+
 
   if (
     event != null &&

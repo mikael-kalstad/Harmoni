@@ -132,6 +132,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  // Get upcoming events
   getCountOfEventsByCategoryNotCancelledNotFinished(
     category: string,
     callback

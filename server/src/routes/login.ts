@@ -49,7 +49,6 @@ router.post("/token", (req, res) => {
   if (token !== undefined) {
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {
-        console.log("You are not logged in");
         res.status(401);
         res.json({ error: "You are not logged in" });
       } else {
@@ -82,7 +81,6 @@ router.post("/register", (req, res) => {
           });
           res.json({ jwt: token });
         } else {
-          console.log(status);
           res.status(401);
           res.json({ error: "Could not add user" });
         }

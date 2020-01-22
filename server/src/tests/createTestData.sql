@@ -1,16 +1,12 @@
 INSERT INTO user VALUES(default, 'Hans Hansen', 'hans@hansen.com', default, 'dfghjklfghj', 'fghjkfghjkh', 'organizer', default);
- 
 INSERT INTO user VALUES(default, 'Roy Narvestad', 'roy@hotmail.com', default, 'qwertyuty', 'cbnmnnm', 'organizer', default);
- 
 INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', 1881, 'dfghjkfghjkfghjk', 'zxcvbnmxcvb', 'artist', default);
- 
 INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 'ajjjajajjjjs', 'uriueriueriei', 'volunteer', default);
  
 INSERT INTO user VALUES(default, "Coldplay", "cold@play.com", default, "e34tef43", "3fwef34t3", "artist", default);
 
  
-INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12', '2020-01-07 15:00:00', DATE_ADD(NOW(), INTERVAL 1 DAY), 1000, '0', 'Norges største festival – løp og kjøp!', 'festival', 'x’23BC');
- 
+INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12','2020-01-07 15:00:00', DATE_ADD(NOW(), INTERVAL 1 DAY), 1000, '0', 'Norges største festival – løp og kjøp!', 'festival', 'x’23BC');
 INSERT INTO event VALUES(DEFAULT, 1, 'Astrid S konsert', 'Elgseter Gate 1', '2020-01-18 21:00:00', DATE_ADD(NOW(), INTERVAL 1 DAY), 300, '0', 'Detta må du få med deg', 'konsert', 'x’12D');
  
 INSERT INTO ticket VALUES(default, 1, 600, 'ståplass', 20);

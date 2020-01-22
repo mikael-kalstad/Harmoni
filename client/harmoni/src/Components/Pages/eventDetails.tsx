@@ -11,6 +11,7 @@ import Success from "../AddEvent/success";
 import BackBtn from "../Button/backBtn";
 import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
+import { attachmentService } from "../../services/AttachmentService";
 import WarningInfo from "../Pages/warningInfo";
 import EmailService, { emailService } from "../../services/EmailService";
 
@@ -78,6 +79,8 @@ const Text = styled.p`
 const EventDetails = (props: any) => {
   // Data states
   const [eventData, setEventData] = useState();
+  const [attachments, setAttachments] = useState([]);
+  const [attachmentsRights, setAttachmentsRights] = useState([]);
   const [artists, setArtists] = useState();
   const [volunteers, setVolunteers] = useState();
   const [tickets, setTickets] = useState();
@@ -109,7 +112,6 @@ const EventDetails = (props: any) => {
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
       if (artists) {
-        console.log("Artists: ", artists);
         artists.map(artist => {
           emailService.sendEmail(
             artist.email,
@@ -125,7 +127,6 @@ const EventDetails = (props: any) => {
         setVolunteers(
           eventService.getUsersOfEventByType(eventData.event_id, "volunteer")
         );
-        console.log("Vol: ", volunteers);
         volunteers.forEach(volunteer => {
           emailService.sendEmail(
             volunteer.email,
@@ -175,10 +176,8 @@ const EventDetails = (props: any) => {
       if (organizer) {
         setAccess(true);
         setReadOnly(false);
-      } else if (artist) {
+      } else {
         setAccess(true);
-      } else if (!organizer || !artist) {
-        setDeniedAccess(true);
       }
     };
 
@@ -186,12 +185,41 @@ const EventDetails = (props: any) => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
         userService
-          .getArtistsForEvent(res[0].event_id)
-          .then(response => setArtists(response));
+          .getArtistsForEvent(props.match.params.id)
+          .then(artistResponse => {
+            setArtists(artistResponse);
+            attachmentService
+              .getAttachmentsForUserForEvent(
+                props.userData.user_id,
+                props.match.params.id
+              )
+              .then(attachmentResponse => {
+                setAttachments(attachmentResponse);
+                attachmentResponse.forEach(attachment => {
+                  console.log(attachment);
+                  attachmentService
+                    .getAttachmentRights(attachment.attachment_id)
+                    .then(rightsResponse => {
+                      console.log(artistResponse);
+                      console.log(rightsResponse)
+                      let newRight = {
+                        attachment: attachment,
+                        users: artistResponse.filter(artist =>
+                          rightsResponse.some(right => right.user_id == artist.user_id)
+                        )
+                      };
+                      console.log(newRight)
+                      setAttachmentsRights(array => [...array, newRight]);
+                    });
+                });
+              });
+          });
 
-        ticketService.getAllTicketsByEventId(res[0].event_id).then(response => {
-          setTickets(response);
-        });
+        ticketService
+          .getAllTicketsByEventId(props.match.params.id)
+          .then(response => {
+            setTickets(response);
+          });
 
         riderService
           .getRiderByEventId(res[0].event_id)
@@ -223,6 +251,8 @@ const EventDetails = (props: any) => {
         artistsData={artists}
         ticketsData={tickets}
         riderData={riders}
+        attachmentsData={attachments}
+        attachmentsRights={attachmentsRights}
       />
     );
 
@@ -246,7 +276,10 @@ const EventDetails = (props: any) => {
                 program={eventData.programText}
                 artists={artists}
                 tickets={tickets}
+                attachments={attachments}
+                userRights={attachmentsRights}
                 riders={riders}
+                showOnly={true}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>
