@@ -179,7 +179,7 @@ const Summary = (props: IProps) => (
           attachments={props.attachments}
           userRights={props.userRights}
           artists={props.artists}
-          showOnly={props.showOnly}
+          readOnly={props.readOnly}
         ></AttachmentList>
       </div>
     )}

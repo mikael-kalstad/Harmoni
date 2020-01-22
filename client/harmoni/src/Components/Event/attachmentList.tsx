@@ -139,7 +139,7 @@ const AttachmentList = (props: any) => {
               rights.users.map(e => {
                 return (
                   <div key={e.user_id}>
-                    <Artistcard user={e} />
+                    <Artistcard artist={e} />
                   </div>
                 );
               })
@@ -159,7 +159,7 @@ const AttachmentList = (props: any) => {
               <FilenameText>{attachment.filename}</FilenameText>
               {props.showOnly ? (
                 <FaFileDownload
-                  style={{cursor: "pointer"}}
+                  style={{ cursor: "pointer" }}
                   title="Last ned vedlegg."
                   size="4em"
                   onClick={downloadAttachment(attachment)}
