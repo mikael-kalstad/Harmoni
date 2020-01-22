@@ -65,12 +65,11 @@ router.get(
 
 // Update singular rider given id
 router.put(
-  "/authorized/riders/riderlist/:event_id/:user_id",
+  "/authorized/riders/riderlist/:rider_list_id",
   async (request, response) => {
     dao.updateRiderList(
-      parseInt(request.params.event_id),
-      parseInt(request.params.user_id),
-      request.body.text,
+      parseInt(request.params.rider_list_id),
+      request.body,
       (status, data) => {
         status == 500 ? response.status(500) : response.send(data);
       }

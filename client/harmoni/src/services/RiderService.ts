@@ -2,6 +2,7 @@ import axios from "axios";
 import Service, { updateToken } from "./Service";
 
 interface RiderList {
+  rider_list_id;
   userId: number;
   eventId: number;
   text: string;
@@ -63,17 +64,12 @@ export default class RiderService extends Service {
       .catch(error => console.log(error));
   }
 
-  updateRiderList(eventId: number, userId: number, text: string) {
-    console.log("user id in service!", userId);
+  updateRiderList(rider: RiderList) {
     updateToken();
     return axios({
       method: "put",
-      url: this.path + "/authorized/riders/riderlist/" + userId + "/" + eventId,
-      data: {
-        eventId: eventId,
-        userId: userId,
-        text: text
-      },
+      url: this.path + "/authorized/riders/riderlist/" + rider.rider_list_id,
+      data: rider,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
