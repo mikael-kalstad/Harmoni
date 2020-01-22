@@ -51,7 +51,7 @@ router.put("/authorized/riders/riderlist/:rider_list_id", async (request, respon
 
 //delete riderlist
 router.delete("/authorized/riders/riderlist/:rider_list_id", async (request, response) => {
-    dao.deleteRiderListById(parseInt(request.params.id), (status, data) => {
+    dao.deleteRiderListById(parseInt(request.params.rider_list_id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
