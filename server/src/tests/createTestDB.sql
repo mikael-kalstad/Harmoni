@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS attachment (
   event_id INT NOT NULL,
   user_id INT,
   data LONGBLOB NOT NULL,
-  filetype VARCHAR(50) NOT NULL,
-  filename VARCHAR(50) NOT NULL,
+  filetype VARCHAR(512) NOT NULL,
+  filename VARCHAR(512) NOT NULL,
   filesize INT NOT NULL,
   PRIMARY KEY (attachment_id),
 	FOREIGN KEY (event_id)

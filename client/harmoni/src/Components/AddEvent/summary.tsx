@@ -4,6 +4,7 @@ import ArtistList from "../Event/artistsList";
 import TicketCard from "./EventForms/ticketCard";
 import ListGroup from "react-bootstrap/ListGroup";
 import moment from "moment";
+import AttachmentList from "../Event/attachmentList";
 
 const Wrapper = styled.div`
   margin-bottom: 80px;
@@ -104,7 +105,10 @@ interface IProps {
   program: string;
   artists: any[];
   tickets: any[];
+  attachments;
+  userRights;
   riders: any[];
+  showOnly?: any;
 }
 
 const Summary = (props: IProps) => (
@@ -160,6 +164,17 @@ const Summary = (props: IProps) => (
         ))}
       </ListGroup>
     )}
+
+    <UnderTitle>Vedlegg:</UnderTitle>
+    {(!props.attachments || props.attachments.length === 0) ? 
+    (
+      <Text>Ingen vedlegg er lagt til</Text>
+      ) : (
+      <div>
+        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists} showOnly={props.showOnly}></AttachmentList>
+      </div>
+      )
+    }
   </Wrapper>
 );
 

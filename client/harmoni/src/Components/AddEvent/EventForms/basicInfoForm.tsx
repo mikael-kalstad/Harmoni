@@ -94,6 +94,12 @@ const BasicInfoForm = (props: IProps) => {
     }
   };
 
+  const compare_dates =(date1,date2) =>{
+    let fromDate = new Date(date1);
+    let toDate = new Date(date2);
+    return fromDate < toDate ;
+}
+
   return (
     <>
       <Title>Info</Title>
@@ -235,6 +241,17 @@ const BasicInfoForm = (props: IProps) => {
           fortsetter.
         </WarningText>
       )}
+      {props.infoData.dateFrom !== null &&
+        props.infoData.dateTo !== null &&
+        !compare_dates(props.infoData.dateFrom, props.infoData.dateTo) && (
+          <WarningText>Fra dato kan ikke være etter til dato</WarningText>
+        )}
+      {props.infoData.dateFrom !== null &&
+        props.infoData.dateTo !== null &&
+        (!compare_dates(new Date(), props.infoData.dateFrom) ||
+          !compare_dates(new Date(), props.infoData.dateTo)) && (
+          <WarningText>Datoen du har valgt er i fortiden</WarningText>
+        )}
     </>
   );
 };

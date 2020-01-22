@@ -23,6 +23,9 @@ server.use('/api/v0', require('./routes/search'));
 server.use('/api/v0', require('./routes/geo'));
 server.use('/api/v0', require('./routes/sendEmail'));
 
+
+//server.use("api/v0/users", require("./routes/users"));
+
 var port = parseInt(process.env.server_port);
 
 server.listen(port, () => console.log('Server started on port:', port));
