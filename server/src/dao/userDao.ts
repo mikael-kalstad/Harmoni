@@ -66,7 +66,7 @@ export default class userDao extends daoParentUser {
   }
 
   // Gets specific user given email
-  getUserAllInfoByEMail(email: string, callback){
+  getUserAllInfoByEMail(email: string, callback) {
     super.query(
       "SELECT user_id, name, email, mobile, type, picture FROM user WHERE email = ?",
       [email],
@@ -104,7 +104,7 @@ export default class userDao extends daoParentUser {
   // Gets all artists for an event
   getArtistsForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
+      "SELECT user.user_id, user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
       [eventId],
       callback
     );

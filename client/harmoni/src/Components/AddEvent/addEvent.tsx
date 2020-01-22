@@ -185,7 +185,7 @@ const AddEvent = (props: IProps) => {
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-
+  console.log(listOfArtists);
   function getStepContent(step: number) {
     switch (step) {
       case 0:
@@ -324,14 +324,8 @@ const AddEvent = (props: IProps) => {
     // Add all riders
     listOfArtists.forEach(a => {
       let text = listOfRiders.find(data => data.user_id === a.user_id)["text"];
-
-      let rider: Rider = {
-        eventId: eventId,
-        userId: a.user_id,
-        text: text
-      };
-
-      // riderService.updateRiderList(rider);
+      console.log(a);
+      riderService.updateRiderList(eventId, a.user_id, text);
     });
   };
 

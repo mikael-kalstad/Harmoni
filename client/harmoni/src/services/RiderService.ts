@@ -63,12 +63,17 @@ export default class RiderService extends Service {
       .catch(error => console.log(error));
   }
 
-  updateRiderList(eventId: number, userId: number, rider: RiderList) {
+  updateRiderList(eventId: number, userId: number, text: string) {
+    console.log("user id in service!", userId);
     updateToken();
     return axios({
       method: "put",
       url: this.path + "/authorized/riders/riderlist/" + userId + "/" + eventId,
-      data: rider,
+      data: {
+        eventId: eventId,
+        userId: userId,
+        text: text
+      },
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")

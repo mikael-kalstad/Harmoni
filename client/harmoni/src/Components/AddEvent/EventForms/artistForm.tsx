@@ -60,16 +60,16 @@ const Text = styled.p`
   font-weight: 400;
   color: #777777;
 `;
-var tempId = 1;
+
 const ArtistForm = (props: any) => {
-  const [userData, setUserData] = useState<IUser[]>();
+  const [artistsData, setArtistsData] = useState<IUser[]>();
   let typeahead;
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    setUserData(await userService.getUsersOfType("artist"));
+    setArtistsData(await userService.getUsersOfType("artist"));
   };
 
   const addArtist = (s: { user: IUser }[]) => {
@@ -88,7 +88,7 @@ const ArtistForm = (props: any) => {
     }
   };
 
-  if (userData && userData != null) {
+  if (artistsData && artistsData != null) {
     return (
       <>
         <Title>Artister</Title>
@@ -100,7 +100,7 @@ const ArtistForm = (props: any) => {
         <Typeahead
           id="typeahead"
           labelKey={artistName => `${artistName.user.name}`}
-          options={userData.map(user => ({ user }))}
+          options={artistsData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
           placeholder="Søk etter artister..."
           selected={props.userData}
