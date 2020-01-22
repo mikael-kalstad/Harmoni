@@ -2,10 +2,13 @@ import axios from 'axios';
 import Service, {updateToken} from './Service';
 
 interface Attachment {
-  attachmentId: number;
-  userId: number;
-  eventId: number;
+  attachment_id: number;
+  user_id: number;
+  event_id: number;
   data: File;
+  filename: string;
+  filetype: string;
+  filesize: number;
 }
 
 class AttachmentService extends Service {
@@ -49,6 +52,18 @@ class AttachmentService extends Service {
       }
     }).then(response =>  response.data).catch(error => console.log(error));
   }
+
+  getAttachmentRights(attachment_id: number) {
+    updateToken();
+    return axios({
+      method: 'get',
+      url: this.path + '/authorized/attachments/attachment_user/' + attachment_id,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    }).then(response => response.data).catch(error => console.log(error));
+  }
   
   //Fetches all attachments a user has access to
   getAttachmentsForUser(userId: number){
@@ -78,13 +93,17 @@ class AttachmentService extends Service {
 
   // Adds an attachment
   addAttachment(attachment: Attachment) {
+    console.log(attachment);
+    const data = new FormData();
+    data.append('file', attachment.data);
+    data.append('data', JSON.stringify(attachment));
+    console.log(data);
     updateToken();
     return axios({
       method: 'post',
       url: this.path + '/authorized/attachments/',
-      data: attachment,
+      data: data,
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     }).then(response =>  response.data).catch(error => console.log(error));
@@ -107,7 +126,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'put',
-      url: this.path + '/authorized/attachments/' + attachment.attachmentId,
+      url: this.path + '/authorized/attachments/' + attachment.attachment_id,
       data: attachment,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -133,6 +152,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'get',
+      responseType: "blob",
       url: this.path + '/authorized/attachments/download/' + attachmentId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -146,7 +166,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'post',
-      url: this.path + '/authorized/attachment_user/' + attachmentId + '&' + userId,
+      url: this.path + '/authorized/attachments/attachment_user/' + attachmentId + '&' + userId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -159,7 +179,7 @@ class AttachmentService extends Service {
     updateToken();
     return axios({
       method: 'delete',
-      url: this.path + '/authorized/attachment_user/' + attachmentId + '&' + userId,
+      url: this.path + '/authorized/attachments/attachment_user/' + attachmentId + '&' + userId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
