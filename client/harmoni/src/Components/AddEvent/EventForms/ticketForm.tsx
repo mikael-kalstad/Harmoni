@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import TextField from '@material-ui/core/TextField';
-import { ListGroup } from 'react-bootstrap';
-import TicketCard from './ticketCard';
-import Btn from '../../Button/button';
+import React, { useState } from "react";
+import styled from "styled-components";
+import TextField from "@material-ui/core/TextField";
+import { ListGroup } from "react-bootstrap";
+import TicketCard from "./ticketCard";
+import Btn from "../../Button/button";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -16,8 +16,8 @@ const UnderTitle = styled.h3`
   margin: 50px 0 20px 0;
 `;
 const inputStyle = {
-  width: '100%',
-  marginBottom: '25px'
+  width: "100%",
+  marginBottom: "25px"
 };
 
 const Text = styled.p`
@@ -27,6 +27,12 @@ const Text = styled.p`
   color: #777777;
 `;
 
+const WarningText = styled.p`
+  margin: 45px 0;
+  font-size: 16px;
+  font-weight: 700;
+`;
+
 interface ITicket {
   ticket_id: number;
   event_id: number;
@@ -34,36 +40,48 @@ interface ITicket {
   type: string;
   available: number;
 }
-var tempId = 1;
+
 const TicketForm = (props: any) => {
-  const [type, setType] = useState('');
+  const [type, setType] = useState<string>("");
   const [price, setPrice] = useState();
   const [available, setAvailable] = useState();
+  const [submit, setSubmit] = useState<boolean>(false);
 
   function handleChange(newInt: any, setFunc: Function) {
     if (newInt < 0) setFunc(0);
     else setFunc(newInt);
   }
 
+  // Check if enter key is clicked
+  const checkForEnterKey = (e: { key: string } | undefined) => {
+    // Try to Log in if enter key is pressed down
+    if (e !== undefined && e.key === "Enter") addTicket();
+  };
+
+  const isInputsEmpty = () => {
+    return type === "" || price === undefined || available === undefined;
+  };
+
   const addTicket = () => {
-    let s: ITicket = {
-      ticket_id: tempId,
-      event_id: tempId,
-      price: -1,
-      type: '',
-      available: -1
+    setSubmit(true);
+    if (isInputsEmpty()) return;
+
+    let newTicket: ITicket = {
+      ticket_id: undefined,
+      event_id: undefined,
+      price: price,
+      type: type,
+      available: available
     };
 
-    if (s !== null) {
-      tempId = tempId + 1;
-      s.type = type;
-      s.price = price;
-      s.available = available;
-      props.setListOfTickets(array => [...array, s]);
-    }
-    setType('');
-    setPrice('');
-    setAvailable('');
+    props.setListOfTickets(array => [...array, newTicket]);
+
+    setSubmit(false);
+
+    // Clear inputs
+    setType("");
+    setPrice("");
+    setAvailable("");
   };
 
   const deleteTicket = ticket => {
@@ -73,14 +91,20 @@ const TicketForm = (props: any) => {
       );
     }
   };
+  console.log(props.listOfTickets);
 
   return (
     <>
       <Title>Billetter</Title>
       <Text>
-        Du kan legge til og endre billetter senere ved å redigere arrangementet
-        i min side.
+        Du kan legge til billetter senere ved å redigere arrangementet i min
+        side.
       </Text>
+
+      <WarningText>
+        OBS! Du kan ikke endre eller slette billetter som allerede er lagd når
+        du oppretter et arrangement.
+      </WarningText>
 
       <h5>Billett-type</h5>
       <TextField
@@ -88,12 +112,18 @@ const TicketForm = (props: any) => {
         variant="outlined"
         placeholder="(Sitteplass, ståplass, VIP, etc.)"
         value={type}
-        helperText="Maks 45 karakterer"
+        error={submit && type === ""}
+        helperText={
+          submit && type === ""
+            ? "Type er påkrevd for billett"
+            : "Maks 45 karakterer"
+        }
         onChange={e =>
           e.target.value.length <= 45
             ? handleChange(e.target.value, setType)
             : null
         }
+        onKeyDown={e => checkForEnterKey(e)}
       />
 
       <h5>Pris per billett</h5>
@@ -102,14 +132,19 @@ const TicketForm = (props: any) => {
         variant="outlined"
         type="number"
         placeholder="Pris for kategori"
+        error={submit && price === undefined}
+        helperText={
+          submit && price === undefined && "Pris er påkrevd for billett"
+        }
         value={price}
         onChange={e =>
-          e.target.value === ''
+          e.target.value === ""
             ? handleChange(e.target.value, setPrice)
             : Number.parseInt(e.target.value) <= 2147483647
             ? handleChange(e.target.value, setPrice)
             : null
         }
+        onKeyDown={e => checkForEnterKey(e)}
       />
 
       <h5>Total antall</h5>
@@ -117,15 +152,20 @@ const TicketForm = (props: any) => {
         style={inputStyle}
         variant="outlined"
         type="number"
+        helperText={
+          submit && available === undefined && "Kategori er påkrevd for billett"
+        }
         placeholder="Antall tilgjengelige plasser i kategori"
+        error={submit && available === undefined}
         value={available}
         onChange={e =>
-          e.target.value === ''
+          e.target.value === ""
             ? handleChange(e.target.value, setAvailable)
             : Number.parseInt(e.target.value) <= 2147483647
             ? handleChange(e.target.value, setAvailable)
             : null
         }
+        onKeyDown={e => checkForEnterKey(e)}
       />
 
       <Btn onClick={() => addTicket()}>Legg til</Btn>
@@ -136,8 +176,12 @@ const TicketForm = (props: any) => {
 
       <ListGroup>
         {props.listOfTickets &&
-          props.listOfTickets.map(u => (
-            <TicketCard ticket={u} remove={deleteTicket} />
+          props.listOfTickets.map(t => (
+            <TicketCard
+              ticket={t}
+              remove={deleteTicket}
+              disabled={t.ticket_id !== undefined}
+            />
           ))}
       </ListGroup>
     </>

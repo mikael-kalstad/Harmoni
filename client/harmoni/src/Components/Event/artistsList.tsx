@@ -19,6 +19,9 @@ interface IProps {
   artists: IUser[];
   hideTitle?: boolean;
   riderData?: any;
+  readOnly?: boolean;
+  eventId?: number;
+  userData?: any;
 }
 
 interface IWrapper {
@@ -80,8 +83,23 @@ const ArtistsList = (props: IProps) => {
         )}
         {props.artists.map((artist, index) => {
           return (
-            <ListGroup.Item key={artist.user_id + index}>
-              <ArtistCard user={artist} riderData={props.riderData} />
+            <ListGroup.Item
+              key={artist.user_id + index}
+              style={
+                props.userData && props.userData.user_id === artist.user_id
+                  ? {
+                      background: "#E3F2FF"
+                    }
+                  : {}
+              }
+            >
+              <ArtistCard
+                artist={artist}
+                riderData={props.riderData}
+                readOnly={props.readOnly}
+                eventId={props.eventId}
+                userData={props.userData}
+              />
             </ListGroup.Item>
           );
         })}
