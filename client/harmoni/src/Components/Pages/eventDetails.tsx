@@ -109,7 +109,6 @@ const EventDetails = (props: any) => {
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
       if (artists) {
-        console.log("Artists: ", artists);
         artists.map(artist => {
           emailService.sendEmail(
             artist.email,
@@ -125,7 +124,6 @@ const EventDetails = (props: any) => {
         setVolunteers(
           eventService.getUsersOfEventByType(eventData.event_id, "volunteer")
         );
-        console.log("Vol: ", volunteers);
         volunteers.forEach(volunteer => {
           emailService.sendEmail(
             volunteer.email,
@@ -175,10 +173,8 @@ const EventDetails = (props: any) => {
       if (organizer) {
         setAccess(true);
         setReadOnly(false);
-      } else if (artist) {
+      } else {
         setAccess(true);
-      } else if (!organizer || !artist) {
-        setDeniedAccess(true);
       }
     };
 

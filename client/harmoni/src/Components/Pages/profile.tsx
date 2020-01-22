@@ -69,6 +69,7 @@ const BtnIcon = styled.img`
 
 const Profile = (props: { userData: any }) => {
   const [events, setEvents] = useState();
+  const [eventsParticipant, setEventsParticipant] = useState();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -76,10 +77,14 @@ const Profile = (props: { userData: any }) => {
         await eventService.getEventsByOrganizer(props.userData.user_id)
       );
     };
-
+    const getEventsVolunteers= async ()=>{
+        setEventsParticipant(
+            await eventService.getEventsByUser(props.userData.user_id)
+        );
+    };
     getEvents();
+    getEventsVolunteers();
   }, [props.userData]);
-
   return (
     <>
       <Wrapper>
@@ -104,13 +109,27 @@ const Profile = (props: { userData: any }) => {
           <></>
         )}
       </Wrapper>
+        {props.userData.type==="volunteer" ||props.userData.type==="artist"?(
+            <EventGrid
+                eventInProfile={true}
+                emptyText="Du har ingen arrangementer som du er medlem i"
+                data={eventsParticipant && eventsParticipant.filter(e => e.status === 0)}
+                title="Arrangementer der du er medlem"
+            />
+        ):(
+            <></>
+        )}
+        {props.userData.type === "organizer" ? (
+            <EventGrid
+                eventInProfile={true}
+                emptyText="Du har ingen kommende arrangementer"
+                data={events && events.filter(e => e.status === 0)}
+                title="Mine arrangementer"
+            />
+            ):(
+            <></>
+        )}
 
-      <EventGrid
-        eventInProfile={true}
-        emptyText="Du har ingen kommende arrangementer"
-        data={events && events.filter(e => e.status === 0)}
-        title="Mine arrangementer"
-      />
 
       <EventGrid
         eventInProfile={true}
@@ -121,7 +140,17 @@ const Profile = (props: { userData: any }) => {
 
       <CalenderWrapper>
         <Title>Kalender</Title>
-        <EventCalendar data={events && events.filter(e => e.status === 0)} />
+          {props.userData.type === "organizer"?(
+              <EventCalendar data={events && events.filter(e => e.status === 0||e.status===1 ||e.status===3)} />
+          ):(
+              <></>
+          )}
+          {props.userData.type==="volunteer"||props.userData.type==="artist"? (
+              <EventCalendar data={eventsParticipant && eventsParticipant.filter(e => e.status === 0||e.status===1 ||e.status===3)} />
+          ):(
+              <></>
+          )}
+
       </CalenderWrapper>
     </>
   );
