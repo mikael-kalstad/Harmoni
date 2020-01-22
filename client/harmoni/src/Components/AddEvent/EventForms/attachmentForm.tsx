@@ -2,17 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import ListGroup from "react-bootstrap/ListGroup";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { userService } from "../../../services/UserService";
+import Button from "../../Button/button";
 import styled from "styled-components";
 import ArtistCard from "./artistCard";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { attachmentService } from "../../../services/AttachmentService";
-import { isNullOrUndefined } from "util";
-import AttachmentList from "../../Event/attachmentList";
-
-interface IWrapper {
-  empty: boolean;
-}
 
 interface userRight {
   users: IUser[];
@@ -39,16 +31,18 @@ interface IUser {
   picture: string;
 }
 
-const Wrapper = styled.div<IWrapper>`
-  border: ${props => (props.empty ? "dashed 3px #bbbbbb" : "none")};
+const Wrapper = styled.div`
   height: 100%;
+  margin-top: 20px;
+  grid-gap: 10px;
+  display: grid;
+`;
+
+const AttachmentWrapper = styled.div`
+  display: grid;
+  border: dashed 3px #bbbbbb;
+  grid-template-rows: 5fr 3fr;
   border-radius: 10px;
-  /* padding: 10px; */
-  ${props => (props.empty ? "display: grid" : "")}
-  ${props =>
-    props.empty ? "grid-template-rows: 5fr 3fr" : ""}
-  align-items: center;
-  justify-items: center;
 `;
 
 const DelBtn = styled.img`
@@ -66,34 +60,21 @@ const Input = styled.input`
   z-index: -1;
 `;
 
-const LoadingWrapper = styled.div`
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  grid-gap: 20px;
-`;
-
-const LoadingText = styled.p`
-  font-size: 24px;
-`;
-
 const UnderTitle = styled.h3`
   font-size: 24px;
-  margin: 50px 0 20px 0;
 `;
 
 const Title = styled.h2`
   font-size: 48px;
   font-weight: 500;
-  text-align: center;
   margin-bottom: 10px;
 `;
 
 const Text = styled.p`
-  margin-top: 45px;
   font-size: 16px;
   font-weight: 400;
-  color: #777777;
+  margin: 0;
+  color: #222222;
 `;
 
 const FilenameText = styled.label`
@@ -107,8 +88,8 @@ const FilenameText = styled.label`
 
 const FileUploadWrapper = styled.div`
   width: 400px;
-  height: 200px;
-  background: #f0f0f0;
+  height: 60px;
+  background: #e0e0e0;
   display: grid;
   align-items: center;
   justify-items: center;
@@ -122,6 +103,24 @@ const FileUploadWrapper = styled.div`
   :active {
     filter: brightness(98%);
   }
+`;
+
+const FileUploadText = styled.p`
+  font-size: 22px;
+  color: #222222;
+  margin: 0;
+  font-weight: bold;
+`;
+
+const NoAttachmentsText = styled.p`
+  font-size: 26px;
+  color: #444444;
+  margin: 0;
+  font-weight: bold;
+`;
+
+const AddAttachmentButtonWrapper = styled.div`
+  margin: 17px 0;
 `;
 
 const AttachmentForm = (props: any) => {
@@ -293,9 +292,10 @@ const AttachmentForm = (props: any) => {
         Du kan legge til og endre vedlegg og hvem som skal ha tilgang til disse
         ved å redigere arrangementet i min side.
       </Text>
-      <UnderTitle>Legg til vedlegg:</UnderTitle>
+
       {/* Input type file, ListGroup with ArtistCards? */}
-      <Wrapper empty={false}>
+      <Wrapper>
+        <UnderTitle>Legg til vedlegg:</UnderTitle>
         <Input
           accept="*/*"
           id="attachment-upload"
@@ -306,11 +306,13 @@ const AttachmentForm = (props: any) => {
         />
         <label htmlFor="attachment-upload">
           <FileUploadWrapper>
-            <Text>{fileInputName ? fileInputName : "Velg fil"}</Text>
+            <FileUploadText>
+              {fileInputName ? fileInputName : "Velg fil"}
+            </FileUploadText>
           </FileUploadWrapper>
         </label>
-        <Title>Lesetilgang:</Title>
-        <UnderTitle>Legg til brukere som skal ha tilgang</UnderTitle>
+        <UnderTitle>Lesetilgang:</UnderTitle>
+        <Text>Legg til brukere som skal ha tilgang</Text>
         {readyToUpload ? (
           <>
             <Typeahead
@@ -363,46 +365,51 @@ const AttachmentForm = (props: any) => {
             ) : null}
           </>
         ) : null}
+        <AddAttachmentButtonWrapper>
+          <Button
+            disabled={!readyToUpload}
+            onClick={() => addAttachment(currAttachment)}
+          >
+            Legg til vedlegg
+          </Button>
+        </AddAttachmentButtonWrapper>
+      </Wrapper>
 
-        <input
-          type="submit"
-          value="Legg til vedlegg"
-          disabled={!readyToUpload}
-          onClick={() => addAttachment(currAttachment)}
-        />
-      </Wrapper>
-      <Wrapper empty={props.listOfAttachments.length == 0}>
-        <UnderTitle>Vedleggsliste:</UnderTitle>
-        <ListGroup>
-          {props.listOfAttachments.map(e => {
-            let rights = getUsersforAttachment(e.filename);
-            console.log(e);
-            console.log(rights);
-            let RightsJSX = rights.users.map(data => {
-              console.log(data);
+      <AttachmentWrapper>
+        {props.listOfAttachments.length == 0 ? (
+          <NoAttachmentsText>Ingen vedlegg er lagt til</NoAttachmentsText>
+        ) : (
+          <ListGroup>
+            {props.listOfAttachments.map(e => {
+              let rights = getUsersforAttachment(e.filename);
+              console.log(e);
+              console.log(rights);
+              let RightsJSX = rights.users.map(data => {
+                console.log(data);
+                return (
+                  <>
+                    <ArtistCard artist={data} remove={removeUser(e, data)} />
+                  </>
+                );
+              });
               return (
-                <>
-                  <ArtistCard artist={data} remove={removeUser(e, data)} />
-                </>
-              );
-            });
-            return (
-              <div key={e.filename}>
-                <div>
-                  <img
-                    width="55px"
-                    height="55px"
-                    src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
-                  />
-                  <FilenameText>{e.filename}</FilenameText>
-                  <DelBtn src="/icons/cross.svg" onClick={removeFile(e)} />
+                <div key={e.filename}>
+                  <div>
+                    <img
+                      width="55px"
+                      height="55px"
+                      src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
+                    />
+                    <FilenameText>{e.filename}</FilenameText>
+                    <DelBtn src="/icons/cross.svg" onClick={removeFile(e)} />
+                  </div>
+                  <div>{RightsJSX}</div>
                 </div>
-                <div>{RightsJSX}</div>
-              </div>
-            );
-          })}
-        </ListGroup>
-      </Wrapper>
+              );
+            })}
+          </ListGroup>
+        )}
+      </AttachmentWrapper>
     </>
   );
 };

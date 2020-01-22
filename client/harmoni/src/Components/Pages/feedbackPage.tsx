@@ -3,6 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import Button from "../Button/button";
 import { FaCheckCircle } from "react-icons/fa";
+import { FaTimesCircle } from "react-icons/fa";
 import BackBtn from "../Button/backBtn";
 
 import { emailService } from "../../services/EmailService";
@@ -34,6 +35,12 @@ const InfoText = styled.p`
 const checkCircleStyle = {
     fontSize: 120,
     color: "#82c91e",
+    justifySelf: "center"
+};
+
+const crossCircleStyle = {
+    fontSize: 120,
+    color: "#e74c3c",
     justifySelf: "center"
 };
 

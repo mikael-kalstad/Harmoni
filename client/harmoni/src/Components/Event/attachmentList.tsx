@@ -157,7 +157,7 @@ const AttachmentList = (props: any) => {
               src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
             /> */}
               <FilenameText>{attachment.filename}</FilenameText>
-              {props.showOnly ? (
+              {props.readOnly ? (
                 <FaFileDownload
                   style={{ cursor: "pointer" }}
                   title="Last ned vedlegg."

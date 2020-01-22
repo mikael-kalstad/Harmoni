@@ -68,9 +68,9 @@ const Footer = (props: any) => {
                 <ContactText>
                     <StyledLink to="/feedback">Kontakt oss</StyledLink>
                     <br />
-                    Prosjektet finnes på GitLab:{" "}
+                    Prosjektet finnes på{" "}
                     <StyledA href="https://gitlab.stud.idi.ntnu.no/henrikwt/team-8---harmoni">
-                        Team 8
+                        GitLab
                     </StyledA>
                 </ContactText>
             </InfoItem>

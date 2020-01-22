@@ -13,18 +13,18 @@ import {log} from "util";
 const SearchEvents = (props:any) => {
     const [eventsData, setEventData] = useState<IEvent[]>();
     const [userInput, setUserInput] = useState("");
-
-    useEffect(() => {
-        fetchSearchEvents();
-
-    }, [userInput]);
-
+    const [complete, setComplete] = useState(false);
+    const [searching, setSearching] = useState(false);
 
     // Get events from DB and set state
     const fetchSearchEvents = async() => {
         // Async DB call
-        if( userInput){
+        if(userInput.length >= 3){
+            setComplete(false);
+            setSearching(true);
             setEventData(await searchService.searchForEvents(userInput));
+            setSearching(false);
+            setComplete(true);
         }
     }
 
@@ -35,19 +35,21 @@ const SearchEvents = (props:any) => {
 
     // Render grid of all matching arrangements
     return (
-        <>
+        <div style={{alignContent: "center", justifyContent: "center"}}>
             <input type="text" onChange={inputChange}
                    value={userInput}
                    style={{
                        fontSize: "27px",
                        textAlign: "center",
-                       margin: "50px auto auto 600px",
+                       margin: "50px 15px auto 600px",
                        borderRadius: "30px",
                        border: "solid"
                     }}
             />
-            <ArrangementGrid title={ ' arrangmenter'} data={eventsData} />
-        </>
+            <input type="submit" value="Søk" onClick={fetchSearchEvents}/>
+            {searching ? <ArrangementGrid></ArrangementGrid> : null}
+            {complete ? <ArrangementGrid title={ ' arrangmenter'} data={eventsData} /> : null}
+        </div>
     )
 }
 

@@ -389,7 +389,7 @@ const AddEvent = (props: IProps) => {
   };
 
   const addRiders = async (event_id: number) => {
-    let res = await riderService.getRiderByEventId(props.eventData.event_id);
+    let res = await riderService.getRiderByEventId(event_id);
 
     if (res) {
       // Add all riders
