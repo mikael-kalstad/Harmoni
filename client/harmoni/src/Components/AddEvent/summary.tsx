@@ -170,7 +170,7 @@ const Summary = (props: IProps) => (
       <Text>Ingen vedlegg er lagt til</Text>
       ) : (
       <div>
-        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists}></AttachmentList>>
+        <AttachmentList attachments={props.attachments} userRights={props.userRights} artists={props.artists}></AttachmentList>
       </div>
       )
     }

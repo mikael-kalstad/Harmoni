@@ -135,24 +135,23 @@ const AttachmentForm = (props: any) => {
 
   const [listOfArtists, setListOfArtists] = useState<IUser[]>([]);
 
+  let typeahead;
+
   useEffect(() => {
     setListOfArtists(props.listOfArtists);
   }, [tempAttachmentRights]);
 
   const removeUserTemp = (attachment, user) => () => {
-    let userRight = {
-      user: user,
-      attachment: attachment
+    let array = {
+      users: [],
+      attachment: null
     };
-    console.log(userRight);
-
-    //Remove the user from the access list
-    let files = tempAttachmentRights.users.filter(e => {
+    array.users = tempAttachmentRights.users.filter(e => {
       console.log(e);
       return e.user_id != user.user_id;
     });
-    tempAttachmentRights.users = files;
-    setTempAttachmentRights(tempAttachmentRights);
+    array.attachment = currAttachment;
+    setTempAttachmentRights(array);
   };
 
   const removeFileTemp = attachment => () => {
@@ -206,6 +205,7 @@ const AttachmentForm = (props: any) => {
         setTempAttachmentRights(array);
       }
     }
+    typeahead.clear();
   };
 
   const removeUser = (attachment, user) => () => {
@@ -322,6 +322,7 @@ const AttachmentForm = (props: any) => {
               onChange={s => addUser(s[0])}
               placeholder="Søk etter brukere..."
               emptyLabel="Du må legge til artister i steg 2."
+              ref={elem => (typeahead = elem)}
             />
             {currAttachment ? (
               <ListGroup>
