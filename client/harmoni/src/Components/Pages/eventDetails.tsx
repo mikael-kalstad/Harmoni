@@ -92,6 +92,15 @@ const EventDetails = (props: any) => {
   const [readOnly, setReadOnly] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
 
+  let categories = {
+    concert: "Konsert",
+    festival: "Festival",
+    theatre: "Teater",
+    standup: "Standup",
+    show: "Show",
+    other: "Annet"
+  };
+
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
@@ -230,8 +239,8 @@ const EventDetails = (props: any) => {
               <Summary
                 name={eventData.name}
                 img={new Buffer(eventData.picture, "base64").toString("ascii")}
-                category={eventData.category}
-                location={eventData.location}
+                category={categories[eventData.category]}
+                location={eventData.address}
                 fromDate={eventData.from_date}
                 toDate={eventData.to_date}
                 program={eventData.programText}
