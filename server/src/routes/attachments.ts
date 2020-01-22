@@ -32,7 +32,7 @@ router.post('/authorized/attachments/', upload.single("file"), async (request, r
     filesize: request.file.size,
     filetype: request.file.mimetype,
   }
-  dao.addAttachmentForUserForEvent({ body: request.body, attachment: attachment },
+  dao.addAttachmentForUserForEvent({ body: request.body.data, attachment: attachment },
     (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     });
