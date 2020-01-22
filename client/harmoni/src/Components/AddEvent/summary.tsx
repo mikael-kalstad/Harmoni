@@ -154,11 +154,11 @@ const Summary = (props: IProps) => (
     {!props.tickets || props.tickets.length === 0 ? (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
-      props.tickets.map(ticket => (
-        <ListGroup key={ticket.ticket_id}>
+      <ListGroup>
+        {props.tickets.map(ticket => (
           <TicketCard ticket={ticket} />
-        </ListGroup>
-      ))
+        ))}
+      </ListGroup>
     )}
   </Wrapper>
 );
