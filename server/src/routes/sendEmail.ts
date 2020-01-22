@@ -1,4 +1,7 @@
+// Routes to interact with sendMail to inform user when event cancelled
+
 const express = require('express');
+const router = express.Router();
 
 var path = require('path');
 var bodyParser = require("body-parser");
@@ -6,12 +9,7 @@ var nodemailer = require('nodemailer');
 var email = process.env.gmail_email;
 var password = process.env.gmail_password;
 
-const router = express.Router();
-
 router.use(bodyParser.json());
-
-
-
 
 var smtpTransport = nodemailer.createTransport({
     service:  'gmail',
@@ -20,8 +18,6 @@ var smtpTransport = nodemailer.createTransport({
         pass: password
     }
 });
-
-
 
 router.post("/send_email/",(req,res)=>{
     var emailinfo = {

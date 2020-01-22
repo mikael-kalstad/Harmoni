@@ -1,11 +1,11 @@
+// Routes to interact with users.
+
 import express from "express";
 import userDAO, { sanitizeUser } from "../dao/userDao";
 import { pool } from "../dao/database";
 
 const router = express.Router();
 const dao = new userDAO(pool);
-
-// Routes to interact with users.
 
 // Create user
 router.post("/users/", async (request, response) => {
@@ -26,6 +26,7 @@ router.get('/name/:name', async (request, response) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+
 // Get singular user given email
 router.get("/users/email/:email", async (request, response) => {
   dao.getUserByEMail(request.params.email, (status, data) => {
@@ -100,26 +101,26 @@ router.put("/authorized/users/:id", async (request, response) => {
       dao.updateUser(parseInt(request.params.id), request.body, data => {
         response.status(200);
         response.send(sanitizeUser(data));
-        console.log("Mailen gjøres om til en ny");
       });
     }else if(user.user_id == request.params.id){
       dao.updateUser(parseInt(request.params.id), request.body, (status, data) => {
         response.status(200);
         response.send(sanitizeUser(data));
-        console.log("Mailen forblir den samme");
       });
     }else{
-      
       response.sendStatus(409);
-      console.log("Email finnes allerede");
     }
   });
 });
+
+// Edit password, used in edit profile
 router.put("/authorized/users/change_password/:email", async (request, response) => {
   dao.changePassword(request.params.email, request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+
+// Edit pic, used in edit profile
 router.put("/authorized/users/change_picture/:id", async (request, response) => {
   dao.changePicture(parseInt(request.params.id), request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
