@@ -105,6 +105,9 @@ interface IProps {
   artists: any[];
   tickets: any[];
   riders: any[];
+  readOnly?: boolean;
+  eventId?: number;
+  userData?: any;
 }
 
 const Summary = (props: IProps) => (
@@ -147,6 +150,9 @@ const Summary = (props: IProps) => (
         hideTitle={true}
         artists={props.artists}
         riderData={props.riders}
+        readOnly={true}
+        eventId={props.eventId}
+        userData={props.userData}
       />
     )}
 

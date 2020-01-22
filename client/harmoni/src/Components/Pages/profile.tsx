@@ -72,9 +72,16 @@ const Profile = (props: { userData: any }) => {
 
   useEffect(() => {
     const getEvents = async () => {
-      setEvents(
-        await eventService.getEventsByOrganizer(props.userData.user_id)
-      );
+      if (props.userData) {
+        // User is an organizer
+        if (props.userData.type === "organizer")
+          setEvents(
+            await eventService.getEventsByOrganizer(props.userData.user_id)
+          );
+        // User is artist/manager or volunteer
+        else
+          setEvents(await eventService.getEventsByUser(props.userData.user_id));
+      }
     };
 
     getEvents();

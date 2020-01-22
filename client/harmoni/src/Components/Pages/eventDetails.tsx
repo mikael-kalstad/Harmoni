@@ -238,6 +238,8 @@ const EventDetails = (props: any) => {
                 artists={artists}
                 tickets={tickets}
                 riders={riders}
+                eventId={props.match.params.id}
+                userData={props.userData}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>

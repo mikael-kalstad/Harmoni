@@ -4,7 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 10%;
   align-items: center;
   justify-items: center;
   padding: 10px;
@@ -31,6 +31,7 @@ const DelBtn = styled.img`
 interface IProps {
   ticket: any;
   remove?: Function;
+  disabled?: boolean;
 }
 
 const TicketCard = (props: IProps) => (
@@ -40,7 +41,7 @@ const TicketCard = (props: IProps) => (
       <Text>{props.ticket.price}kr</Text>
       <Text>{props.ticket.available} stk</Text>
 
-      {props.remove && (
+      {props.remove && !props.disabled && (
         <DelBtn
           src="/icons/cross.svg"
           onClick={() => props.remove(props.ticket)}

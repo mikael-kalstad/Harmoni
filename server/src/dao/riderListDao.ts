@@ -6,8 +6,8 @@ const daoParentRider = require("./dao");
 
 export interface riderList {
   rider_list_id: number;
-  user_id: number;
-  event_id: number;
+  userId: number;
+  eventId: number;
   text: string;
 }
 
@@ -56,9 +56,10 @@ export default class riderListDao extends daoParentRider {
 
   // Update riderList given its id and the incoming text
   updateRiderList(riderId: number, rider: riderList, callback) {
+    console.log("rider in dao", rider);
     super.query(
       "UPDATE rider_list SET user_id = ?, event_id = ?, text = ? WHERE rider_list_id = ? ;",
-      [rider.user_id, rider.event_id, rider.text, riderId],
+      [rider.userId, rider.eventId, rider.text, riderId],
       callback
     );
   }

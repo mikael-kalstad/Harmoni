@@ -115,7 +115,7 @@ const ArtistForm = (props: any) => {
           props.listOfArtists.map(u => (
             <ListGroup.Item key={u.email}>
               <ArtistCard
-                user={u}
+                artist={u}
                 remove={deleteArtist}
                 riderData={props.listOfRiders}
                 setRiderData={props.setListOfRiders}
