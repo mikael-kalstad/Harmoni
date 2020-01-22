@@ -85,7 +85,7 @@ test("Get all events with offset 1", done => {
   });
 });
 
-test("Get count of all events not cancelled", done => {
+test("Get count of all events not cancelled and not finished", done => {
   dao.getCountOfAllEventsNotCancelledNotFinished((status, data) => {
     expect(status).toBe(200);
     expect(data[0].count).toBe(2);
@@ -144,7 +144,7 @@ test("Get events by category with offset 1", done => {
   });
 });
 
-test("Get count of events by category not cancelled", done => {
+test("Get count of events by category not cancelled and not finished", done => {
   dao.getCountOfEventsByCategoryNotCancelledNotFinished(
     "konsert",
     (status, data) => {

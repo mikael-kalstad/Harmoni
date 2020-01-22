@@ -55,12 +55,6 @@ const FrontPage = () => {
   const increaseOffset = () => {
     setOffset(offset + 20);
   };
-  console.log(
-    "Alldatafetched: " + allDataFetched(),
-    "offset: " + offset,
-    "totalcount: " + totalEventsCount
-  );
-  console.log(eventData);
 
   return (
     <>

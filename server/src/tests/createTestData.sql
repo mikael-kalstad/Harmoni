@@ -6,6 +6,7 @@ INSERT INTO user VALUES(default, 'Jens Jensen', 'jens@jensen.com', 1881, 'dfghjk
  
 INSERT INTO user VALUES(default, 'Navn Navnesen', 'navn@navnesen.com', default, 'ajjjajajjjjs', 'uriueriueriei', 'volunteer', default);
  
+INSERT INTO user VALUES(default, "Coldplay", "cold@play.com", default, "e34tef43", "3fwef34t3", "artist", default);
 
  
 INSERT INTO event VALUES(DEFAULT, 2, 'Øyafestivalen', 'Hovinveien 12', '2020-01-07 15:00:00', DATE_ADD(NOW(), INTERVAL 1 DAY), 1000, '0', 'Norges største festival – løp og kjøp!', 'festival', 'x’23BC');
@@ -23,5 +24,6 @@ INSERT INTO user_event VALUES(2,1);
 INSERT INTO user_event VALUES(1,1);
 INSERT INTO user_event VALUES(3,1);
 INSERT INTO user_event VALUES(4,1);
+INSERT INTO user_event VALUES(5,2);
  
-INSERT INTO rider_list VALUES(DEFAULT, 3, 1, 1, DEFAULT);
+INSERT INTO rider_list VALUES(DEFAULT, 3, 1, "5 pepsi max");
