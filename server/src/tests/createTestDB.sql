@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS attachment_user;
 DROP TABLE IF EXISTS attachment;
 DROP TABLE IF EXISTS rider_list;
 DROP TABLE IF EXISTS user_event;
-DROP TABLE IF EXISTS rider;
 DROP TABLE IF EXISTS event;
 DROP TABLE IF EXISTS user;
 
@@ -60,21 +59,12 @@ CREATE TABLE IF NOT EXISTS user_event (
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;
  
-  
-CREATE TABLE IF NOT EXISTS rider (
-  rider_id INT NOT NULL AUTO_INCREMENT,
-  text VARCHAR(45) NOT NULL UNIQUE,
-  PRIMARY KEY (rider_id))
-ENGINE = InnoDB;
- 
  
 CREATE TABLE IF NOT EXISTS rider_list (
   rider_list_id INT NOT NULL AUTO_INCREMENT,
   user_id INT,
   event_id INT,
-  rider_id INT,
-  text VARCHAR(256),
-  quantity INT,
+  text TEXT,
     PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)
@@ -82,10 +72,6 @@ CREATE TABLE IF NOT EXISTS rider_list (
 	ON UPDATE CASCADE,
 	FOREIGN KEY (event_id)
 	REFERENCES event (event_id)
-	ON DELETE SET NULL
-	ON UPDATE CASCADE,
-	FOREIGN KEY (rider_id)
-	REFERENCES rider (rider_id)
 	ON DELETE SET NULL
 	ON UPDATE CASCADE)
 ENGINE = InnoDB;

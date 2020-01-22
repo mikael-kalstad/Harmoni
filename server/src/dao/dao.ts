@@ -1,3 +1,8 @@
+/**
+ * Dao is superclass that sets up a connection pool,
+ * and it's used to get a connection from the connection pool
+ * instead of writing the same method in every single query
+ */
 module.exports = class Dao{
     pool;
     constructor(pool){

@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ArtistList from "../Event/artistsList";
-import TicketCard from "./EventForms/ticketCard";
+import ArtistList from "../../Event/artistsList";
+import TicketCard from "./ticketCard";
 import ListGroup from "react-bootstrap/ListGroup";
-import moment from "moment";
 
 const Wrapper = styled.div`
   margin-bottom: 80px;
@@ -50,10 +49,7 @@ const Text = styled.p`
   margin-top: 10px;
 `;
 
-const formatDate = (date: any) => {
-  if (typeof date === "string")
-    date = moment(date, "DD-MM-YYYY HH:mm").toDate();
-
+const formatDate = (date: Date) => {
   let days = [
     "Mandag",
     "Tirsdag",
@@ -83,11 +79,11 @@ const formatDate = (date: any) => {
     days[date.getDay()] +
     " " +
     (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-    ". " +
-    months[date.getMonth()].toLocaleLowerCase() +
+    "." +
+    months[date.getMonth()] +
     " " +
     date.getFullYear() +
-    " kl: " +
+    " KL: " +
     (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) +
     ":" +
     (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
@@ -99,12 +95,11 @@ interface IProps {
   img: any;
   category: string;
   location: string;
-  fromDate: string | Date;
-  toDate: string | Date;
+  fromDate: Date;
+  toDate: Date;
   program: string;
   artists: any[];
   tickets: any[];
-  riders: any[];
 }
 
 const Summary = (props: IProps) => (
@@ -140,18 +135,14 @@ const Summary = (props: IProps) => (
     )}
 
     <UnderTitle>Artister:</UnderTitle>
-    {!props.artists || props.artists.length === 0 ? (
+    {props.artists.length === 0 ? (
       <Text>Ingen artister er valgt</Text>
     ) : (
-      <ArtistList
-        hideTitle={true}
-        artists={props.artists}
-        riderData={props.riders}
-      />
+      <ArtistList hideTitle={true} artists={props.artists} />
     )}
 
     <UnderTitle>Billetter:</UnderTitle>
-    {!props.tickets || props.tickets.length === 0 ? (
+    {props.tickets.length === 0 ? (
       <Text>Ingen billetter er opprettet</Text>
     ) : (
       <ListGroup>

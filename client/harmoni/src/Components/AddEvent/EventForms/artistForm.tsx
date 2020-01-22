@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import ListGroup from 'react-bootstrap/ListGroup';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { userService } from '../../../services/UserService';
-import styled from 'styled-components';
-import ArtistCard from './artistCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { useState, useEffect } from "react";
+import { Typeahead } from "react-bootstrap-typeahead";
+import ListGroup from "react-bootstrap/ListGroup";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { userService } from "../../../services/UserService";
+import styled from "styled-components";
+import ArtistCard from "./artistCard";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface IUser {
   user_id: number;
@@ -16,6 +16,19 @@ interface IUser {
   salt: string;
   type: string;
   picture: string;
+}
+interface IRider {
+  riderId: number;
+  text: string;
+}
+interface IRiderList {
+  riderListId: number;
+  userId: number;
+  eventId: number;
+  riderId: number;
+  text: string;
+  quantity;
+  number;
 }
 
 const LoadingWrapper = styled.div`
@@ -47,22 +60,23 @@ const Text = styled.p`
   font-weight: 400;
   color: #777777;
 `;
-
+var tempId = 1;
 const ArtistForm = (props: any) => {
   const [userData, setUserData] = useState<IUser[]>();
-
+  let typeahead;
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    setUserData(await userService.getUsersOfType('artist'));
+    setUserData(await userService.getUsersOfType("artist"));
   };
 
   const addArtist = (s: { user: IUser }[]) => {
     if (s[0] != null) {
       let checker = props.listOfArtists.includes(s[0].user);
       if (!checker) props.setListOfArtists(array => [...array, s[0].user]);
+      typeahead.clear();
     }
   };
 
@@ -90,6 +104,7 @@ const ArtistForm = (props: any) => {
           onChange={s => addArtist(s)}
           placeholder="Søk etter artister..."
           selected={props.userData}
+          ref={elem => (typeahead = elem)}
         />
 
         {props.listOfArtists && props.listOfArtists.length !== 0 && (
@@ -98,9 +113,14 @@ const ArtistForm = (props: any) => {
 
         {props.listOfArtists &&
           props.listOfArtists.map(u => (
-            <ListGroup key={u.email}>
-              <ArtistCard user={u} remove={deleteArtist} />
-            </ListGroup>
+            <ListGroup.Item key={u.email}>
+              <ArtistCard
+                user={u}
+                remove={deleteArtist}
+                riderData={props.listOfRiders}
+                setRiderData={props.setListOfRiders}
+              />
+            </ListGroup.Item>
           ))}
       </>
     );

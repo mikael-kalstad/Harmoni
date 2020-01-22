@@ -1,3 +1,7 @@
+/**
+ * The attachmentDao-class is used to do everything has to do with
+ * event such get,create update...
+ */
 const daoParentEvent = require("./dao");
 
 export interface event {
@@ -25,7 +29,28 @@ export default class eventDao extends daoParentEvent {
         "status, information, category, picture, " +
         'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
         'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        "FROM event",
+        "FROM event ORDER BY from_date DESC LIMIT 20",
+      [],
+      callback
+    );
+  }
+
+  // Get the last 20 uploaded events using Offset to load 20 more if more clicked
+  getAllEventsWithOffset(offset: number, callback) {
+    super.query(
+      "SELECT event_id, organizer, name, address, capacity, " +
+        "status, information, category, picture, " +
+        'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
+        'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
+        "FROM event WHERE status != 2 AND event.to_date > NOW() ORDER BY event.from_date ASC LIMIT 20 OFFSET ?",
+      [offset],
+      callback
+    );
+  }
+
+  getCountOfAllEventsNotCancelledNotFinished(callback) {
+    super.query(
+      "SELECT COUNT(*) as 'count' FROM event WHERE status != 2 AND to_date > NOW()",
       [],
       callback
     );
@@ -43,6 +68,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  // Get singular event given location
   getEventsByAddress(location: string, callback) {
     super.query(
       "SELECT event_id, organizer, name, address, capacity, " +
@@ -55,18 +81,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
-  getEventsByCapacity(capacity: number, callback) {
-    super.query(
-      "SELECT event_id, organizer, name, address, capacity, " +
-        "status, information, category, picture, " +
-        'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
-        'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
-        "FROM event WHERE capacity = ?",
-      [capacity],
-      callback
-    );
-  }
-
+  // Get singular event given organizerId
   getEventsByOrganizer(organizer: number, callback) {
     super.query(
       "SELECT event_id, organizer, name, address, capacity, " +
@@ -79,6 +94,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  // Get singular event given status
   getEventsByStatus(status: number, callback) {
     super.query(
       "SELECT event_id, organizer, name, address, capacity, " +
@@ -91,6 +107,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  // Get singular event given category, used to sort events in front-end
   getEventsByCategory(category: string, callback) {
     super.query(
       "SELECT event_id, organizer, name, address, capacity, " +
@@ -103,6 +120,30 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  getEventsByCategoryWithOffset(category: string, offset: number, callback) {
+    super.query(
+      "SELECT event_id, organizer, name, address, capacity, " +
+        "status, information, category, picture, " +
+        'DATE_FORMAT(to_date, "%d.%m.%Y %H:%i") as to_date, ' +
+        'DATE_FORMAT(from_date, "%d.%m.%Y %H:%i") as from_date ' +
+        "FROM event WHERE category = ? AND status != 2 AND event.to_date > NOW() ORDER BY event.from_date ASC LIMIT 20 OFFSET ?",
+      [category, offset],
+      callback
+    );
+  }
+
+  getCountOfEventsByCategoryNotCancelledNotFinished(
+    category: string,
+    callback
+  ) {
+    super.query(
+      "SELECT COUNT(*) as 'count' FROM event WHERE category = ? AND status != 2 AND to_date > NOW()",
+      [category],
+      callback
+    );
+  }
+
+  // Create event
   addEvent(event: event, callback) {
     super.query(
       "INSERT INTO event VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -122,6 +163,7 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
+  // Used to connect users to specific event
   addUserToEvent(userId: number, eventId: number, callback) {
     super.query(
       "INSERT INTO user_event VALUES(?, ?)",
@@ -138,13 +180,16 @@ export default class eventDao extends daoParentEvent {
     );
   }
 
-  removeUserFromEvent(userId: number, eventId: number, callback) {
+  // Delete user from event
+  deleteUserFromEvent(userId: number, eventId: number, callback) {
     super.query(
       "DELETE FROM user_event WHERE user_id=? AND event_id=?",
       [userId, eventId],
       callback
     );
   }
+
+  // Gets users of specific event given user type and eventId
   getUsersOfEventByType(eventId: number, type: string, callback) {
     super.query(
       "SELECT DISTINCT user_event.user_id FROM user_event, user where user.type=? AND user_event.event_id=?",
@@ -176,6 +221,7 @@ export default class eventDao extends daoParentEvent {
     super.query("DELETE FROM event WHERE event_id = ?", [eventId], callback);
   }
 
+  // Gets all events of specific user given userId
   getEventsOfUser(userId: number, callback) {
     super.query(
       "SELECT event.event_id, event.organizer, event.name, event.address, event.capacity, " +
@@ -188,6 +234,8 @@ export default class eventDao extends daoParentEvent {
       callback
     );
   }
+
+  // Changes status of singular event given eventId, used to archive/cancel event
   changeStatus(eventId: number, status: string, callback) {
     super.query(
       "UPDATE event SET status=? WHERE event_id=?",

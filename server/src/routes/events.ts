@@ -6,7 +6,7 @@ const router = express.Router();
 const dao = new eventDao(pool);
 // Routes to interact with events.
 
-// Create event
+// Create an event
 router.post("/authorized/events/", async (request, response) => {
   dao.addEvent(request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
@@ -51,6 +51,22 @@ router.get("/events/", async (request, response) => {
   });
 });
 
+// Get all with offset
+router.get("/events/offset/:offset", async (request, response) => {
+  dao.getAllEventsWithOffset(
+    parseInt(request.params.offset),
+    (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
+});
+
+router.get("/events/count/all", async (request, response) => {
+  dao.getCountOfAllEventsNotCancelledNotFinished((status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  });
+});
+
 router.post(
   "/authorized/events/user_event/:userId/:eventId",
   async (request, response) => {
@@ -63,18 +79,26 @@ router.post(
     );
   }
 );
+
+// Get user for event given eventId,userId
 router.get(
-    "/authorized/events/user_event/:userId/:eventId",
-    async (request, response) => {
-        dao.getUserEvent(parseInt( request.params.userId), parseInt(request.params.eventId),(status,data)=>{
-            status == 500 ? response.status(500) : response.send(data);
-        })
-    }
+  "/authorized/events/user_event/:userId/:eventId",
+  async (request, response) => {
+    dao.getUserEvent(
+      parseInt(request.params.userId),
+      parseInt(request.params.eventId),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
 );
+
+// Delete user from an event given userId,eventId
 router.delete(
   "/authorized/events/user_event/:userId/:eventId",
   async (request, response) => {
-    dao.removeUserFromEvent(
+    dao.deleteUserFromEvent(
       parseInt(request.params.userId),
       parseInt(request.params.eventId),
       (status, data) => {
@@ -104,12 +128,36 @@ router.get("/events/user/:id", async (request, response) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+
 // Get events by category
 router.get("/events/user/:category", async (request, response) => {
   dao.getEventsByCategory(request.params.category, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
+
+router.get(
+  "/events/category/offset/:category/:offset",
+  async (request, response) => {
+    dao.getEventsByCategoryWithOffset(
+      request.params.category,
+      parseInt(request.params.offset),
+      (status, data) => {
+        status == 500 ? response.status(500) : response.send(data);
+      }
+    );
+  }
+);
+
+router.get("/events/count/category/:category", async (request, response) => {
+  dao.getCountOfEventsByCategoryNotCancelledNotFinished(
+    request.params.category,
+    (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    }
+  );
+});
+
 router.get("/events/user/:event_id/:type", async (request, response) => {
   dao.getUsersOfEventByType(
     parseInt(request.params.event_id),
@@ -119,18 +167,8 @@ router.get("/events/user/:event_id/:type", async (request, response) => {
     }
   );
 });
-router.put(
-  "/authorized/events/:event_id/:status",
-  async (request, response) => {
-    dao.changeStatus(
-      parseInt(request.params.event_id),
-      request.params.status,
-      (status, data) => {
-        status == 500 ? response.status(500) : response.send(data);
-      }
-    );
-  }
-);
+
+// Change status for an event given its id
 router.put(
   "/authorized/events/:event_id/:status",
   async (request, response) => {

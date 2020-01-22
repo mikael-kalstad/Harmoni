@@ -38,17 +38,17 @@ const Wrapper = styled.div`
 const Icon = styled.img`
   padding-top: 30px;
   display: block;
-  margin: 0 auto;
-  width: 32px;
+  margin: 10px auto;
+  width: 220px;
 `;
 
-const Title = styled.h2`
+/*const Title = styled.h2`
   text-align: center;
   font-weight: bold;
   font-size: 28px;
   margin-bottom: 30px;
   margin-top: 0;
-`;
+`;*/
 
 const StyledLink = styled(props => <Link {...props} />)`
   margin-top: 20px;
@@ -162,9 +162,12 @@ const Login = (props: any) => {
     <>
       <Overlay onClick={() => props.toggle()} />
       <Container>
-        <Exit src="/icons/cross.svg" onClick={() => props.toggle()} />
-        <Icon src="/icons/icon.svg" />
-        <Title>Harmoni</Title>
+        <Exit
+          src="/icons/cross.svg"
+          alt="kryss ikon"
+          onClick={() => props.toggle()}
+        />
+        <Icon alt="Harmoni tekst-logo" src="/icons/footericon.svg" />
 
         <Wrapper>
           <TextField

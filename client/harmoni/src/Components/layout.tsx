@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import NavigationBar from "./Nav/navigationBar";
+import Footer from "./footer";
 
 const Content = styled.div`
   position: relative;
+  min-height: 70vh;
 `;
 
 interface IProps {
@@ -21,6 +23,7 @@ const Layout = (props: IProps) => (
       logIn={props.logIn}
     />
     <Content>{props.children}</Content>
+    <Footer />
   </>
 );
 

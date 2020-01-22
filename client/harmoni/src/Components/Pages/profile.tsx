@@ -6,6 +6,7 @@ import ProfilePageImage from "../Profile/profilePageImage";
 import ProfileOptions from "../Profile/profileOptions";
 import EventGrid from "../eventGrid";
 import { eventService } from "../../services/EventService";
+import EventCalendar from "../eventCalendar";
 
 const Wrapper = styled.div`
   position: relative;
@@ -13,18 +14,7 @@ const Wrapper = styled.div`
   margin: 100px auto;
 `;
 
-const StyledLink = styled(props => <Link {...props} />)`
-  :visited {
-    color: black;
-  }
-
-  :hover {
-    color: black;
-    text-decoration: none;
-  }
-`;
-
-const AddBtn = styled.div`
+const AddBtn = styled(props => <Link {...props} />)`
     display: grid;
     grid-template-columns: 30% 1fr;
     justify-items: start;
@@ -42,14 +32,33 @@ const AddBtn = styled.div`
     cursor: pointer;
     border-radius: 50px;
     text-align: center;
-    outline: none;   
+    outline: none;
     
     :hover {
         filter: brightness(95%);
+        text-decoration: none;
+        color: white;
     }
     :active {
         box-shadow: none;
     }
+`;
+
+const CalenderWrapper = styled.div`
+  width: 80%;
+  margin: 30px auto;
+`;
+
+const Title = styled.h2`
+  font-weight: 500;
+  font-size: 36px;
+  margin: 70px 20px;
+  width: 60%;
+  max-width: 100%;
+
+  ::first-letter {
+    text-transform: uppercase;
+  }
 `;
 
 const BtnIcon = styled.img`
@@ -64,7 +73,7 @@ const Profile = (props: { userData: any }) => {
   useEffect(() => {
     const getEvents = async () => {
       setEvents(
-        await eventService.getEventsByUser(props.userData.user_id)
+        await eventService.getEventsByOrganizer(props.userData.user_id)
       );
     };
 
@@ -87,12 +96,10 @@ const Profile = (props: { userData: any }) => {
         />
 
         {props.userData.type === "organizer" ? (
-          <StyledLink to="/newEvent">
-            <AddBtn>
-              <BtnIcon src="/icons/plus-1.svg" />
-              Nytt arrangement
-            </AddBtn>
-          </StyledLink>
+          <AddBtn to="/newEvent">
+            <BtnIcon src="/icons/plus-1.svg" />
+            Nytt arrangement
+          </AddBtn>
         ) : (
           <></>
         )}
@@ -111,6 +118,11 @@ const Profile = (props: { userData: any }) => {
         data={events && events.filter(e => e.status === 1)}
         title="Arkiverte arrangementer"
       />
+
+      <CalenderWrapper>
+        <Title>Kalender</Title>
+        <EventCalendar data={events && events.filter(e => e.status === 0)} />
+      </CalenderWrapper>
     </>
   );
 };

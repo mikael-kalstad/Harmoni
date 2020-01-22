@@ -22,6 +22,7 @@ import SearchEvents from "./Components/Pages/searchPage";
 import Authenticate from "./Components/authenticate";
 import ForgotPassword from "./Components/Pages/forgotPasswordPage";
 import ResetPassword from "./Components/Pages/resetPassword";
+import ChangePassword from "./Components/Pages/changePassword";
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState(null);
@@ -95,15 +96,18 @@ const App: React.FC = () => {
           />
           <RouteWithAuth
             exact
+            path="/profile/password"
+            render={props => (
+              <ChangePassword userData={userData} logIn={logIn} />
+            )}
+          />
+          <RouteWithAuth
+            exact
             path="/profile"
             render={props => <Profile userData={userData} />}
           />
           <Route exact path="/glemt-passord" component={ForgotPassword} />
-          <Route
-            exact
-            path="/reset/reset_password/:token"
-            component={ResetPassword}
-          />
+          <Route exact path="/reset-passord/:token" component={ResetPassword} />
 
           <Route path="/search/" component={SearchEvents} />
 

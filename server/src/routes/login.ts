@@ -1,3 +1,5 @@
+// Routes to interact with login.
+
 import express from "express";
 
 import { pool } from "../dao/database";
@@ -10,10 +12,11 @@ var bodyParser = require("body-parser");
 const router = express.Router();
 const dao = new userDao(pool);
 
-router.use(bodyParser.json()); //to transtalte JSON in the body
+// to translate JSON in the body
+router.use(bodyParser.json());
 
 let publicKey;
-const privateKey =(publicKey="This is my super secret key");
+const privateKey = (publicKey = "This is my super secret key");
 
 let user;
 router.use(express.static("public"));
@@ -29,7 +32,6 @@ router.post("/", (req, res) => {
         res.json({ jwt: token });
         res.status(200);
       } else {
-        //console.log('email & password NOT ok');
         res.status(204);
         res.json({ error: "Not authorized" });
       }
@@ -40,30 +42,16 @@ router.post("/", (req, res) => {
   });
 });
 
-/*router.post("/token/update", (req, res, next) => {
-  var token = req.headers["harmoni-token"];
-  jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) {
-      next();
-    } else {
-      let token = jwt.sign({ email: decoded.email }, privateKey, {
-        expiresIn: 1800
-      });
 
-      res.json({jwt: token});
-      //console.log("Token ok: " + decoded.email);
-      next();
-    }
-  });
-});*/
 router.post("/token", (req, res) => {
   let newToken = "";
   var token = req.headers["harmoni-token"];
-  if(token!==undefined){
+  if (token !== undefined) {
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {
         console.log("You are not logged in");
         res.status(401);
+        res.json({ error: "You are not logged in" });
       } else {
         newToken = jwt.sign({ email: decoded.email }, privateKey, {
           expiresIn: 1800
@@ -74,10 +62,10 @@ router.post("/token", (req, res) => {
         });
       }
     });
-  }else{
+  } else {
     res.status(401);
+    res.json({ error: "Token not defined" });
   }
-
 });
 
 router.post("/register", (req, res) => {
@@ -100,6 +88,7 @@ router.post("/register", (req, res) => {
         }
       });
     } else {
+      res.status(409);
       res.json({ error: "the user exists error code:" + status });
     }
   });

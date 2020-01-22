@@ -41,6 +41,34 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
+  getAllEventsWithOffset(offset: number) {
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/events/offset/" + offset,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
+
+  getCountOfAllEventsNotCancelledNotFinished() {
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/events/count/all",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
+
   getEventsByLocation(location: string) {
     updateToken();
     return axios({
@@ -84,6 +112,33 @@ class EventService extends Service {
       .catch(error => console.log(error));
   }
 
+  getEventsByCategoryWithOffset(category: string, offset: number) {
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/events/category/offset/" + category + "/" + offset,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
+
+  getCountOfEventsByCategoryNotCancelledNotFinished(category: string) {
+    updateToken();
+    return axios({
+      method: "get",
+      url: this.path + "/events/count/category/" + category,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "harmoni-token": localStorage.getItem("harmoni-token")
+      }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(error));
+  }
 
   addEvent(event: Event) {
     updateToken();
@@ -157,19 +212,19 @@ class EventService extends Service {
       .then(response => response.data)
       .catch(error => console.log(error));
   }
-  getUserOfEvent(userId:number, eventId:number){
+  getUserOfEvent(userId: number, eventId: number) {
     updateToken();
     return axios({
       method: "get",
       url:
-          this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
+        this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
     })
-        .then(response => response.data)
-        .catch(error => console.log(error));
+      .then(response => response.data)
+      .catch(error => console.log(error));
   }
 
   removeUserFromEvent(userId: number, eventId: number) {
@@ -203,7 +258,7 @@ class EventService extends Service {
   getUsersOfEventByType(eventId: number, type: string) {
     updateToken();
     return axios({
-      method: "delete",
+      method: "get",
       url: this.path + "/events/user/" + eventId + "/" + type,
       headers: {
         "Content-Type": "application/json; charset=utf-8",

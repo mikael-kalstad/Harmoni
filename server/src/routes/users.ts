@@ -94,8 +94,25 @@ router.get("/authorized/users/", async (request, response) => {
 
 // Update singular user given id
 router.put("/authorized/users/:id", async (request, response) => {
-  dao.updateUser(parseInt(request.params.id), request.body, (status, data) => {
-    status == 500 ? response.status(500) : response.send(sanitizeUser(data));
+  dao.getUserByEMail(request.body.email, (status, data) => {
+    let user = data[0];
+    if(typeof user === "undefined" || user.user_id == request.params.id){
+      dao.updateUser(parseInt(request.params.id), request.body, data => {
+        response.status(200);
+        response.send(sanitizeUser(data));
+        console.log("Mailen gjøres om til en ny");
+      });
+    }else if(user.user_id == request.params.id){
+      dao.updateUser(parseInt(request.params.id), request.body, (status, data) => {
+        response.status(200);
+        response.send(sanitizeUser(data));
+        console.log("Mailen forblir den samme");
+      });
+    }else{
+      
+      response.sendStatus(409);
+      console.log("Email finnes allerede");
+    }
   });
 });
 router.put("/authorized/users/change_password/:email", async (request, response) => {

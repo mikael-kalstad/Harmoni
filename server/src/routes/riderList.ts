@@ -1,72 +1,57 @@
+// Routes to interact with riderLists.
+
 import express from 'express';
-import riderDAO from '../dao/riderDao';
+import riderDAO from '../dao/riderListDao';
 import { pool } from '../dao/database'
 
 const router = express.Router();
 const dao = new riderDAO(pool);
 
-// Routes to interact with riders.
-
-// Add rider
-router.post("/authorized/riders", async (request, response) => {
-    dao.addRider(request.body,(status, data) => {
-        status == 500 ? response.status(500) : response.send(data)
-    });
-})
-
 // Add rider list
 router.post("/authorized/riders/riderlist/:event_id", async (request, response) => {
-    dao.addRiderList(request.body.eventId,request.body.userId,request.body.riderId, request.body.text, request.body.quantity ,(status, data) => {
+    dao.addRiderList(request.body.eventId,request.body.userId, request.body.text,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
 // Get singular rider given id
 router.get("/riders/:id", async (request, response) => {
-    dao.getRider(parseInt(request.params.id), (status, data)=>{
+    dao.getRiderList(parseInt(request.params.id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });
 })
 
 // Get all riders
 router.get("/riders/", async (request, response) => {
-    dao.getAllRiders((status, data) => {
+    dao.getAllRiderLists((status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
 // Get all riders in event
 router.get("/authorized/riders/riderlist/:event_id", async (request, response) => {
-    dao.getRiderByEventId(parseInt(request.params.event_id), (status, data)=>{
+    dao.getRiderListByEventId(parseInt(request.params.event_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });
 })
 
-
 // Get all riders of user in event 
 router.get("/authorized/riders/riderlist/:event_id/:user_id", async (request, response) => {
-    dao.getRiderByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
+    dao.getRiderListByUserIdInEvent(parseInt(request.params.event_id), parseInt(request.params.user_id), (status, data)=>{
         status==500 ? response.status(500):response.send(data)
     });
 })
 
 // Update singular rider given id
-router.put("/authorized/riders/:id", async (request, response) => {
-    dao.updateRider(parseInt(request.params.id), request.body,(status, data) => {
-        status == 500 ? response.status(500) : response.send(data)
-    });
-})
-
-// Delete rider given id
-router.delete("/authorized/riders/:id", async (request, response) => {
-    dao.deleteRider(parseInt(request.params.id), (status, data) => {
+router.put("/authorized/riders/riderlist/:rider_list_id", async (request, response) => {
+    dao.updateRiderList(parseInt(request.params.rider_list_id), request.body,(status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })
 
 //delete riderlist
 router.delete("/authorized/riders/riderlist/:rider_list_id", async (request, response) => {
-    dao.deleteRider(parseInt(request.params.id), (status, data) => {
+    dao.deleteRiderListById(parseInt(request.params.id), (status, data) => {
         status == 500 ? response.status(500) : response.send(data)
     });
 })

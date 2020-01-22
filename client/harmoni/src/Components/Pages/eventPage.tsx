@@ -89,9 +89,8 @@ const ArtistsAndMapGrid = styled.div`
 
 const ArtistsGrid = styled.div`
   max-height: 400px;
-  overflow-y: scroll;
+  overflow-y: auto;
   justify-self: start;
-  border-radius: 10px;
   height: 100%;
 
   @media screen and (max-width: 800px) {
@@ -101,7 +100,8 @@ const ArtistsGrid = styled.div`
 
 const MapGrid = styled.div`
   display: grid;
-  border: solid;
+  border: 3px solid grey;
+  border-radius: 3px;
   min-height: 300px;
   width: 100%;
   height: 100%;
@@ -110,6 +110,7 @@ const MapGrid = styled.div`
 `;
 
 const TicketsGrid = styled.div`
+  padding-top: 30px;
   width: 70%;
   margin: auto;
 `;
@@ -129,11 +130,7 @@ const BoldSpan = styled.span`
   font-weight: bold;
 `;
 
-const DateText = styled.p``;
-
-const AddressText = styled.p``;
-
-const OrganizerText = styled.p``;
+const InfoText = styled.p``;
 
 const Title = styled.h1``;
 
@@ -257,8 +254,6 @@ const Event = (props: any) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        console.log(data);
-
         setCoords({ lat: data[0], lng: data[1] });
       });
     };
@@ -316,13 +311,14 @@ const Event = (props: any) => {
     props.userData != null
   ) {
     let categories = {
-      concert: 'Konsert',
-      festival: 'Festival',
-      theatre: 'Teater',
-      standup: 'Standup',
-      show: 'Show',
-      other: 'Annet'
+      concert: "Konsert",
+      festival: "Festival",
+      theatre: "Teater",
+      standup: "Standup",
+      show: "Show",
+      other: "Annet"
     };
+
     let dateFrom = event[0].from_date.split(" ");
     let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
@@ -336,8 +332,8 @@ const Event = (props: any) => {
             src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
-          <AddressText>{event[0].address}</AddressText>
-          <DateText>{event[0].from_date}</DateText>
+          <InfoText>{event[0].address}</InfoText>
+          <InfoText>{event[0].from_date}</InfoText>
           {(props.userData.type == "volunteer" && status == "Kommende" && showVolunteerButton) ?  (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -365,11 +361,11 @@ const Event = (props: any) => {
               <></>
             )}
           </Title>
-          <OrganizerText>
+          <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
             {organizer[0].name}
-          </OrganizerText>
-          <DateText>
+          </InfoText>
+          <InfoText>
             <BoldSpan>Tid: </BoldSpan>
             {dateFrom[0] === dateTo[0]
               ? dateFrom[0] + ", fra kl. " + dateFrom[1] + " til " + dateTo[1]
@@ -381,11 +377,15 @@ const Event = (props: any) => {
                 dateTo[0] +
                 " kl. " +
                 dateTo[1]}
-          </DateText>
-          <AddressText>
+          </InfoText>
+          <InfoText>
             <BoldSpan>Sted: </BoldSpan>
             {event[0].address}
-          </AddressText>
+          </InfoText>
+          <InfoText>
+            <BoldSpan>Kategori: </BoldSpan>
+            {categories[event[0].category]}
+          </InfoText>
           <ContentText>
             {event[0].information === ""
               ? "Arrangementet har ingen beskrivelse eller program"
@@ -402,7 +402,7 @@ const Event = (props: any) => {
           <TicketMenu
             tickets={eventTickets}
             canceled={
-              event[0].status == 2 || hasEventHappened(event[0].to_date)
+              event[0].status === 2 || hasEventHappened(event[0].to_date)
             }
           />
         </TicketsGrid>
