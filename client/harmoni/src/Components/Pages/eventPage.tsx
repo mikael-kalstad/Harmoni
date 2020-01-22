@@ -294,7 +294,7 @@ const Event = (props: any) => {
       setDialog(
         <InfoDialog width="300px" height="250px" closeDialog={closeSuccessDialog}>
           <FaCheckCircle style={checkCircleStyle} />
-          <SuccessText>Du har nå blitt meldt på arrangementet</SuccessText>
+          <SuccessText>Du har nå blitt meldt som frivillig på arrangementet</SuccessText>
           <Button onClick={closeSuccessDialog}>Tilbake</Button>
         </InfoDialog>
       )
