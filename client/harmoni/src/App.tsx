@@ -24,7 +24,7 @@ import ForgotPassword from "./Components/Pages/forgotPasswordPage";
 import ResetPassword from "./Components/Pages/resetPassword";
 
 const App: React.FC = () => {
-  const [userData, setUserData] = useState(undefined);
+  const [userData, setUserData] = useState(null);
 
   // Get data when component mounts
   useEffect(() => {

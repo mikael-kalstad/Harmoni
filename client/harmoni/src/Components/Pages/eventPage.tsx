@@ -10,6 +10,8 @@ import { geoService } from "../../services/GeoService";
 import TicketMenu from "../Event/ticketMenu";
 import ArtistsList from "../Event/artistsList";
 import Map from "../Event/map";
+import InfoDialog from "../infoDialog";
+import { FaCheckCircle } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
@@ -185,6 +187,33 @@ const BtnIcon = styled.img`
   justify-self: center;
 `;
 
+const SuccessText = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  color: #8a8a8a;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0px;
+`;
+
+const ErrorText = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  color: #8a8a8a;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 40px;
+`;
+
+let checkCircleStyle = {
+  fontSize: 120,
+  color: "#82c91e",
+  marginTop: 30,
+  marginBottom: 20,
+  marginLeft: 80
+};
+
 const Event = (props: any) => {
   const [event, setEvent] = useState<IEvent[]>();
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
@@ -194,6 +223,8 @@ const Event = (props: any) => {
   let statuses = ["Kommende", "Arkivert", "Avlyst"];
   const params = useParams<{ id }>();
   const [displayDialog, setDisplayDialog] = useState(false);
+  const [showVolunteerButton, setShowVolunteerButton] = useState(false);
+  const [dialog, setDialog] = useState(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -201,26 +232,28 @@ const Event = (props: any) => {
         setEvent(data);
         fetchCoords(data[0].address);
       });
-      console.log("Event: ", event)
     };
 
     const fetchTickets = async () => {
       setEventTickets(
         await ticketService.getAllTicketsByEventId(parseInt(params.id))
       );
-      console.log("Tickets: ", eventTickets);
-
     };
 
     const fetchArtists = async () => {
       setArtists(await userService.getArtistsForEvent(parseInt(params.id)));
-      console.log("Artists: ", artists)
     };
 
     const fetchOrganizer = async () => {
       setOrganizer(await userService.getOrganizerForEvent(parseInt(params.id)));
-      console.log("Organizer: ", organizer)
     };
+
+    const alreadyVolunteered = () => {
+      if(!props.userData){
+        return Promise.resolve(true);
+      }
+      return eventService.getUserOfEvent(props.userData.user_id, parseInt(params.id))
+    }
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
@@ -233,36 +266,71 @@ const Event = (props: any) => {
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
+    alreadyVolunteered().then(e => setShowVolunteerButton(e.length == 0));
     console.log("params.id ", params.id)
+    //console.log("props.userData.user_id: ", props.userData.user_id)
   }, [parseInt(params.id)]);
   //
 
   const addVolunteer = async () => {
-    console.log("Ble trykka på");
-    await eventService.addUserToEvent(
+    let returnData = await eventService.addUserToEvent(
       props.userData.user_id,
       parseInt(params.id)
     );
+    setDisplayDialog(true);
+    if(typeof returnData != "undefined" && returnData.length != 0){
+      setDialog(
+        <InfoDialog width="300px" height="250px" closeDialog={closeSuccessDialog}>
+          <FaCheckCircle style={checkCircleStyle} />
+          <SuccessText>Du har nå blitt meldt på arrangementet</SuccessText>
+          <Button onClick={closeSuccessDialog}>Tilbake</Button>
+        </InfoDialog>
+      )
+    }
+    else{
+      setDialog(
+        <InfoDialog width="300px" height="170px" closeDialog={closeErrorDialog}>
+          <ErrorText>Beklager, noe gikk galt</ErrorText>
+          <Button onClick={closeErrorDialog}>Tilbake</Button>
+        </InfoDialog>
+      )
+    }
   };
 
-  const closeDialog = () => {
+  const closeSuccessDialog = () => {
     setDisplayDialog(false);
+    setShowVolunteerButton(false);
   };
+
+  const closeErrorDialog = () => {
+    setDisplayDialog(false)
+  }
+
+  
 
   if (
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null
+    artists != null &&
+    props.userData != null
   ) {
+    let categories = {
+      concert: 'Konsert',
+      festival: 'Festival',
+      theatre: 'Teater',
+      standup: 'Standup',
+      show: 'Show',
+      other: 'Annet'
+    };
     let dateFrom = event[0].from_date.split(" ");
     let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
-
     let status = inProgress ? "Pågående" : statuses[event[0].status];
     return (
       <Wrapper>
+        {displayDialog ? dialog : null}
         <ImageGrid>
           <EventImage
             src={new Buffer(event[0].picture).toString("ascii")}
@@ -270,7 +338,7 @@ const Event = (props: any) => {
           ></EventImage>
           <AddressText>{event[0].address}</AddressText>
           <DateText>{event[0].from_date}</DateText>
-          {props.userData.type == "volunteer" ? (
+          {(props.userData.type == "volunteer" && status == "Kommende" && showVolunteerButton) ?  (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
               Meld deg på arrangement
@@ -344,22 +412,6 @@ const Event = (props: any) => {
     return <></>;
   }
 };
-/*
-{displayDialog && (
-  <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
-    <FaCheckCircle style={checkCircleStyle} />
-    <Text>Du har nå blitt meldt på arrangementet</Text>
-    <Button onClick={closeDialog}>Tilbake</Button>
-  </InfoDialog>
-)}
 
-{displayDialog && (
-  <InfoDialog width="300px" height="270px" closeDialog={closeDialog}>
-    <FaCheckCircle style={checkCircleStyle} />
-    <Text>Beklager, noe gikk galt</Text>
-    <Button onClick={closeDialog}>Tilbake</Button>
-  </InfoDialog>
-)}
-*/
 
 export default Event;
