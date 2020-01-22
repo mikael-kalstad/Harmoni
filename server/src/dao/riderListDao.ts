@@ -22,7 +22,7 @@ export default class riderListDao extends daoParentRider {
 
   getRiderList(riderListId: number, callback) {
     super.query(
-      "SELECT * FROM rider_list WHERE rider_id = ?",
+      "SELECT * FROM rider_list WHERE rider_list_id = ?",
       [riderListId],
       callback
     );
@@ -58,12 +58,7 @@ export default class riderListDao extends daoParentRider {
   updateRiderList(riderId: number, rider: riderList, callback) {
     super.query(
       "UPDATE rider_list SET user_id = ?, event_id = ?, text = ? WHERE rider_list_id = ? ;",
-      [
-          rider.user_id,
-          rider.event_id,
-          rider.text,
-          riderId
-      ],
+      [rider.user_id, rider.event_id, rider.text, riderId],
       callback
     );
   }
