@@ -83,11 +83,11 @@ const formatDate = (date: any) => {
     days[date.getDay()] +
     " " +
     (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-    "." +
-    months[date.getMonth()] +
+    ". " +
+    months[date.getMonth()].toLocaleLowerCase() +
     " " +
     date.getFullYear() +
-    " KL: " +
+    " kl: " +
     (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) +
     ":" +
     (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())

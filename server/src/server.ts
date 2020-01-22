@@ -5,7 +5,6 @@ const server = express();
 const cors = require('cors');
 const body_parser = require('body-parser');
 
-import { hash, compareHash } from './hashing';
 
 server.use(body_parser.json({ limit: '50mb' }));
 server.use(cors());
@@ -23,8 +22,6 @@ server.use('/api/v0', require('./routes/reset'));
 server.use('/api/v0', require('./routes/search'));
 server.use('/api/v0', require('./routes/geo'));
 server.use('/api/v0', require('./routes/sendEmail'));
-
-//server.use("api/v0/users", require("./routes/users"));
 
 var port = parseInt(process.env.server_port);
 

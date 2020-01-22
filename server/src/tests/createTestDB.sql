@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS rider_list (
   rider_list_id INT NOT NULL AUTO_INCREMENT,
   user_id INT,
   event_id INT,
-  text VARCHAR(256),
+  text TEXT,
     PRIMARY KEY (rider_list_id),
 	FOREIGN KEY (user_id)
 	REFERENCES user (user_id)

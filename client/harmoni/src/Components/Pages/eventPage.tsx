@@ -85,7 +85,6 @@ const ArtistsGrid = styled.div`
   max-height: 400px;
   overflow-y: auto;
   justify-self: start;
-  border-radius: 10px;
   height: 100%;
 
   @media screen and (max-width: 800px) {

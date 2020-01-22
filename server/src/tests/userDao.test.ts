@@ -1,11 +1,9 @@
 import userDao from "../dao/userDao";
-import { doesNotReject } from "assert";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-  console.log("runsqlfile: reading file " + filename);
   let sql = fs.readFileSync(filename, "utf8");
   pool.getConnection((err, connection) => {
     if (err) {
@@ -230,21 +228,6 @@ test("Reset password of user", done => {
     done();
   });
 });
-
-// Commented out because of error 'TypeError: callback.sendStatus is not a function'
-/*
-test("Change password of user", done => {
-  dao.changePassword(
-    "jens@jensen.com",
-    { newPassword: "NewPasswordTest" },
-    (status, data) => {
-      expect(status).toBe(200);
-      expect(data.affectedRows).toBe(1);
-      done();
-    }
-  );
-});
-*/
 
 test("Change picture of user", done => {
   dao.changePicture(1, "picturepicturepicturepicture", (status, data) => {

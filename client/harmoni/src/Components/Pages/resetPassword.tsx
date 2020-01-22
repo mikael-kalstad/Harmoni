@@ -89,7 +89,7 @@ const ResetPassword = (props: any) => {
     }
   };
   if (redirect) {
-    return <Redirect to="/" />;
+    return <Redirect to="/profile" />;
   }
   // Check if enter key is clicked
   const checkForEnterKey = (e: { key: string } | undefined) => {

@@ -1,3 +1,5 @@
+// Routes to interact with events
+
 import express from "express";
 import eventDao from "../dao/eventDao";
 import { pool } from "../dao/database";
@@ -136,6 +138,7 @@ router.get("/events/user/:category", async (request, response) => {
   });
 });
 
+// Get events by category with offset
 router.get(
   "/events/category/offset/:category/:offset",
   async (request, response) => {

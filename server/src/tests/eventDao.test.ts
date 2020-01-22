@@ -1,10 +1,11 @@
+// Tests to interact with events.
+
 import eventDao from "../dao/eventDao";
 
 var mysql = require("mysql");
 var fs = require("fs");
 
 function run(filename, pool, done) {
-  console.log("runsqlfile: reading file " + filename);
   let sql = fs.readFileSync(filename, "utf8");
   pool.getConnection((err, connection) => {
     if (err) {
@@ -93,6 +94,7 @@ test("Get count of all events not cancelled and not finished", done => {
   });
 });
 
+// Expected 1000 capacity for event with eventId = 1
 test("Get event by id", done => {
   dao.getEvent(1, (status, data) => {
     expect(status).toBe(200);
