@@ -1,6 +1,5 @@
 // Routes to interact with sendMail to inform user when event cancelled
-
-import express from "express"
+import express from "express";
 const router = express.Router();
 
 var path = require('path');
