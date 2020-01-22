@@ -55,10 +55,15 @@ export default class riderListDao extends daoParentRider {
   }
 
   // Update riderList given its id and the incoming text
-  updateRiderList(riderList_id: number, rider: riderList, callback) {
+  updateRiderList(riderId: number, rider: riderList, callback) {
     super.query(
-      "UPDATE rider_list SET user_id = ?, event_id = ?,  text = ? WHERE riderList_id = ?",
-      [rider.user_id, rider.event_id, riderList_id],
+      "UPDATE rider_list SET user_id = ?, event_id = ?, text = ? WHERE rider_list_id = ? ;",
+      [
+          rider.user_id,
+          rider.event_id,
+          rider.text,
+          riderId
+      ],
       callback
     );
   }
