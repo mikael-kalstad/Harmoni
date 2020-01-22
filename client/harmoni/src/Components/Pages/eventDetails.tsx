@@ -13,7 +13,7 @@ import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
 import { attachmentService } from "../../services/AttachmentService";
 import WarningInfo from "../Pages/warningInfo";
-import  { emailService } from "../../services/EmailService";
+import { emailService } from "../../services/EmailService";
 
 const Container = styled.div`
   width: 80%;
@@ -87,7 +87,6 @@ const EventDetails = (props: any) => {
   const [riders, setRiders] = useState();
   const [organizer, setOrganizer] = useState();
 
-
   // Boolean check states
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -108,12 +107,10 @@ const EventDetails = (props: any) => {
 
   const toggleDialog = () => setShowDialog(!showDialog);
 
-
   const cancelEvent = async () => {
     userService
-        .getUserById(eventData.organizer)
-        .then(response=> setOrganizer(response));
-    ;
+      .getUserById(eventData.organizer)
+      .then(response => setOrganizer(response));
     setLoading(true);
 
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
@@ -125,7 +122,8 @@ const EventDetails = (props: any) => {
             "Hei, Vi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Du kan ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:"+organizer.email,
+              "Du kan ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" +
+              organizer.email,
             eventData.name + " er avlyst"
           );
         });
@@ -140,7 +138,8 @@ const EventDetails = (props: any) => {
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:"+organizer.email,
+              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" +
+              organizer.email,
             eventData.name + " er avlyst"
           );
         });
@@ -208,14 +207,16 @@ const EventDetails = (props: any) => {
                     .getAttachmentRights(attachment.attachment_id)
                     .then(rightsResponse => {
                       console.log(artistResponse);
-                      console.log(rightsResponse)
+                      console.log(rightsResponse);
                       let newRight = {
                         attachment: attachment,
                         users: artistResponse.filter(artist =>
-                          rightsResponse.some(right => right.user_id == artist.user_id)
+                          rightsResponse.some(
+                            right => right.user_id == artist.user_id
+                          )
                         )
                       };
-                      console.log(newRight)
+                      console.log(newRight);
                       setAttachmentsRights(array => [...array, newRight]);
                     });
                 });
@@ -286,7 +287,9 @@ const EventDetails = (props: any) => {
                 attachments={attachments}
                 userRights={attachmentsRights}
                 riders={riders}
-                showOnly={true}
+                eventId={props.match.params.id}
+                userData={props.userData}
+                readOnly={true}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>

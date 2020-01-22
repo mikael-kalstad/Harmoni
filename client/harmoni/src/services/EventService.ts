@@ -231,7 +231,8 @@ class EventService extends Service {
     updateToken();
     return axios({
       method: "delete",
-      url: this.path + "authorized/events/user_event/" + userId + "/" + eventId,
+      url:
+        this.path + "/authorized/events/user_event/" + userId + "/" + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
