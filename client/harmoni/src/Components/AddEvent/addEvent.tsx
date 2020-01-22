@@ -18,6 +18,8 @@ import Success from "./success";
 import { eventService } from "../../services/EventService";
 import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
+import AttachmentForm from "./EventForms/attachmentForm";
+import { attachmentService } from "../../services/AttachmentService";
 import { riderService } from "../../services/RiderService";
 
 interface Event {
@@ -83,6 +85,8 @@ interface IProps {
   artistsData?: any;
   ticketsData?: any;
   riderData?: any;
+  attachmentsData?: any;
+  attachmentsRights?: any;
 }
 
 const AddEvent = (props: IProps) => {
@@ -98,6 +102,7 @@ const AddEvent = (props: IProps) => {
     "Artister",
     "Billett-typer",
     "Beskrivelse og program",
+    "Vedlegg",
     "Oppsummering"
   ];
 
@@ -133,6 +138,10 @@ const AddEvent = (props: IProps) => {
   // 4. Program
   const [programText, setProgramText] = useState("");
 
+  // 5. Attachments
+  const [listOfAttachments, setListOfAttachments] = useState([]);
+  const [listOfAttachmentsRights, setListOfAttachmentsRights] = useState([]);
+
   const infoProps = { infoSubmit, infoData, setInfoData, isInfoDataEmpty };
   const artistProps = {
     listOfArtists,
@@ -142,6 +151,14 @@ const AddEvent = (props: IProps) => {
   };
   const ticketProps = { listOfTickets, setListOfTickets };
   const programProps = { programText, setProgramText };
+  const attachmentProps = {
+    listOfAttachments,
+    setListOfAttachments,
+    listOfArtists,
+    setListOfArtists,
+    listOfAttachmentsRights,
+    setListOfAttachmentsRights
+  };
 
   useEffect(() => {
     if (props.eventData) {
@@ -179,13 +196,20 @@ const AddEvent = (props: IProps) => {
       // Set rider data
       if (props.riderData) setListOfRiders(props.riderData);
 
+      // Set attachments data
+      if (props.attachmentsData) setListOfAttachments(props.attachmentsData);
+
+      // Set attachments rights
+      if (props.attachmentsRights)
+        setListOfAttachmentsRights(props.attachmentsRights);
+
       // Set all, but last step in stepper, to completed
       const newCompleted = new Set<number>();
       for (let i = 0; i < steps.length - 1; i++) newCompleted.add(i);
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-
+  console.log(listOfArtists);
   function getStepContent(step: number) {
     switch (step) {
       case 0:
@@ -197,6 +221,8 @@ const AddEvent = (props: IProps) => {
       case 3:
         return <ProgramForm {...programProps} />;
       case 4:
+        return <AttachmentForm {...attachmentProps} />;
+      case 5:
         return (
           <Summary
             name={infoData.name}
@@ -208,7 +234,10 @@ const AddEvent = (props: IProps) => {
             program={programText}
             artists={listOfArtists}
             tickets={listOfTickets}
+            attachments={listOfAttachments}
+            userRights={listOfAttachmentsRights}
             riders={listOfRiders}
+            readOnly={true}
           />
         );
     }
@@ -234,11 +263,25 @@ const AddEvent = (props: IProps) => {
     return activeStep === totalSteps() - 1;
   };
 
+  let todayDate = new Date();
+  const compareDates = (date1, date2) => {
+    let fromDate = new Date(date1);
+    let toDate = new Date(date2);
+    console.log("hei", todayDate, fromDate);
+    return fromDate < toDate;
+  };
+
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
       setInfoSubmit(true);
       if (isInfoDataEmpty()) return;
+      if (
+        !compareDates(infoData.dateFrom, infoData.dateTo) ||
+        !compareDates(todayDate, infoData.dateFrom) ||
+        !compareDates(todayDate, infoData.dateTo)
+      )
+        return;
     }
 
     // Set step to completed
@@ -292,27 +335,52 @@ const AddEvent = (props: IProps) => {
       picture: infoData.imgData
     };
 
+    console.log(listOfAttachmentsRights);
+
     setLoading(true);
 
     // Event is already made, save changes
     if (props.eventData) {
-      eventService.updateEvent(newEvent).then(res => {
-        updateRiders();
-        checkResponse(res);
-      });
+      let res = await eventService.updateEvent(newEvent);
+
+      // Add new riders
+      addRiders(props.eventData.event_id);
+
+      // Add new tickets
+      addTickets(eventId);
+
+      // Add new artists
+      addArtists(eventId);
+
+      // Update attachments
+      updateAttachments();
+
+      checkResponse(res);
 
       // Make new event
     } else {
       eventService.addEvent(newEvent).then(res => {
-        listOfTickets.forEach(ticket => {
-          ticket["event_id"] = res.insertId;
-          ticketService.addTickets(ticket);
-        });
-        listOfArtists.forEach(artist => {
-          eventService.addUserToEvent(artist.user_id, res.insertId);
+        addRiders(res.insertId);
+        addTickets(res.insertId);
+        addArtists(res.insertId);
+
+        listOfAttachments.forEach(attachment => {
+          attachment.event_id = res.insertId;
+          attachment.user_id = props.userData.user_id;
+          attachmentService.addAttachment(attachment).then(response => {
+            listOfAttachmentsRights
+              .filter(e => e.attachment.filename == attachment.filename)
+              .forEach(e =>
+                e.users.forEach(e =>
+                  attachmentService.addUserForAttachment(
+                    response.insertId,
+                    e.user_id
+                  )
+                )
+              );
+          });
         });
 
-        addRiders(res.insertId);
         setEventId(res["insertId"]);
 
         checkResponse(res);
@@ -320,29 +388,151 @@ const AddEvent = (props: IProps) => {
     }
   };
 
-  const updateRiders = async () => {
-    // Add all riders
-    listOfArtists.forEach(a => {
-      let text = listOfRiders.find(data => data.user_id === a.user_id)["text"];
+  const addRiders = async (event_id: number) => {
+    let res = await riderService.getRiderByEventId(props.eventData.event_id);
 
-      let rider: Rider = {
-        eventId: eventId,
-        userId: a.user_id,
-        text: text
-      };
+    if (res) {
+      // Add all riders
+      listOfRiders.forEach(rider => {
+        // Check if rider is already created in DB
+        let riderInDB = res.find(
+          r => r.event_id === event_id && r.user_id === rider.user_id
+        );
 
-      // riderService.updateRiderList(rider);
-    });
+        if (riderInDB !== undefined) {
+          let updatedRider = {
+            rider_list_id: riderInDB.rider_list_id,
+            eventId: event_id,
+            userId: rider.user_id,
+            text: rider.text
+          };
+
+          riderService.updateRiderList(updatedRider);
+        }
+        // Create new rider
+        else riderService.addRiderList(event_id, rider.user_id, rider.text);
+      });
+    }
   };
 
-  const addRiders = async (event_id: number) => {
-    console.log(listOfArtists);
-    // Add all riders
-    listOfArtists.forEach(a => {
-      let text = listOfRiders.find(data => data.user_id === a.user_id)["text"];
+  const addTickets = async (event_id: number) => {
+    let res = await ticketService.getAllTicketsByEventId(event_id);
 
-      riderService.addRiderList(event_id, a.user_id, text);
-    });
+    if (res) {
+      // Add all tickets
+      listOfTickets.forEach(ticket => {
+        // Only add tickets that is not already created in DB (ticket id is not yet set)
+        if (ticket.ticket_id === undefined) {
+          ticketService.addTicket({
+            ticket_id: -1,
+            event_id: event_id,
+            price: ticket.price,
+            type: ticket.type,
+            available: ticket.available
+          });
+        }
+      });
+    }
+  };
+
+  const addArtists = async (event_id: number) => {
+    let res = await userService.getArtistsForEvent(event_id);
+
+    if (res) {
+      // Add artist to event
+      listOfArtists.forEach(artist => {
+        let check = res.find(a => a.user_id === artist.user_id);
+
+        if (check === undefined)
+          eventService.addUserToEvent(artist.user_id, event_id);
+      });
+
+      // Check if artists should be removed from event in DB
+      res.forEach(artist => {
+        let check = listOfArtists.find(a => a.user_id === artist.user_id);
+
+        if (check === undefined)
+          eventService.removeUserFromEvent(artist.user_id, event_id);
+      });
+    }
+  };
+
+  const updateAttachments = async () => {
+    attachmentService
+      .getAttachmentsForEvent(eventId)
+      .then(attachmentResponse => {
+        console.log(attachmentResponse);
+        console.log(listOfAttachments);
+        const removedAttachments = attachmentResponse.filter(
+          attachment =>
+            !listOfAttachments.some(
+              e => e.attachment_id == attachment.attachment_id
+            )
+        );
+        console.log(removedAttachments);
+        if (removedAttachments) {
+          removedAttachments.forEach(removedAttachment => {
+            attachmentService.deleteAttachment(removedAttachment.attachment_id);
+          });
+        }
+        const remainingAttachments = attachmentResponse.filter(
+          attachment =>
+            !removedAttachments.some(
+              removedAttachment =>
+                removedAttachment.attachment_id == attachment.attachment_id
+            )
+        );
+        console.log(remainingAttachments);
+        remainingAttachments.forEach(attachment => {
+          attachmentService
+            .getAttachmentRights(attachment.attachment_id)
+            .then(attachmentRightsResponse => {
+              console.log(attachmentRightsResponse);
+              console.log(listOfAttachmentsRights);
+              const attachmentRights = listOfAttachmentsRights.find(
+                e => e.attachment.attachment_id == attachment.attachment_id
+              );
+              console.log(attachmentRights);
+              const removedRights = attachmentRightsResponse.filter(user => {
+                let shouldRemove = !attachmentRights.users.some(e => {
+                  return (
+                    user.user_id == props.userData.user_id ||
+                    user.user_id == e.user_id
+                  );
+                });
+                console.log(shouldRemove);
+                return shouldRemove;
+              });
+              console.log(removedRights);
+              removedRights.forEach(removedRight => {
+                console.log(removedRight);
+                attachmentService.deleteAttachmentforUser(
+                  attachment.attachment_id,
+                  removedRight.user_id
+                );
+              });
+            });
+        });
+
+        const newAttachments = listOfAttachmentsRights.filter(
+          e => e.attachment.attachment_id == -1
+        );
+        console.log(newAttachments);
+        newAttachments.forEach(attachment => {
+          attachment.attachment.event_id = eventId;
+          attachment.attachment.user_id = props.userData.user_id;
+          attachmentService
+            .addAttachment(attachment.attachment)
+            .then(response => {
+              attachment.users.forEach(e =>
+                attachmentService.addUserForAttachment(
+                  response.insertId,
+                  e.user_id
+                )
+              );
+            });
+        });
+      });
   };
 
   const checkResponse = (res: any) => {
@@ -422,7 +612,11 @@ const AddEvent = (props: IProps) => {
                               uploaded
                         }
                         color="primary"
-                        onClick={submit}
+                        onClick={() => {
+                          submit();
+                          props.eventData !== undefined &&
+                            setActiveStep(totalSteps() - 1);
+                        }}
                       >
                         {props.eventData
                           ? "Lagre endringer"

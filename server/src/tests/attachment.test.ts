@@ -112,17 +112,23 @@ test("Delete attachment for user", done => {
 })
 
 test("Add attachment", done => {
-    let input = 
+    let attachment = 
     {
-        attachment_id: 3,
-        event_id: 2,
-        user_id: 2,
         data: "x'23B",
         filename: "testdata.txt",
         filetype: "document/txt",
         filesize: 100
     }
-    dao.addAttachmentForUserForEvent({attachment: input, body: input}, (status, data) => {
+    let body = {
+        event_id: 2,
+        user_id: 2,
+    }
+
+    let data = {
+        body: JSON.stringify(body),
+        attachment: attachment
+    }
+    dao.addAttachmentForUserForEvent(data, (status, data) => {
         expect(status).toBe(200);
         expect(data.affectedRows).toBe(1);
 

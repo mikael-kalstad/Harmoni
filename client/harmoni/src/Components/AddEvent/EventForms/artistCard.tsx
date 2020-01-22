@@ -3,6 +3,8 @@ import styled from "styled-components";
 import InputDialog from "../inputDialog";
 
 const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 20% 1fr 12% 12%;
   align-items: center;
@@ -43,28 +45,34 @@ const RiderIcon = styled.img`
 `;
 
 interface IProps {
-  user: any;
+  artist: any;
   remove?: Function;
   riderData?: any;
-  setRiderData?: Function;
+  setRiderData?: any;
+  readOnly?: boolean;
+  eventId?: number;
+  userData?: any;
 }
 
 const Artistcard = (props: IProps) => {
-  const [showRider, setShowRider] = useState(false);
+  const [showRider, setShowRider] = useState<boolean>(false);
 
   const toggleShow = () => setShowRider(!showRider);
 
-  const addRider = text => {
-    if (text === "") return;
+  const addRider = async text => {
+    if (text.trim() === "") return;
+
+    // Get rider data to specified user
+    let data = findRiderWithId(props.artist.user_id);
 
     toggleShow();
-
+    console.log(data);
     // Check if rider is already created
-    let data = findRiderWithId(props.user.user_id);
     if (data !== undefined) {
+      data = data["text"];
       let newData = props.riderData;
       newData.forEach(data => {
-        if (data.user_id === props.user.user_id) data["text"] = text;
+        if (data.user_id === props.artist.user_id) data["text"] = text;
       });
 
       props.setRiderData([...newData]);
@@ -73,7 +81,7 @@ const Artistcard = (props: IProps) => {
 
     props.setRiderData([
       ...props.riderData,
-      { text: text, user_id: props.user.user_id }
+      { text: text, user_id: props.artist.user_id }
     ]);
   };
 
@@ -82,15 +90,31 @@ const Artistcard = (props: IProps) => {
     if (!props.riderData) return undefined;
 
     let data = props.riderData.find(
-      data => data.user_id === props.user.user_id
+      data => data.user_id === props.artist.user_id
     );
 
     if (data === undefined || data.length > 1 || data.length === 0)
       return undefined;
 
-    let riderData = data["text"];
+    return data;
+  };
 
-    if (riderData !== undefined) return riderData;
+  const getTextWithId = (id: number) => {
+    let data = findRiderWithId(id);
+
+    if (!data || data === undefined || data["text"] === undefined)
+      return undefined;
+    return data["text"];
+  };
+
+  const showRiderIcon = () => {
+    if (props.setRiderData !== undefined) return true;
+    if (props.userData === undefined) return false;
+
+    return (
+      props.userData.type === "organizer" ||
+      props.userData.user_id === props.artist.user_id
+    );
   };
 
   return (
@@ -100,35 +124,40 @@ const Artistcard = (props: IProps) => {
           toggleShow={toggleShow}
           onClick={addRider}
           title="Rider Info"
-          btnText="LEGG TIL"
-          inputValue={findRiderWithId(props.user.user_id)}
+          btnText={
+            findRiderWithId(props.artist.user_id) === undefined
+              ? "LEGG TIL"
+              : "LAGRE"
+          }
+          inputValue={getTextWithId(props.artist.user_id)}
           placeholder='- Lokalt øl, laktosefri pizza
           - Konjakk, dram, akkevitt, hjemmebrent
           - Besøk av mor, venn, kjendis
           - Utstyr: gitar, ukelele, gitar band til PS4"'
-          disabled={props.setRiderData === undefined}
+          readOnly={props.readOnly}
         />
       )}
 
       <Wrapper>
         <ImgWrapper>
-          {props.user.picture.data && props.user.picture.data.length !== 0 && (
-            <ArtistImage
-              src={new Buffer(props.user.picture).toString("ASCII")}
-            />
-          )}
+          {props.artist.picture.data &&
+            props.artist.picture.data.length !== 0 && (
+              <ArtistImage
+                src={new Buffer(props.artist.picture).toString("ASCII")}
+              />
+            )}
         </ImgWrapper>
 
-        <Name>{props.user.name}</Name>
+        <Name>{props.artist.name}</Name>
 
-        {props.riderData && (
+        {props.riderData && showRiderIcon() && (
           <RiderIcon src="/icons/ridericon.svg" onClick={toggleShow} />
         )}
 
         {props.remove && (
           <DelBtn
             src="/icons/cross.svg"
-            onClick={() => props.remove(props.user)}
+            onClick={() => props.remove(props.artist)}
           />
         )}
       </Wrapper>

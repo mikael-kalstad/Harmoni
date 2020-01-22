@@ -43,10 +43,11 @@ const Exit = styled.img`
   cursor: pointer;
 `;
 
-const WarningText = styled.p`
-  color: #d45951;
+const Text = styled.p`
+  color: #777;
   font-size: 18px;
   font-weight: 400;
+  margin: 40px;
 `;
 
 interface IProps {
@@ -56,7 +57,7 @@ interface IProps {
   inputValue?: string;
   btnText: string;
   placeholder: string;
-  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 // MATERIAL UI input style
@@ -67,7 +68,7 @@ const inputStyle = {
 
 const InputDialog = (props: IProps) => {
   const [submit, setSubmit] = useState<boolean>(false);
-  const [input, setInput] = useState<string | undefined>();
+  const [input, setInput] = useState<string>("");
 
   return (
     <>
@@ -78,29 +79,42 @@ const InputDialog = (props: IProps) => {
 
         <Title>{props.title}</Title>
 
-        <TextField
-          style={inputStyle}
-          variant="outlined"
-          placeholder={props.placeholder}
-          id="multiline-static"
-          label="Info"
-          multiline
-          InputLabelProps={{
-            shrink: true
-          }}
-          rows="8"
-          error={submit && input === ""}
-          helperText={
-            submit && input === "" && "Tekstfeltet kan ikke være tomt"
-          }
-          value={input || props.inputValue}
-          onChange={e => setInput(e.target.value)}
-          disabled={props.disabled}
-        />
+        {!props.readOnly && (
+          <TextField
+            style={inputStyle}
+            variant="outlined"
+            placeholder={props.placeholder}
+            id="multiline-static"
+            label="Info"
+            multiline
+            InputLabelProps={{
+              shrink: true
+            }}
+            rows="8"
+            error={submit && (input.trim() === "" && )}
+            helperText={
+              submit && input.trim() === "" && "Tekstfeltet kan ikke være tomt"
+            }
+            value={input || props.inputValue}
+            onChange={e => setInput(e.target.value)}
+          />
+        )}
 
-        <Button disabled={props.disabled} onClick={() => props.onClick(input)}>
-          {props.btnText}
-        </Button>
+        {!props.readOnly && (
+          <Button
+            disabled={props.readOnly}
+            onClick={() => {
+              input.trim() !== "" && props.onClick(input);
+              setSubmit(true);
+            }}
+          >
+            {props.btnText}
+          </Button>
+        )}
+
+        {props.readOnly && (
+          <Text>{props.inputValue || "Ingen rider info er lagt til ennå"}</Text>
+        )}
       </DialogBox>
     </>
   );

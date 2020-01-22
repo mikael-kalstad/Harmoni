@@ -32,6 +32,29 @@ const Icon = styled.img`
 
 const LinkWrapper = styled.div`
     margin: 10px;
+    color: #7f7f7f;
+    text-decoration: none;
+
+    :visited {
+        color: #7f7f7f;
+    }
+
+    :hover {
+        text-decoration: none;
+    }
+    margin: 0;
+    right: 20px;
+`;
+
+const LinkWrapper1 = styled.div`
+    color: #7f7f7f;
+
+    :visited {
+        color: #7f7f7f;
+    }
+
+    margin: 0;
+    margin-right: 20px;
 `;
 
 const NavigationBar = (props: any) => (
@@ -90,6 +113,19 @@ const NavigationBar = (props: any) => (
                         </LinkContainer>
                     </NavDropdown>
                 </LinkWrapper>
+            </Nav>
+
+            <Nav>
+                <LinkWrapper1>
+                    <NavDropdown title="Sorter etter" id="basic-nav-dropdown">
+                        <LinkContainer to="/sort/events/cheapest">
+                            <NavDropdown.Item>Laveste pris</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/sorts/events/most-expensive">
+                            <NavDropdown.Item>Høyeste pris</NavDropdown.Item>
+                        </LinkContainer>
+                    </NavDropdown>
+                </LinkWrapper1>
             </Nav>
 
             <StyledLink to="/search">

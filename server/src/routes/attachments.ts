@@ -24,7 +24,7 @@ function checkIfAccessRights(user_id: number, attachment_id: number): Promise<bo
 }
 
 // Create attachment
-router.post('/authorized/attachments/', upload.single("attachment"), async (request, response) => {
+router.post('/authorized/attachments/', upload.single("file"), async (request, response) => {
   var attachment =
   {
     data: request.file.buffer,
@@ -40,7 +40,7 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
 
 // Add user to attachment in attachment_user table i DB
 router.post(
-  '/authorized/attachments/attachment_user/:attachmentId/:userId',
+  '/authorized/attachments/attachment_user/:attachmentId&:userId',
   async (request, response) => {
     checkIfAccessRights(parseInt(request.params.userId), parseInt(request.params.attachmentId)).then(valid => {
       valid ? response.status(401) :
@@ -50,6 +50,14 @@ router.post(
     })
   }
 );
+
+// Get user ids who have access to the document.
+router.get('/authorized/attachments/attachment_user/:attachmentId',
+async (request, response) => {
+  dao.getAttachmentRights(parseInt(request.params.attachmentId), (status, data) => {
+    status == 500 ? response.status(500) : response.send(data);
+  })
+})
 
 //Get attachment given its id
 router.get('/authorized/attachments/:id', async (request, response) => {
