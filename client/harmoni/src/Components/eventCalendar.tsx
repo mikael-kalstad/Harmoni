@@ -49,7 +49,7 @@ const EventCalendar = (props: any) => {
         defaultDate={new Date()}
         defaultView="month"
         events={events}
-        style={{ height: "80vh", maxWidth: "100vh" }}
+        style={{ height: "80vh", maxWidth: "120vh" }}
         views={["month", "agenda"]}
         onSelectEvent={e => handleSelectEvent(e)}
       />

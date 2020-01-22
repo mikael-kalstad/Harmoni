@@ -121,7 +121,7 @@ const Profile = (props: { userData: any }) => {
 
       <CalenderWrapper>
         <Title>Kalender</Title>
-        <EventCalendar data={events} />
+        <EventCalendar data={events && events.filter(e => e.status === 0)} />
       </CalenderWrapper>
     </>
   );
