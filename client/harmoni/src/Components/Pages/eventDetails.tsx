@@ -13,7 +13,7 @@ import ConfirmationDialog from "../confirmationDialog";
 import Button from "../Button/button";
 import { attachmentService } from "../../services/AttachmentService";
 import WarningInfo from "../Pages/warningInfo";
-import EmailService, { emailService } from "../../services/EmailService";
+import  { emailService } from "../../services/EmailService";
 
 const Container = styled.div`
   width: 80%;
@@ -85,6 +85,8 @@ const EventDetails = (props: any) => {
   const [volunteers, setVolunteers] = useState();
   const [tickets, setTickets] = useState();
   const [riders, setRiders] = useState();
+  const [organizer, setOrganizer] = useState();
+
 
   // Boolean check states
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -106,7 +108,12 @@ const EventDetails = (props: any) => {
 
   const toggleDialog = () => setShowDialog(!showDialog);
 
+
   const cancelEvent = async () => {
+    userService
+        .getUserById(eventData.organizer)
+        .then(response=> setOrganizer(response));
+    ;
     setLoading(true);
 
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
@@ -118,7 +125,7 @@ const EventDetails = (props: any) => {
             "Hei, Vi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Du får denne mailen fordi arrangøren har avlyst arrangementer.",
+              "Du kan ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:"+organizer.email,
             eventData.name + " er avlyst"
           );
         });
@@ -130,10 +137,10 @@ const EventDetails = (props: any) => {
         volunteers.forEach(volunteer => {
           emailService.sendEmail(
             volunteer.email,
-            "Hei, Vi informerer deg at arrangementet: " +
+            "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Du får denne mailen fordi arrangøren har avlyst arrangementer.",
+              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:"+organizer.email,
             eventData.name + " er avlyst"
           );
         });
