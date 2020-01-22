@@ -1,3 +1,8 @@
+/**
+ * This class used to hash and salt password for users,
+ * sjcl is the stanford Javascript Crypto Library
+  */
+
 const sjcl = require('sjcl')
 
 export function hash(data: string) {
@@ -9,6 +14,7 @@ export function hash(data: string) {
     };
 }
 
+// This method is used when the user logs in
 export function compareHash(hash: string, data: string, salt: string) {
     var newHash = sjcl.codec.base64.fromBits(sjcl.hash.sha256.hash(data + salt));
     return hash == newHash;

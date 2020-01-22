@@ -112,10 +112,9 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     var count = 0;
     count += /[a-z]/.test(thePassword) ? 1 : 0;
     count += /[A-Z]/.test(thePassword) ? 1 : 0;
-    count += /\d/.test(thePassword) ? 1 : 0;
     count += /[@]/.test(thePassword) ? 1 : 0;
     count += /[0-9]/.test(thePassword) ? 1 : 0;
-    if (count >= 2 && thePassword) {
+    if (count >= 2 &&counter(thePassword)>5) {
       return true;
     } else if (count < 2) return false;
   }
@@ -343,7 +342,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
               submit && passwordInput === ""
                 ? "Passord er påkrevd"
                 : submit && !passwordValidation(passwordInput)
-                ? "Passordet må innholde minst en små bokstav og en stor bokstav eller ett tall eller ett tegn"
+                ? "Passordet må innholde minst 6 tegn, og det må innholde minst to av følgende: en liten bokstav, en stor bokstav, et tall,  et symbol (for eksempel '&')"
                 : submit && counter(passwordInput) > 45
                 ? "passordet kan ikke være flere enn 45 bokstaver"
                 : ""

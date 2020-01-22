@@ -1,4 +1,4 @@
-// Routes to interact with attachmentDao.
+// Routes to interact with attachments.
 
 import express from 'express';
 import attachmentDao from '../dao/attachmentDao';
@@ -32,7 +32,6 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
     filesize: request.file.size,
     filetype: request.file.mimetype,
   }
-  console.log("File: ", request.file)
   dao.addAttachmentForUserForEvent({ body: request.body, attachment: attachment },
     (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
@@ -43,7 +42,6 @@ router.post('/authorized/attachments/', upload.single("attachment"), async (requ
 router.post(
   '/authorized/attachments/attachment_user/:attachmentId/:userId',
   async (request, response) => {
-    console.log("HERE!")
     checkIfAccessRights(parseInt(request.params.userId), parseInt(request.params.attachmentId)).then(valid => {
       valid ? response.status(401) :
         dao.addUserForAttachment(parseInt(request.params.attachmentId), parseInt(request.params.userId), (status, data) => {
@@ -111,9 +109,7 @@ router.get('/authorized/attachments/download/:id', async (request, response) => 
     else {
       response.setHeader('Content-disposition', 'attachment; filename=' + data[0].filename);
       response.setHeader('Content-type', data[0].filetype);
-      console.log("Sending attachment download response");
       response.send(data[0].data);
-      console.log("Completed sending attachment response.");
     }
   })
 })

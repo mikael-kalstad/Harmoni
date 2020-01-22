@@ -1,3 +1,5 @@
+// Routes to interact with tickets
+
 import express from 'express';
 import ticketDAO from '../dao/ticketDao';
 import { pool } from '../dao/database';
@@ -5,26 +7,28 @@ import { pool } from '../dao/database';
 const router = express.Router();
 const dao = new ticketDAO(pool);
 
-//Get all tickets
+// Get all tickets
 router.get('/tickets/', async (request, response) => {
   dao.getAllTickets((status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
-//Get all tickets for a given event
+// Get all tickets for a given event
 router.get('/tickets/event/:id', async (request, response) => {
   dao.getTicketsByEventId(parseInt(request.params.id), (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
-//Add tickets
+
+// Create ticket
 router.post('/authorized/tickets/', async (request, response) => {
   dao.addTicket(request.body, (status, data) => {
     status == 500 ? response.status(500) : response.send(data);
   });
 });
 
+// Update ticket
 router.put(
   '/authorized/tickets/available/:ticketId&:value',
   async (request, response) => {
