@@ -91,7 +91,7 @@ const InputDialog = (props: IProps) => {
               shrink: true
             }}
             rows="8"
-            error={submit && input.trim() === ""}
+            error={submit && (input.trim() === "" && )}
             helperText={
               submit && input.trim() === "" && "Tekstfeltet kan ikke være tomt"
             }
