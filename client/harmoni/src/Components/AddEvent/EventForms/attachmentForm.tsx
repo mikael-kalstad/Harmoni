@@ -335,7 +335,7 @@ const AttachmentForm = (props: any) => {
                     return (
                       <>
                         <ArtistCard
-                          user={data}
+                          artist={data}
                           remove={removeUserTemp(e, data)}
                         />
                       </>
@@ -382,7 +382,7 @@ const AttachmentForm = (props: any) => {
               console.log(data);
               return (
                 <>
-                  <ArtistCard user={data} remove={removeUser(e, data)} />
+                  <ArtistCard artist={data} remove={removeUser(e, data)} />
                 </>
               );
             });

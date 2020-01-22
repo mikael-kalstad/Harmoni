@@ -34,7 +34,6 @@ const SearchEvents = (props:any) => {
     }
 
     // Render grid of all matching arrangements
-    console.log(eventsData);
     return (
         <div style={{alignContent: "center", justifyContent: "center"}}>
             <input type="text" onChange={inputChange}

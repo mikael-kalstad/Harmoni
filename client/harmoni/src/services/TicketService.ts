@@ -38,7 +38,7 @@ class TicketService extends Service {
       .catch(error => console.log(error));
   }
 
-  addTickets(ticket: Ticket) {
+  addTicket(ticket: Ticket) {
     updateToken();
     return axios({
       method: "post",

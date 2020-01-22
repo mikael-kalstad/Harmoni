@@ -100,6 +100,7 @@ interface IProps {
   program: string;
   artists: any[];
   tickets: any[];
+  readOnly: boolean;
 }
 
 const Summary = (props: IProps) => (
