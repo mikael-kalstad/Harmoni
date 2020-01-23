@@ -108,14 +108,13 @@ const EventDetails = (props: any) => {
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
-    console.log("org id: " +  eventData.organizer);
-   /* let data = await userService.getOrganizerForEvent(eventData.event_id);
-    console.log("org:" + data);
+    /* let data = await userService.getOrganizerForEvent(eventData.event_id);
+    
     setOrganizer(data); */
 
     //console.log(userService.getUserById(73));
-   // setOrganizer(userService.getUserById(73));
-  /*  userService
+    // setOrganizer(userService.getUserById(73));
+    /*  userService
       .getUserById(eventData.organizer)
       .then(response => setOrganizer(response));
 
@@ -128,31 +127,27 @@ const EventDetails = (props: any) => {
     setLoading(true);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
-      console.log(organizer)
       if (artists) {
-        console.log("Artist:",artists)
         artists.forEach(artist => {
-          console.log("email sent to",artist.email)
-          emailService.sendEmail(artist.email, 
+          emailService.sendEmail(
+            artist.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
-         );
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
+          );
         });
       }
       if (volunteers) {
-        console.log("volunteers: ", volunteers);
         volunteers.map(volunteer => {
-          console.log("email sent to",volunteer.email);
           emailService.sendEmail(
             volunteer.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
           );
         });
       }
@@ -203,10 +198,10 @@ const EventDetails = (props: any) => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
         eventService
-            .getUsersOfEventByType(props.match.params.id, "volunteer")
-            .then(volunteersResponse=>{
-              setVolunteers(volunteersResponse);
-            });
+          .getUsersOfEventByType(props.match.params.id, "volunteer")
+          .then(volunteersResponse => {
+            setVolunteers(volunteersResponse);
+          });
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
@@ -219,12 +214,9 @@ const EventDetails = (props: any) => {
               .then(attachmentResponse => {
                 setAttachments(attachmentResponse);
                 attachmentResponse.forEach(attachment => {
-                  console.log(attachment);
                   attachmentService
                     .getAttachmentRights(attachment.attachment_id)
                     .then(rightsResponse => {
-                      console.log(artistResponse);
-                      console.log(rightsResponse);
                       let newRight = {
                         attachment: attachment,
                         users: artistResponse.filter(artist =>
@@ -233,7 +225,7 @@ const EventDetails = (props: any) => {
                           )
                         )
                       };
-                      console.log(newRight);
+
                       setAttachmentsRights(array => [...array, newRight]);
                     });
                 });

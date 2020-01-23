@@ -267,7 +267,7 @@ const AddEvent = (props: IProps) => {
   const compareDates = (date1, date2) => {
     let fromDate = new Date(date1);
     let toDate = new Date(date2);
-    console.log("hei", todayDate, fromDate);
+
     return fromDate < toDate;
   };
 
@@ -334,8 +334,6 @@ const AddEvent = (props: IProps) => {
       category: infoData.category,
       picture: infoData.imgData
     };
-
-    console.log(listOfAttachmentsRights);
 
     setLoading(true);
 
@@ -463,15 +461,13 @@ const AddEvent = (props: IProps) => {
     attachmentService
       .getAttachmentsForEvent(eventId)
       .then(attachmentResponse => {
-        console.log(attachmentResponse);
-        console.log(listOfAttachments);
         const removedAttachments = attachmentResponse.filter(
           attachment =>
             !listOfAttachments.some(
               e => e.attachment_id == attachment.attachment_id
             )
         );
-        console.log(removedAttachments);
+
         if (removedAttachments) {
           removedAttachments.forEach(removedAttachment => {
             attachmentService.deleteAttachment(removedAttachment.attachment_id);
@@ -484,17 +480,15 @@ const AddEvent = (props: IProps) => {
                 removedAttachment.attachment_id == attachment.attachment_id
             )
         );
-        console.log(remainingAttachments);
+
         remainingAttachments.forEach(attachment => {
           attachmentService
             .getAttachmentRights(attachment.attachment_id)
             .then(attachmentRightsResponse => {
-              console.log(attachmentRightsResponse);
-              console.log(listOfAttachmentsRights);
               const attachmentRights = listOfAttachmentsRights.find(
                 e => e.attachment.attachment_id == attachment.attachment_id
               );
-              console.log(attachmentRights);
+
               const removedRights = attachmentRightsResponse.filter(user => {
                 let shouldRemove = !attachmentRights.users.some(e => {
                   return (
@@ -502,12 +496,11 @@ const AddEvent = (props: IProps) => {
                     user.user_id == e.user_id
                   );
                 });
-                console.log(shouldRemove);
+
                 return shouldRemove;
               });
-              console.log(removedRights);
+
               removedRights.forEach(removedRight => {
-                console.log(removedRight);
                 attachmentService.deleteAttachmentforUser(
                   attachment.attachment_id,
                   removedRight.user_id
@@ -519,7 +512,7 @@ const AddEvent = (props: IProps) => {
         const newAttachments = listOfAttachmentsRights.filter(
           e => e.attachment.attachment_id == -1
         );
-        console.log(newAttachments);
+
         newAttachments.forEach(attachment => {
           attachment.attachment.event_id = eventId;
           attachment.attachment.user_id = props.userData.user_id;

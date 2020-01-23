@@ -185,7 +185,6 @@ const AttachmentForm = (props: any) => {
       attachment: null
     };
     array.users = tempAttachmentRights.users.filter(e => {
-      console.log(e);
       return e.user_id != user.user_id;
     });
     array.attachment = currAttachment;
@@ -203,8 +202,6 @@ const AttachmentForm = (props: any) => {
 
   //Add attachment and all the assosiated user-rights.
   const addAttachment = (file: attachment) => {
-    if (!file)
-      console.log("File is undefined or null, button should be disabled");
     let exists = props.listOfAttachments.some(e => e.filename == file.filename);
     if (!exists) {
       props.setListOfAttachments(array => [...array, file]);
@@ -218,7 +215,7 @@ const AttachmentForm = (props: any) => {
       //TODO: Display error
     }
     setReadyToUpload(false);
-    console.log(fileInputName);
+
     setFileInputName("");
   };
 
@@ -231,7 +228,7 @@ const AttachmentForm = (props: any) => {
       let exists = tempAttachmentRights.users.some(e => {
         return e.user_id == userRight.user.user_id;
       });
-      console.log(exists ? "Exists!" : "Doesn't exist!");
+
       if (!exists) {
         let array = {
           users: [],
@@ -251,19 +248,16 @@ const AttachmentForm = (props: any) => {
       user: user,
       attachment: attachment
     };
-    console.log(userRight);
 
     let indexOfFile;
     //Find the correct file
-    console.log(props.listOfAttachmentsRights);
+
     let files = props.listOfAttachmentsRights.filter(e => {
-      console.log(e);
       return e.attachment.filename === userRight.attachment.filename;
     });
 
     //Remove the user from the access list
     files[0].users = files[0].users.filter(e => {
-      console.log(e);
       return e.user_id != user.user_id;
     });
     props.listOfAttachmentsRights[indexOfFile] = files;
@@ -271,7 +265,6 @@ const AttachmentForm = (props: any) => {
   };
 
   const removeFile = attachment => () => {
-    console.log("Removeing file: ", attachment);
     let attachments = props.listOfAttachments;
     attachments = attachments.filter(e => e.filename !== attachment.filename);
     props.setListOfAttachments(attachments);
@@ -295,7 +288,7 @@ const AttachmentForm = (props: any) => {
       users: [],
       attachment: null
     });
-    setFileInputName("")
+    setFileInputName("");
   };
 
   const handleChange = e => {
@@ -307,8 +300,6 @@ const AttachmentForm = (props: any) => {
     const filename = file.name;
     const filesize = file.size;
     const filetype = file.type;
-    console.log(filesize);
-    console.log(file);
 
     if (filesize > MAX_FILE_SIZE) {
       setWarning(true);
@@ -326,8 +317,6 @@ const AttachmentForm = (props: any) => {
       return;
     }
     reader.onloadend = () => {
-      console.log("Uploaded file...", reader);
-      console.log("Upload result: ", reader.result);
       let att: attachment = {
         attachment_id: -1,
         data: file,
@@ -337,7 +326,7 @@ const AttachmentForm = (props: any) => {
         filetype: filetype,
         user_id: -1
       };
-      console.log("The attachment: ", att);
+
       setCurrAttachment(att);
       let tempRights = tempAttachmentRights;
       tempRights.attachment = att;
@@ -352,12 +341,14 @@ const AttachmentForm = (props: any) => {
     <Wrapper>
       {warning == true ? (
         <InfoDialog width="500px" height="350px" closeDialog={closeWarning}>
-          <TiWarning style={checkCircleStyle}/>
-          <Text style={{padding:"15px"}}>
-            Filen "{currAttachment.filename}" er for stor, vennligst velg en annen
-            eller reduser størrelsen.
+          <TiWarning style={checkCircleStyle} />
+          <Text style={{ padding: "15px" }}>
+            Filen "{currAttachment.filename}" er for stor, vennligst velg en
+            annen eller reduser størrelsen.
           </Text>
-          <Text style={{padding:"15px"}}>Maks filstørrelse er: {MAX_FILE_SIZE} bytes (1.57MB)</Text>
+          <Text style={{ padding: "15px" }}>
+            Maks filstørrelse er: {MAX_FILE_SIZE} bytes (1.57MB)
+          </Text>
         </InfoDialog>
       ) : null}
       <Title>Vedlegg</Title>
