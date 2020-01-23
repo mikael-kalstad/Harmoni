@@ -116,14 +116,14 @@ router.put("/authorized/users/:id", async (request, response) => {
 // Edit password, used in edit profile
 router.put("/authorized/users/change_password/:email", async (request, response) => {
   dao.changePassword(request.params.email, request.body, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
+    status == 500 ? response.status(500) : response.send(sanitizeUser(data));
   });
 });
 
 // Edit pic, used in edit profile
 router.put("/authorized/users/change_picture/:id", async (request, response) => {
   dao.changePicture(parseInt(request.params.id), request.body, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
+    status == 500 ? response.status(500) : response.send(sanitizeUser(data));
   });
 });
 
