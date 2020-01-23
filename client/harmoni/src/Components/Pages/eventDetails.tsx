@@ -117,37 +117,41 @@ const EventDetails = (props: any) => {
    // setOrganizer(userService.getUserById(73));
   /*  userService
       .getUserById(eventData.organizer)
-      .then(response => setOrganizer(response));  */
-    setLoading(true); 
-    console.log("organizer: "+ organizer);
+      .then(response => setOrganizer(response));
+
+        let resOrganizer= await userService
+          .getUserById(eventData.organizer);
+        if(resOrganizer){
+        console.log("res organizer kjørt")
+        setOrganizer(resOrganizer);
+      }*/
+    setLoading(true);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
-      setOrganizer(userService.getOrganizerForEvent(eventData.event_id));
       console.log(organizer)
       if (artists) {
-        setArtists(eventService.getUsersOfEventByType(eventData.event_id, "artist"));
-        console.log(artists)
+        console.log("Artist:",artists)
         artists.forEach(artist => {
+          console.log("email sent to",artist.email)
           emailService.sendEmail(artist.email, 
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
+              "Ta kontakt med arrangøren for mer informasjon."
             ,eventData.name + " er avlyst"
          );
         });
       }
       if (volunteers) {
-        setVolunteers(
-          eventService.getUsersOfEventByType(eventData.event_id, "volunteer")
-        );
-        volunteers.forEach(volunteer => {
+        console.log("volunteers: ", volunteers);
+        volunteers.map(volunteer => {
+          console.log("email sent to",volunteer.email);
           emailService.sendEmail(
             volunteer.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
+              "Ta kontakt med arrangøren for mer informasjon."
             ,eventData.name + " er avlyst"
           );
         });
@@ -198,6 +202,11 @@ const EventDetails = (props: any) => {
     const fetchEvent = async () => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
+        eventService
+            .getUsersOfEventByType(props.match.params.id, "volunteer")
+            .then(volunteersResponse=>{
+              setVolunteers(volunteersResponse);
+            });
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
