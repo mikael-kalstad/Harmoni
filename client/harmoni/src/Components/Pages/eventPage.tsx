@@ -173,8 +173,8 @@ const AddBtn = styled.div`
     font-size: 16px;
     font-weight: 500;
     border none;
-    margin: 0;
-    margin-top: 0;
+    margin: 20px;
+
     cursor: pointer;
     border-radius: 50px;
     text-align: center;

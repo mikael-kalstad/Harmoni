@@ -43,17 +43,21 @@ const UploadWrapper = styled.div`
   display: grid;
 `;
 
-interface IAttachmentWrapper {
+interface IAttachmentListWrapper {
   empty: boolean;
 }
-const AttachmentWrapper = styled.div<IAttachmentWrapper>`
+const AttachmentListWrapper = styled.div<IAttachmentListWrapper>`
   border: ${props => (props.empty ? "dashed 3px #bbbbbb" : "none")};
   border-radius: 10px;
 `;
 
+const AttachmentWrapper = styled.div`
+  margin-top: 30px;
+`;
+
 const DelBtn = styled.img`
   cursor: pointer;
-  margin-left: 10px;
+  justify-self: end;
 `;
 
 const Input = styled.input`
@@ -80,27 +84,32 @@ const Text = styled.p`
   font-size: 16px;
   font-weight: 400;
   margin: 0;
-  color: #222222;
+  color: #777777;
 `;
 
 const FileCard = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: dashed 1px;
-  font-size: 25px;
+  font-size: 40px;
+`;
+
+const ArtistCardWrapper = styled.div`
+  margin: 10px 0;
 `;
 
 const FilenameText = styled.p`
   font-family: Arial;
-  font-size: 20px;
+  font-size: 18px;
   margin: 0;
   justify-self: start;
   font-weight: bold;
   color: #434343;
+
+  text-overflow: ellipsis;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 const FileUploadWrapper = styled.div`
@@ -130,7 +139,7 @@ const FileUploadText = styled.p`
 
 const NoAttachmentsText = styled.p`
   font-size: 26px;
-  color: #777777;
+  color: #999999;
   margin: 20px;
   font-weight: bold;
   text-align: center;
@@ -302,10 +311,21 @@ const AttachmentForm = (props: any) => {
   return (
     <Wrapper>
       <Title>Vedlegg</Title>
-      <Text>
-        Du kan legge til og endre vedlegg og hvem som skal ha tilgang til disse
-        ved å redigere arrangementet i min side.
+      <Text style={{ marginTop: "45px" }}>
+        Her kan du laste opp vedlegg og bestemme hvilke artister som skal ha
+        tilgang til hver av dem.
       </Text>
+
+      {window.location.pathname === "/newEvent" ? (
+        <>
+          <Text style={{ marginTop: "10px" }}>
+            Du kan også gjøre dette senere ved å redigere arrangementet i min
+            side.
+          </Text>
+        </>
+      ) : (
+        <></>
+      )}
 
       {/* Input type file, ListGroup with ArtistCards? */}
       <UploadWrapper>
@@ -348,12 +368,12 @@ const AttachmentForm = (props: any) => {
                       let rights = tempAttachmentRights;
                       let RightsJSX = rights.users.map(data => {
                         return (
-                          <>
+                          <ArtistCardWrapper>
                             <ArtistCard
                               artist={data}
                               remove={removeUserTemp(e, data)}
                             />
-                          </>
+                          </ArtistCardWrapper>
                         );
                       });
                       return (
@@ -390,40 +410,41 @@ const AttachmentForm = (props: any) => {
           </Button>
         </AddAttachmentButtonWrapper>
       </UploadWrapper>
-
-      <AttachmentWrapper empty={props.listOfAttachments.length == 0}>
-        {props.listOfAttachments.length == 0 ? (
-          <NoAttachmentsText>Ingen vedlegg er lagt til</NoAttachmentsText>
-        ) : (
-          <ListGroup>
-            {props.listOfAttachments.map(e => {
-              let rights = getUsersforAttachment(e.filename);
-              let RightsJSX = rights.users.map(data => {
+      <AttachmentWrapper>
+        <UnderTitle>Dine vedlegg:</UnderTitle>
+        <AttachmentListWrapper empty={props.listOfAttachments.length == 0}>
+          {props.listOfAttachments.length == 0 ? (
+            <NoAttachmentsText>Ingen vedlegg er lagt til</NoAttachmentsText>
+          ) : (
+            <ListGroup>
+              {props.listOfAttachments.map(e => {
+                let rights = getUsersforAttachment(e.filename);
+                let RightsJSX = rights.users.map(data => {
+                  return (
+                    <ArtistCardWrapper>
+                      <ArtistCard artist={data} remove={removeUser(e, data)} />
+                    </ArtistCardWrapper>
+                  );
+                });
                 return (
-                  <>
-                    <ArtistCard artist={data} remove={removeUser(e, data)} />
-                  </>
+                  <ListGroup.Item>
+                    <div key={e.filename}>
+                      <FileCard>
+                        <FaFileAlt />
+                        <FilenameText>{e.filename}</FilenameText>
+                        <DelBtn
+                          src="/icons/cross.svg"
+                          onClick={removeFile(e)}
+                        />
+                      </FileCard>
+                      <div>{RightsJSX}</div>
+                    </div>
+                  </ListGroup.Item>
                 );
-              });
-              return (
-                <ListGroup.Item>
-                  <div key={e.filename}>
-                    <FileCard>
-                      <FaFileAlt style={{ fontSize: "20px" }} />
-                      <FilenameText>{e.filename}</FilenameText>
-                      <DelBtn
-                        src="/icons/cross.svg"
-                        onClick={removeFile(e)}
-                        style={{ justifySelf: "end" }}
-                      />
-                    </FileCard>
-                    <div>{RightsJSX}</div>
-                  </div>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
-        )}
+              })}
+            </ListGroup>
+          )}
+        </AttachmentListWrapper>
       </AttachmentWrapper>
     </Wrapper>
   );
