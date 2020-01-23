@@ -280,8 +280,10 @@ const Event = (props: any) => {
     fetchOrganizer();
     alreadyVolunteered().then(e => setShowVolunteerButton(e.length == 0));
     console.log("params.id ", params.id)
+    console.log("showVolunteerButton: ", showVolunteerButton)
+    console.log("props.userData: ", props.userData)
     //console.log("props.userData.user_id: ", props.userData.user_id)
-  }, [parseInt(params.id)]);
+  }, [parseInt(params.id), props.userData]);
   //
 
   const addVolunteer = async () => {
