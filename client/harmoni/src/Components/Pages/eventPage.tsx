@@ -258,11 +258,13 @@ const Event = (props: any) => {
       setOrganizer(await userService.getOrganizerForEvent(parseInt(params.id)));
     };
 
-    const alreadyVolunteered = () => {
-      if(!props.userData){
-        return Promise.resolve(true);
-      }
-      return eventService.getUserOfEvent(props.userData.user_id, parseInt(params.id))
+    const alreadyVolunteered =async () => {
+      eventService.getUserOfEvent(props.userData.user_id, parseInt(params.id)).then(result=>{
+        if( result.length == 0){
+          setShowVolunteerButton(true);
+        }else
+          setShowVolunteerButton(false);
+      })
     }
 
     const fetchCoords = async (address: string) => {
@@ -273,15 +275,16 @@ const Event = (props: any) => {
 
   
     //
-
+    // Check if user should have access
+    if (props.userData){
+      alreadyVolunteered();
+    }
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-    alreadyVolunteered().then(e => setShowVolunteerButton(e.length == 0));
-    console.log("params.id ", params.id)
-    //console.log("props.userData.user_id: ", props.userData.user_id)
-  }, [parseInt(params.id)]);
+
+  }, [parseInt(params.id),props.userData]);
   //
 
   const addVolunteer = async () => {
@@ -318,6 +321,7 @@ const Event = (props: any) => {
     setDisplayDialog(false)
   }
 
+
   
 
 
@@ -340,7 +344,8 @@ const Event = (props: any) => {
     let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
-    let status = inProgress ? "Pågående" : statuses[event[0].status];
+    let eventStatus = inProgress ? "Pågående" : statuses[event[0].status];
+
     return (
       <Wrapper>
         {displayDialog ? dialog : null}
@@ -349,10 +354,10 @@ const Event = (props: any) => {
             src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
-          {(props.userData && props.userData.type == "volunteer" && status == "Kommende" && showVolunteerButton) ?  (
+          {(props.userData && props.userData.type == "volunteer" && eventStatus === "Kommende" && showVolunteerButton) ?  (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
-              Meld deg på arrangement
+              Meld deg som frivillig
             </AddBtn>
           ) : (
             <></>
@@ -361,15 +366,15 @@ const Event = (props: any) => {
         <InfoGrid>
           <Title>
             {event[0].name}{" "}
-            {status === "Pågående" ? (
+            {eventStatus === "Pågående" ? (
               <>
-                {" - "} <StatusSpan color="#448b30">{status}</StatusSpan>
+                {" - "} <StatusSpan color="#448b30">{eventStatus}</StatusSpan>
               </>
-            ) : status == "Avlyst" || finished ? (
+            ) : eventStatus == "Avlyst" || finished ? (
               <>
                 {" - "}{" "}
                 <StatusSpan color="#c7554f">
-                  {finished ? "Ferdig" : status}
+                  {finished ? "Ferdig" : eventStatus}
                 </StatusSpan>
               </>
             ) : (
@@ -378,7 +383,7 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer[0].name}
+            {organizer.name}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
