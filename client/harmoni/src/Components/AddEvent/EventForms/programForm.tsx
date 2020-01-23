@@ -1,3 +1,7 @@
+/**
+ * Form for program info to an event.
+ */
+
 import React from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
@@ -33,7 +37,7 @@ interface ProgramProps {
 const ProgramForm = (props: ProgramProps) => {
   return (
     <>
-      <Title>Program:</Title>
+      <Title>Program</Title>
       <Text>
         Du kan legge til og endre program senere ved å redigere arrangementet i
         min side.

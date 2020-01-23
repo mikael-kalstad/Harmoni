@@ -8,6 +8,11 @@ const Container = styled.div`
   align-items: center;
   grid-gap: 20px;
   z-index: 1;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 `;
 
 const ImgWrapper = styled.div`
@@ -49,12 +54,16 @@ const Name = styled.p`
   width: 30%;
   margin: 0;
   font-weight: 500;
-  font-size: 60px;
+  font-size: 46px;
   width: 80%;
 
   ::first-letter {
     align-self: end;
     text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 1000px) {
+    font-size: 36px;
   }
 `;
 

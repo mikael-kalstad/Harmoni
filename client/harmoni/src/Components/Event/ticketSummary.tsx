@@ -40,6 +40,7 @@ const TicketPriceText = styled.div`
   justify-self: end;
 `;
 
+// Component showing a summary of selected tickets and their price
 const TicketSummary = (props: TicketSummaryProps) => {
   return (
     <Wrapper>

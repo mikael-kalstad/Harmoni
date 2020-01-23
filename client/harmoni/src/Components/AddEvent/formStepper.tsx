@@ -1,9 +1,15 @@
+/**
+ * Stepper component to display several components in a single page with page selectors.
+ * Intended to use with forms.
+ */
+
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepButton from "@material-ui/core/StepButton";
 
+// Style for stepper, used in material UI component
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -39,10 +45,12 @@ interface IProps {
 const FormStepper = (props: IProps) => {
   const classes = useStyles({});
 
+  // Check if any steps is skipped
   const isStepSkipped = (step: number) => {
     return props.skipped.has(step);
   };
 
+  // Check if all steps are completed
   const isStepComplete = (step: number) => {
     return props.completed.has(step);
   };
@@ -57,9 +65,11 @@ const FormStepper = (props: IProps) => {
       {props.steps.map((label, index) => {
         const stepProps: { completed?: boolean } = {};
         const buttonProps: { optional?: React.ReactNode } = {};
+
         if (isStepSkipped(index)) {
           stepProps.completed = false;
         }
+
         return (
           <Step
             key={label}

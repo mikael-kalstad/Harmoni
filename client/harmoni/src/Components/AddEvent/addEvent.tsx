@@ -215,7 +215,7 @@ const AddEvent = (props: IProps) => {
       case 0:
         return <BasicInfoForm {...infoProps} />;
       case 1:
-        return <ArtistForm {...artistProps} />;
+        return <ArtistForm {...artistProps} userData={props.userData} />;
       case 2:
         return <TicketForm {...ticketProps} />;
       case 3:
@@ -236,6 +236,7 @@ const AddEvent = (props: IProps) => {
             tickets={listOfTickets}
             attachments={listOfAttachments}
             userRights={listOfAttachmentsRights}
+            userData={props.userData}
             riders={listOfRiders}
             readOnly={true}
           />

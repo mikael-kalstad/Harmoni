@@ -1,3 +1,13 @@
+/**
+ * Artist card component used to display artist info.
+ *
+ * This component also includes:
+ * - Rider (optional)
+ * - Remove functionality (optional)
+ *
+ * Riders are
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import InputDialog from "../inputDialog";
@@ -26,7 +36,7 @@ const ArtistImage = styled.img`
 `;
 
 const Name = styled.p`
-  font-size: 20px;
+  font-size: 18px;
   margin: 0 0 0 15px;
   justify-self: start;
   font-family: Arial;
@@ -36,12 +46,12 @@ const Name = styled.p`
 
 const DelBtn = styled.img`
   cursor: pointer;
-  height: 30%;
+  height: 20px;
 `;
 
 const RiderIcon = styled.img`
   cursor: pointer;
-  height: 40%;
+  height: 25px;
 `;
 
 interface IProps {
@@ -66,7 +76,7 @@ const Artistcard = (props: IProps) => {
     let data = findRiderWithId(props.artist.user_id);
 
     toggleShow();
-    console.log(data);
+
     // Check if rider is already created
     if (data !== undefined) {
       data = data["text"];
@@ -75,10 +85,12 @@ const Artistcard = (props: IProps) => {
         if (data.user_id === props.artist.user_id) data["text"] = text;
       });
 
+      // Update rider
       props.setRiderData([...newData]);
       return;
     }
 
+    // Create new rider
     props.setRiderData([
       ...props.riderData,
       { text: text, user_id: props.artist.user_id }
@@ -99,6 +111,7 @@ const Artistcard = (props: IProps) => {
     return data;
   };
 
+  // Get text content of an rider with id
   const getTextWithId = (id: number) => {
     let data = findRiderWithId(id);
 
@@ -107,14 +120,20 @@ const Artistcard = (props: IProps) => {
     return data["text"];
   };
 
+  // Check if rider icon should be displayed or not
   const showRiderIcon = () => {
-    if (props.setRiderData !== undefined) return true;
-    if (props.userData === undefined) return false;
+    // Need userData to verify user
+    if (props.userData) {
+      // 1. Organizer should see all riders in event
+      // 2. An artist/manager should see his/her own rider
+      return (
+        props.userData.type === "organizer" ||
+        props.userData.user_id === props.artist.user_id
+      );
+    }
 
-    return (
-      props.userData.type === "organizer" ||
-      props.userData.user_id === props.artist.user_id
-    );
+    // User can't be verified
+    return false;
   };
 
   return (

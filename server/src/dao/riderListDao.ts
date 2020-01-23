@@ -6,8 +6,8 @@ const daoParentRider = require("./dao");
 
 export interface riderList {
   rider_list_id: number;
-  userId: number;
-  eventId: number;
+  user_id: number;
+  event_id: number;
   text: string;
 }
 
