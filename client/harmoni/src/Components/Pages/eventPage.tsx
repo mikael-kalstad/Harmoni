@@ -130,13 +130,10 @@ interface IEventImage {
 const EventImage = styled.img<IEventImage>`
   width: 100%;
   height: 60vh;
-  object-fit: cover;
-  ${props => (props.noImage ? "filter: invert(80%);" : "")}
-  ${props =>
-    props.noImage
-      ? "transform: scale(0.83);"
-      : ""}
-  @media screen and (max-width: 800px) {
+  object-fit: ${props => (props.noImage ? "contain" : "cover")};
+  ${props => (props.noImage ? "filter: invert(65%);" : "")}
+  @media screen and
+    (max-width: 800px) {
     height: 40vh;
     justify-self: center;
     border-radius: 10px;
@@ -275,7 +272,7 @@ const Event = (props: any) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        if(data){
+        if (data) {
           setCoords({ lat: data[0], lng: data[1] });
         }
       });

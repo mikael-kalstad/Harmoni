@@ -16,12 +16,15 @@ const Container = styled.div`
   position: relative;
   padding-bottom: 80%;
 `;
-
-const Img = styled.img`
+interface IImg {
+  noImage: boolean;
+}
+const Img = styled.img<IImg>`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: ${props => (props.noImage ? "contain" : "cover")};
   border-radius: 10px;
+  ${props => (props.noImage ? "filter: invert(65%);" : "")}
 `;
 
 const Overlay = styled.div`
@@ -116,10 +119,15 @@ const ArrangementCard = (props: any) => {
 
         {/* Only show overlay if event has status 'coming' = 0 */}
         {props.picture && <Overlay />}
-        {props.picture && props.picture.data.length > 0 && (
+        {props.picture && (
           <Img
-            src={new Buffer(props.picture, "base64").toString("ascii")}
+            src={
+              props.picture.data.length > 0
+                ? new Buffer(props.picture, "base64").toString("ascii")
+                : "/icons/footericon.svg"
+            }
             alt={props.title}
+            noImage={props.picture.data.length == 0}
           />
         )}
 
