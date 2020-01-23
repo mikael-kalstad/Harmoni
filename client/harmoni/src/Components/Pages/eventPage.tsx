@@ -7,8 +7,8 @@ import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
 import { geoService } from "../../services/GeoService";
 
-import AttachmentList from '../Event/attachmentList';
-import { attachmentService } from '../../services/AttachmentService';
+import AttachmentList from "../Event/attachmentList";
+import { attachmentService } from "../../services/AttachmentService";
 import TicketMenu from "../Event/ticketMenu";
 import ArtistsList from "../Event/artistsList";
 import Map from "../Event/map";
@@ -258,14 +258,15 @@ const Event = (props: any) => {
       setOrganizer(await userService.getOrganizerForEvent(parseInt(params.id)));
     };
 
-    const alreadyVolunteered =async () => {
-      eventService.getUserOfEvent(props.userData.user_id, parseInt(params.id)).then(result=>{
-        if( result.length == 0){
-          setShowVolunteerButton(true);
-        }else
-          setShowVolunteerButton(false);
-      })
-    }
+    const alreadyVolunteered = async () => {
+      eventService
+        .getUserOfEvent(props.userData.user_id, parseInt(params.id))
+        .then(result => {
+          if (result.length == 0) {
+            setShowVolunteerButton(true);
+          } else setShowVolunteerButton(false);
+        });
+    };
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
@@ -273,18 +274,16 @@ const Event = (props: any) => {
       });
     };
 
-  
     //
     // Check if user should have access
-    if (props.userData){
+    if (props.userData) {
       alreadyVolunteered();
     }
     fetchEvent();
     fetchTickets();
     fetchArtists();
     fetchOrganizer();
-
-  }, [parseInt(params.id),props.userData]);
+  }, [parseInt(params.id), props.userData]);
   //
 
   const addVolunteer = async () => {
@@ -293,22 +292,27 @@ const Event = (props: any) => {
       parseInt(params.id)
     );
     setDisplayDialog(true);
-    if(typeof returnData != "undefined" && returnData.length != 0){
+    if (typeof returnData != "undefined" && returnData.length != 0) {
       setDialog(
-        <InfoDialog width="300px" height="250px" closeDialog={closeSuccessDialog}>
+        <InfoDialog
+          width="300px"
+          height="250px"
+          closeDialog={closeSuccessDialog}
+        >
           <FaCheckCircle style={checkCircleStyle} />
-          <SuccessText>Du har nå blitt meldt som frivillig på arrangementet</SuccessText>
+          <SuccessText>
+            Du har nå blitt meldt som frivillig på arrangementet
+          </SuccessText>
           <Button onClick={closeSuccessDialog}>Tilbake</Button>
         </InfoDialog>
-      )
-    }
-    else{
+      );
+    } else {
       setDialog(
         <InfoDialog width="300px" height="170px" closeDialog={closeErrorDialog}>
           <ErrorText>Beklager, noe gikk galt</ErrorText>
           <Button onClick={closeErrorDialog}>Tilbake</Button>
         </InfoDialog>
-      )
+      );
     }
   };
 
@@ -318,18 +322,14 @@ const Event = (props: any) => {
   };
 
   const closeErrorDialog = () => {
-    setDisplayDialog(false)
-  }
-
-
-  
-
+    setDisplayDialog(false);
+  };
 
   if (
     event != null &&
     eventTickets != null &&
     organizer != null &&
-    artists != null 
+    artists != null
   ) {
     let categories = {
       concert: "Konsert",
@@ -354,7 +354,10 @@ const Event = (props: any) => {
             src={new Buffer(event[0].picture).toString("ascii")}
             alt={event[0].name}
           ></EventImage>
-          {(props.userData && props.userData.type == "volunteer" && eventStatus === "Kommende" && showVolunteerButton) ?  (
+          {props.userData &&
+          props.userData.type == "volunteer" &&
+          eventStatus === "Kommende" &&
+          showVolunteerButton ? (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
               Meld deg som frivillig
@@ -383,7 +386,7 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer.name}
+            {organizer[0].name}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
@@ -432,6 +435,5 @@ const Event = (props: any) => {
     return <></>;
   }
 };
-
 
 export default Event;

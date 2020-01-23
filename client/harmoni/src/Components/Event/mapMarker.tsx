@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Marker = styled.div`
   position: absolute;
@@ -14,6 +14,7 @@ const Marker = styled.div`
   left: 50%;
 `;
 
+// Styled div used in the google maps component to pin a location
 const MapMarker = (props: any) => {
   return <Marker></Marker>;
 };
