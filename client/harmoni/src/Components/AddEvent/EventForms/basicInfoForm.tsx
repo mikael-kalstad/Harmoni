@@ -102,7 +102,9 @@ const BasicInfoForm = (props: IProps) => {
     if (address.length > 0) {
       setFetchingCoords(true);
       geoService.getLatAndLndOfAddress(address).then(data => {
-        setCoords(data);
+        if(data){
+          setCoords(data)
+        }
         setFetchingCoords(false);
       });
     } else {
