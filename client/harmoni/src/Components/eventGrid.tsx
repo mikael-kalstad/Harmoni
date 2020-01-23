@@ -13,7 +13,7 @@ const Grid = styled.div`
   max-width: 100vw;
   overflow: hidden;
   display: grid;
-  /* grid-template-columns: repeat(auto-fill, 350px); */
+
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 50px 70px;
 

@@ -275,7 +275,9 @@ const Event = (props: any) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        setCoords({ lat: data[0], lng: data[1] });
+        if(data){
+          setCoords({ lat: data[0], lng: data[1] });
+        }
       });
     };
 

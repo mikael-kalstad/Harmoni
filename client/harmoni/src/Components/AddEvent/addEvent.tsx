@@ -209,13 +209,13 @@ const AddEvent = (props: IProps) => {
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-  console.log(listOfArtists);
+
   function getStepContent(step: number) {
     switch (step) {
       case 0:
         return <BasicInfoForm {...infoProps} />;
       case 1:
-        return <ArtistForm {...artistProps} />;
+        return <ArtistForm {...artistProps} userData={props.userData} />;
       case 2:
         return <TicketForm {...ticketProps} />;
       case 3:
@@ -236,6 +236,7 @@ const AddEvent = (props: IProps) => {
             tickets={listOfTickets}
             attachments={listOfAttachments}
             userRights={listOfAttachmentsRights}
+            userData={props.userData}
             riders={listOfRiders}
             readOnly={true}
           />
@@ -399,11 +400,13 @@ const AddEvent = (props: IProps) => {
           r => r.event_id === event_id && r.user_id === rider.user_id
         );
 
+        let updatedRider;
+
         if (riderInDB !== undefined) {
-          let updatedRider = {
+          updatedRider = {
             rider_list_id: riderInDB.rider_list_id,
-            eventId: event_id,
-            userId: rider.user_id,
+            event_id: event_id,
+            user_id: rider.user_id,
             text: rider.text
           };
 

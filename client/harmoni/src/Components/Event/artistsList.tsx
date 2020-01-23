@@ -1,3 +1,8 @@
+/**
+ * Component for displaying a list of artists (using artists cards).
+ *
+ */
+
 import React from "react";
 import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -13,15 +18,6 @@ interface IUser {
   salt: string;
   type: string;
   picture: any;
-}
-
-interface IProps {
-  artists: IUser[];
-  hideTitle?: boolean;
-  riderData?: any;
-  readOnly?: boolean;
-  eventId?: number;
-  userData?: any;
 }
 
 interface IWrapper {
@@ -51,26 +47,23 @@ const TitleText = styled.p<ITitleText>`
   margin: 0px 10px;
 `;
 
-interface IArtistsBar {
-  rider: any;
+let FaIconStyle = {
+  fontSize: "15vw",
+  color: "#cccccc",
+  margin: "10px"
+};
+
+interface IProps {
+  artists: IUser[];
+  hideTitle?: boolean;
+  riderData?: any;
+  readOnly?: boolean;
+  eventId?: number;
+  userData?: any;
 }
 
-const ArtistBar = styled.div<IArtistsBar>`
-  display: grid;
-  grid-template-columns: ${props =>
-    props.rider ? "30% auto 10%" : "30% auto"};
-  align-items: center;
-`;
-
-/* Component for displaying a list of artists */
-/* Used in eventPage */
 const ArtistsList = (props: IProps) => {
-  let FaIconStyle = {
-    fontSize: "15vw",
-    color: "#cccccc",
-    margin: "10px"
-  };
-
+  // Check if there are any artists defined in list
   return props.artists.length > 0 ? (
     <Wrapper empty={props.artists.length === 0}>
       <ListGroup>
@@ -106,6 +99,7 @@ const ArtistsList = (props: IProps) => {
       </ListGroup>
     </Wrapper>
   ) : (
+    // No artists defined, show "empty" message
     <Wrapper empty={props.artists.length === 0}>
       <FaRegFrownOpen style={FaIconStyle} />
       <TitleText empty={props.artists.length === 0}>
