@@ -7,6 +7,8 @@ import styled from "styled-components";
 import ArtistCard from "./artistCard";
 
 import { FaFileAlt } from "react-icons/fa";
+import { TiWarning } from "react-icons/ti";
+import InfoDialog from "../../infoDialog";
 
 interface userRight {
   users: IUser[];
@@ -149,7 +151,16 @@ const AddAttachmentButtonWrapper = styled.div`
   margin: 17px 0;
 `;
 
+let checkCircleStyle = {
+  fontSize: 120,
+  color: "#FF0101",
+  marginTop: 30,
+  marginBottom: 20,
+  marginLeft: 80
+};
+
 const AttachmentForm = (props: any) => {
+  const [warning, setWarning] = useState<boolean>(false);
   const [currAttachment, setCurrAttachment] = useState<attachment>(null);
   const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
   const [fileInputName, setFileInputName] = useState<string>("");
@@ -160,6 +171,8 @@ const AttachmentForm = (props: any) => {
 
   const [listOfArtists, setListOfArtists] = useState<IUser[]>([]);
 
+  // Max file size is 2MB
+  const MAX_FILE_SIZE = 1572864;
   let typeahead;
 
   useEffect(() => {
@@ -275,6 +288,16 @@ const AttachmentForm = (props: any) => {
     });
   };
 
+  const closeWarning = () => {
+    setWarning(false);
+    setCurrAttachment(null);
+    setTempAttachmentRights({
+      users: [],
+      attachment: null
+    });
+    setFileInputName("")
+  };
+
   const handleChange = e => {
     if (!e.target.files[0]) return;
     // setFile(e.target.files[0]);
@@ -284,7 +307,24 @@ const AttachmentForm = (props: any) => {
     const filename = file.name;
     const filesize = file.size;
     const filetype = file.type;
+    console.log(filesize);
+    console.log(file);
 
+    if (filesize > MAX_FILE_SIZE) {
+      setWarning(true);
+      setReadyToUpload(false);
+      let att: attachment = {
+        attachment_id: -1,
+        data: file,
+        event_id: -1,
+        filename: filename,
+        filesize: filesize,
+        filetype: filetype,
+        user_id: -1
+      };
+      setCurrAttachment(att);
+      return;
+    }
     reader.onloadend = () => {
       console.log("Uploaded file...", reader);
       console.log("Upload result: ", reader.result);
@@ -310,6 +350,16 @@ const AttachmentForm = (props: any) => {
 
   return (
     <Wrapper>
+      {warning == true ? (
+        <InfoDialog width="500px" height="350px" closeDialog={closeWarning}>
+          <TiWarning style={checkCircleStyle}/>
+          <Text style={{padding:"15px"}}>
+            Filen "{currAttachment.filename}" er for stor, vennligst velg en annen
+            eller reduser størrelsen.
+          </Text>
+          <Text style={{padding:"15px"}}>Maks filstørrelse er: {MAX_FILE_SIZE} bytes (1.57MB)</Text>
+        </InfoDialog>
+      ) : null}
       <Title>Vedlegg</Title>
       <Text style={{ marginTop: "45px" }}>
         Her kan du laste opp vedlegg og bestemme hvilke artister som skal ha
@@ -327,7 +377,6 @@ const AttachmentForm = (props: any) => {
         <></>
       )}
 
-      {/* Input type file, ListGroup with ArtistCards? */}
       <UploadWrapper>
         <UnderTitle>Legg til vedlegg:</UnderTitle>
         <Input
