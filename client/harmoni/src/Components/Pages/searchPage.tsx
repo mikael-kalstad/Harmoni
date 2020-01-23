@@ -5,12 +5,10 @@ import { IEvent } from "./eventPage";
 import styled from "styled-components";
 
 const Container = styled.div`
-  /* position: relative; */
   min-height: 80vh
   width: 100%;
   display: grid;
   justify-items: center;
-  /* align-items: center; */
 `;
 
 interface IInputWrapper {
@@ -27,8 +25,7 @@ const InputWrapper = styled.div<IInputWrapper>`
   grid-template-columns: 1fr 15%;
   justify-items: center;
   align-items: center;
-  /* top: ${props => (props.showEvents ? "20%" : "50%")}; */
-  margin-top: ${props => (props.showEvents ? "10%" : "30%")};
+  margin-top: ${props => (props.showEvents ? "10vh" : "30vh")};
   transition: all 300ms ease;
 
   :hover {

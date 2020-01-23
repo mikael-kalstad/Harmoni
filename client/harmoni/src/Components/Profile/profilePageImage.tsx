@@ -27,6 +27,7 @@ const Img = styled.img`
   height: 250px;
   border-radius: 50%;
   object-fit: cover;
+  box-shadow: 0px 3px 5px 0px #aaaaaa;
 `;
 
 const TextWrapper = styled.div`

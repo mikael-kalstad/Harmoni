@@ -209,7 +209,6 @@ const AddEvent = (props: IProps) => {
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-
   function getStepContent(step: number) {
     switch (step) {
       case 0:
