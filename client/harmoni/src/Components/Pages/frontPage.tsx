@@ -29,6 +29,8 @@ const FrontPage = () => {
   const fetchData = () => {
     setFetchingData(true);
     eventService.getAllEventsWithOffset(offset).then(data => {
+      if (data === undefined) return;
+
       let currData;
       eventData ? (currData = eventData.map(i => i)) : (currData = []);
       setEventData(currData.concat(data));
