@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 
 const Container = styled.div`
   width: 80%;
-  display: grid;
+  margin: auto;
   margin-bottom: 100px;
 `;
 

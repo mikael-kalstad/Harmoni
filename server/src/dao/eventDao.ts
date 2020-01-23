@@ -193,7 +193,7 @@ export default class eventDao extends daoParentEvent {
     // Gets users of specific event given user type and eventId
     getUsersOfEventByType(eventId: number, type: string, callback) {
         super.query(
-            "SELECT DISTINCT user_event.user_id FROM user_event, user where user.type=? AND user_event.event_id=?",
+            "SELECT DISTINCT user_event.user_id, user.email FROM user_event, user where user_event.user_id=user.user_id AND user.type=? AND user_event.event_id=?",
             [type, eventId],
             callback
         );

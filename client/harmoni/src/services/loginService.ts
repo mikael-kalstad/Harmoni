@@ -69,7 +69,7 @@ export default class LoginService {
       })
       .then(response => {
         if (response.status === 409) {
-          console.log("User exists from before.");
+
         } else if (response.data.jwt !== undefined) {
           localStorage.setItem("harmoni-token", response.data.jwt);
         }

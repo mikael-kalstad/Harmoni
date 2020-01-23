@@ -24,19 +24,6 @@ interface IUser {
   type: string;
   picture: string;
 }
-interface IRider {
-  riderId: number;
-  text: string;
-}
-interface IRiderList {
-  riderListId: number;
-  userId: number;
-  eventId: number;
-  riderId: number;
-  text: string;
-  quantity;
-  number;
-}
 
 const LoadingWrapper = styled.div`
   display: grid;

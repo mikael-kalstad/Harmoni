@@ -67,8 +67,7 @@ const ImgUpload = (props: { picture?: string; setImgData: Function }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  // console.log("File", file);
-  console.log("imgLink", imgLink);
+  //
 
   return (
     <>

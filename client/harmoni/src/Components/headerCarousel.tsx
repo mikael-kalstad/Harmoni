@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "./carousel.css";
 
-const Img = styled.img`
+interface IImg {
+  noImage: boolean;
+}
+const Img = styled.img<IImg>`
   height: 450px;
   max-height: 450px;
-  object-fit: cover;
+  object-fit: ${props => (props.noImage ? "contain" : "cover")};
+  ${props => (props.noImage ? "filter: invert(50%)" : "")}
 `;
 
 const Wrapper = styled.div`
@@ -50,7 +54,12 @@ const HeaderCarousel = (props: any) => {
             <Overlay />
             <Img
               className="d-block w-100"
-              src={new Buffer(a.picture, "base64").toString("ascii")}
+              src={
+                a.picture.data.length > 0
+                  ? new Buffer(a.picture, "base64").toString("ascii")
+                  : "/icons/footericon.svg"
+              }
+              noImage={a.picture.data.length == 0}
               alt={a.name}
             />
           </>

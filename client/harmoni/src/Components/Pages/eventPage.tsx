@@ -7,17 +7,14 @@ import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
 import { geoService } from "../../services/GeoService";
 
-import AttachmentList from "../Event/attachmentList";
-import { attachmentService } from "../../services/AttachmentService";
 import TicketMenu from "../Event/ticketMenu";
 import ArtistsList from "../Event/artistsList";
 import Map from "../Event/map";
 import InfoDialog from "../infoDialog";
 import { FaCheckCircle } from "react-icons/fa";
-import Skeleton from "react-loading-skeleton";
+
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
-import TextField from "@material-ui/core/TextField";
 
 export interface IEvent {
   event_id: number;
@@ -127,11 +124,16 @@ const TicketsGrid = styled.div`
   margin: auto;
 `;
 
-const EventImage = styled.img`
+interface IEventImage {
+  noImage: boolean;
+}
+const EventImage = styled.img<IEventImage>`
   width: 100%;
   height: 60vh;
-  object-fit: cover;
-  @media screen and (max-width: 800px) {
+  object-fit: ${props => (props.noImage ? "contain" : "cover")};
+  ${props => (props.noImage ? "filter: invert(65%);" : "")}
+  @media screen and
+    (max-width: 800px) {
     height: 40vh;
     justify-self: center;
     border-radius: 10px;
@@ -270,13 +272,12 @@ const Event = (props: any) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        if(data){
+        if (data) {
           setCoords({ lat: data[0], lng: data[1] });
         }
       });
     };
 
-    //
     // Check if user should have access
     if (props.userData) {
       alreadyVolunteered();
@@ -286,7 +287,6 @@ const Event = (props: any) => {
     fetchArtists();
     fetchOrganizer();
   }, [parseInt(params.id), props.userData]);
-  //
 
   const addVolunteer = async () => {
     let returnData = await eventService.addUserToEvent(
@@ -346,14 +346,19 @@ const Event = (props: any) => {
     let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
-    let eventStatus = inProgress ? "Pågående" : statuses[event[0].status];
+    let eventStatus =
+      inProgress && event[0].status !== 2
+        ? "Pågående"
+        : statuses[event[0].status];
 
+    let base64 = new Buffer(event[0].picture).toString("ascii");
     return (
       <Wrapper>
         {displayDialog ? dialog : null}
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString("ascii")}
+            noImage={base64.length == 0}
+            src={base64.length == 0 ? "/icons/footericon.svg" : base64}
             alt={event[0].name}
           ></EventImage>
           {props.userData &&

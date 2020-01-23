@@ -108,47 +108,46 @@ const EventDetails = (props: any) => {
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
-    console.log("org id: " +  eventData.organizer);
-   /* let data = await userService.getOrganizerForEvent(eventData.event_id);
-    console.log("org:" + data);
+    /* let data = await userService.getOrganizerForEvent(eventData.event_id);
+    
     setOrganizer(data); */
 
     //console.log(userService.getUserById(73));
-   // setOrganizer(userService.getUserById(73));
-  /*  userService
+    // setOrganizer(userService.getUserById(73));
+    /*  userService
       .getUserById(eventData.organizer)
-      .then(response => setOrganizer(response));  */
-    setLoading(true); 
-    console.log("organizer: "+ organizer);
+      .then(response => setOrganizer(response));
+
+        let resOrganizer= await userService
+          .getUserById(eventData.organizer);
+        if(resOrganizer){
+        console.log("res organizer kjørt")
+        setOrganizer(resOrganizer);
+      }*/
+    setLoading(true);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
-      setOrganizer(userService.getOrganizerForEvent(eventData.event_id));
-      console.log(organizer)
       if (artists) {
-        setArtists(eventService.getUsersOfEventByType(eventData.event_id, "artist"));
-        console.log(artists)
         artists.forEach(artist => {
-          emailService.sendEmail(artist.email, 
+          emailService.sendEmail(
+            artist.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
-            ,eventData.name + " er avlyst"
-         );
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
+          );
         });
       }
       if (volunteers) {
-        setVolunteers(
-          eventService.getUsersOfEventByType(eventData.event_id, "volunteer")
-        );
-        volunteers.forEach(volunteer => {
+        volunteers.map(volunteer => {
           emailService.sendEmail(
             volunteer.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
-            ,eventData.name + " er avlyst"
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
           );
         });
       }
@@ -198,6 +197,11 @@ const EventDetails = (props: any) => {
     const fetchEvent = async () => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
+        eventService
+          .getUsersOfEventByType(props.match.params.id, "volunteer")
+          .then(volunteersResponse => {
+            setVolunteers(volunteersResponse);
+          });
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
@@ -210,12 +214,9 @@ const EventDetails = (props: any) => {
               .then(attachmentResponse => {
                 setAttachments(attachmentResponse);
                 attachmentResponse.forEach(attachment => {
-                  console.log(attachment);
                   attachmentService
                     .getAttachmentRights(attachment.attachment_id)
                     .then(rightsResponse => {
-                      console.log(artistResponse);
-                      console.log(rightsResponse);
                       let newRight = {
                         attachment: attachment,
                         users: artistResponse.filter(artist =>
@@ -224,7 +225,7 @@ const EventDetails = (props: any) => {
                           )
                         )
                       };
-                      console.log(newRight);
+
                       setAttachmentsRights(array => [...array, newRight]);
                     });
                 });
