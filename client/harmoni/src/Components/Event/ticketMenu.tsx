@@ -44,6 +44,8 @@ let checkCircleStyle = {
   marginBottom: 20
 };
 
+// Menu with one ticketbar for each ticket
+// Contains the button to buy the selected tickets
 const TicketMenu = (props: { tickets: ITicket[]; canceled: boolean }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantities, setQuantities] = useState(

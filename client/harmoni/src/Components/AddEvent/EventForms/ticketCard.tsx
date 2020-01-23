@@ -1,3 +1,7 @@
+/**
+ * Ticket card component used to display ticket info
+ */
+
 import React from "react";
 import styled from "styled-components";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -11,14 +15,14 @@ const Wrapper = styled.div`
 `;
 
 const Name = styled.p`
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   margin: 0 0 0 15px;
   justify-self: start;
 `;
 
 const Text = styled.p`
-  font-size: 15px;
+  font-size: 16px;
   margin: 0 0 0 15px;
   justify-self: start;
 `;

@@ -1,3 +1,15 @@
+/**
+ * Info form with inputs that gives the basic info for an event.
+ *
+ * Inputs in this form:
+ * - Title
+ * - Picture (optional)
+ * - Category
+ * - Location
+ * - Date and time from
+ * - Date and time to
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import DateTimePicker from "./dateTimePicker";
@@ -8,9 +20,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import ImageUpload from "../../Upload/imageUpload";
-
 import Map from "../../Event/map";
-
 import { geoService } from "../../../services/GeoService";
 
 const Title = styled.h2`
@@ -60,6 +70,8 @@ interface IProps {
 const BasicInfoForm = (props: IProps) => {
   const [coords, setCoords] = useState([-1000, -1000]);
   const [fetchingCoords, setFetchingCoords] = useState(false);
+
+  // Category types and translated to norwegian
   const types_translated = [
     "Konsert",
     "Festival",
@@ -70,7 +82,10 @@ const BasicInfoForm = (props: IProps) => {
   ];
   const types = ["concert", "festival", "theatre", "standup", "show", "other"];
 
+  // Inital geoLocaton before it is set
   let initialCoords = [-1000, -1000];
+
+  // Category items
   let menuItems: JSX.Element[] = [];
 
   // Add menu items to dropdown list
@@ -82,6 +97,7 @@ const BasicInfoForm = (props: IProps) => {
     );
   }
 
+  // Get coordinates based on location (string) in input
   const fetchCoords = (address: string) => {
     if (address.length > 0) {
       setFetchingCoords(true);
@@ -96,14 +112,16 @@ const BasicInfoForm = (props: IProps) => {
     }
   };
 
-  const compare_dates =(date1,date2) =>{
+  // Compare two dates to check which is larger/smaller
+  const compare_dates = (date1, date2) => {
     let fromDate = new Date(date1);
     let toDate = new Date(date2);
-    return fromDate < toDate ;
-}
+    return fromDate < toDate;
+  };
 
   return (
     <>
+      {/* Name input */}
       <Title>Info</Title>
       <UnderTitle>Navn på arrangement*</UnderTitle>
       <TextField
@@ -124,6 +142,7 @@ const BasicInfoForm = (props: IProps) => {
         }
       />
 
+      {/* Picture input and image preview  */}
       <UnderTitle>Bilde</UnderTitle>
       <ImageUpload
         picture={
@@ -135,6 +154,7 @@ const BasicInfoForm = (props: IProps) => {
         }
       />
 
+      {/* Category dropdown selector */}
       <UnderTitle>Kategori*</UnderTitle>
       <FormControl
         variant="outlined"
@@ -163,6 +183,7 @@ const BasicInfoForm = (props: IProps) => {
         )}
       </FormControl>
 
+      {/* Location Input and map */}
       <UnderTitle>Lokasjon*</UnderTitle>
       <TextField
         style={
@@ -199,6 +220,7 @@ const BasicInfoForm = (props: IProps) => {
         </MapWrapper>
       )}
 
+      {/* Date and time inputs */}
       <UnderTitle>Dato og tid*</UnderTitle>
       <MiniTitle>Fra</MiniTitle>
       <DateTimePicker
@@ -237,17 +259,23 @@ const BasicInfoForm = (props: IProps) => {
             : ""
         }
       />
+
+      {/* Show warning message if any required input is empty/not selected  */}
       {props.infoSubmit && props.isInfoDataEmpty() && (
         <WarningText>
           Noen felter som er påkrevd er tomme, vennligst fyll disse ut før du
           fortsetter.
         </WarningText>
       )}
+
+      {/* Check that from date is not after to date, which would be invalid */}
       {props.infoData.dateFrom !== null &&
         props.infoData.dateTo !== null &&
         !compare_dates(props.infoData.dateFrom, props.infoData.dateTo) && (
           <WarningText>Fra dato kan ikke være etter til dato</WarningText>
         )}
+
+      {/* Check that the date is not in the past */}
       {props.infoData.dateFrom !== null &&
         props.infoData.dateTo !== null &&
         (!compare_dates(new Date(), props.infoData.dateFrom) ||

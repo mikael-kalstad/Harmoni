@@ -1,3 +1,11 @@
+/**
+ * Form page for ticket input in add event
+ *
+ * Tickets can be added to a local list. The tickets can only be deleted when creating the ticket.
+ * If an event is already created with tickets, these tickets cannot be changed or deleteed.
+ * This is to prevent an organizer from creating tickets, selling them, and then deleting them from the event.
+ */
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
@@ -47,6 +55,7 @@ const TicketForm = (props: any) => {
   const [available, setAvailable] = useState();
   const [submit, setSubmit] = useState<boolean>(false);
 
+  // Number inputs should not be able to be negative in this form
   function handleChange(newInt: any, setFunc: Function) {
     if (newInt < 0) setFunc(0);
     else setFunc(newInt);
@@ -62,6 +71,7 @@ const TicketForm = (props: any) => {
     return type === "" || price === undefined || available === undefined;
   };
 
+  // Add tickets to local list
   const addTicket = () => {
     setSubmit(true);
     if (isInputsEmpty()) return;
@@ -84,6 +94,7 @@ const TicketForm = (props: any) => {
     setAvailable("");
   };
 
+  // Delete ticket from local list
   const deleteTicket = ticket => {
     if (ticket != null) {
       props.setListOfTickets(
@@ -91,7 +102,22 @@ const TicketForm = (props: any) => {
       );
     }
   };
-  console.log(props.listOfTickets);
+
+  // Add all tickets to render
+  let ticketArr: JSX.Element[] = [];
+
+  for (let i = 0; i < props.listOfTickets.length; i++) {
+    let t = props.listOfTickets[i];
+
+    ticketArr.push(
+      <TicketCard
+        key={i}
+        ticket={t}
+        remove={deleteTicket}
+        disabled={t.ticket_id !== undefined}
+      />
+    );
+  }
 
   return (
     <>
@@ -174,16 +200,7 @@ const TicketForm = (props: any) => {
         <UnderTitle>Billettliste:</UnderTitle>
       )}
 
-      <ListGroup>
-        {props.listOfTickets &&
-          props.listOfTickets.map(t => (
-            <TicketCard
-              ticket={t}
-              remove={deleteTicket}
-              disabled={t.ticket_id !== undefined}
-            />
-          ))}
-      </ListGroup>
+      <ListGroup>{ticketArr}</ListGroup>
     </>
   );
 };

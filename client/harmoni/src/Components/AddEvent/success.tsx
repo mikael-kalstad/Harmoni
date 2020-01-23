@@ -1,3 +1,8 @@
+/**
+ * Simple success component that shows a checkmark with a message.
+ * Intended to use when e.g. uploaded an event.
+ */
+
 import React from "react";
 import styled from "styled-components";
 

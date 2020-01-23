@@ -125,7 +125,7 @@ const AttachmentList = (props: any) => {
         let rights = props.userRights.find(right => {
           console.log(right);
           console.log(attachment);
-          return right.attachment.attachment_id == attachment.attachment_id;
+          return right.attachment.filename == attachment.filename;
         });
         console.log(props.userRights);
         console.log(rights);
@@ -157,7 +157,7 @@ const AttachmentList = (props: any) => {
               src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
             /> */}
               <FilenameText>{attachment.filename}</FilenameText>
-              {props.showOnly ? (
+              {props.readOnly ? (
                 <FaFileDownload
                   style={{ cursor: "pointer" }}
                   title="Last ned vedlegg."
