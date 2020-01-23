@@ -95,7 +95,7 @@ export default class userDao extends daoParentUser {
   // Gets the organizer for an event
   getOrganizerForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.user_id, user.name FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
+      "SELECT user.user_id, user.name, user.email FROM user, event WHERE event.event_id = ? AND event.organizer = user.user_id",
       [eventId],
       callback
     );
@@ -104,7 +104,7 @@ export default class userDao extends daoParentUser {
   // Gets all artists for an event
   getArtistsForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.user_id, user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
+      "SELECT user.user_id, user.name, user.email, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'artist'",
       [eventId],
       callback
     );
@@ -113,7 +113,7 @@ export default class userDao extends daoParentUser {
   // Gets all volunteers for an event
   getVolunteersForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
+      "SELECT user.name, user.email, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
       [eventId],
       callback
     );

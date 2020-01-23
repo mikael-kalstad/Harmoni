@@ -108,24 +108,33 @@ const EventDetails = (props: any) => {
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
-    userService
-      .getUserById(eventData.organizer)
-      .then(response => setOrganizer(response));
-    setLoading(true);
+    console.log("org id: " +  eventData.organizer);
+   /* let data = await userService.getOrganizerForEvent(eventData.event_id);
+    console.log("org:" + data);
+    setOrganizer(data); */
 
+    //console.log(userService.getUserById(73));
+   // setOrganizer(userService.getUserById(73));
+  /*  userService
+      .getUserById(eventData.organizer)
+      .then(response => setOrganizer(response));  */
+    setLoading(true); 
+    console.log("organizer: "+ organizer);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
+      setOrganizer(userService.getOrganizerForEvent(eventData.event_id));
+      console.log(organizer)
       if (artists) {
-        artists.map(artist => {
-          emailService.sendEmail(
-            artist.email,
-            "Hei, Vi informerer deg at arrangementet: " +
+        setArtists(eventService.getUsersOfEventByType(eventData.event_id, "artist"));
+        console.log(artists)
+        artists.forEach(artist => {
+          emailService.sendEmail(artist.email, 
+            "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Du kan ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" +
-              organizer.email,
-            eventData.name + " er avlyst"
-          );
+              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
+            ,eventData.name + " er avlyst"
+         );
         });
       }
       if (volunteers) {
@@ -138,9 +147,8 @@ const EventDetails = (props: any) => {
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" +
-              organizer.email,
-            eventData.name + " er avlyst"
+              "Ta kontakt med arrangøren for mer informasjon.\nArrangørens mail:" //+ organizer.email,
+            ,eventData.name + " er avlyst"
           );
         });
       }
