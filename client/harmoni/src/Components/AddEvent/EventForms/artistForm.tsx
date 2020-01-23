@@ -1,3 +1,10 @@
+/**
+ * Form page for artist input in add event
+ *
+ * Users are able to search and add artist to a local list before uploading the event.
+ * Artists can be removed while creating the event, and when editing a event.
+ */
+
 import React, { useState, useEffect } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -103,7 +110,6 @@ const ArtistForm = (props: any) => {
           options={artistsData.map(user => ({ user }))}
           onChange={s => addArtist(s)}
           placeholder="Søk etter artister..."
-          selected={props.userData}
           ref={elem => (typeahead = elem)}
         />
 
@@ -115,6 +121,7 @@ const ArtistForm = (props: any) => {
           props.listOfArtists.map(u => (
             <ListGroup.Item key={u.email}>
               <ArtistCard
+                userData={props.userData}
                 artist={u}
                 remove={deleteArtist}
                 riderData={props.listOfRiders}

@@ -1,3 +1,10 @@
+/**
+ * Show a brief summary/overview of an event.
+ * Intended to only be seen by users participating in the event.
+ *
+ *
+ */
+
 import React from "react";
 import styled from "styled-components";
 import ArtistList from "../Event/artistsList";
@@ -51,6 +58,7 @@ const Text = styled.p`
   margin-top: 10px;
 `;
 
+// Format the date into a suitable and readable string
 const formatDate = (date: any) => {
   if (typeof date === "string")
     date = moment(date, "DD-MM-YYYY HH:mm").toDate();
@@ -113,77 +121,90 @@ interface IProps {
   userData?: any;
 }
 
-const Summary = (props: IProps) => (
-  <Wrapper>
-    <Title>Oppsummering</Title>
+const Summary = (props: IProps) => {
+  let ticketsArr: JSX.Element[] = [];
 
-    <UnderTitle>Navn på arrangement:</UnderTitle>
-    <Text>{props.name || "Navn er ikke oppgitt"}</Text>
+  // Add all tickets to array for render
+  for (let i = 0; i < props.tickets.length; i++) {
+    ticketsArr.push(<TicketCard ticket={props.tickets[i]} key={i} />);
+  }
 
-    <UnderTitle>Bilde</UnderTitle>
-    <ImgWrapper>
-      {props.img ? (
-        <ImagePreview src={props.img} />
+  return (
+    <Wrapper>
+      <Title>Oppsummering</Title>
+
+      {/* Name of event */}
+      <UnderTitle>Navn på arrangement:</UnderTitle>
+      <Text>{props.name || "Navn er ikke oppgitt"}</Text>
+
+      {/* Picture preview */}
+      <UnderTitle>Bilde</UnderTitle>
+      <ImgWrapper>
+        {props.img ? (
+          <ImagePreview src={props.img} />
+        ) : (
+          <ImgPlaceHolder src="/icons/imagePlaceholder.svg" />
+        )}
+      </ImgWrapper>
+
+      {/* Category */}
+      <UnderTitle>Kategori:</UnderTitle>
+      <Text>{props.category || "Kategori ikke valgt"}</Text>
+
+      {/* Location */}
+      <UnderTitle>Lokasjon:</UnderTitle>
+      <Text>{props.location || "Lokasjon er ikke oppgitt"}</Text>
+
+      {/* Date and time */}
+      <UnderTitle>Dato og tid:</UnderTitle>
+      {props.fromDate === null || props.toDate === null ? (
+        <Text>"Dato og tid er ikke oppgitt" </Text>
       ) : (
-        <ImgPlaceHolder src="/icons/imagePlaceholder.svg" />
+        <>
+          <Text>{"Fra: " + formatDate(props.fromDate)}</Text>
+          <Text>{"Til: " + formatDate(props.toDate)}</Text>
+        </>
       )}
-    </ImgWrapper>
 
-    <UnderTitle>Kategori:</UnderTitle>
-    <Text>{props.category || "Kategori ikke valgt"}</Text>
-
-    <UnderTitle>Lokasjon:</UnderTitle>
-    <Text>{props.location || "Lokasjon er ikke oppgitt"}</Text>
-
-    <UnderTitle>Dato og tid:</UnderTitle>
-    {props.fromDate === null || props.toDate === null ? (
-      <Text>"Dato og tid er ikke oppgitt" </Text>
-    ) : (
-      <>
-        <Text>{"Fra: " + formatDate(props.fromDate)}</Text>
-        <Text>{"Til: " + formatDate(props.toDate)}</Text>
-      </>
-    )}
-
-    <UnderTitle>Artister:</UnderTitle>
-    {!props.artists || props.artists.length === 0 ? (
-      <Text>Ingen artister er valgt</Text>
-    ) : (
-      <ArtistList
-        hideTitle={true}
-        artists={props.artists}
-        riderData={props.riders}
-        readOnly={true}
-        eventId={props.eventId}
-        userData={props.userData}
-      />
-    )}
-
-    <UnderTitle>Billetter:</UnderTitle>
-    {!props.tickets || props.tickets.length === 0 ? (
-      <Text>Ingen billetter er opprettet</Text>
-    ) : (
-      <ListGroup>
-        {props.tickets.map(ticket => (
-          <TicketCard ticket={ticket} />
-        ))}
-      </ListGroup>
-    )}
-
-    <UnderTitle>Vedlegg:</UnderTitle>
-    {!props.attachments || props.attachments.length === 0 ? (
-      <Text>Ingen vedlegg er lagt til</Text>
-    ) : (
-      <div>
-        <AttachmentList
-          attachments={props.attachments}
-          userRights={props.userRights}
+      {/* Artists */}
+      <UnderTitle>Artister:</UnderTitle>
+      {!props.artists || props.artists.length === 0 ? (
+        <Text>Ingen artister er valgt</Text>
+      ) : (
+        <ArtistList
+          hideTitle={true}
           artists={props.artists}
-          readOnly={props.readOnly}
-        ></AttachmentList>
-      </div>
-    )}
-  </Wrapper>
-);
+          riderData={props.riders}
+          readOnly={true}
+          eventId={props.eventId}
+          userData={props.userData}
+        />
+      )}
+
+      {/* Tickets */}
+      <UnderTitle>Billetter:</UnderTitle>
+      {!props.tickets || props.tickets.length === 0 ? (
+        <Text>Ingen billetter er opprettet</Text>
+      ) : (
+        <ListGroup>{ticketsArr}</ListGroup>
+      )}
+
+      {/* Attachments */}
+      <UnderTitle>Vedlegg:</UnderTitle>
+      {!props.attachments || props.attachments.length === 0 ? (
+        <Text>Ingen vedlegg er lagt til</Text>
+      ) : (
+        <div>
+          <AttachmentList
+            attachments={props.attachments}
+            userRights={props.userRights}
+            artists={props.artists}
+            readOnly={props.readOnly}
+          ></AttachmentList>
+        </div>
+      )}
+    </Wrapper>
+  );
+};
 
 export default Summary;
