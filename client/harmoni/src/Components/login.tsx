@@ -4,7 +4,7 @@ import { Redirect, Link, BrowserRouter, useHistory } from "react-router-dom";
 import Button from "./Button/button";
 import { loginService } from "../services/loginService";
 import TextField from "@material-ui/core/TextField";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
 const Overlay = styled.div`
   position: fixed;
@@ -236,6 +236,5 @@ const Login = (props: any) => {
     </>
   );
 };
-
 
 export default withRouter(Login);
