@@ -55,25 +55,25 @@ const SearchIcon = styled.img`
 `;
 
 const SearchEvents = () => {
-  const [eventsData, setEventData] = useState<IEvent[]>([]);
-  const [userInput, setUserInput] = useState<string>("");
+  let input;
+  const [eventsData, setEventsData] = useState([]);
   const [completed, setCompleted] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(false);
 
   // Get events from DB and set state
-  const fetchSearchEvents = async text => {
+  const fetchSearchEvents = async () => {
     // Only search for event if there are atleast 3 characters in search inpput
-    if (text.length >= 3) {
+    if (input.length >= 3) {
       //   setUserInput(e.target.value);
       setSearching(true);
       setCompleted(false);
 
       // Get all event from DB that matches search term
-      let res = await searchService.searchForEvents(text);
+      let res = await searchService.searchForEvents(input);
 
       if (res) {
         console.log(res);
-        setEventData(res);
+        setEventsData(res);
         setSearching(false);
         setCompleted(true);
       }
@@ -83,18 +83,15 @@ const SearchEvents = () => {
   // Check if enter key is clicked
   const checkForEnterKey = e => {
     // Try to Log in if enter key is pressed down
-    if (e !== undefined && e.key === "Enter") fetchSearchEvents(e.target.value);
+    if (e !== undefined && e.key === "Enter") fetchSearchEvents();
   };
 
-  //   const getInputvalue = () => {
-  //     let text = (<HTMLInputElement>document.getElementById("search-input")).value;
-  //     return text;
-  //   };
-
   const handleChange = e => {
+    input = e.target.value;
+
     // Reset events
     if (e.target.value === "") {
-      setEventData([]);
+      setEventsData([]);
       setCompleted(false);
     }
   };
@@ -102,21 +99,16 @@ const SearchEvents = () => {
   // Render grid of all matching arrangements
   return (
     <Container>
-      <InputWrapper
-        showEvents={userInput === "" ? false : searching || completed}
-      >
+      <InputWrapper showEvents={input === "" ? false : searching || completed}>
         <Input
           id="search-input"
           type="text"
           placeholder="Rihanna konsert"
-          //onChange={handleChange}
+          onChange={handleChange}
           onKeyDown={checkForEnterKey}
           //   value={userInput}
         />
-        <SearchIcon
-          src="/icons/search.svg"
-          onClick={() => fetchSearchEvents(getInputvalue())}
-        />
+        <SearchIcon src="/icons/search.svg" onClick={fetchSearchEvents} />
       </InputWrapper>
 
       {/* <input type="submit" value="Søk" onClick={fetchSearchEvents} /> */}
@@ -126,11 +118,7 @@ const SearchEvents = () => {
         <ArrangementGrid
           title={" arrangmenter"}
           data={eventsData}
-          emptyText={
-            "Ingen arrangementer funnet med søkeord " +
-            userInput +
-            ". Prøv å søke på noe annet."
-          }
+          emptyText={"Ingen arrangementer funnet. Prøv å søke på noe annet."}
         />
       )}
     </Container>
