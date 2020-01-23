@@ -76,7 +76,6 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
 
   useEffect(() => {
     if (props.userData) {
-      console.log(props.userData);
       // Phone is optional
       if (props.userData["mobile"]) setTlfInput(props.userData["mobile"]);
 
@@ -114,7 +113,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     count += /[A-Z]/.test(thePassword) ? 1 : 0;
     count += /[@]/.test(thePassword) ? 1 : 0;
     count += /[0-9]/.test(thePassword) ? 1 : 0;
-    if (count >= 2 &&counter(thePassword)>5) {
+    if (count >= 2 && counter(thePassword) > 5) {
       return true;
     } else if (count < 2) return false;
   }
@@ -138,7 +137,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return true;
     }
   }
- 
+
   // Save changes to user info
   const save = async () => {
     setSubmit(true);
@@ -152,7 +151,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return;
 
     setLoading(true);
-    
+
     let user = {
       user_id: props.userData.user_id,
       name: nameInput,
@@ -161,10 +160,9 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       mobile: tlfInput,
       picture: imgData.toString()
     };
-    
-    console.log(user);
+
     let res = await userService.updateUser(user);
-    console.log(res);
+
     if ((res && res.status === 409) || !res) {
       setEmailWarning("Email er allerede registrert");
       setLoading(false);
@@ -190,7 +188,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       passwordInput.trim() === "" ||
       !emailInput.match(emailFormat) ||
       !passwordValidation(passwordInput) ||
-        (tlfInput !==undefined && !tlfInput.toString().match(tlfFormat))
+      (tlfInput !== undefined && !tlfInput.toString().match(tlfFormat))
     )
       return;
 
@@ -204,10 +202,9 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       type,
       imgData.toString()
     );
-    console.log(res);
 
     // Status code 409 indicates that the email is already registered
-    if (res && res.status === 409 || res instanceof Error || !res) {
+    if ((res && res.status === 409) || res instanceof Error || !res) {
       setEmailWarning("Email er allerede registrert");
       setLoading(false);
     }

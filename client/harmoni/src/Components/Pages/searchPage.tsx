@@ -69,7 +69,6 @@ const SearchEvents = () => {
       let res = await searchService.searchForEvents(input);
 
       if (res) {
-        console.log(res);
         setEventsData(res);
         setSearching(false);
         setCompleted(true);

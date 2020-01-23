@@ -113,13 +113,14 @@ const EventDetails = (props: any) => {
     if (res) {
       if (artists) {
         artists.forEach(artist => {
-          emailService.sendEmail(artist.email, 
+          emailService.sendEmail(
+            artist.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
-         );
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
+          );
         });
       }
       if (volunteers) {
@@ -129,8 +130,8 @@ const EventDetails = (props: any) => {
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
           );
         });
       }
@@ -180,10 +181,10 @@ const EventDetails = (props: any) => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
         eventService
-            .getUsersOfEventByType(props.match.params.id, "volunteer")
-            .then(volunteersResponse=>{
-              setVolunteers(volunteersResponse);
-            });
+          .getUsersOfEventByType(props.match.params.id, "volunteer")
+          .then(volunteersResponse => {
+            setVolunteers(volunteersResponse);
+          });
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
@@ -196,12 +197,9 @@ const EventDetails = (props: any) => {
               .then(attachmentResponse => {
                 setAttachments(attachmentResponse);
                 attachmentResponse.forEach(attachment => {
-                  console.log(attachment);
                   attachmentService
                     .getAttachmentRights(attachment.attachment_id)
                     .then(rightsResponse => {
-                      console.log(artistResponse);
-                      console.log(rightsResponse);
                       let newRight = {
                         attachment: attachment,
                         users: artistResponse.filter(artist =>
@@ -210,7 +208,7 @@ const EventDetails = (props: any) => {
                           )
                         )
                       };
-                      console.log(newRight);
+
                       setAttachmentsRights(array => [...array, newRight]);
                     });
                 });

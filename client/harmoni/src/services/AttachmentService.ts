@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Service, {updateToken} from './Service';
+import Service, { updateToken } from './Service';
 
 interface Attachment {
   attachment_id: number;
@@ -22,9 +22,9 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
-   
+
 
   // Fetches all attachments for a user by its id
   getAttachmentsForUploader(userId: number) {
@@ -36,7 +36,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
 
@@ -50,7 +50,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
   getAttachmentRights(attachment_id: number) {
@@ -64,9 +64,9 @@ class AttachmentService extends Service {
       }
     }).then(response => response.data).catch(error => console.log(error));
   }
-  
+
   //Fetches all attachments a user has access to
-  getAttachmentsForUser(userId: number){
+  getAttachmentsForUser(userId: number) {
     updateToken();
     return axios({
       method: 'get',
@@ -75,11 +75,11 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
-   //Fetches all attachments a user has access to for an event
-   getAttachmentsForUserForEvent(userId: number, eventId: number){
+  //Fetches all attachments a user has access to for an event
+  getAttachmentsForUserForEvent(userId: number, eventId: number) {
     updateToken();
     return axios({
       method: 'get',
@@ -88,16 +88,16 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
   // Adds an attachment
   addAttachment(attachment: Attachment) {
-    console.log(attachment);
+
     const data = new FormData();
     data.append('file', attachment.data);
     data.append('data', JSON.stringify(attachment));
-    console.log(data);
+
     updateToken();
     return axios({
       method: 'post',
@@ -106,10 +106,10 @@ class AttachmentService extends Service {
       headers: {
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
-  
-  getAttachment(attachmentId: number){
+
+  getAttachment(attachmentId: number) {
     return axios({
       method: 'get',
       url: this.path + '/authorized/attachments/' + attachmentId,
@@ -117,9 +117,9 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
-  
+
 
   // Updates an attachment
   updateAttachment(attachment: Attachment) {
@@ -132,7 +132,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
   // Deletes an attachment
@@ -145,10 +145,10 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
-  downloadAttachment(attachmentId: number){
+  downloadAttachment(attachmentId: number) {
     updateToken();
     return axios({
       method: 'get',
@@ -158,7 +158,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
   // Add user to attachment in attachment_user table in DB
@@ -171,7 +171,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
   // Delete user to attachment in attachment_user table in DB
@@ -184,7 +184,7 @@ class AttachmentService extends Service {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
       }
-    }).then(response =>  response.data).catch(error => console.log(error));
+    }).then(response => response.data).catch(error => console.log(error));
   }
 
 }
