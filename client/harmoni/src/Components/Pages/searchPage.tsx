@@ -11,33 +11,33 @@ import {log} from "util";
 
 
 const SearchEvents = (props:any) => {
+    let text;
     const [eventsData, setEventData] = useState<IEvent[]>();
-    const [userInput, setUserInput] = useState("");
     const [complete, setComplete] = useState(false);
     const [searching, setSearching] = useState(false);
 
     // Get events from DB and set state
     const fetchSearchEvents = async() => {
         // Async DB call
-        if(userInput.length >= 3){
+        if(text.length >= 3){
             setComplete(false);
             setSearching(true);
-            setEventData(await searchService.searchForEvents(userInput));
+            setEventData(await searchService.searchForEvents(text));
             setSearching(false);
             setComplete(true);
         }
     }
 
 
-    const inputChange = (value: React.ChangeEvent<HTMLInputElement>) => {
-        setUserInput(value.target.value);
-    }
 
+    const inputChange = (value: React.ChangeEvent<HTMLInputElement>) => {
+        text = value.target.value;
+    }
     // Render grid of all matching arrangements
     return (
         <div style={{alignContent: "center", justifyContent: "center"}}>
             <input type="text" onChange={inputChange}
-                   value={userInput}
+                   value={text}
                    style={{
                        fontSize: "27px",
                        textAlign: "center",
