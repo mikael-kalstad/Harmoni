@@ -209,7 +209,7 @@ const AddEvent = (props: IProps) => {
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-  console.log(listOfArtists);
+
   function getStepContent(step: number) {
     switch (step) {
       case 0:
@@ -400,11 +400,13 @@ const AddEvent = (props: IProps) => {
           r => r.event_id === event_id && r.user_id === rider.user_id
         );
 
+        let updatedRider;
+
         if (riderInDB !== undefined) {
-          let updatedRider = {
+          updatedRider = {
             rider_list_id: riderInDB.rider_list_id,
-            eventId: event_id,
-            userId: rider.user_id,
+            event_id: event_id,
+            user_id: rider.user_id,
             text: rider.text
           };
 
