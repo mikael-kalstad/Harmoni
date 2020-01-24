@@ -103,7 +103,7 @@ const AddEvent = (props: IProps) => {
   const [eventId, setEventId] = useState();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
-  const [skipped, setSkipped] = useState(new Set<number>());
+  const [skipped] = useState(new Set<number>());
   const [loading, setLoading] = useState<boolean>(false);
   const [warningText, setWarningText] = useState("");
   const [uploaded, setUploaded] = useState<boolean>(false);
@@ -533,7 +533,7 @@ const AddEvent = (props: IProps) => {
                 removedAttachment.attachment_id == attachment.attachment_id
             )
         );
-        
+
         //Get attachments rights for the remaining
         remainingAttachments.forEach(attachment => {
           attachmentService

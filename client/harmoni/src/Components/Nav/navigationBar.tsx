@@ -52,7 +52,7 @@ const LinkWrapper = styled.div`
   right: 20px;
 `;
 
-const LinkWrapper_right = styled.div`
+const LinkWrapperRight = styled.div`
   color: #7f7f7f;
   padding: 8px;
 
@@ -128,7 +128,7 @@ const NavigationBar = (props: any) => (
 
       {/* Sort all events after price */}
       <Nav>
-        <LinkWrapper_right>
+        <LinkWrapperRight>
           <NavDropdown title="Sorter etter" id="basic-nav-dropdown">
             <LinkContainer to="/sort/events/cheapest">
               <NavDropdown.Item>Pris lav-høy</NavDropdown.Item>
@@ -137,7 +137,7 @@ const NavigationBar = (props: any) => (
               <NavDropdown.Item>Pris høy-lav</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown>
-        </LinkWrapper_right>
+        </LinkWrapperRight>
       </Nav>
 
       {/* Search icon with link to search page */}

@@ -219,11 +219,11 @@ const EventDetails = (props: any) => {
           });
 
         riderService
-          .getRiderByEventId(res[0].event_id)
+          .getRiderByEventId(props.match.params.id)
           .then(response => setRiders(response));
 
         userService
-          .getVolunteersForEvent(res[0].event_id)
+          .getVolunteersForEvent(props.match.params.id)
           .then(response => setVolunteers(response));
       });
     };
