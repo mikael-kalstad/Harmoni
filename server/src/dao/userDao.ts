@@ -113,7 +113,7 @@ export default class userDao extends daoParentUser {
   // Gets all volunteers for an event
   getVolunteersForEvent(eventId: number, callback) {
     super.query(
-      "SELECT user.name, user.email, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
+      "SELECT user.user_id user.name, user.email, user.picture FROM user, user_event WHERE user_event.event_id = ? AND user_event.user_id = user.user_id AND user.type = 'volunteer'",
       [eventId],
       callback
     );

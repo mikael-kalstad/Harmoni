@@ -133,7 +133,7 @@ class UserService extends Service {
     updateToken();
     return axios({
       method: "get",
-      url: this.path + "/authorized/users/volunteers" + eventId,
+      url: this.path + "/authorized/users/volunteers/" + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
