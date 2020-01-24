@@ -11,9 +11,11 @@ const dao = new searchDao(pool);
 
 // Get events given input
 router.get("/search/events/:require", async (request, response) => {
-    dao.searchForEvents(request.params.require, (status, data) => {
-        status == 500 ? response.status(500) : response.send(data)
-    });
+    if (request.params.require && request.params.require != "") {
+        dao.searchForEvents(request.params.require, (status, data) => {
+            status == 500 ? response.status(500) : response.send(data)
+        });
+    }
 })
 // Get events by lowest price to tickets
 router.get('/sort/events/cheapest', async (request, response) => {

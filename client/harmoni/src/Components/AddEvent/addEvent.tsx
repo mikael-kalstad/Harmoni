@@ -103,7 +103,7 @@ const AddEvent = (props: IProps) => {
   const [eventId, setEventId] = useState();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
-  const [skipped, setSkipped] = useState(new Set<number>());
+  const [skipped] = useState(new Set<number>());
   const [loading, setLoading] = useState<boolean>(false);
   const [warningText, setWarningText] = useState("");
   const [uploaded, setUploaded] = useState<boolean>(false);
@@ -504,11 +504,13 @@ const AddEvent = (props: IProps) => {
     }
   };
 
-  // Update all attachments to event
+  // Update all attachments and rights to attachments for event
   const updateAttachments = async () => {
+    //Retrieve current events
     attachmentService
       .getAttachmentsForEvent(eventId)
       .then(attachmentResponse => {
+        // Create list of events that should be removed
         const removedAttachments = attachmentResponse.filter(
           attachment =>
             !listOfAttachments.some(
@@ -517,11 +519,13 @@ const AddEvent = (props: IProps) => {
         );
 
         if (removedAttachments) {
+          //Delete the events that should be removed (also removes rights due to ON CASCADE DELETE)
           removedAttachments.forEach(removedAttachment => {
             attachmentService.deleteAttachment(removedAttachment.attachment_id);
           });
         }
 
+        //Create list of attachments that remains after delete
         const remainingAttachments = attachmentResponse.filter(
           attachment =>
             !removedAttachments.some(
@@ -530,14 +534,17 @@ const AddEvent = (props: IProps) => {
             )
         );
 
+        //Get attachments rights for the remaining
         remainingAttachments.forEach(attachment => {
           attachmentService
             .getAttachmentRights(attachment.attachment_id)
             .then(attachmentRightsResponse => {
+              //Get current client side attachment rights
               const attachmentRights = listOfAttachmentsRights.find(
                 e => e.attachment.attachment_id == attachment.attachment_id
               );
 
+              //Create list of rights that should be removed
               const removedRights = attachmentRightsResponse.filter(user => {
                 let shouldRemove = !attachmentRights.users.some(e => {
                   return (
@@ -549,6 +556,7 @@ const AddEvent = (props: IProps) => {
                 return shouldRemove;
               });
 
+              //Delete the rights from the database
               removedRights.forEach(removedRight => {
                 attachmentService.deleteAttachmentforUser(
                   attachment.attachment_id,
@@ -558,10 +566,12 @@ const AddEvent = (props: IProps) => {
             });
         });
 
+        //Create a list of just the newly added attachments and rights
         const newAttachments = listOfAttachmentsRights.filter(
           e => e.attachment.attachment_id == -1
         );
 
+        //Add the new attachments and rights.
         newAttachments.forEach(attachment => {
           attachment.attachment.event_id = eventId;
           attachment.attachment.user_id = props.userData.user_id;

@@ -133,7 +133,7 @@ class UserService extends Service {
     updateToken();
     return axios({
       method: "get",
-      url: this.path + "/authorized/users/volunteers" + eventId,
+      url: this.path + "/authorized/users/volunteers/" + eventId,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "harmoni-token": localStorage.getItem("harmoni-token")
@@ -172,11 +172,13 @@ class UserService extends Service {
       }
     })
       .then(response => {
-        if (response.status == 409) {
-
+        console.log("res inservice", response);
+        if (response.status === 409) {
+          return response;
         } else {
           updateToken();
-        } return response;
+        }
+        return response;
       })
       .catch(error => console.log(error));
   }

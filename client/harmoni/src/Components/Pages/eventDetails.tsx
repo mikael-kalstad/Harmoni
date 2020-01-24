@@ -85,7 +85,6 @@ const EventDetails = (props: any) => {
   const [volunteers, setVolunteers] = useState();
   const [tickets, setTickets] = useState();
   const [riders, setRiders] = useState();
-  const [organizer, setOrganizer] = useState();
 
   // Boolean check states
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -141,6 +140,8 @@ const EventDetails = (props: any) => {
     }
   };
 
+  console.log(volunteers);
+
   useEffect(() => {
     const isUserArtistOfEvent = async () => {
       // Check if user is artist of event
@@ -180,11 +181,7 @@ const EventDetails = (props: any) => {
     const fetchEvent = async () => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
-        eventService
-          .getUsersOfEventByType(props.match.params.id, "volunteer")
-          .then(volunteersResponse => {
-            setVolunteers(volunteersResponse);
-          });
+
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
@@ -222,8 +219,12 @@ const EventDetails = (props: any) => {
           });
 
         riderService
-          .getRiderByEventId(res[0].event_id)
+          .getRiderByEventId(props.match.params.id)
           .then(response => setRiders(response));
+
+        userService
+          .getVolunteersForEvent(props.match.params.id)
+          .then(response => setVolunteers(response));
       });
     };
 
@@ -282,6 +283,7 @@ const EventDetails = (props: any) => {
                 eventId={props.match.params.id}
                 userData={props.userData}
                 readOnly={true}
+                volunteers={volunteers}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>

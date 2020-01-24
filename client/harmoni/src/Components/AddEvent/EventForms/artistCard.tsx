@@ -159,7 +159,8 @@ const Artistcard = (props: IProps) => {
 
       <Wrapper>
         <ImgWrapper>
-          {props.artist.picture.data &&
+          {props.artist.picture &&
+            props.artist.picture.data &&
             props.artist.picture.data.length !== 0 && (
               <ArtistImage
                 src={new Buffer(props.artist.picture).toString("ASCII")}
