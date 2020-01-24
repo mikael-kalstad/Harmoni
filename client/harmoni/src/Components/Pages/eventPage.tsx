@@ -363,7 +363,7 @@ const Event = (props: any) => {
           ></EventImage>
           {props.userData &&
           props.userData.type == "volunteer" &&
-          eventStatus === "Kommende" &&
+          !finished && !inProgress &&
           showVolunteerButton ? (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
