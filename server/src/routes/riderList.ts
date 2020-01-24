@@ -67,8 +67,6 @@ router.get(
 router.put(
   "/authorized/riders/riderlist/:rider_list_id",
   async (request, response) => {
-    console.log(request.body);
-    console.log("rider id", request.params.rider_list_id);
     dao.updateRiderList(
       parseInt(request.params.rider_list_id),
       request.body,
