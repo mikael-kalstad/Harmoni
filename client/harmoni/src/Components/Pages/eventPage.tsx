@@ -264,7 +264,7 @@ const Event = (props: any) => {
       eventService
         .getUserOfEvent(props.userData.user_id, parseInt(params.id))
         .then(result => {
-          if (result.length == 0) {
+          if (result && result.length == 0) {
             setShowVolunteerButton(true);
           } else setShowVolunteerButton(false);
         });
