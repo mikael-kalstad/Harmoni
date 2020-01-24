@@ -98,7 +98,7 @@ const TicketForm = (props: any) => {
   const deleteTicket = ticket => {
     if (ticket != null) {
       props.setListOfTickets(
-        props.listOfTickets.filter(u => u.ticket_id !== ticket.ticket_id)
+        props.listOfTickets.filter(u => u.type !== ticket.type)
       );
     }
   };

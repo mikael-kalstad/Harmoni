@@ -313,6 +313,7 @@ const AttachmentForm = (props: any) => {
         filetype: filetype,
         user_id: -1
       };
+      e.target.value = "";
       setCurrAttachment(att);
       return;
     }
@@ -335,6 +336,7 @@ const AttachmentForm = (props: any) => {
     };
     reader.readAsBinaryString(e.target.files[0]);
     setReadyToUpload(true);
+    e.target.value = "";
   };
 
   return (
