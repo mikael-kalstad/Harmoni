@@ -108,22 +108,6 @@ const EventDetails = (props: any) => {
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
-    /* let data = await userService.getOrganizerForEvent(eventData.event_id);
-    
-    setOrganizer(data); */
-
-    //console.log(userService.getUserById(73));
-    // setOrganizer(userService.getUserById(73));
-    /*  userService
-      .getUserById(eventData.organizer)
-      .then(response => setOrganizer(response));
-
-        let resOrganizer= await userService
-          .getUserById(eventData.organizer);
-        if(resOrganizer){
-        console.log("res organizer kjørt")
-        setOrganizer(resOrganizer);
-      }*/
     setLoading(true);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
@@ -182,7 +166,6 @@ const EventDetails = (props: any) => {
     };
 
     const validateUser = async () => {
-      // console.log(await isUserOrganizerOfEvent());
       let organizer = await isUserOrganizerOfEvent();
       let artist = await isUserArtistOfEvent();
 

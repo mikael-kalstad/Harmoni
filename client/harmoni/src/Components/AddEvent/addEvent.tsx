@@ -1,3 +1,18 @@
+/**
+ * Page for adding new events.
+ *
+ * It contains a stepper with different forms and validations.
+ * Each form is unique with different info needed to create an event.
+ *
+ * Forms in this component:
+ * - Basic info form (basis info for an event).
+ * - Artists form (add/connect artists to an event)
+ * - Ticket form (add tickets to an event)
+ * - Program form (description and program details for an event)
+ * - Attachment form (add attachments e.g. contracts for an event)
+ * - Summary (brief summary of all forms before upload)
+ */
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
@@ -5,6 +20,7 @@ import Btn from "../Button/button";
 import FormStepper from "./formStepper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
+import { compareDates } from "../utils";
 
 // Form components
 import ArtistForm from "./EventForms/artistForm";
@@ -34,12 +50,6 @@ interface Event {
   information: string;
   category: string;
   picture: string;
-}
-
-interface Rider {
-  userId: number;
-  eventId: number;
-  text: string;
 }
 
 const BtnWrapper = styled.div`
@@ -118,6 +128,7 @@ const AddEvent = (props: IProps) => {
     dateTo: null
   });
 
+  // Check if infoData state is empty (used in basic form)
   const isInfoDataEmpty = () => {
     return (
       infoData.name === "" ||
@@ -209,7 +220,9 @@ const AddEvent = (props: IProps) => {
       setCompleted(newCompleted);
     }
   }, [props.eventData, props.artistsData, props.ticketsData, steps.length]);
-  function getStepContent(step: number) {
+
+  // Get content for each specific step in the stepper component
+  const getStepContent = (step: number) => {
     switch (step) {
       case 0:
         return <BasicInfoForm {...infoProps} />;
@@ -241,41 +254,46 @@ const AddEvent = (props: IProps) => {
           />
         );
     }
-  }
+  };
 
+  // Get total amount of steps in stepper
   const totalSteps = () => {
     return steps.length;
   };
 
+  // Get number of steps that are skipped
   const skippedSteps = () => {
     return skipped.size;
   };
 
+  // Get number of steps that are completed
   const completedSteps = () => {
     return completed.size;
   };
 
+  // Check if all steps in stepper are completed
   const stepsCompleted = () => {
     return completedSteps() === totalSteps() - skippedSteps();
   };
 
+  // Check if current step is last step
   const isLastStep = () => {
     return activeStep === totalSteps() - 1;
   };
 
-  let todayDate = new Date();
-  const compareDates = (date1, date2) => {
-    let fromDate = new Date(date1);
-    let toDate = new Date(date2);
-
-    return fromDate < toDate;
-  };
-
+  // Handle click on the next button in stepper
   const handleNext = () => {
     // Info step is required
     if (activeStep === 0) {
       setInfoSubmit(true);
+
+      // Check if infoData state is empty
       if (isInfoDataEmpty()) return;
+
+      // Get todays date
+      let todayDate = new Date();
+
+      // Date validation
       if (
         !compareDates(infoData.dateFrom, infoData.dateTo) ||
         !compareDates(todayDate, infoData.dateFrom) ||
@@ -284,36 +302,44 @@ const AddEvent = (props: IProps) => {
         return;
     }
 
-    // Set step to completed
+    // All validation is successfull, set step to completed
     const newCompleted = new Set(completed);
     newCompleted.add(activeStep);
     setCompleted(newCompleted);
 
-    // All other steps is optional
+    // Go to next step in stepper
     nextStep();
   };
 
+  // Switch to next step in stepper
   const nextStep = () => {
+    // Go to first step if current step is last
     const newActiveStep =
       isLastStep() && !stepsCompleted()
         ? steps.findIndex((step, i) => !completed.has(i))
         : activeStep + 1;
+
+    // Set new active step
     setActiveStep(newActiveStep);
   };
 
+  // Handle click on the back button in stepper
   const handleBack = () => {
-    // Set step to uncompleted
+    // Set current step to uncompleted
     const newCompleted = new Set(completed);
     newCompleted.delete(activeStep - 1);
     setCompleted(newCompleted);
 
+    // Set new active step
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
+  // Handle change step when clicking on top stepper menu item
   const handleStep = (step: number) => () => {
     setActiveStep(step);
   };
 
+  // Submit/upload event
   const submit = async () => {
     let newEvent: Event = {
       eventId: infoData.id || -1,
@@ -357,11 +383,14 @@ const AddEvent = (props: IProps) => {
 
       // Make new event
     } else {
+      // Upload new event to DB
       eventService.addEvent(newEvent).then(res => {
+        // Add rider, tickets and artists that is connected to the event
         addRiders(res.insertId);
         addTickets(res.insertId);
         addArtists(res.insertId);
 
+        // Handle attachments upload
         listOfAttachments.forEach(attachment => {
           attachment.event_id = res.insertId;
           attachment.user_id = props.userData.user_id;
@@ -379,18 +408,23 @@ const AddEvent = (props: IProps) => {
           });
         });
 
+        // Set the new event id created by the DB
         setEventId(res["insertId"]);
 
+        // Check the response from the server before giver user feedback
         checkResponse(res);
       });
     }
   };
 
+  // Add all riders to DB
   const addRiders = async (event_id: number) => {
+    // Get all riders already in event to see changes
     let res = await riderService.getRiderByEventId(event_id);
 
+    // If response is successful
     if (res) {
-      // Add all riders
+      // Update riders that already exists in DB
       listOfRiders.forEach(rider => {
         // Check if rider is already created in DB
         let riderInDB = res.find(
@@ -399,6 +433,7 @@ const AddEvent = (props: IProps) => {
 
         let updatedRider;
 
+        // Updated rider object
         if (riderInDB !== undefined) {
           updatedRider = {
             rider_list_id: riderInDB.rider_list_id,
@@ -407,19 +442,24 @@ const AddEvent = (props: IProps) => {
             text: rider.text
           };
 
+          // Update rider
           riderService.updateRiderList(updatedRider);
         }
-        // Create new rider
+
+        // No existing rider, create new rider in DB
         else riderService.addRiderList(event_id, rider.user_id, rider.text);
       });
     }
   };
 
+  // Add all tickets to DB
   const addTickets = async (event_id: number) => {
+    // Get existing tickets in DB
     let res = await ticketService.getAllTicketsByEventId(event_id);
 
+    // If response is successfull
     if (res) {
-      // Add all tickets
+      // Add all new tickets
       listOfTickets.forEach(ticket => {
         // Only add tickets that is not already created in DB (ticket id is not yet set)
         if (ticket.ticket_id === undefined) {
@@ -435,32 +475,42 @@ const AddEvent = (props: IProps) => {
     }
   };
 
+  // Add all artists to DB
   const addArtists = async (event_id: number) => {
+    // Get existing artists for event
     let res = await userService.getArtistsForEvent(event_id);
 
+    // Check if response is successfull
     if (res) {
-      // Add artist to event
+      // Add all new artist to event
       listOfArtists.forEach(artist => {
+        // Check if artist already exists in DB
         let check = res.find(a => a.user_id === artist.user_id);
 
+        // Add new artist to event if it does not already exist
         if (check === undefined)
           eventService.addUserToEvent(artist.user_id, event_id);
       });
 
       // Check if artists should be removed from event in DB
       res.forEach(artist => {
+        // Check if artist in DB is not in local list
         let check = listOfArtists.find(a => a.user_id === artist.user_id);
 
+        // Remove artist from event in DB if it is removed locally
         if (check === undefined)
           eventService.removeUserFromEvent(artist.user_id, event_id);
       });
     }
   };
 
+  // Update all attachments and rights to attachments for event
   const updateAttachments = async () => {
+    //Retrieve current events
     attachmentService
       .getAttachmentsForEvent(eventId)
       .then(attachmentResponse => {
+        // Create list of events that should be removed
         const removedAttachments = attachmentResponse.filter(
           attachment =>
             !listOfAttachments.some(
@@ -469,10 +519,13 @@ const AddEvent = (props: IProps) => {
         );
 
         if (removedAttachments) {
+          //Delete the events that should be removed (also removes rights due to ON CASCADE DELETE)
           removedAttachments.forEach(removedAttachment => {
             attachmentService.deleteAttachment(removedAttachment.attachment_id);
           });
         }
+
+        //Create list of attachments that remains after delete
         const remainingAttachments = attachmentResponse.filter(
           attachment =>
             !removedAttachments.some(
@@ -480,15 +533,18 @@ const AddEvent = (props: IProps) => {
                 removedAttachment.attachment_id == attachment.attachment_id
             )
         );
-
+        
+        //Get attachments rights for the remaining
         remainingAttachments.forEach(attachment => {
           attachmentService
             .getAttachmentRights(attachment.attachment_id)
             .then(attachmentRightsResponse => {
+              //Get current client side attachment rights
               const attachmentRights = listOfAttachmentsRights.find(
                 e => e.attachment.attachment_id == attachment.attachment_id
               );
 
+              //Create list of rights that should be removed
               const removedRights = attachmentRightsResponse.filter(user => {
                 let shouldRemove = !attachmentRights.users.some(e => {
                   return (
@@ -500,6 +556,7 @@ const AddEvent = (props: IProps) => {
                 return shouldRemove;
               });
 
+              //Delete the rights from the database
               removedRights.forEach(removedRight => {
                 attachmentService.deleteAttachmentforUser(
                   attachment.attachment_id,
@@ -509,10 +566,12 @@ const AddEvent = (props: IProps) => {
             });
         });
 
+        //Create a list of just the newly added attachments and rights
         const newAttachments = listOfAttachmentsRights.filter(
           e => e.attachment.attachment_id == -1
         );
 
+        //Add the new attachments and rights.
         newAttachments.forEach(attachment => {
           attachment.attachment.event_id = eventId;
           attachment.attachment.user_id = props.userData.user_id;
@@ -530,6 +589,7 @@ const AddEvent = (props: IProps) => {
       });
   };
 
+  // Check response from API when uploading new or updated content
   const checkResponse = (res: any) => {
     if (res) {
       setLoading(false);
@@ -538,12 +598,6 @@ const AddEvent = (props: IProps) => {
       setLoading(false);
       setWarningText("Det skjedde noe feil. Prøv igjen");
     }
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted(new Set<number>());
-    setSkipped(new Set<number>());
   };
 
   return (
@@ -571,9 +625,7 @@ const AddEvent = (props: IProps) => {
                   }
                 />
                 <BtnWrapper>
-                  <Btn onClick={handleReset} to={"/event/" + eventId}>
-                    Gå til arrangement
-                  </Btn>
+                  <Btn to={"/event/" + eventId}>Gå til arrangement</Btn>
                 </BtnWrapper>
               </>
             )}
@@ -626,8 +678,6 @@ const AddEvent = (props: IProps) => {
                 )}
               </>
             )}
-
-            {/* {props.eventData && <Btn onClick={submit}>LAGRE ENDRINGER</Btn>} */}
           </div>
           {warningText !== "" && <WarningText>{warningText}</WarningText>}
         </div>

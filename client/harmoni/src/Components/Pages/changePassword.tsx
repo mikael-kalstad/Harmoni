@@ -69,14 +69,13 @@ const ChangePassword = (props: { userData?: any; logIn?: Function }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [warningText, setWarningText] = useState("");
 
-
   function passwordValidation(thePassword: string) {
     var count = 0;
     count += /[a-z]/.test(thePassword) ? 1 : 0;
     count += /[A-Z]/.test(thePassword) ? 1 : 0;
     count += /[@]/.test(thePassword) ? 1 : 0;
     count += /[0-9]/.test(thePassword) ? 1 : 0;
-    if (count >= 2 &&counter(thePassword)>5) {
+    if (count >= 2 && counter(thePassword) > 5) {
       return true;
     } else if (count < 2) return false;
   }
@@ -109,10 +108,12 @@ const ChangePassword = (props: { userData?: any; logIn?: Function }) => {
       // Check if input is empty
       setOldPasswordWarning("");
 
-      if (password.trim() === "" ||
-      confirmedPassword.trim() === "" ||
-      !passwordValidation(passwordInput) || 
-      !passwordValidation(confirmPassword) ) {
+      if (
+        password.trim() === "" ||
+        confirmedPassword.trim() === "" ||
+        !passwordValidation(passwordInput) ||
+        !passwordValidation(confirmPassword)
+      ) {
         return;
       } else if (password === confirmedPassword) {
         userService.changePassword(
@@ -188,7 +189,7 @@ const ChangePassword = (props: { userData?: any; logIn?: Function }) => {
             type="password"
             error={(submit && confirmPassword === "") || warningText !== ""}
             helperText={
-             submit && confirmPassword === ""
+              submit && confirmPassword === ""
                 ? "Passord er påkrevd"
                 : submit && !passwordValidation(confirmPassword)
                 ? "Passordet må innholde minst 6 tegn, og det må innholde minst to av følgende: en liten bokstav, en stor bokstav, et tall,  et symbol (for eksempel '&')"

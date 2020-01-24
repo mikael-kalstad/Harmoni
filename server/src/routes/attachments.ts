@@ -53,11 +53,11 @@ router.post(
 
 // Get user ids who have access to the document.
 router.get('/authorized/attachments/attachment_user/:attachmentId',
-async (request, response) => {
-  dao.getAttachmentRights(parseInt(request.params.attachmentId), (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
+  async (request, response) => {
+    dao.getAttachmentRights(parseInt(request.params.attachmentId), (status, data) => {
+      status == 500 ? response.status(500) : response.send(data);
+    })
   })
-})
 
 //Get attachment given its id
 router.get('/authorized/attachments/:id', async (request, response) => {
@@ -94,7 +94,7 @@ router.get('/authorized/attachments/user/event/:userId&:eventId', async (request
 //Get all attachments an user has access to 
 router.get('/authorized/attachments/user/access/:userId', async (request, response) => {
   dao.getAttachmentsForUser(
-    parseInt(request.params.userId),  (status, data) => {
+    parseInt(request.params.userId), (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     }
   );
@@ -103,7 +103,7 @@ router.get('/authorized/attachments/user/access/:userId', async (request, respon
 //Get all attachments an user has access to for an event
 router.get('/authorized/attachments/user/access/event/:userId&:eventId', async (request, response) => {
   dao.getAttachmentsForUserForEvent(
-    parseInt(request.params.userId), parseInt(request.params.eventId),  (status, data) => {
+    parseInt(request.params.userId), parseInt(request.params.eventId), (status, data) => {
       status == 500 ? response.status(500) : response.send(data);
     }
   );
@@ -115,14 +115,15 @@ router.get('/authorized/attachments/download/:id', async (request, response) => 
     if (status == 500)
       response.sendStatus(500);
     else {
-      response.setHeader('Content-disposition', 'attachment; filename=' + data[0].filename);
-      response.setHeader('Content-type', data[0].filetype);
-      response.send(data[0].data);
+      if (data && data != null && data[0] && data[0] != null && data[0].filetype && data[0].filename) {
+        response.setHeader('Content-disposition', 'attachment; filename=' + data[0].filename);
+        response.setHeader('Content-type', data[0].filetype);
+        response.send(data[0].data);
+      }
     }
   })
 })
 
-//TODO: Is this "overwrite"? Path to update file name only?
 // Update singular attachment given attachmentId
 router.put('/authorized/attachments/:id', async (request, response) => {
   dao.updateAttachment(request.body, (status, data) => {

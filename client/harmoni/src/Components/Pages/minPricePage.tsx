@@ -2,15 +2,9 @@ import React, { useEffect, useState } from "react";
 import { searchService } from "../../services/SearchService";
 import ArrangementGrid from "../eventGrid";
 import { IEvent } from "./eventPage";
-import styled from "styled-components";
 
-const LinkWrapper = styled.div`
-  margin: 10px 0;
-`;
-
-const MinPrice = (props: any) => {
+const MinPrice = () => {
   const [eventsData, setEventData] = useState<IEvent[]>();
-  const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
     fetchLowPriceEvents();
@@ -21,11 +15,8 @@ const MinPrice = (props: any) => {
   };
 
   // Render grid of all matching arrangements
-
   return (
-    <>
-      <ArrangementGrid title={" Laveste arrangmenter"} data={eventsData} />
-    </>
+    <ArrangementGrid title={"Arrangmenter pris lav-høy"} data={eventsData} />
   );
 };
 
