@@ -99,7 +99,7 @@ const SearchEvents = () => {
         <Input
           id="search-input"
           type="text"
-          placeholder="Rihanna konsert"
+          placeholder="Søk på arrangementer"
           onChange={handleChange}
           onKeyDown={checkForEnterKey}
           //   value={userInput}
