@@ -39,8 +39,8 @@ const ProgramForm = (props: ProgramProps) => {
     <>
       <Title>Program</Title>
       <Text>
-        Du kan legge til og endre program senere ved å redigere arrangementet i
-        min side.
+        Du kan legge til og endre beskrivelse/program senere ved å redigere
+        arrangementet i min side.
       </Text>
 
       <UnderTitle>Skriv inn her:</UnderTitle>
@@ -49,7 +49,7 @@ const ProgramForm = (props: ProgramProps) => {
         variant="outlined"
         placeholder="Program"
         id="multiline-static"
-        label="Program"
+        label="Beskrivelse og program"
         multiline
         rows="8"
         value={props.programText}
