@@ -241,8 +241,10 @@ const Event = (props: any) => {
   useEffect(() => {
     const fetchEvent = async () => {
       eventService.getEventById(parseInt(params.id)).then(data => {
-        setEvent(data);
-        fetchCoords(data[0].address);
+        if(data){
+          setEvent(data);
+          fetchCoords(data[0].address);
+        }
       });
     };
 
