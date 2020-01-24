@@ -2,7 +2,7 @@
  * The attachmentDao-class is used to do everything has to do with
  * Search or sort after price
  */
-const daoParentEvent = require('./dao.ts');
+const daoParentEvent = require('./dao');
 
 export interface user {
     user_id: number,
@@ -43,7 +43,7 @@ export default class searchDao extends daoParentEvent {
         var sql1 =
             'SELECT DISTINCT * FROM event WHERE name LIKE ? OR address LIKE ? OR information LIKE ? OR category LIKE ? or status like ? ORDER BY event_id DESC;';
 
-        var sql2 = "SELECT DISTINCT event.* FROM user_event, user,event WHERE user_event.user_id = user.user_id AND user.name LIKE ? and user.type='artist' ORDER BY event.event_id DESC;";
+        var sql2 = "SELECT DISTINCT event.* FROM user_event, user,event WHERE (user.user_id = event.organizer AND user.name LIKE ?) OR (user.name LIKE ? AND user.type='artist' AND event.event_id = user_event.event_id AND user_event.user_id = user.user_id) ORDER BY event.event_id DESC;";
 
         let events: event[] = [];
         super.query(sql1,
@@ -54,7 +54,7 @@ export default class searchDao extends daoParentEvent {
                 }
                 else {
                     data.forEach(e => events.push(e));
-                    super.query(sql2, ["%" + input + "%"],
+                    super.query(sql2, ["%" + input + "%", "%" + input + "%"],
                         (status, data) => {
                             if (status == 500) {
                                 callback(500, null);
