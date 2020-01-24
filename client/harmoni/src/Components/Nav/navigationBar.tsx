@@ -80,7 +80,7 @@ const NavigationBar = (props: any) => (
           height="60"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
-          style={{ margin: "0px 1px -10px 15px", padding: "8px" }}
+          style={{ margin: "0px 1px -10px 15px", padding: "0px" }}
           onClick={() => handleIconClick("/")}
         />
       </Link>
