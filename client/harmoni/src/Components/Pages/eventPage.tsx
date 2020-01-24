@@ -16,6 +16,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
 import WarningInfo from "./warningInfo";
+import OutlineButton from "../Button/outlineButton";
 
 export interface IEvent {
   event_id: number;
@@ -339,6 +340,7 @@ const Event = (props: any) => {
         title="Det skjedde noe feil"
         underTitle="Arrangementet finnes ikke"
         text="Hvis du forventet å finne et arrangement, kan det hende at det er slettet"
+        btn1_component={<OutlineButton to="/">Til forsiden</OutlineButton>}
       />
     );
   }
@@ -379,7 +381,8 @@ const Event = (props: any) => {
           ></EventImage>
           {props.userData &&
           props.userData.type == "volunteer" &&
-          !finished && !inProgress &&
+          !finished &&
+          !inProgress &&
           showVolunteerButton ? (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
