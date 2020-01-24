@@ -11,6 +11,7 @@ import { loginService } from "../../services/loginService";
 import { userService } from "../../services/UserService";
 import { Redirect } from "react-router-dom";
 import ImgUpload from "../Upload/profileImgUpload";
+import { passwordValidation } from "../utils";
 
 const Wrapper = styled.div`
   margin: 80px auto 0 auto;
@@ -55,6 +56,8 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
   const [type, setType] = useState("");
   const [imgData, setImgData] = useState("");
   const [warningText, setWarningText] = useState("");
+
+  // Input format validations
   const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const tlfFormat = /^(0047|\+47|47)?[2-9]\d{7}$/;
 
@@ -76,7 +79,6 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
 
   useEffect(() => {
     if (props.userData) {
-      console.log(props.userData);
       // Phone is optional
       if (props.userData["mobile"]) setTlfInput(props.userData["mobile"]);
 
@@ -108,27 +110,6 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       props.userData ? save() : register();
   };
 
-  function passwordValidation(thePassword: string) {
-    var count = 0;
-    count += /[a-z]/.test(thePassword) ? 1 : 0;
-    count += /[A-Z]/.test(thePassword) ? 1 : 0;
-    count += /[@]/.test(thePassword) ? 1 : 0;
-    count += /[0-9]/.test(thePassword) ? 1 : 0;
-    if (count >= 2 &&counter(thePassword)>5) {
-      return true;
-    } else if (count < 2) return false;
-  }
-
-  function counter(string) {
-    var count = 0;
-    if (string) {
-      string.split("").forEach(function() {
-        count ? count++ : (count = 1);
-      });
-    }
-    return count;
-  }
-
   function tlfValidation(num: number) {
     if (num !== undefined) {
       if (num.toString().match(tlfFormat)) {
@@ -138,21 +119,29 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       return true;
     }
   }
- 
+
+  const valdidateInputs = () => {
+    return (
+      type.trim() !== "" &&
+      nameInput.trim() !== "" &&
+      nameInput.length <= 45 &&
+      emailInput.trim() !== "" &&
+      emailInput.length <= 45 &&
+      emailFormat.test(emailInput) &&
+      tlfInput.toString().length <= 45 &&
+      tlfFormat.test(tlfInput.toString())
+    );
+  };
+
   // Save changes to user info
   const save = async () => {
     setSubmit(true);
 
-    if (
-      type.trim() === "" ||
-      nameInput.trim() === "" ||
-      (emailInput.trim() !== "" && !emailInput.match(emailFormat)) ||
-      (tlfInput !== undefined && !tlfInput.toString().match(tlfFormat))
-    )
-      return;
+    // Check if inputs are valid
+    if (!valdidateInputs()) return;
 
     setLoading(true);
-    
+
     let user = {
       user_id: props.userData.user_id,
       name: nameInput,
@@ -161,14 +150,15 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       mobile: tlfInput,
       picture: imgData.toString()
     };
-    
-    console.log(user);
+
+    // Update user info
     let res = await userService.updateUser(user);
-    console.log(res);
+
     if ((res && res.status === 409) || !res) {
       setEmailWarning("Email er allerede registrert");
       setLoading(false);
     }
+
     // Status code 401 indicates that something went wrong
     else if ((res && res.status === 401) || res instanceof Error) {
       setLoading(false);
@@ -190,7 +180,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       passwordInput.trim() === "" ||
       !emailInput.match(emailFormat) ||
       !passwordValidation(passwordInput) ||
-        (tlfInput !==undefined && !tlfInput.toString().match(tlfFormat))
+      (tlfInput !== undefined && !tlfInput.toString().match(tlfFormat))
     )
       return;
 
@@ -204,10 +194,9 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       type,
       imgData.toString()
     );
-    console.log(res);
 
     // Status code 409 indicates that the email is already registered
-    if (res && res.status === 409 || res instanceof Error || !res) {
+    if ((res && res.status === 409) || res instanceof Error || !res) {
       setEmailWarning("Email er allerede registrert");
       setLoading(false);
     }
@@ -215,7 +204,6 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
     // Status code 401 indicates that something went wrong
     else if ((res && res.status === 401) || res instanceof Error || !res) {
       setLoading(false);
-      setEmailWarning("Email er allerede registrert");
       setWarningText("Noe feil skjedde, sjekk internett tilkoblingen");
     } else if (res) {
       if (props.logIn !== undefined) props.logIn(emailInput);
@@ -269,12 +257,12 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           label="Navn*"
           value={nameInput}
           error={
-            (submit && nameInput === "") || (submit && counter(nameInput) > 45)
+            (submit && nameInput === "") || (submit && nameInput.length > 45)
           }
           helperText={
             submit && nameInput === ""
               ? "Navn er påkrevd"
-              : submit && counter(nameInput) > 45
+              : submit && nameInput.length > 45
               ? "Navn kan ikke ha flere enn 45 bokstaver"
               : ""
           }
@@ -308,7 +296,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
             (submit && emailInput === "") ||
             emailWarning !== "" ||
             (submit && !emailInput.match(emailFormat)) ||
-            (submit && counter(emailInput) > 45)
+            (submit && emailInput.length > 45)
           }
           helperText={
             submit && emailInput === ""
@@ -317,8 +305,8 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
               ? "Du har oppgitt en ugyldig mail"
               : emailWarning !== ""
               ? emailWarning
-              : submit && counter(emailInput) > 45
-              ? "mailen kan ikke ha flere enn 45 bokstaver"
+              : submit && emailInput.length > 45
+              ? "Email kan ikke ha flere enn 45 bokstaver"
               : ""
           }
           onChange={e => setEmailInput(e.target.value)}
@@ -336,14 +324,14 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
             error={
               (submit && passwordInput === "") ||
               (submit && !passwordValidation(passwordInput)) ||
-              (submit && counter(passwordInput) > 45)
+              (submit && passwordInput.length > 45)
             }
             helperText={
               submit && passwordInput === ""
                 ? "Passord er påkrevd"
                 : submit && !passwordValidation(passwordInput)
                 ? "Passordet må innholde minst 6 tegn, og det må innholde minst to av følgende: en liten bokstav, en stor bokstav, et tall,  et symbol (for eksempel '&')"
-                : submit && counter(passwordInput) > 45
+                : submit && passwordInput.length > 45
                 ? "passordet kan ikke være flere enn 45 bokstaver"
                 : ""
             }

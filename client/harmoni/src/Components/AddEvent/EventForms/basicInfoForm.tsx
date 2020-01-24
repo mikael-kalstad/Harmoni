@@ -22,6 +22,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import ImageUpload from "../../Upload/imageUpload";
 import Map from "../../Event/map";
 import { geoService } from "../../../services/GeoService";
+import { compareDates } from "../../utils";
 
 const Title = styled.h2`
   font-size: 48px;
@@ -102,8 +103,8 @@ const BasicInfoForm = (props: IProps) => {
     if (address.length > 0) {
       setFetchingCoords(true);
       geoService.getLatAndLndOfAddress(address).then(data => {
-        if(data){
-          setCoords(data)
+        if (data) {
+          setCoords(data);
         }
         setFetchingCoords(false);
       });
@@ -113,11 +114,11 @@ const BasicInfoForm = (props: IProps) => {
   };
 
   // Compare two dates to check which is larger/smaller
-  const compare_dates = (date1, date2) => {
-    let fromDate = new Date(date1);
-    let toDate = new Date(date2);
-    return fromDate < toDate;
-  };
+  // const compareDates = (date1, date2) => {
+  //   let fromDate = new Date(date1);
+  //   let toDate = new Date(date2);
+  //   return fromDate < toDate;
+  // };
 
   return (
     <>
@@ -271,15 +272,15 @@ const BasicInfoForm = (props: IProps) => {
       {/* Check that from date is not after to date, which would be invalid */}
       {props.infoData.dateFrom !== null &&
         props.infoData.dateTo !== null &&
-        !compare_dates(props.infoData.dateFrom, props.infoData.dateTo) && (
+        !compareDates(props.infoData.dateFrom, props.infoData.dateTo) && (
           <WarningText>Fra dato kan ikke være etter til dato</WarningText>
         )}
 
       {/* Check that the date is not in the past */}
       {props.infoData.dateFrom !== null &&
         props.infoData.dateTo !== null &&
-        (!compare_dates(new Date(), props.infoData.dateFrom) ||
-          !compare_dates(new Date(), props.infoData.dateTo)) && (
+        (!compareDates(new Date(), props.infoData.dateFrom) ||
+          !compareDates(new Date(), props.infoData.dateTo)) && (
           <WarningText>Datoen du har valgt er i fortiden</WarningText>
         )}
     </>

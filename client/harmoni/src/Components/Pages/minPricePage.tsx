@@ -1,39 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {searchService} from "../../services/SearchService";
+import React, { useEffect, useState } from "react";
+import { searchService } from "../../services/SearchService";
 import ArrangementGrid from "../eventGrid";
-import {IEvent} from "./eventPage";
-import styled from "styled-components";
+import { IEvent } from "./eventPage";
 
+const MinPrice = () => {
+  const [eventsData, setEventData] = useState<IEvent[]>();
 
-const LinkWrapper = styled.div`
-  margin: 10px 0;
-`;
+  useEffect(() => {
+    fetchLowPriceEvents();
+  }, []);
 
-const MinPrice = (props:any) => {
-    const [eventsData, setEventData] = useState<IEvent[]>();
-    const [userInput, setUserInput] = useState("");
+  const fetchLowPriceEvents = async () => {
+    setEventData(await searchService.sortAfterLowPrice());
+  };
 
-    useEffect(() => {
-        fetchLowPriceEvents();
-
-    }, []);
-
-
-
-
-    const fetchLowPriceEvents = async() => {
-        setEventData(await searchService.sortAfterLowPrice());
-
-    }
-
-
-    // Render grid of all matching arrangements
-    console.log(eventsData);
-    return (
-        <>
-            <ArrangementGrid title={ ' Laveste arrangmenter'} data={eventsData} />
-        </>
-    )
-}
+  // Render grid of all matching arrangements
+  return (
+    <ArrangementGrid title={"Arrangmenter pris lav-høy"} data={eventsData} />
+  );
+};
 
 export default MinPrice;

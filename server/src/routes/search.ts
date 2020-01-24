@@ -11,17 +11,19 @@ const dao = new searchDao(pool);
 
 // Get events given input
 router.get("/search/events/:require", async (request, response) => {
-    dao.searchForEvents(request.params.require, (status, data) => {
-        status == 500 ? response.status(500) : response.send(data)
-    });
+    if (request.params.require && request.params.require != "") {
+        dao.searchForEvents(request.params.require, (status, data) => {
+            status == 500 ? response.status(500) : response.send(data)
+        });
+    }
 })
 // Get events by lowest price to tickets
 router.get('/sort/events/cheapest', async (request, response) => {
-    dao.sortCheapestEvents( (status, data) => {
-        if(status==500){
+    dao.sortCheapestEvents((status, data) => {
+        if (status == 500) {
             response.status(500);
-            console.log("Something is wrong");
-        }else{
+
+        } else {
             response.send(data);
         }
     });
@@ -29,12 +31,12 @@ router.get('/sort/events/cheapest', async (request, response) => {
 
 // Get events by highest price to tickets
 router.get('/sorts/events/most-expensive', async (request, response) => {
-    dao.sortExpensiveEvents( (status, data) => {
-        if(status==500){
+    dao.sortExpensiveEvents((status, data) => {
+        if (status == 500) {
             response.status(500);
-            console.log("Something is wrong");
-        }else{
-            //console.log(data[0]);
+
+        } else {
+            //
             response.send(data);
         }
     });

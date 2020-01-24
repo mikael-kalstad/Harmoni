@@ -7,6 +7,8 @@ import styled from "styled-components";
 import ArtistCard from "./artistCard";
 
 import { FaFileAlt } from "react-icons/fa";
+import { TiWarning } from "react-icons/ti";
+import InfoDialog from "../../infoDialog";
 
 interface userRight {
   users: IUser[];
@@ -149,7 +151,16 @@ const AddAttachmentButtonWrapper = styled.div`
   margin: 17px 0;
 `;
 
+let checkCircleStyle = {
+  fontSize: 120,
+  color: "#FF0101",
+  marginTop: 30,
+  marginBottom: 20,
+  marginLeft: 80
+};
+
 const AttachmentForm = (props: any) => {
+  const [warning, setWarning] = useState<boolean>(false);
   const [currAttachment, setCurrAttachment] = useState<attachment>(null);
   const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
   const [fileInputName, setFileInputName] = useState<string>("");
@@ -160,6 +171,8 @@ const AttachmentForm = (props: any) => {
 
   const [listOfArtists, setListOfArtists] = useState<IUser[]>([]);
 
+  // Max file size is 2MB
+  const MAX_FILE_SIZE = 1572864;
   let typeahead;
 
   useEffect(() => {
@@ -172,7 +185,6 @@ const AttachmentForm = (props: any) => {
       attachment: null
     };
     array.users = tempAttachmentRights.users.filter(e => {
-      console.log(e);
       return e.user_id != user.user_id;
     });
     array.attachment = currAttachment;
@@ -190,8 +202,6 @@ const AttachmentForm = (props: any) => {
 
   //Add attachment and all the assosiated user-rights.
   const addAttachment = (file: attachment) => {
-    if (!file)
-      console.log("File is undefined or null, button should be disabled");
     let exists = props.listOfAttachments.some(e => e.filename == file.filename);
     if (!exists) {
       props.setListOfAttachments(array => [...array, file]);
@@ -205,7 +215,7 @@ const AttachmentForm = (props: any) => {
       //TODO: Display error
     }
     setReadyToUpload(false);
-    console.log(fileInputName);
+
     setFileInputName("");
   };
 
@@ -218,7 +228,7 @@ const AttachmentForm = (props: any) => {
       let exists = tempAttachmentRights.users.some(e => {
         return e.user_id == userRight.user.user_id;
       });
-      console.log(exists ? "Exists!" : "Doesn't exist!");
+
       if (!exists) {
         let array = {
           users: [],
@@ -238,19 +248,16 @@ const AttachmentForm = (props: any) => {
       user: user,
       attachment: attachment
     };
-    console.log(userRight);
 
     let indexOfFile;
     //Find the correct file
-    console.log(props.listOfAttachmentsRights);
+
     let files = props.listOfAttachmentsRights.filter(e => {
-      console.log(e);
       return e.attachment.filename === userRight.attachment.filename;
     });
 
     //Remove the user from the access list
     files[0].users = files[0].users.filter(e => {
-      console.log(e);
       return e.user_id != user.user_id;
     });
     props.listOfAttachmentsRights[indexOfFile] = files;
@@ -258,7 +265,6 @@ const AttachmentForm = (props: any) => {
   };
 
   const removeFile = attachment => () => {
-    console.log("Removeing file: ", attachment);
     let attachments = props.listOfAttachments;
     attachments = attachments.filter(e => e.filename !== attachment.filename);
     props.setListOfAttachments(attachments);
@@ -275,6 +281,16 @@ const AttachmentForm = (props: any) => {
     });
   };
 
+  const closeWarning = () => {
+    setWarning(false);
+    setCurrAttachment(null);
+    setTempAttachmentRights({
+      users: [],
+      attachment: null
+    });
+    setFileInputName("");
+  };
+
   const handleChange = e => {
     if (!e.target.files[0]) return;
     // setFile(e.target.files[0]);
@@ -285,9 +301,9 @@ const AttachmentForm = (props: any) => {
     const filesize = file.size;
     const filetype = file.type;
 
-    reader.onloadend = () => {
-      console.log("Uploaded file...", reader);
-      console.log("Upload result: ", reader.result);
+    if (filesize > MAX_FILE_SIZE) {
+      setWarning(true);
+      setReadyToUpload(false);
       let att: attachment = {
         attachment_id: -1,
         data: file,
@@ -297,7 +313,21 @@ const AttachmentForm = (props: any) => {
         filetype: filetype,
         user_id: -1
       };
-      console.log("The attachment: ", att);
+      e.target.value = "";
+      setCurrAttachment(att);
+      return;
+    }
+    reader.onloadend = () => {
+      let att: attachment = {
+        attachment_id: -1,
+        data: file,
+        event_id: -1,
+        filename: filename,
+        filesize: filesize,
+        filetype: filetype,
+        user_id: -1
+      };
+
       setCurrAttachment(att);
       let tempRights = tempAttachmentRights;
       tempRights.attachment = att;
@@ -306,10 +336,23 @@ const AttachmentForm = (props: any) => {
     };
     reader.readAsBinaryString(e.target.files[0]);
     setReadyToUpload(true);
+    e.target.value = "";
   };
 
   return (
     <Wrapper>
+      {warning == true ? (
+        <InfoDialog width="500px" height="350px" closeDialog={closeWarning}>
+          <TiWarning style={checkCircleStyle} />
+          <Text style={{ padding: "15px" }}>
+            Filen "{currAttachment.filename}" er for stor, vennligst velg en
+            annen eller reduser størrelsen.
+          </Text>
+          <Text style={{ padding: "15px" }}>
+            Maks filstørrelse er: {MAX_FILE_SIZE} bytes (1.57MB)
+          </Text>
+        </InfoDialog>
+      ) : null}
       <Title>Vedlegg</Title>
       <Text style={{ marginTop: "45px" }}>
         Her kan du laste opp vedlegg og bestemme hvilke artister som skal ha
@@ -327,7 +370,6 @@ const AttachmentForm = (props: any) => {
         <></>
       )}
 
-      {/* Input type file, ListGroup with ArtistCards? */}
       <UploadWrapper>
         <UnderTitle>Legg til vedlegg:</UnderTitle>
         <Input

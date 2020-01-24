@@ -95,21 +95,12 @@ const AttachmentWrapper = styled.div`
 `;
 
 const AttachmentList = (props: any) => {
-  console.log(props.attachments);
-  console.log("Artists: ", props.artists);
-  console.log("Attachments: ", props.attachments);
-  console.log("userRights: ", props.userRights);
-
-  useEffect(() => {
-    console.log("useEffect called in attachmentList");
-  }, [props]);
+  useEffect(() => {}, [props]);
 
   const downloadAttachment = attachment => () => {
-    console.log("HELLO");
     attachmentService
       .downloadAttachment(attachment.attachment_id)
       .then(data => {
-        console.log(data);
         const url = window.URL.createObjectURL(new Blob([data]));
         const link = document.createElement("a");
         link.href = url;
@@ -123,12 +114,9 @@ const AttachmentList = (props: any) => {
     <ListGroup>
       {props.attachments.map((attachment, i) => {
         let rights = props.userRights.find(right => {
-          console.log(right);
-          console.log(attachment);
           return right.attachment.filename == attachment.filename;
         });
-        console.log(props.userRights);
-        console.log(rights);
+
         if (rights === undefined || rights === [] || rights === null)
           return null;
 

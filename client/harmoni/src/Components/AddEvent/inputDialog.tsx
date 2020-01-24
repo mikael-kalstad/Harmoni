@@ -1,3 +1,10 @@
+/**
+ * General input dialog with button for adding/uploading content.
+ * Intended to use with riders, but can be used for all general purposes.
+ *
+ * Includes validation if input is empty, and will be displayed over any content on the page.
+ */
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "../Button/button";
@@ -70,12 +77,14 @@ const InputDialog = (props: IProps) => {
   const [submit, setSubmit] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
 
+  // Update input if inputValue is defined in props
   useEffect(() => {
     if (props.inputValue) setInput(props.inputValue);
   }, [props.inputValue]);
 
   return (
     <>
+      {/* Overlay over all content */}
       <Overlay onClick={() => props.toggleShow()} />
 
       <DialogBox>
@@ -83,6 +92,7 @@ const InputDialog = (props: IProps) => {
 
         <Title>{props.title}</Title>
 
+        {/* Only show input if input is not readOnly */}
         {!props.readOnly && (
           <TextField
             style={inputStyle}
@@ -104,6 +114,7 @@ const InputDialog = (props: IProps) => {
           />
         )}
 
+        {/* Only show button if input is not readOnly */}
         {!props.readOnly && (
           <Button
             disabled={props.readOnly}
@@ -116,6 +127,7 @@ const InputDialog = (props: IProps) => {
           </Button>
         )}
 
+        {/* Only show text if input is readOnly */}
         {props.readOnly && (
           <Text>{props.inputValue || "Ingen rider info er lagt til ennå"}</Text>
         )}

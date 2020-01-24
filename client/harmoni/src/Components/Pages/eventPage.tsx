@@ -7,17 +7,16 @@ import { ticketService } from "../../services/TicketService";
 import { userService } from "../../services/UserService";
 import { geoService } from "../../services/GeoService";
 
-import AttachmentList from "../Event/attachmentList";
-import { attachmentService } from "../../services/AttachmentService";
 import TicketMenu from "../Event/ticketMenu";
 import ArtistsList from "../Event/artistsList";
 import Map from "../Event/map";
 import InfoDialog from "../infoDialog";
 import { FaCheckCircle } from "react-icons/fa";
-import Skeleton from "react-loading-skeleton";
+
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
-import TextField from "@material-ui/core/TextField";
+import WarningInfo from "./warningInfo";
+import OutlineButton from "../Button/outlineButton";
 
 export interface IEvent {
   event_id: number;
@@ -127,11 +126,16 @@ const TicketsGrid = styled.div`
   margin: auto;
 `;
 
-const EventImage = styled.img`
+interface IEventImage {
+  noImage: boolean;
+}
+const EventImage = styled.img<IEventImage>`
   width: 100%;
   height: 60vh;
-  object-fit: cover;
-  @media screen and (max-width: 800px) {
+  object-fit: ${props => (props.noImage ? "contain" : "cover")};
+  ${props => (props.noImage ? "filter: invert(65%);" : "")}
+  @media screen and
+    (max-width: 800px) {
     height: 40vh;
     justify-self: center;
     border-radius: 10px;
@@ -228,6 +232,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+  const [redirect, setRedirect] = useState(false);
 
   const [coords, setCoords] = useState();
   let statuses = ["Kommende", "Arkivert", "Avlyst"];
@@ -239,8 +244,12 @@ const Event = (props: any) => {
   useEffect(() => {
     const fetchEvent = async () => {
       eventService.getEventById(parseInt(params.id)).then(data => {
-        setEvent(data);
-        fetchCoords(data[0].address);
+        if (data !== undefined && data[0] !== undefined) {
+          setEvent(data);
+          fetchCoords(data[0].address);
+        } else {
+          setRedirect(true);
+        }
       });
     };
 
@@ -262,7 +271,7 @@ const Event = (props: any) => {
       eventService
         .getUserOfEvent(props.userData.user_id, parseInt(params.id))
         .then(result => {
-          if (result.length == 0) {
+          if (result && result.length == 0) {
             setShowVolunteerButton(true);
           } else setShowVolunteerButton(false);
         });
@@ -270,13 +279,12 @@ const Event = (props: any) => {
 
     const fetchCoords = async (address: string) => {
       geoService.getLatAndLndOfAddress(address).then(data => {
-        if(data){
+        if (data) {
           setCoords({ lat: data[0], lng: data[1] });
         }
       });
     };
 
-    //
     // Check if user should have access
     if (props.userData) {
       alreadyVolunteered();
@@ -286,7 +294,6 @@ const Event = (props: any) => {
     fetchArtists();
     fetchOrganizer();
   }, [parseInt(params.id), props.userData]);
-  //
 
   const addVolunteer = async () => {
     let returnData = await eventService.addUserToEvent(
@@ -303,7 +310,7 @@ const Event = (props: any) => {
         >
           <FaCheckCircle style={checkCircleStyle} />
           <SuccessText>
-            Du har nå blitt meldt som frivillig på arrangementet
+            Du har nå blitt meldt på som frivillig på arrangementet
           </SuccessText>
           <Button onClick={closeSuccessDialog}>Tilbake</Button>
         </InfoDialog>
@@ -327,6 +334,17 @@ const Event = (props: any) => {
     setDisplayDialog(false);
   };
 
+  if (redirect) {
+    return (
+      <WarningInfo
+        title="Det skjedde noe feil"
+        underTitle="Arrangementet finnes ikke"
+        text="Hvis du forventet å finne et arrangement, kan det hende at det er slettet"
+        btn1_component={<OutlineButton to="/">Til forsiden</OutlineButton>}
+      />
+    );
+  }
+
   if (
     event != null &&
     eventTickets != null &&
@@ -346,19 +364,25 @@ const Event = (props: any) => {
     let dateTo = event[0].to_date.split(" ");
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
-    let eventStatus = inProgress ? "Pågående" : statuses[event[0].status];
+    let eventStatus =
+      inProgress && event[0].status !== 2
+        ? "Pågående"
+        : statuses[event[0].status];
 
+    let base64 = new Buffer(event[0].picture).toString("ascii");
     return (
       <Wrapper>
         {displayDialog ? dialog : null}
         <ImageGrid>
           <EventImage
-            src={new Buffer(event[0].picture).toString("ascii")}
+            noImage={base64.length == 0}
+            src={base64.length == 0 ? "/icons/footericon.svg" : base64}
             alt={event[0].name}
           ></EventImage>
           {props.userData &&
           props.userData.type == "volunteer" &&
-          eventStatus === "Kommende" &&
+          !finished &&
+          !inProgress &&
           showVolunteerButton ? (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -388,7 +412,7 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer[0].name}
+            {organizer[0] ? organizer[0].name : null}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>

@@ -1,39 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {searchService} from "../../services/SearchService";
+import React, { useEffect, useState } from "react";
+import { searchService } from "../../services/SearchService";
 import ArrangementGrid from "../eventGrid";
-import {IEvent} from "./eventPage";
-import styled from "styled-components";
+import { IEvent } from "./eventPage";
 
+const MaxPrice = () => {
+  const [eventsData, setEventData] = useState<IEvent[]>();
 
-const LinkWrapper = styled.div`
-  margin: 10px 0;
-`;
+  useEffect(() => {
+    fetchHighPriceEvents();
+  }, []);
 
-const MaxPrice = (props:any) => {
-    const [eventsData, setEventData] = useState<IEvent[]>();
-    const [userInput, setUserInput] = useState("");
+  const fetchHighPriceEvents = async () => {
+    setEventData(await searchService.sortAfterHighPrice());
+  };
 
-    useEffect(() => {
-        fetchHighPriceEvents();
-
-    }, []);
-
-
-
-
-    const fetchHighPriceEvents = async() => {
-        setEventData(await searchService.sortAfterHighPrice());
-
-    }
-
-
-    // Render grid of all matching arrangements
-    console.log(eventsData);
-    return (
-        <>
-            <ArrangementGrid title={ ' Dyreste arrangmenter'} data={eventsData} />
-        </>
-    )
-}
+  // Render grid of all matching arrangements
+  return (
+    <ArrangementGrid title={"Arrangmenter pris høy-lav"} data={eventsData} />
+  );
+};
 
 export default MaxPrice;

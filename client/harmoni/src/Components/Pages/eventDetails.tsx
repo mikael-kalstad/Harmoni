@@ -85,7 +85,6 @@ const EventDetails = (props: any) => {
   const [volunteers, setVolunteers] = useState();
   const [tickets, setTickets] = useState();
   const [riders, setRiders] = useState();
-  const [organizer, setOrganizer] = useState();
 
   // Boolean check states
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -108,51 +107,30 @@ const EventDetails = (props: any) => {
   const toggleDialog = () => setShowDialog(!showDialog);
 
   const cancelEvent = async () => {
-    console.log("org id: " +  eventData.organizer);
-   /* let data = await userService.getOrganizerForEvent(eventData.event_id);
-    console.log("org:" + data);
-    setOrganizer(data); */
-
-    //console.log(userService.getUserById(73));
-   // setOrganizer(userService.getUserById(73));
-  /*  userService
-      .getUserById(eventData.organizer)
-      .then(response => setOrganizer(response));
-
-        let resOrganizer= await userService
-          .getUserById(eventData.organizer);
-        if(resOrganizer){
-        console.log("res organizer kjørt")
-        setOrganizer(resOrganizer);
-      }*/
     setLoading(true);
     let res = await eventService.changeStatusOfEvent(eventData.event_id, 2);
     if (res) {
-      console.log(organizer)
       if (artists) {
-        console.log("Artist:",artists)
         artists.forEach(artist => {
-          console.log("email sent to",artist.email)
-          emailService.sendEmail(artist.email, 
+          emailService.sendEmail(
+            artist.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
-         );
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
+          );
         });
       }
       if (volunteers) {
-        console.log("volunteers: ", volunteers);
         volunteers.map(volunteer => {
-          console.log("email sent to",volunteer.email);
           emailService.sendEmail(
             volunteer.email,
             "Hei,\nVi informerer deg at arrangementet: " +
               eventData.name +
               " er avlyst. \n" +
-              "Ta kontakt med arrangøren for mer informasjon."
-            ,eventData.name + " er avlyst"
+              "Ta kontakt med arrangøren for mer informasjon.",
+            eventData.name + " er avlyst"
           );
         });
       }
@@ -161,6 +139,8 @@ const EventDetails = (props: any) => {
       setFinished(true);
     }
   };
+
+  console.log(volunteers);
 
   useEffect(() => {
     const isUserArtistOfEvent = async () => {
@@ -187,7 +167,6 @@ const EventDetails = (props: any) => {
     };
 
     const validateUser = async () => {
-      // console.log(await isUserOrganizerOfEvent());
       let organizer = await isUserOrganizerOfEvent();
       let artist = await isUserArtistOfEvent();
 
@@ -202,11 +181,7 @@ const EventDetails = (props: any) => {
     const fetchEvent = async () => {
       eventService.getEventById(props.match.params.id).then(res => {
         setEventData(res[0]);
-        eventService
-            .getUsersOfEventByType(props.match.params.id, "volunteer")
-            .then(volunteersResponse=>{
-              setVolunteers(volunteersResponse);
-            });
+
         userService
           .getArtistsForEvent(props.match.params.id)
           .then(artistResponse => {
@@ -219,12 +194,9 @@ const EventDetails = (props: any) => {
               .then(attachmentResponse => {
                 setAttachments(attachmentResponse);
                 attachmentResponse.forEach(attachment => {
-                  console.log(attachment);
                   attachmentService
                     .getAttachmentRights(attachment.attachment_id)
                     .then(rightsResponse => {
-                      console.log(artistResponse);
-                      console.log(rightsResponse);
                       let newRight = {
                         attachment: attachment,
                         users: artistResponse.filter(artist =>
@@ -233,7 +205,7 @@ const EventDetails = (props: any) => {
                           )
                         )
                       };
-                      console.log(newRight);
+
                       setAttachmentsRights(array => [...array, newRight]);
                     });
                 });
@@ -247,8 +219,12 @@ const EventDetails = (props: any) => {
           });
 
         riderService
-          .getRiderByEventId(res[0].event_id)
+          .getRiderByEventId(props.match.params.id)
           .then(response => setRiders(response));
+
+        userService
+          .getVolunteersForEvent(props.match.params.id)
+          .then(response => setVolunteers(response));
       });
     };
 
@@ -307,6 +283,7 @@ const EventDetails = (props: any) => {
                 eventId={props.match.params.id}
                 userData={props.userData}
                 readOnly={true}
+                volunteers={volunteers}
               />
               {!readOnly && (
                 <Button onClick={() => setEdit(true)}>ENDRE ARRANGEMENT</Button>

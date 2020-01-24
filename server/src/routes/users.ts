@@ -20,12 +20,6 @@ router.get("/users/:id", async (request, response) => {
     status == 500 ? response.status(500) : response.send(sanitizeUser(data));
   });
 });
-// Get singular user given name
-router.get('/name/:name', async (request, response) => {
-  dao.getUserByName(request.params.name, (status, data) => {
-    status == 500 ? response.status(500) : response.send(data);
-  });
-});
 
 // Get singular user given email
 router.get("/users/email/:email", async (request, response) => {
