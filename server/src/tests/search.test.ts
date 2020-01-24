@@ -63,7 +63,7 @@ test("search for events given organizer ", done => {
     dao.searchForEvents("jens jensen", (status, data) => {
         expect(status).toBe(200);
         expect(data.length).toBe(1);
-        expect(data[0].address).toBe("Elgseter Gate 1");
+        expect(data[0].address).toBe("Hovinveien 12");
         done();
     })
 })
