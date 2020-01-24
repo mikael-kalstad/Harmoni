@@ -148,12 +148,12 @@ const Profile = (props: { userData: any }) => {
       <CalenderWrapper>
         <Title>Kalender</Title>
           {props.userData.type === "organizer"?(
-              <EventCalendar data={events && events.filter(e => e.status === 0||e.status===1 ||e.status===3)} />
+              <EventCalendar data={events && events.filter(e => e.status === 0)} />
           ):(
               <></>
           )}
           {props.userData.type==="volunteer"||props.userData.type==="artist"? (
-              <EventCalendar data={eventsParticipant && eventsParticipant.filter(e => e.status === 0||e.status===1 ||e.status===3)} />
+              <EventCalendar data={eventsParticipant && eventsParticipant.filter(e => e.status === 0)} />
           ):(
               <></>
           )}
