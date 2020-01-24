@@ -172,11 +172,13 @@ class UserService extends Service {
       }
     })
       .then(response => {
-        if (response.status == 409) {
-
+        console.log("res inservice", response);
+        if (response.status === 409) {
+          return response;
         } else {
           updateToken();
-        } return response;
+        }
+        return response;
       })
       .catch(error => console.log(error));
   }

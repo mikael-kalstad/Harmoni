@@ -1,3 +1,8 @@
+/**
+ * Navigation bar which is included in the top of the layout on all pages.
+ *
+ */
+
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -32,6 +37,7 @@ const Icon = styled.img`
 
 const LinkWrapper = styled.div`
   margin: 10px;
+  padding: 8px;
   color: #7f7f7f;
   text-decoration: none;
 
@@ -46,8 +52,9 @@ const LinkWrapper = styled.div`
   right: 20px;
 `;
 
-const LinkWrapper1 = styled.div`
+const LinkWrapper_right = styled.div`
   color: #7f7f7f;
+  padding: 8px;
 
   :visited {
     color: #7f7f7f;
@@ -64,6 +71,7 @@ const NavigationBar = (props: any) => (
     sticky="top"
     style={{ boxShadow: "0px 1px 8px rgba(0, 0, 0, 0.25)", padding: "0px" }}
   >
+    {/* Icon in navbar */}
     <Navbar.Brand>
       <Link to="/">
         <img
@@ -72,12 +80,14 @@ const NavigationBar = (props: any) => (
           height="60"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
-          style={{ margin: "0px 1px -10px 15px", padding: "0px" }}
+          style={{ margin: "0px 1px -10px 15px", padding: "8px" }}
           onClick={() => handleIconClick("/")}
         />
       </Link>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+    {/* All elements inside this parent will collapse to a mobile friendly menu when width is lower than breakpoint */}
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
         <LinkWrapper>
@@ -99,6 +109,7 @@ const NavigationBar = (props: any) => (
         </LinkWrapper>
 
         <LinkWrapper>
+          {/* Dropdown inside the navbar for "overflow" categories that does not fit in the navbar */}
           <NavDropdown title="Annet" id="basic-nav-dropdown">
             <LinkContainer to="/events/festival">
               <NavDropdown.Item>Festival</NavDropdown.Item>
@@ -115,8 +126,9 @@ const NavigationBar = (props: any) => (
         </LinkWrapper>
       </Nav>
 
+      {/* Sort all events after price */}
       <Nav>
-        <LinkWrapper1>
+        <LinkWrapper_right>
           <NavDropdown title="Sorter etter" id="basic-nav-dropdown">
             <LinkContainer to="/sort/events/cheapest">
               <NavDropdown.Item>Pris lav-høy</NavDropdown.Item>
@@ -125,13 +137,15 @@ const NavigationBar = (props: any) => (
               <NavDropdown.Item>Pris høy-lav</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown>
-        </LinkWrapper1>
+        </LinkWrapper_right>
       </Nav>
 
+      {/* Search icon with link to search page */}
       <StyledLink to="/search">
         <Icon src="/icons/search.svg" />
       </StyledLink>
 
+      {/* Render profile component in navbar if userData is defined (user logged in) */}
       {props.userData ? (
         <>
           <SmallProfileNav
@@ -152,10 +166,12 @@ const NavigationBar = (props: any) => (
   </Navbar>
 );
 
+// Handle click on the icon
 const handleIconClick = (path: any) => {
   //Smooth scroll to top if already on the home page
   if (window.location.pathname === path)
     window.scrollTo({ top: 0, behavior: "smooth" });
+  // Scroll to the top
   else window.scrollTo(0, 0);
 };
 
