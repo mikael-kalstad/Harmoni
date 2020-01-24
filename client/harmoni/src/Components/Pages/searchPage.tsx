@@ -52,7 +52,7 @@ const SearchIcon = styled.img`
 `;
 
 const SearchEvents = () => {
-  let input;
+  let input = "";
   const [eventsData, setEventsData] = useState([]);
   const [completed, setCompleted] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(false);
