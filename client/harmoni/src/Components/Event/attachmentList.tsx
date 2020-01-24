@@ -4,7 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { Typeahead } from "react-bootstrap-typeahead";
 import Artistcard from "../AddEvent/EventForms/artistCard";
-import { FaFileDownload } from "react-icons/fa";
+import { FaFileDownload, FaFileAlt } from "react-icons/fa";
 import { attachmentService } from "../../services/AttachmentService";
 
 interface IWrapper {
@@ -25,6 +25,14 @@ interface AttachmentListProps {
   attachments: attachment[];
 }
 
+const FileCard = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+`;
+
 const Wrapper = styled.div<IWrapper>`
   border: ${props => (props.empty ? "dashed 3px #bbbbbb" : "none")};
   height: 100%;
@@ -37,13 +45,17 @@ const Wrapper = styled.div<IWrapper>`
   justify-items: center;
 `;
 
-const FilenameText = styled.label`
+const FilenameText = styled.p`
   font-family: Arial;
-  font-size: 20px;
+  font-size: 18px;
   margin: 0;
   justify-self: start;
   font-weight: bold;
   color: #434343;
+
+  text-overflow: ellipsis;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 interface IUser {
@@ -70,7 +82,6 @@ const LoadingText = styled.p`
 
 const UnderTitle = styled.h3`
   font-size: 24px;
-  margin: 50px 0 20px 0;
 `;
 
 const Title = styled.h2`
@@ -137,25 +148,23 @@ const AttachmentList = (props: any) => {
           </Wrapper>
         );
         return (
-          <AttachmentWrapper>
-            <ListGroup.Item key={attachment.attachment_id}>
-              {/*             <img
-              width="55px"
-              height="55px"
-              src="https://cdn0.iconfinder.com/data/icons/popular-files-formats/154/tmp-512.png"
-            /> */}
-              <FilenameText>{attachment.filename}</FilenameText>
-              {props.readOnly ? (
-                <FaFileDownload
-                  style={{ cursor: "pointer" }}
-                  title="Last ned vedlegg."
-                  size="4em"
-                  onClick={downloadAttachment(attachment)}
-                />
-              ) : null}
+          <ListGroup.Item>
+            <div key={attachment.filename}>
+              <FileCard>
+                <FaFileAlt style={{ justifySelf: "center" }} size="2em" />
+                <FilenameText>{attachment.filename}</FilenameText>
+                {!props.attachments.every(e => e.attachment_id == -1) ? (
+                  <FaFileDownload
+                    style={{ cursor: "pointer", justifySelf: "center" }}
+                    title="Last ned vedlegg."
+                    size="2em"
+                    onClick={downloadAttachment(attachment)}
+                  />
+                ) : null}
+              </FileCard>
               {children}
-            </ListGroup.Item>
-          </AttachmentWrapper>
+            </div>
+          </ListGroup.Item>
         );
       })}
     </ListGroup>

@@ -15,6 +15,8 @@ import { FaCheckCircle } from "react-icons/fa";
 
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
+import WarningInfo from "./warningInfo";
+import OutlineButton from "../Button/outlineButton";
 
 export interface IEvent {
   event_id: number;
@@ -230,6 +232,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+  const [redirect, setRedirect] = useState(false);
 
   const [coords, setCoords] = useState();
   let statuses = ["Kommende", "Arkivert", "Avlyst"];
@@ -241,9 +244,11 @@ const Event = (props: any) => {
   useEffect(() => {
     const fetchEvent = async () => {
       eventService.getEventById(parseInt(params.id)).then(data => {
-        if(data){
+        if (data !== undefined && data[0] !== undefined) {
           setEvent(data);
           fetchCoords(data[0].address);
+        } else {
+          setRedirect(true);
         }
       });
     };
@@ -329,6 +334,17 @@ const Event = (props: any) => {
     setDisplayDialog(false);
   };
 
+  if (redirect) {
+    return (
+      <WarningInfo
+        title="Det skjedde noe feil"
+        underTitle="Arrangementet finnes ikke"
+        text="Hvis du forventet å finne et arrangement, kan det hende at det er slettet"
+        btn1_component={<OutlineButton to="/">Til forsiden</OutlineButton>}
+      />
+    );
+  }
+
   if (
     event != null &&
     eventTickets != null &&
@@ -349,7 +365,7 @@ const Event = (props: any) => {
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
     let eventStatus =
-      inProgress && event[0].status !== 2
+      inProgress && event[0].status === 0
         ? "Pågående"
         : statuses[event[0].status];
 
@@ -365,7 +381,8 @@ const Event = (props: any) => {
           ></EventImage>
           {props.userData &&
           props.userData.type == "volunteer" &&
-          !finished && !inProgress &&
+          !finished &&
+          !inProgress &&
           showVolunteerButton ? (
             <AddBtn onClick={addVolunteer}>
               <BtnIcon src="/icons/plus-1.svg" />
@@ -382,11 +399,17 @@ const Event = (props: any) => {
               <>
                 {" - "} <StatusSpan color="#448b30">{eventStatus}</StatusSpan>
               </>
-            ) : eventStatus == "Avlyst" || finished ? (
+            ) : eventStatus == "Avlyst" ||
+              eventStatus == "Arkivert" ||
+              finished ? (
               <>
                 {" - "}{" "}
                 <StatusSpan color="#c7554f">
-                  {finished ? "Ferdig" : eventStatus}
+                  {finished &&
+                  eventStatus !== "Avlyst" &&
+                  eventStatus !== "Arkivert"
+                    ? "Ferdig"
+                    : eventStatus}
                 </StatusSpan>
               </>
             ) : (
@@ -395,9 +418,7 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer[0] ? (
-              organizer[0].name
-            ) : null}
+            {organizer[0] ? organizer[0].name : null}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
