@@ -303,7 +303,7 @@ const Event = (props: any) => {
         >
           <FaCheckCircle style={checkCircleStyle} />
           <SuccessText>
-            Du har nå blitt meldt som frivillig på arrangementet
+            Du har nå blitt meldt på som frivillig på arrangementet
           </SuccessText>
           <Button onClick={closeSuccessDialog}>Tilbake</Button>
         </InfoDialog>
@@ -393,7 +393,9 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer[0].name}
+            {organizer[0] ? (
+              organizer[0].name
+            ) : null}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
