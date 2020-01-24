@@ -127,7 +127,7 @@ const ArrangementCard = (props: any) => {
                 : "/icons/footericon.svg"
             }
             alt={props.title}
-            noImage={props.picture.data.length == 0}
+            noImage={props.picture.data.length === 0}
           />
         )}
 

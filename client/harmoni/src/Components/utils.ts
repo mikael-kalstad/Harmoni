@@ -24,3 +24,19 @@ export const compareDates = (date1, date2) => {
 
   return fromDate < toDate;
 };
+
+export const passwordValidation = (password: string) => {
+  let count = 0;
+
+  // Add to count if test match
+  count += /[a-z]/.test(password) ? 1 : 0;
+  count += /[A-Z]/.test(password) ? 1 : 0;
+  count += /[@]/.test(password) ? 1 : 0;
+  count += /[0-9]/.test(password) ? 1 : 0;
+
+  // Password is only valid if more than two test match and
+  // length is greater than 5
+  if (count >= 2 && password.length > 5) {
+    return true;
+  } else if (count < 2) return false;
+};

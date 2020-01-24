@@ -119,6 +119,7 @@ interface IProps {
   readOnly?: boolean;
   eventId?: number;
   userData?: any;
+  volunteers?: any;
 }
 
 const Summary = (props: IProps) => {
@@ -202,6 +203,17 @@ const Summary = (props: IProps) => {
             readOnly={props.readOnly}
           ></AttachmentList>
         </div>
+      )}
+
+      <UnderTitle>Frivillige</UnderTitle>
+      {!props.volunteers || props.volunteers.length === 0 ? (
+        <Text>Ingen frivillige lagt til enda</Text>
+      ) : (
+        <ArtistList
+          hideTitle={true}
+          artists={props.volunteers}
+          readOnly={true}
+        />
       )}
     </Wrapper>
   );
