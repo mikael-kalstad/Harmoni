@@ -15,6 +15,7 @@ import { FaCheckCircle } from "react-icons/fa";
 
 import { useParams } from "react-router-dom";
 import Button from "../Button/button";
+import WarningInfo from "./warningInfo";
 
 export interface IEvent {
   event_id: number;
@@ -230,6 +231,7 @@ const Event = (props: any) => {
   const [eventTickets, setEventTickets] = useState<ITicket[]>();
   const [artists, setArtists] = useState<IUser[]>();
   const [organizer, setOrganizer] = useState();
+  const [redirect, setRedirect] = useState(false);
 
   const [coords, setCoords] = useState();
   let statuses = ["Kommende", "Arkivert", "Avlyst"];
@@ -241,8 +243,12 @@ const Event = (props: any) => {
   useEffect(() => {
     const fetchEvent = async () => {
       eventService.getEventById(parseInt(params.id)).then(data => {
-        setEvent(data);
-        fetchCoords(data[0].address);
+        if (data !== undefined && data[0] !== undefined) {
+          setEvent(data);
+          fetchCoords(data[0].address);
+        } else {
+          setRedirect(true);
+        }
       });
     };
 
@@ -327,6 +333,16 @@ const Event = (props: any) => {
     setDisplayDialog(false);
   };
 
+  if (redirect) {
+    return (
+      <WarningInfo
+        title="Det skjedde noe feil"
+        underTitle="Arrangementet finnes ikke"
+        text="Hvis du forventet å finne et arrangement, kan det hende at det er slettet"
+      />
+    );
+  }
+
   if (
     event != null &&
     eventTickets != null &&
@@ -393,9 +409,7 @@ const Event = (props: any) => {
           </Title>
           <InfoText>
             <BoldSpan>Arrangør: </BoldSpan>
-            {organizer[0] ? (
-              organizer[0].name
-            ) : null}
+            {organizer[0] ? organizer[0].name : null}
           </InfoText>
           <InfoText>
             <BoldSpan>Tid: </BoldSpan>
