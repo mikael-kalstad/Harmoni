@@ -112,9 +112,7 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
 
   function tlfValidation(num: number) {
     if (num !== undefined) {
-      if (num.toString().match(tlfFormat)) {
-        return true;
-      } else return false;
+      return tlfFormat.test(num.toString());
     } else {
       return true;
     }
@@ -128,15 +126,16 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
       emailInput.trim() !== "" &&
       emailInput.length <= 45 &&
       emailFormat.test(emailInput) &&
-      tlfInput.toString().length <= 45 &&
-      tlfFormat.test(tlfInput.toString())
+      (tlfInput === undefined
+        ? true
+        : tlfInput.toString().length <= 45 && tlfFormat.test(tlfInput))
     );
   };
 
   // Save changes to user info
   const save = async () => {
     setSubmit(true);
-
+    console.log("tlfInput", valdidateInputs());
     // Check if inputs are valid
     if (!valdidateInputs()) return;
 
@@ -278,11 +277,15 @@ const Register = (props: { userData?: any; logIn?: Function }) => {
           value={tlfInput}
           error={submit && tlfInput !== undefined && !tlfValidation(tlfInput)}
           helperText={
-            submit && !tlfValidation(tlfInput)
+            submit && tlfInput !== undefined && !tlfValidation(tlfInput)
               ? "Du har git en ugyldig telefonnummer, eksempel på riktig telefonnummer: 47768462"
               : "Det er valgfritt å oppgi telefonnummer"
           }
-          onChange={e => setTlfInput(Number.parseInt(e.target.value))}
+          onChange={e =>
+            e.target.value.toString() === ""
+              ? setTlfInput(undefined)
+              : setTlfInput(Number.parseInt(e.target.value))
+          }
           onKeyDown={e => checkForEnterKey(e)}
         />
 

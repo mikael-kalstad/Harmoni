@@ -365,7 +365,7 @@ const Event = (props: any) => {
     let inProgress = isEventInProgress(event[0].from_date, event[0].to_date);
     let finished = hasEventHappened(event[0].to_date);
     let eventStatus =
-      inProgress && event[0].status !== 2
+      inProgress && event[0].status === 0
         ? "Pågående"
         : statuses[event[0].status];
 
@@ -399,11 +399,17 @@ const Event = (props: any) => {
               <>
                 {" - "} <StatusSpan color="#448b30">{eventStatus}</StatusSpan>
               </>
-            ) : eventStatus == "Avlyst" || finished ? (
+            ) : eventStatus == "Avlyst" ||
+              eventStatus == "Arkivert" ||
+              finished ? (
               <>
                 {" - "}{" "}
                 <StatusSpan color="#c7554f">
-                  {finished ? "Ferdig" : eventStatus}
+                  {finished &&
+                  eventStatus !== "Avlyst" &&
+                  eventStatus !== "Arkivert"
+                    ? "Ferdig"
+                    : eventStatus}
                 </StatusSpan>
               </>
             ) : (
