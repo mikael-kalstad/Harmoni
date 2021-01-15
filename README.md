@@ -2,8 +2,8 @@
 
 **A concert/event system made with focus on learning the SCRUM development process.**<br/>
 
-<img src="https://github.com/mikael-kalstad/Monopolish/raw/master/wiki_resources/system/manual/game_1.png" width="100%">
-A screenshot from the board view in the game.<br/><br/>
+<img src="https://github.com/mikael-kalstad/Harmoni/blob/master/screenshots/harmoni.PNG" width="100%">
+An overview screenshot of the landing page. NOTE: the database used when developing this has been removed, therefore no events is shown, only the lazy-loading feature.<br/><br/>
 
 This project was an university project in the subject <em>TDAT2003 Systemutvikling 2</em>. The project lasted for about one month, where we went through all the stages of developing an application. An extensive report with schedules, timesheets, meetings, vision document and more: <a href="https://github.com/mikael-kalstad/Monopolish/raw/master/wiki_resources/_tdat1006_2019_team4.pdf" download>Click to Download</a>
 
@@ -39,3 +39,8 @@ This project was an university project in the subject <em>TDAT2003 Systemutvikli
 - Solving issues with GIT when working with a team.
 - Modelling: use case-, sequence-, ER-, class diagrams and domain model. 
 - Documentation used in SCRUM
+
+</br>
+# Screenshots
+<img src="https://github.com/mikael-kalstad/Harmoni/blob/master/screenshots/login.PNG" width="100%">
+A screenshot showing the login page of the website<br/><br/>
