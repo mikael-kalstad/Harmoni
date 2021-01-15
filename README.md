@@ -29,6 +29,7 @@ This project was an university project in the subject <em>TDAT2003 Systemutvikli
   #### Front-end
 - Working with React in a larger project
 - Creating UI for a complex website with many components
+- Creating React elements with lazy-loading
 
 #### Back-end
 - Working with data classes to connect to a database.
