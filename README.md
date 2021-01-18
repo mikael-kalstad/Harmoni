@@ -41,7 +41,7 @@ This project was an university project in the subject <em>TDAT2003 Systemutvikli
 - Modelling: use case-, sequence-, ER-, class diagrams and domain model. 
 - Documentation used in SCRUM
 
-</br>
+<br/>
 # Screenshots
 <img src="https://github.com/mikael-kalstad/Harmoni/blob/master/screenshots/login.PNG" width="100%">
 A screenshot showing the login page of the website<br/><br/>
